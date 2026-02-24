@@ -1,24 +1,27 @@
-// app/layout.tsx
 import "./globals.css";
 import Navbar from "./components/Navbar";
-import { Inter, Space_Grotesk } from "next/font/google";
-
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const space = Space_Grotesk({ subsets: ["latin"], variable: "--font-space" });
+import StarsBackground from "./components/StarsBackground";
 
 export const metadata = {
   title: "Crewboard",
-  description: "Web3 talent marketplace",
+  description: "Connecting talents. Building crews.",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} ${space.variable}`}>
+    <html lang="en">
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Outfit:wght@300;400;500;600&display=swap"
+        />
+      </head>
       <body>
-        <div className="bg">
-          <Navbar />
-          {children}
-        </div>
+        {/* ✅ ONE global canvas for all routes */}
+        <StarsBackground />
+
+        <Navbar />
+        {children}
       </body>
     </html>
   );

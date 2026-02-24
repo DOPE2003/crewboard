@@ -1,36 +1,30 @@
-// app/components/Navbar.tsx
 import Link from "next/link";
+import { createClient } from "@/lib/supabase/server";
 
-export default function Navbar() {
+export default async function Navbar() {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
+
   return (
-    <header className="nav">
-      <div className="container nav-inner">
-        <Link href="/" className="brand">
-          <span className="brand-mark" aria-hidden />
-          <span className="brand-name">Crewboard</span>
-        </Link>
+    <nav>
+      <Link href="/" className="nav-logo">CREWBOARD</Link>
 
-        <nav className="nav-links" aria-label="Primary">
-          <Link href="/talent" className="nav-link">
-            Talent
-          </Link>
-          <Link href="/projects" className="nav-link">
-            Projects
-          </Link>
-          <Link href="/how" className="nav-link">
-            How it works
-          </Link>
-        </nav>
+      <ul className="nav-links">
+        <li><Link href="/whitepaper">Whitepaper</Link></li>
+        <li><Link href="/whitepaper#challenge">Challenge</Link></li>
+        <li><Link href="/whitepaper#solution">Solution</Link></li>
+        <li><Link href="/whitepaper#roadmap">Roadmap</Link></li>
+        <li><Link href="/whitepaper#invest">Invest</Link></li>
+      </ul>
 
-        <div className="nav-actions">
-          <Link href="/login" className="btn btn-ghost">
-            Sign in
-          </Link>
-          <Link href="/login" className="btn btn-primary">
-            Get started
-          </Link>
-        </div>
+      <div>
+        {user ? (
+          <Link href="/dashboard" className="nav-pill">Dashboard</Link>
+        ) : (
+          <Link href="/login" className="nav-pill">Login</Link>
+        )}
       </div>
-    </header>
+    </nav>
   );
 }
