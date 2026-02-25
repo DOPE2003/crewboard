@@ -1,71 +1,68 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { createClient } from "@/lib/supabase/client";
+import { createBrowserClient } from "@supabase/ssr";
 
 export default function LoginPage() {
-  const supabase = useMemo(() => createClient(), []);
-  const [email, setEmail] = useState("");
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
-  const [message, setMessage] = useState<string>("");
+  const supabase = useMemo(() => {
+    return createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+  }, []);
 
-  const onSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setStatus("sending");
-    setMessage("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  async function signInWithX() {
+    setLoading(true);
+    setError(null);
 
     const origin = window.location.origin;
 
-    const { error } = await supabase.auth.signInWithOtp({
-      email,
-      options: { emailRedirectTo: `${origin}/auth/callback` },
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "twitter",
+      options: {
+        redirectTo: `${origin}/auth/callback`,
+      },
     });
 
     if (error) {
-      setStatus("error");
-      setMessage(error.message);
-      return;
+      setError(error.message);
+      setLoading(false);
     }
-
-    setStatus("sent");
-    setMessage("Magic link sent. Open the newest email and click the link.");
-  };
+  }
 
   return (
-    <main className="page auth-shell">
-      <section className="auth-panel">
-        <div className="auth-kicker">Auth </div>
+    <main className="page">
+      <div style={{ paddingTop: 90 }} />
 
-        <h1 className="auth-heading">Login</h1>
-        <p className="auth-lead">
-          Sign in with email and check your confirmation link
-        </p>
+      <section className="auth-wrap">
+        <div className="auth-card">
+          <div className="auth-kicker">— AUTH</div>
 
-        <form onSubmit={onSubmit} className="auth-form">
-          <label className="auth-label">
-            <span>Email</span>
-            <input
-              className="auth-input"
-              type="email"
-              placeholder="you@domain.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </label>
+          <h1 className="auth-title">Login</h1>
 
-          <button className="auth-submit" type="submit" disabled={status === "sending"}>
-            {status === "sending" ? "SENDING..." : "SEND MAGIC LINK"}
+          <p className="auth-sub">
+            Continue with X to verify the real account people will work with.
+          </p>
+
+          <button
+            className="btn-primary auth-btn"
+            onClick={signInWithX}
+            disabled={loading}
+          >
+            {loading ? "CONNECTING..." : "CONTINUE WITH X"}
           </button>
 
-          {message ? (
-            <div className={status === "error" ? "auth-msg error" : "auth-msg"}>
-              {message}
-            </div>
-          ) : null}
+          <div className="auth-foot">
+            <span className="muted">
+              Your X handle becomes part of your public identity on Crewboard.
+            </span>
+          </div>
 
-
-        </form>
+          {error && <p className="auth-error">{error}</p>}
+        </div>
       </section>
     </main>
   );

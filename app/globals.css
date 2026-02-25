@@ -356,3 +356,101 @@ body.whitepaper-invert .scroll-line {
 
 :root { --star-rgb: 255,255,255; }           /* default: white stars */
 body.whitepaper-invert { --star-rgb: 0,0,0; } /* on whitepaper: black stars */
+/* =========================
+   AUTH (LOGIN) UI — Crewboard
+   ========================= */
+
+.auth-wrap {
+  min-height: calc(100vh - 90px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem 1.25rem 5rem;
+}
+
+.auth-card {
+  width: min(560px, 100%);
+  padding: 2.2rem 2rem;
+  border-radius: 18px;
+
+  background: rgba(0, 0, 0, 0.42);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  background: radial-gradient(
+    600px 220px at 20% 0%,
+    rgba(255, 255, 255, 0.12),
+    transparent 55%
+  );
+  pointer-events: none;
+}
+
+.auth-kicker {
+  font-family: "Space Mono", monospace;
+  font-size: 0.62rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.45);
+  margin-bottom: 0.9rem;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-title {
+  font-family: "Rajdhani", sans-serif;
+  font-weight: 700;
+  font-size: clamp(2.2rem, 4vw, 3rem);
+  letter-spacing: 0.02em;
+  margin: 0 0 0.35rem;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-sub {
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.6;
+  margin: 0 0 1.6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-btn {
+  width: 100%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 56px;
+  border-radius: 12px;
+  position: relative;
+  z-index: 1;
+}
+
+.auth-foot {
+  margin-top: 1.1rem;
+  position: relative;
+  z-index: 1;
+}
+
+.muted {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.92rem;
+}
+
+.auth-error {
+  margin-top: 1rem;
+  color: rgba(255, 120, 120, 0.95);
+  font-size: 0.95rem;
+  line-height: 1.4;
+  position: relative;
+  z-index: 1;
+}
