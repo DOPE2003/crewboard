@@ -474,3 +474,295 @@ footer p {
   font-family: 'Space Mono', monospace;
   letter-spacing: 0.04em;
 }
+/* =========================================================
+   WHITEPAPER INVERT OVERRIDES (only when body has class)
+   Goal: what was black -> white, what was white -> black
+   Keep layout/animations unchanged.
+   ========================================================= */
+
+body.whitepaper-invert .whitepaper,
+body.whitepaper-invert .whitepaper * {
+  /* Helps when some elements inherit weird colors */
+  color-scheme: light;
+}
+
+/* Force default text to black-ish across whitepaper content */
+body.whitepaper-invert .whitepaper,
+body.whitepaper-invert .whitepaper p,
+body.whitepaper-invert .whitepaper h1,
+body.whitepaper-invert .whitepaper h2,
+body.whitepaper-invert .whitepaper h3,
+body.whitepaper-invert .whitepaper h4,
+body.whitepaper-invert .whitepaper h5,
+body.whitepaper-invert .whitepaper h6 {
+  color: rgba(0, 0, 0, 0.88);
+}
+
+/* Muted/labels become dark-muted instead of white-muted */
+body.whitepaper-invert .whitepaper .muted,
+body.whitepaper-invert .whitepaper .label,
+body.whitepaper-invert .whitepaper .kicker,
+body.whitepaper-invert .whitepaper .section-label,
+body.whitepaper-invert .whitepaper .meta,
+body.whitepaper-invert .whitepaper .sub,
+body.whitepaper-invert .whitepaper small {
+  color: rgba(0, 0, 0, 0.55) !important;
+}
+
+/* Lines + dividers */
+body.whitepaper-invert .whitepaper hr,
+body.whitepaper-invert .whitepaper .divider,
+body.whitepaper-invert .whitepaper .line {
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  background: rgba(0, 0, 0, 0.12) !important;
+}
+
+/* Cards that used to be dark glass become light glass */
+body.whitepaper-invert .whitepaper .card,
+body.whitepaper-invert .whitepaper .tile,
+body.whitepaper-invert .whitepaper .feature,
+body.whitepaper-invert .whitepaper .box {
+  background: rgba(255, 255, 255, 0.78) !important;
+  border-color: rgba(0, 0, 0, 0.12) !important;
+  box-shadow: 0 16px 50px rgba(0,0,0,0.08) !important;
+}
+
+/* BIG black panels / figures / flowchart containers -> white */
+body.whitepaper-invert .whitepaper .figure,
+body.whitepaper-invert .whitepaper .mock,
+body.whitepaper-invert .whitepaper .diagram,
+body.whitepaper-invert .whitepaper .flow,
+body.whitepaper-invert .whitepaper .panel,
+body.whitepaper-invert .whitepaper .frame,
+body.whitepaper-invert .whitepaper .hero-figure,
+body.whitepaper-invert .whitepaper .image-frame,
+body.whitepaper-invert .whitepaper .screenshot,
+body.whitepaper-invert .whitepaper .stage {
+  background: #ffffff !important;
+  border: 1px solid rgba(0,0,0,0.12) !important;
+  box-shadow: 0 22px 70px rgba(0,0,0,0.10) !important;
+}
+
+/* Anything inside those panels that was white text -> black text */
+body.whitepaper-invert .whitepaper .figure *,
+body.whitepaper-invert .whitepaper .mock *,
+body.whitepaper-invert .whitepaper .diagram *,
+body.whitepaper-invert .whitepaper .flow *,
+body.whitepaper-invert .whitepaper .panel *,
+body.whitepaper-invert .whitepaper .frame *,
+body.whitepaper-invert .whitepaper .hero-figure *,
+body.whitepaper-invert .whitepaper .image-frame *,
+body.whitepaper-invert .whitepaper .screenshot *,
+body.whitepaper-invert .whitepaper .stage * {
+  color: rgba(0, 0, 0, 0.88) !important;
+  border-color: rgba(0, 0, 0, 0.18) !important;
+}
+
+/* Buttons inside whitepaper (invert) */
+body.whitepaper-invert .whitepaper .btn-primary,
+body.whitepaper-invert .whitepaper .primary-btn,
+body.whitepaper-invert .whitepaper button.primary {
+  background: #000 !important;
+  color: #fff !important;
+  border-color: rgba(0,0,0,0.25) !important;
+}
+
+body.whitepaper-invert .whitepaper .btn-outline,
+body.whitepaper-invert .whitepaper .secondary-btn,
+body.whitepaper-invert .whitepaper button.secondary {
+  background: transparent !important;
+  color: #000 !important;
+  border-color: rgba(0,0,0,0.28) !important;
+}
+
+/* Scroll hint inside whitepaper */
+body.whitepaper-invert .whitepaper .scroll-hint span {
+  color: rgba(0,0,0,0.38) !important;
+}
+body.whitepaper-invert .whitepaper .scroll-line {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent) !important;
+}
+
+/* The little "N" badge / corner elements */
+body.whitepaper-invert .whitepaper .corner-badge,
+body.whitepaper-invert .whitepaper .badge,
+body.whitepaper-invert .whitepaper .n-badge {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(0,0,0,0.18) !important;
+  color: rgba(0,0,0,0.9) !important;
+}
+/* Fix hero readability in inverted mode */
+body.whitepaper-invert .whitepaper h1,
+body.whitepaper-invert .whitepaper .hero-title,
+body.whitepaper-invert .whitepaper .title,
+body.whitepaper-invert .whitepaper .logo-title,
+body.whitepaper-invert .whitepaper .headline {
+  color: #000 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #000 !important;
+  text-shadow: none !important;
+}
+
+/* Make hero subtitle readable too */
+body.whitepaper-invert .whitepaper p,
+body.whitepaper-invert .whitepaper .subtitle,
+body.whitepaper-invert .whitepaper .hero-sub {
+  color: rgba(0,0,0,0.65) !important;
+  opacity: 1 !important;
+}
+
+/* If your title uses mix-blend-mode anywhere, kill it for inverted */
+body.whitepaper-invert .whitepaper * {
+  mix-blend-mode: normal !important;
+}
+
+/* =========================================================
+   FULL INVERT MODE (whitepaper only)
+   Everything white -> black, black -> white
+   Requires: body.whitepaper-invert + .whitepaper wrapper
+   ========================================================= */
+
+/* Base text colors */
+body.whitepaper-invert .whitepaper {
+  color: rgba(0,0,0,0.9);
+}
+body.whitepaper-invert .whitepaper .hero-tag,
+body.whitepaper-invert .whitepaper .section-label,
+body.whitepaper-invert .whitepaper .diagram-title,
+body.whitepaper-invert .whitepaper .node-sub,
+body.whitepaper-invert .whitepaper .roadmap-period {
+  color: rgba(0,0,0,0.55) !important;
+}
+
+/* HERO title readable */
+body.whitepaper-invert .whitepaper .hero-logo {
+  color: #000 !important;
+  opacity: 1 !important;
+  -webkit-text-fill-color: #000 !important;
+}
+
+/* Main body text */
+body.whitepaper-invert .whitepaper .hero-tagline,
+body.whitepaper-invert .whitepaper .section-body,
+body.whitepaper-invert .whitepaper p {
+  color: rgba(0,0,0,0.65) !important;
+}
+
+/* Cards (challenge + features + model) become light */
+body.whitepaper-invert .whitepaper .challenge-card,
+body.whitepaper-invert .whitepaper .feature-card,
+body.whitepaper-invert .whitepaper .model-card {
+  background: rgba(255,255,255,0.75) !important;
+  border-color: rgba(0,0,0,0.12) !important;
+  box-shadow: 0 18px 60px rgba(0,0,0,0.08) !important;
+}
+body.whitepaper-invert .whitepaper .challenge-card h3,
+body.whitepaper-invert .whitepaper .feature-card h3,
+body.whitepaper-invert .whitepaper .model-card .stat,
+body.whitepaper-invert .whitepaper .model-card p {
+  color: rgba(0,0,0,0.9) !important;
+}
+
+/* The big diagram wrapper becomes light */
+body.whitepaper-invert .whitepaper .diagram-wrap {
+  background: #fff !important;
+  border: 1px solid rgba(0,0,0,0.12) !important;
+  box-shadow: 0 22px 70px rgba(0,0,0,0.10) !important;
+}
+
+/* The FLOW PANEL itself (your black rectangles) -> white */
+body.whitepaper-invert .whitepaper .flow {
+  background: #fff !important;
+  border: 1px solid rgba(0,0,0,0.12) !important;
+}
+
+/* Node boxes inside flow: dark -> light */
+body.whitepaper-invert .whitepaper .node-box {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(0,0,0,0.18) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+}
+body.whitepaper-invert .whitepaper .node-title {
+  color: rgba(0,0,0,0.9) !important;
+}
+body.whitepaper-invert .whitepaper .node-sub {
+  color: rgba(0,0,0,0.45) !important;
+}
+
+/* Highlight nodes (hl) inverted: was bright-on-dark -> dark-on-light */
+body.whitepaper-invert .whitepaper .node-box.hl {
+  background: #000 !important;
+  border-color: rgba(0,0,0,0.8) !important;
+}
+body.whitepaper-invert .whitepaper .node-box.hl .node-title,
+body.whitepaper-invert .whitepaper .node-box.hl .node-sub {
+  color: #fff !important;
+}
+
+/* Arrows + labels: white -> black */
+body.whitepaper-invert .whitepaper .a-label {
+  color: rgba(0,0,0,0.55) !important;
+}
+body.whitepaper-invert .whitepaper .a-line {
+  background: rgba(0,0,0,0.35) !important;
+}
+body.whitepaper-invert .whitepaper .a-head {
+  border-left-color: rgba(0,0,0,0.35) !important;
+}
+
+/* Dividers */
+body.whitepaper-invert .whitepaper .divider {
+  background: rgba(0,0,0,0.10) !important;
+}
+
+/* Roadmap line/dots invert */
+body.whitepaper-invert .whitepaper .roadmap-line {
+  background: rgba(0,0,0,0.12) !important;
+}
+body.whitepaper-invert .whitepaper .roadmap-dot {
+  background: #000 !important;
+  box-shadow: none !important;
+}
+
+/* CTA section invert (if it was dark) */
+body.whitepaper-invert .whitepaper .cta-section {
+  background: rgba(255,255,255,0.78) !important;
+  border-color: rgba(0,0,0,0.12) !important;
+}
+body.whitepaper-invert .whitepaper .cta-section h2,
+body.whitepaper-invert .whitepaper .cta-section p {
+  color: rgba(0,0,0,0.85) !important;
+}
+
+/* Footer invert */
+body.whitepaper-invert .whitepaper footer,
+body.whitepaper-invert .whitepaper .footer-logo,
+body.whitepaper-invert .whitepaper footer p {
+  color: rgba(0,0,0,0.6) !important;
+}
+
+/* Scroll hint invert */
+body.whitepaper-invert .whitepaper .scroll-hint span {
+  color: rgba(0,0,0,0.35) !important;
+}
+body.whitepaper-invert .whitepaper .scroll-line {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent) !important;
+}
+/* In inverted mode: highlighted nodes should NOT be black.
+   Make .hl look like normal nodes (white bg + dark text). */
+body.whitepaper-invert .whitepaper .node-box.hl {
+  background: rgba(255,255,255,0.85) !important;
+  border-color: rgba(0,0,0,0.18) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08) !important;
+}
+
+body.whitepaper-invert .whitepaper .node-box.hl .node-title,
+body.whitepaper-invert .whitepaper .node-box.hl .node-sub {
+  color: rgba(0,0,0,0.9) !important;
+}
+
+/* If hl nodes had inner glow/filters, kill them */
+body.whitepaper-invert .whitepaper .node-box.hl * {
+  text-shadow: none !important;
+  -webkit-text-fill-color: currentColor !important;
+}

@@ -298,3 +298,61 @@ nav {
   font-size: 0.7rem;
   line-height: 1.7;
 }
+
+/* =========================
+   Whitepaper inverted theme
+   ========================= */
+
+body.whitepaper-invert {
+  --bg: #ffffff;
+  --card: rgba(255,255,255,0.8);
+  --border: rgba(0,0,0,0.10);
+  --text: #000000;
+  --muted: rgba(0,0,0,0.55);
+  --subtle: rgba(0,0,0,0.35);
+}
+
+/* background becomes white */
+body.whitepaper-invert {
+  background: var(--bg);
+  color: var(--text);
+}
+
+/* NAV inversion while keeping blur */
+body.whitepaper-invert nav {
+  background: rgba(255,255,255,0.82);
+  border-bottom: 1px solid rgba(0,0,0,0.10);
+}
+body.whitepaper-invert .nav-logo { color: #000; }
+body.whitepaper-invert .nav-links a { color: rgba(0,0,0,0.55); }
+body.whitepaper-invert .nav-links a:hover { color: #000; }
+body.whitepaper-invert .nav-pill {
+  color: #000;
+  border: 1px solid rgba(0,0,0,0.14);
+  background: rgba(255,255,255,0.55);
+}
+body.whitepaper-invert .nav-pill:hover { border-color: rgba(0,0,0,0.28); }
+
+/* Buttons invert */
+body.whitepaper-invert .btn-primary {
+  background: #000;
+  color: #fff;
+}
+body.whitepaper-invert .btn-outline {
+  color: #000;
+  border: 1px solid rgba(0,0,0,0.28);
+}
+body.whitepaper-invert .btn-outline:hover {
+  border-color: rgba(0,0,0,0.55);
+}
+
+/* Scroll hint invert */
+body.whitepaper-invert .scroll-hint span {
+  color: rgba(0,0,0,0.35);
+}
+body.whitepaper-invert .scroll-line {
+  background: linear-gradient(to bottom, rgba(0,0,0,0.35), transparent);
+}
+
+:root { --star-rgb: 255,255,255; }           /* default: white stars */
+body.whitepaper-invert { --star-rgb: 0,0,0; } /* on whitepaper: black stars */

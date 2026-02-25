@@ -28,6 +28,11 @@ export default function StarsBackground() {
     let raf = 0;
     let frame = 0;
 
+    const getStarColor = () => {
+      const v = getComputedStyle(document.body).getPropertyValue("--star-rgb").trim();
+      return v || "255,255,255";
+    };
+
     const resize = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
@@ -36,16 +41,12 @@ export default function StarsBackground() {
       canvas.height = Math.floor(h * dpr);
       canvas.style.width = `${w}px`;
       canvas.style.height = `${h}px`;
-
-      // Draw in CSS pixels
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     };
 
     const initStars = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
-
-      // Adaptive density (looks like your whitepaper feel)
       const count = Math.max(180, Math.floor((w * h) / 9000));
       stars = [];
 
@@ -65,6 +66,7 @@ export default function StarsBackground() {
     const draw = () => {
       const w = window.innerWidth;
       const h = window.innerHeight;
+      const starRGB = getStarColor();
 
       ctx.clearRect(0, 0, w, h);
       frame++;
@@ -73,9 +75,7 @@ export default function StarsBackground() {
         const twinkle = Math.sin(frame * s.twinkleSpeed + s.twinklePhase) * 0.14;
         const alpha = Math.max(0, Math.min(1, s.baseOpacity + twinkle));
 
-        // drift upward
         s.y -= s.driftSpeed;
-
         if (s.y < -2) {
           s.y = h + 2;
           s.x = Math.random() * w;
@@ -83,7 +83,7 @@ export default function StarsBackground() {
 
         ctx.beginPath();
         ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(255,255,255,${alpha})`;
+        ctx.fillStyle = `rgba(${starRGB},${alpha})`;
         ctx.fill();
       }
 

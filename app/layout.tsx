@@ -1,6 +1,7 @@
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import StarsBackground from "./components/StarsBackground";
+import ThemeRouteClass from "./components/ThemeRouteClass";
 
 export const metadata = {
   title: "Crewboard",
@@ -17,9 +18,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
-        {/* ✅ ONE global canvas for all routes */}
+        <ThemeRouteClass />
         <StarsBackground />
-
         <Navbar />
         {children}
       </body>
