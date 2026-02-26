@@ -454,3 +454,149 @@ body.whitepaper-invert { --star-rgb: 0,0,0; } /* on whitepaper: black stars */
   position: relative;
   z-index: 1;
 }
+
+.auth-wrap{
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 16px;
+}
+
+.auth-card{
+  width: 100%;
+  max-width: 560px;
+  padding: 34px 28px;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.40);
+  backdrop-filter: blur(14px);
+}
+
+.auth-title{
+  margin: 10px 0 8px;
+}
+
+.auth-sub{
+  max-width: 46ch;
+  line-height: 1.5;
+  opacity: .85;
+  margin: 0 0 18px;
+}
+
+.auth-btn{
+  width: 100%;
+}
+
+.auth-error{
+  margin-top: 14px;
+  color: #ff6b6b;
+}
+/* Make primary buttons consistent everywhere */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  cursor: pointer;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 12px;
+  transition: transform 0.08s ease, opacity 0.2s ease;
+}
+
+.btn-primary:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Fix CONTINUE WITH X sizing */
+.auth-btn {
+  width: 100%;
+  max-width: 420px;   /* keeps it clean on large screens */
+  height: 54px;       /* consistent height */
+  padding: 0 22px;
+  margin-top: 18px;
+  font-size: 12px;
+}
+
+/* Optional: secondary button (for dashboard actions) */
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 54px;
+  padding: 0 22px;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255,255,255,0.06);
+  color: white;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Dashboard profile row */
+.dash-profile {
+  margin-top: 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.04);
+}
+
+.dash-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+}
+
+.dash-avatar-img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+}
+
+.dash-avatar-fallback {
+  width: 100%;
+  height: 100%;
+  background: rgba(255,255,255,0.08);
+}
+
+.dash-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.dash-name {
+  font-size: 18px;
+  font-weight: 800;
+}
+
+.dash-sub {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Dashboard buttons row */
+.dash-actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.dash-actions .btn-primary,
+.dash-actions .btn-secondary {
+  flex: 1;
+  min-width: 180px;
+}

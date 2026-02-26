@@ -1,24 +1,19 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+export default auth((req) => {
+  const isLoggedIn = !!req.auth;
+  const isDashboard = req.nextUrl.pathname.startsWith("/dashboard");
 
-  // Always allow auth callback + public pages
-  if (
-    pathname.startsWith("/auth/callback") ||
-    pathname.startsWith("/login") ||
-    pathname.startsWith("/_next") ||
-    pathname.startsWith("/api") ||
-    pathname.startsWith("/public") ||
-    pathname === "/"
-  ) {
-    return NextResponse.next();
+  if (isDashboard && !isLoggedIn) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/login";
+    return NextResponse.redirect(url);
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/dashboard/:path*"],
 };
