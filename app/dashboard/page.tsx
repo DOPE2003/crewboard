@@ -1,55 +1,56 @@
-// app/dashboard/page.tsx
-import Image from "next/image";
-import { redirect } from "next/navigation";
 import { auth } from "@/auth";
-import LogoutButton from "@/app/components/LogoutButton";
+import { redirect } from "next/navigation";
 
 export default async function DashboardPage() {
   const session = await auth();
 
-  if (!session) redirect("/login");
-
-  const user = session.user;
+  if (!session?.user) redirect("/login");
 
   return (
     <main className="page">
       <section className="auth-wrap">
-        <div className="auth-card">
-          <div className="auth-kicker">— DASHBOARD</div>
+        <div className="auth-card" style={{ maxWidth: 720, width: "100%" }}>
+          <div className="auth-kicker">— CREWBOARD</div>
+          <h1 className="auth-title" style={{ marginBottom: 10 }}>
+            Dashboard
+          </h1>
 
-          <h1 className="auth-title">Dashboard</h1>
-
-          <p className="auth-sub">
-            You’re logged in with X. This profile will be shown publicly on Crewboard.
+          <p className="auth-sub" style={{ marginBottom: 24 }}>
+            Logged in as <strong>{session.user.name ?? "User"}</strong>
           </p>
 
-          <div className="dash-profile">
-            <div className="dash-avatar">
-              {user?.image ? (
-                <Image
-                  src={user.image}
-                  alt="Profile image"
-                  width={56}
-                  height={56}
-                  className="dash-avatar-img"
-                />
-              ) : (
-                <div className="dash-avatar-fallback" />
-              )}
+          <div
+            style={{
+              display: "flex",
+              gap: 16,
+              alignItems: "center",
+              padding: 16,
+              borderRadius: 16,
+              border: "1px solid rgba(255,255,255,0.10)",
+              background: "rgba(255,255,255,0.03)",
+            }}
+          >
+            {/* Use normal img to avoid next/image host config headaches */}
+            {session.user.image ? (
+              <img
+                src={session.user.image}
+                alt="avatar"
+                width={44}
+                height={44}
+                style={{ borderRadius: 999, opacity: 0.95 }}
+              />
+            ) : (
+              <div style={{ width: 44, height: 44, borderRadius: 999, background: "rgba(255,255,255,0.08)" }} />
+            )}
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+              <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>
+                {session.user.name ?? "User"}
+              </div>
+              <div className="muted" style={{ fontSize: 13 }}>
+                Session active — refresh the page, you should stay logged in.
+              </div>
             </div>
-
-            <div className="dash-meta">
-              <div className="dash-name">{user?.name ?? "Unknown"}</div>
-              <div className="dash-sub">Authenticated via X</div>
-            </div>
-          </div>
-
-          <div className="dash-actions">
-            <a className="btn-secondary" href="/">
-              Back to Home
-            </a>
-
-            <LogoutButton />
           </div>
         </div>
       </section>
