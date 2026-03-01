@@ -35,7 +35,7 @@ export default function HomePage() {
           style={{
             fontFamily: "Rajdhani, sans-serif",
             fontWeight: 700,
-            fontSize: "clamp(4rem, 10vw, 6.5rem)",
+            fontSize: "clamp(2.5rem, 9vw, 6.5rem)",
             letterSpacing: "0.08em",
             lineHeight: 1,
             marginBottom: "1.2rem",
