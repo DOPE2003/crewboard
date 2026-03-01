@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../lib/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id              String   @id @default(cuid())
+  twitterId       String   @unique
+  twitterHandle   String   @unique
+  name            String?
+  image           String?
+  role            String?
+  skills          String[]
+  bio             String?
+  availability    String?
+  profileComplete Boolean  @default(false)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
+model Project {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  ownerId     String
+  stack       String[]
+  rolesNeeded String[]
+  status      String   @default("open")
+  createdAt   DateTime @default(now())
+}

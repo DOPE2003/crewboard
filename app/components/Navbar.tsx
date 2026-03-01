@@ -1,10 +1,9 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
+import { auth } from "@/auth";
 
 export default async function Navbar() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.getUser();
-  const user = data.user;
+  const session = await auth();
+  const user = session?.user;
 
   return (
     <nav>

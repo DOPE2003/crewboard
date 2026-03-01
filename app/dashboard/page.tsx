@@ -1,57 +1,91 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import Link from "next/link";
+import LogoutButton from "@/app/components/LogoutButton";
+import db from "@/lib/db";
 
 export default async function DashboardPage() {
   const session = await auth();
+  if (!session?.user?.userId) redirect("/login");
 
-  if (!session?.user) redirect("/login");
+  const dbUser = await db.user.findUnique({
+    where: { id: session.user.userId },
+  });
+
+  if (!dbUser) redirect("/login");
 
   return (
     <main className="page">
       <section className="auth-wrap">
         <div className="auth-card" style={{ maxWidth: 720, width: "100%" }}>
+
+          <div className="dash-badge">
+            <span className="dash-badge-dot" />
+            Early Access
+          </div>
+
           <div className="auth-kicker">— CREWBOARD</div>
-          <h1 className="auth-title" style={{ marginBottom: 10 }}>
-            Dashboard
-          </h1>
+          <h1 className="auth-title">Dashboard</h1>
 
-          <p className="auth-sub" style={{ marginBottom: 24 }}>
-            Logged in as <strong>{session.user.name ?? "User"}</strong>
-          </p>
-
-          <div
-            style={{
-              display: "flex",
-              gap: 16,
-              alignItems: "center",
-              padding: 16,
-              borderRadius: 16,
-              border: "1px solid rgba(255,255,255,0.10)",
-              background: "rgba(255,255,255,0.03)",
-            }}
-          >
-            {/* Use normal img to avoid next/image host config headaches */}
-            {session.user.image ? (
-              <img
-                src={session.user.image}
-                alt="avatar"
-                width={44}
-                height={44}
-                style={{ borderRadius: 999, opacity: 0.95 }}
-              />
-            ) : (
-              <div style={{ width: 44, height: 44, borderRadius: 999, background: "rgba(255,255,255,0.08)" }} />
+          {/* Profile row */}
+          <div className="dash-profile">
+            <div className="dash-avatar">
+              {dbUser.image ? (
+                <img className="dash-avatar-img" src={dbUser.image} alt="avatar" />
+              ) : (
+                <div className="dash-avatar-fallback" />
+              )}
+            </div>
+            <div className="dash-meta">
+              <div className="dash-name">{dbUser.name ?? "User"}</div>
+              <div className="dash-handle">@{dbUser.twitterHandle}</div>
+              <div className="dash-sub">Verified via X · Session active</div>
+            </div>
+            {dbUser.role && (
+              <div className="dash-role-badge">{dbUser.role}</div>
             )}
+          </div>
 
-            <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
-              <div style={{ fontWeight: 700, letterSpacing: 0.2 }}>
-                {session.user.name ?? "User"}
-              </div>
-              <div className="muted" style={{ fontSize: 13 }}>
-                Session active — refresh the page, you should stay logged in.
-              </div>
+          {dbUser.bio && (
+            <p className="dash-bio">{dbUser.bio}</p>
+          )}
+
+          {dbUser.skills.length > 0 && (
+            <div className="dash-skills">
+              {dbUser.skills.map((s: string) => (
+                <span key={s} className="dash-skill-chip">{s}</span>
+              ))}
+            </div>
+          )}
+
+          {/* Stats */}
+          <div className="dash-stats">
+            <div className="dash-stat">
+              <div className="dash-stat-value">—</div>
+              <div className="dash-stat-label">Reputation</div>
+            </div>
+            <div className="dash-stat">
+              <div className="dash-stat-value">0</div>
+              <div className="dash-stat-label">Projects</div>
+            </div>
+            <div className="dash-stat">
+              <div className="dash-stat-value">0</div>
+              <div className="dash-stat-label">Crew</div>
             </div>
           </div>
+
+          <div className="dash-divider" />
+
+          <div className="dash-section-label">Quick Actions</div>
+          <div className="dash-actions">
+            <Link href="/talent" className="btn-secondary">Explore Talent</Link>
+            <Link href="/projects" className="btn-secondary">Browse Projects</Link>
+            <Link href={`/u/${dbUser.twitterHandle}`} className="btn-secondary">My Profile</Link>
+          </div>
+
+          <div className="dash-divider" />
+
+          <LogoutButton />
         </div>
       </section>
     </main>
