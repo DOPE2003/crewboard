@@ -129,7 +129,7 @@ nav {
   align-items: center;
   gap: 0.6rem;
   opacity: 0;
-  animation: fadeUp 1s 1.5s forwards;
+  animation: fadeUpHint 1s 1.5s forwards;
 }
 .scroll-hint span {
   font-family: 'Space Mono', monospace;
@@ -149,6 +149,10 @@ nav {
   100% { opacity: 0; transform: scaleY(1); transform-origin: bottom; }
 }
 @keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeUpHint {
   from { opacity: 0; transform: translate(-50%, 18px); }
   to { opacity: 1; transform: translate(-50%, 0); }
 }
