@@ -13,4 +13,12 @@ export const authConfig = {
   session: { strategy: "jwt" as const },
   pages: { signIn: "/login" },
   trustHost: true,
+  callbacks: {
+    // Map token fields into the session so the proxy can read profileComplete.
+    // No DB calls here — Edge-safe.
+    session({ session, token }) {
+      session.user.profileComplete = token.profileComplete as boolean | undefined;
+      return session;
+    },
+  },
 } satisfies NextAuthConfig;

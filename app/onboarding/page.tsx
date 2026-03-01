@@ -63,18 +63,24 @@ export default function OnboardingPage() {
     setLoading(true);
     setError("");
 
-    const res = await fetch("/api/onboarding", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role, skills, bio, availability }),
-    });
+    try {
+      const res = await fetch("/api/onboarding", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ role, skills, bio, availability }),
+      });
 
-    if (res.ok) {
-      await update(); // Refreshes JWT so profileComplete: true reaches the middleware
-      router.push("/dashboard");
-    } else {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Something went wrong. Try again.");
+      if (res.ok) {
+        // Pass profileComplete directly so the jwt callback doesn't need a DB round-trip.
+        await update({ profileComplete: true });
+        router.push("/dashboard");
+      } else {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Something went wrong. Try again.");
+        setLoading(false);
+      }
+    } catch {
+      setError("Network error. Please try again.");
       setLoading(false);
     }
   }
@@ -95,6 +101,13 @@ export default function OnboardingPage() {
           <p className="auth-sub">
             Tell the crew who you are. This is your public identity on Crewboard.
           </p>
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: "/login" })}
+            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: 12, padding: 0, marginBottom: 8, textDecoration: "underline" }}
+          >
+            Sign out
+          </button>
 
           <form onSubmit={handleSubmit} className="ob-form">
 

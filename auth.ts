@@ -31,7 +31,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
 
-    async jwt({ token, account, profile, trigger }) {
+    async jwt({ token, account, profile, trigger, session }) {
       if (account?.provider === "twitter") {
         // First sign-in — populate token from DB
         const dbUser = await db.user.findUnique({
@@ -44,13 +44,13 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.userId = dbUser?.id;
         token.twitterHandle = dbUser?.twitterHandle || handleFromProfile;
         token.profileComplete = dbUser?.profileComplete ?? false;
-      } else if (trigger === "update" && token.sub) {
-        // Called after useSession().update() — re-fetch profileComplete from DB
-        const dbUser = await db.user.findUnique({
-          where: { twitterId: token.sub },
-          select: { profileComplete: true },
-        });
-        token.profileComplete = dbUser?.profileComplete ?? false;
+      } else if (trigger === "update") {
+        // Called after useSession().update({ profileComplete: true }) from onboarding.
+        // Accept the value passed directly to avoid a DB round-trip.
+        const passed = session as { profileComplete?: boolean } | null;
+        if (passed?.profileComplete !== undefined) {
+          token.profileComplete = passed.profileComplete;
+        }
       }
       return token;
     },
