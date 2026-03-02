@@ -52,79 +52,130 @@ export default async function HomePage() {
         padding: "2rem",
         position: "relative",
       }}>
+
+        {/* Status chip */}
         <div style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
           fontFamily: "Space Mono, monospace",
-          fontSize: "0.62rem",
-          letterSpacing: "0.35em",
-          color: "rgba(255,255,255,0.45)",
+          fontSize: "0.58rem",
+          letterSpacing: "0.28em",
+          color: "#2DD4BF",
           textTransform: "uppercase",
-          marginBottom: "1.8rem",
+          marginBottom: "2.5rem",
+          padding: "0.45rem 1rem",
+          border: "1px solid rgba(45,212,191,0.22)",
+          borderRadius: "999px",
+          background: "rgba(45,212,191,0.05)",
           opacity: 0,
-          animation: "fadeUp 0.8s 0.2s forwards",
+          animation: "fadeUp 0.6s 0.1s forwards",
         }}>
+          <span style={{
+            width: 5, height: 5, borderRadius: "50%",
+            background: "#2DD4BF",
+            display: "inline-block",
+            boxShadow: "0 0 6px rgba(45,212,191,0.8)",
+          }} />
           CREWBOARD · PLATFORM
         </div>
 
+        {/* Headline */}
         <h1 style={{
           fontFamily: "Rajdhani, sans-serif",
           fontWeight: 700,
-          fontSize: "clamp(2rem, 6.5vw, 5rem)",
-          letterSpacing: "0.03em",
-          lineHeight: 1.15,
-          marginBottom: "1.4rem",
-          textAlign: "center",
+          fontSize: "clamp(3rem, 9vw, 7.5rem)",
+          letterSpacing: "-0.01em",
+          lineHeight: 0.93,
+          marginBottom: "2rem",
+          color: "#fff",
           opacity: 0,
-          animation: "fadeUp 0.8s 0.4s forwards",
+          animation: "fadeUp 0.6s 0.25s forwards",
         }}>
-          The platform where{" "}
-          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.22em" }}>
-            <span style={{
-              position: "absolute", inset: 0,
-              background: "rgba(34,211,238,0.07)",
-              border: "1px solid rgba(34,211,238,0.28)",
-              borderRadius: "6px",
-              boxShadow: "0 0 16px rgba(34,211,238,0.08)",
-            }} />
-            <span style={{ position: "relative", color: "#67e8f9" }}>Web3 talent</span>
-          </span>
-          {" "}meets{" "}
-          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.22em" }}>
-            <span style={{
-              position: "absolute", inset: 0,
-              background: "rgba(167,139,250,0.07)",
-              border: "1px solid rgba(167,139,250,0.28)",
-              borderRadius: "6px",
-              boxShadow: "0 0 16px rgba(167,139,250,0.08)",
-            }} />
-            <span style={{ position: "relative", color: "#c4b5fd" }}>great work</span>
-          </span>
+          Where Web3 builders<br />
+          find their <span style={{ color: "#2DD4BF" }}>crew.</span>
         </h1>
 
+        {/* Subtitle */}
         <p style={{
-          color: "rgba(255,255,255,0.5)",
+          color: "rgba(255,255,255,0.38)",
+          fontSize: "1rem",
+          lineHeight: 1.85,
+          maxWidth: "26rem",
+          letterSpacing: "0.01em",
           marginBottom: "3rem",
-          maxWidth: "36rem",
-          lineHeight: 1.7,
           opacity: 0,
-          animation: "fadeUp 0.8s 0.6s forwards",
+          animation: "fadeUp 0.6s 0.4s forwards",
         }}>
-          Connecting talents. Building crews. The future of Web3 collaboration is here.
+          On-chain reputation. Escrow-secured payments.<br />
+          The professional layer Web3 has been missing.
         </p>
 
+        {/* CTAs */}
         <div style={{
           display: "flex",
-          gap: "1rem",
+          gap: "0.75rem",
           flexWrap: "wrap",
           justifyContent: "center",
           opacity: 0,
-          animation: "fadeUp 0.8s 0.8s forwards",
+          animation: "fadeUp 0.6s 0.55s forwards",
         }}>
-          <Link className="btn-primary" href="/whitepaper">Read Whitepaper</Link>
-          {isLoggedIn ? (
-            <Link className="btn-outline" href="/dashboard">Dashboard</Link>
-          ) : (
-            <Link className="btn-outline" href="/login">Login</Link>
-          )}
+          <Link className="btn-hero-primary" href={isLoggedIn ? "/dashboard" : "/login"}>
+            {isLoggedIn ? "Go to Dashboard" : "Join the Platform"}
+          </Link>
+          <Link className="btn-hero-secondary" href="/talent">
+            Browse Talent →
+          </Link>
+        </div>
+
+        {/* Thin vertical divider */}
+        <div style={{
+          width: 1,
+          height: "2.5rem",
+          background: "rgba(255,255,255,0.07)",
+          margin: "4rem auto 0",
+          opacity: 0,
+          animation: "fadeUp 0.6s 0.7s forwards",
+        }} />
+
+        {/* Stats row */}
+        <div style={{
+          display: "flex",
+          gap: "4rem",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          marginTop: "2rem",
+          opacity: 0,
+          animation: "fadeUp 0.6s 0.75s forwards",
+        }}>
+          {([
+            { value: "2,400+", label: "Builders" },
+            { value: "$48M+", label: "Distributed" },
+            { value: "50+", label: "Chains" },
+          ] as const).map((stat) => (
+            <div key={stat.label} style={{ textAlign: "center" }}>
+              <div style={{
+                fontFamily: "Rajdhani, sans-serif",
+                fontWeight: 700,
+                fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
+                color: "#2DD4BF",
+                letterSpacing: "0.01em",
+                lineHeight: 1,
+                marginBottom: "0.4rem",
+              }}>
+                {stat.value}
+              </div>
+              <div style={{
+                fontFamily: "Space Mono, monospace",
+                fontSize: "0.54rem",
+                letterSpacing: "0.22em",
+                textTransform: "uppercase",
+                color: "rgba(255,255,255,0.22)",
+              }}>
+                {stat.label}
+              </div>
+            </div>
+          ))}
         </div>
 
         <div className="scroll-hint">

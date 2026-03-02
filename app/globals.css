@@ -85,6 +85,49 @@ nav {
 body.whitepaper-invert .nav-icon-btn { color: rgba(0,0,0,0.45) !important; }
 body.whitepaper-invert .nav-icon-btn:hover { color: #000 !important; background: rgba(0,0,0,0.06) !important; }
 
+/* Hero CTA buttons */
+.btn-hero-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.75rem;
+  background: #2DD4BF;
+  color: #000;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-hero-primary:hover { background: #14b8a6; transform: translateY(-1px); }
+
+.btn-hero-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.8rem 1.75rem;
+  background: transparent;
+  color: rgba(255,255,255,0.6);
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.875rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  text-decoration: none;
+  transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+.btn-hero-secondary:hover {
+  border-color: rgba(255,255,255,0.22);
+  color: #fff;
+  background: rgba(255,255,255,0.04);
+}
+
 /* Buttons */
 .btn-primary {
   display: inline-flex;
