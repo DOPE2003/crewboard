@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
+import db from "@/lib/db";
 
 const FEATURES = [
   {
@@ -35,7 +36,11 @@ const FEATURES = [
 ];
 
 export default async function HomePage() {
-  const session = await auth();
+  const [session, builderCount, projectCount] = await Promise.all([
+    auth(),
+    db.user.count({ where: { profileComplete: true } }),
+    db.project.count(),
+  ]);
   const isLoggedIn = !!session?.user;
 
   return (
@@ -149,9 +154,9 @@ export default async function HomePage() {
           animation: "fadeUp 0.6s 0.75s forwards",
         }}>
           {([
-            { value: "2,400+", label: "Builders" },
-            { value: "$48M+", label: "Distributed" },
-            { value: "50+", label: "Chains" },
+            { value: builderCount.toString(), label: "Builders" },
+            { value: projectCount.toString(), label: "Projects" },
+            { value: "4", label: "Chains" },
           ] as const).map((stat) => (
             <div key={stat.label} style={{ textAlign: "center" }}>
               <div style={{
@@ -178,8 +183,23 @@ export default async function HomePage() {
           ))}
         </div>
 
-        <div className="scroll-hint">
-          <span>Scroll</span>
+        {/* Scroll hint — in flow, directly under stats */}
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "0.6rem",
+          marginTop: "2.5rem",
+          opacity: 0,
+          animation: "fadeUp 0.6s 0.9s forwards",
+        }}>
+          <span style={{
+            fontFamily: "Space Mono, monospace",
+            fontSize: "0.52rem",
+            letterSpacing: "0.25em",
+            color: "rgba(255,255,255,0.2)",
+            textTransform: "uppercase",
+          }}>Scroll</span>
           <div className="scroll-line" />
         </div>
       </div>
