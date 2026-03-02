@@ -62,7 +62,7 @@ export default async function HomePage() {
           opacity: 0,
           animation: "fadeUp 0.8s 0.2s forwards",
         }}>
-          Platform · 2026
+          CREWBOARD · PLATFORM
         </div>
 
         <h1 style={{
@@ -90,11 +90,11 @@ export default async function HomePage() {
           <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.2em" }}>
             <span style={{
               position: "absolute", inset: 0,
-              background: "rgba(139,92,246,0.15)",
-              border: "1px solid rgba(139,92,246,0.3)",
+              background: "rgba(251,191,36,0.12)",
+              border: "1px solid rgba(251,191,36,0.3)",
               borderRadius: "6px",
             }} />
-            <span style={{ position: "relative", color: "#c4b5fd" }}>great work</span>
+            <span style={{ position: "relative", color: "#fcd34d" }}>great work</span>
           </span>
         </h1>
 
