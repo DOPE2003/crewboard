@@ -77,24 +77,26 @@ export default async function HomePage() {
           animation: "fadeUp 0.8s 0.4s forwards",
         }}>
           The platform where{" "}
-          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.2em" }}>
+          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.22em" }}>
             <span style={{
               position: "absolute", inset: 0,
-              background: "rgba(20,184,166,0.15)",
-              border: "1px solid rgba(20,184,166,0.3)",
+              background: "rgba(34,211,238,0.07)",
+              border: "1px solid rgba(34,211,238,0.28)",
               borderRadius: "6px",
+              boxShadow: "0 0 16px rgba(34,211,238,0.08)",
             }} />
-            <span style={{ position: "relative", color: "#5eead4" }}>Web3 talent</span>
+            <span style={{ position: "relative", color: "#67e8f9" }}>Web3 talent</span>
           </span>
           {" "}meets{" "}
-          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.2em" }}>
+          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.22em" }}>
             <span style={{
               position: "absolute", inset: 0,
-              background: "rgba(251,191,36,0.12)",
-              border: "1px solid rgba(251,191,36,0.3)",
+              background: "rgba(167,139,250,0.07)",
+              border: "1px solid rgba(167,139,250,0.28)",
               borderRadius: "6px",
+              boxShadow: "0 0 16px rgba(167,139,250,0.08)",
             }} />
-            <span style={{ position: "relative", color: "#fcd34d" }}>great work</span>
+            <span style={{ position: "relative", color: "#c4b5fd" }}>great work</span>
           </span>
         </h1>
 
