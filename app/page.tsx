@@ -36,11 +36,14 @@ const FEATURES = [
 ];
 
 export default async function HomePage() {
-  const [session, builderCount, projectCount] = await Promise.all([
+  const [session, counts] = await Promise.all([
     auth(),
-    db.user.count({ where: { profileComplete: true } }),
-    db.project.count(),
+    Promise.all([
+      db.user.count({ where: { profileComplete: true } }),
+      db.project.count(),
+    ]).catch(() => [0, 0] as [number, number]),
   ]);
+  const [builderCount, projectCount] = counts as [number, number];
   const isLoggedIn = !!session?.user;
 
   return (
