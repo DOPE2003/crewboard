@@ -81,6 +81,10 @@ nav {
 }
 .nav-pill:hover { border-color: rgba(255,255,255,0.35); transform: translateY(-1px); }
 
+.nav-icon-btn:hover { color: #fff !important; background: rgba(255,255,255,0.06) !important; }
+body.whitepaper-invert .nav-icon-btn { color: rgba(0,0,0,0.45) !important; }
+body.whitepaper-invert .nav-icon-btn:hover { color: #000 !important; background: rgba(0,0,0,0.06) !important; }
+
 /* Buttons */
 .btn-primary {
   display: inline-flex;

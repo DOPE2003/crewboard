@@ -68,15 +68,34 @@ export default async function HomePage() {
         <h1 style={{
           fontFamily: "Rajdhani, sans-serif",
           fontWeight: 700,
-          fontSize: "clamp(2.5rem, 9vw, 6.5rem)",
-          letterSpacing: "0.08em",
-          lineHeight: 1,
-          marginBottom: "1.2rem",
+          fontSize: "clamp(2rem, 6.5vw, 5rem)",
+          letterSpacing: "0.03em",
+          lineHeight: 1.15,
+          marginBottom: "1.4rem",
           textAlign: "center",
           opacity: 0,
           animation: "fadeUp 0.8s 0.4s forwards",
         }}>
-          CREWBOARD
+          The platform where{" "}
+          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.2em" }}>
+            <span style={{
+              position: "absolute", inset: 0,
+              background: "rgba(20,184,166,0.15)",
+              border: "1px solid rgba(20,184,166,0.3)",
+              borderRadius: "6px",
+            }} />
+            <span style={{ position: "relative", color: "#5eead4" }}>Web3 talent</span>
+          </span>
+          {" "}meets{" "}
+          <span style={{ display: "inline-block", position: "relative", padding: "0.05em 0.2em" }}>
+            <span style={{
+              position: "absolute", inset: 0,
+              background: "rgba(139,92,246,0.15)",
+              border: "1px solid rgba(139,92,246,0.3)",
+              borderRadius: "6px",
+            }} />
+            <span style={{ position: "relative", color: "#c4b5fd" }}>great work</span>
+          </span>
         </h1>
 
         <p style={{
