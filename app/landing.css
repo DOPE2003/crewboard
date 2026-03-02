@@ -1,0 +1,130 @@
+/* ============================================
+   LANDING PAGE — custom classes
+   Scoped under .landing-page where needed
+   ============================================ */
+
+/* Neutralize whitepaper.css global section rule */
+.landing-page section {
+  max-width: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Override global nav styles on landing page */
+.landing-page nav {
+  position: sticky !important;
+  top: 0 !important;
+  background: white !important;
+  backdrop-filter: none !important;
+  border-bottom: 1px solid #f3f4f6 !important;
+  padding: 1rem 1.5rem !important;
+  display: block !important;
+}
+
+/* Override btn-primary to teal on landing page */
+.landing-page .btn-primary {
+  background: #14b8a6 !important;
+  color: white !important;
+}
+.landing-page .btn-primary:hover {
+  background: #0d9488 !important;
+  transform: translateY(-1px);
+}
+
+/* Display font */
+.font-display {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 700;
+}
+
+/* Glass card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Glow border for feature cards */
+.glow-border {
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+}
+.glow-border:hover {
+  box-shadow: 0 0 24px rgba(20, 184, 166, 0.15);
+  border-color: rgba(20, 184, 166, 0.4) !important;
+}
+
+/* Floating animation for hero cards */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes floatDelayed {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.05; }
+  50% { opacity: 0.12; }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+.animate-float-delayed { animation: floatDelayed 4s ease-in-out infinite; animation-delay: 2s; }
+.animate-pulse-glow { animation: pulseGlow 4s ease-in-out infinite; }
+
+/* Text gradient */
+.text-gradient {
+  background: linear-gradient(135deg, #14b8a6, #06b6d4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Hero text wrapper — left teal bar */
+.hero-text-wrapper {
+  position: relative;
+  display: inline-block;
+  padding: 8px 16px 8px 20px;
+}
+.hero-text-wrapper::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 90%;
+  background: linear-gradient(180deg, #14b8a6, #10b981);
+  border-radius: 3px;
+}
+
+/* Category tags */
+.category-tag {
+  transition: all 0.2s ease;
+}
+.category-tag:hover {
+  border-color: #14b8a6 !important;
+  box-shadow: 0 4px 16px rgba(20, 184, 166, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Freelancer cards */
+.freelancer-card {
+  transition: all 0.3s ease;
+}
+.freelancer-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.1);
+}
+
+/* Scrollbar hide */
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+
+/* Line clamp */
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
