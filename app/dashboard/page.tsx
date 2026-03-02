@@ -2,6 +2,7 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import LogoutButton from "@/app/components/LogoutButton";
+import EditProfileForm from "@/app/components/EditProfileForm";
 import db from "@/lib/db";
 
 export default async function DashboardPage() {
@@ -82,6 +83,15 @@ export default async function DashboardPage() {
             <Link href="/projects" className="btn-secondary">Browse Projects</Link>
             <Link href={`/u/${dbUser.twitterHandle}`} className="btn-secondary">My Profile</Link>
           </div>
+
+          <div className="dash-divider" />
+
+          <EditProfileForm
+            initialRole={dbUser.role ?? ""}
+            initialSkills={dbUser.skills}
+            initialBio={dbUser.bio ?? ""}
+            initialAvailability={dbUser.availability ?? "available"}
+          />
 
           <div className="dash-divider" />
 
