@@ -69,22 +69,16 @@ export default async function HomePage() {
           fontFamily: "Space Mono, monospace",
           fontSize: "0.58rem",
           letterSpacing: "0.28em",
-          color: "#2DD4BF",
+          color: "rgba(255,255,255,0.45)",
           textTransform: "uppercase",
           marginBottom: "2.5rem",
           padding: "0.45rem 1rem",
-          border: "1px solid rgba(45,212,191,0.22)",
+          border: "1px solid rgba(255,255,255,0.1)",
           borderRadius: "999px",
-          background: "rgba(45,212,191,0.05)",
+          background: "rgba(255,255,255,0.04)",
           opacity: 0,
           animation: "fadeUp 0.6s 0.1s forwards",
         }}>
-          <span style={{
-            width: 5, height: 5, borderRadius: "50%",
-            background: "#2DD4BF",
-            display: "inline-block",
-            boxShadow: "0 0 6px rgba(45,212,191,0.8)",
-          }} />
           CREWBOARD · PLATFORM
         </div>
 
@@ -166,7 +160,7 @@ export default async function HomePage() {
                 fontFamily: "Rajdhani, sans-serif",
                 fontWeight: 700,
                 fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
-                color: "#2DD4BF",
+                color: "#fff",
                 letterSpacing: "0.01em",
                 lineHeight: 1,
                 marginBottom: "0.4rem",
