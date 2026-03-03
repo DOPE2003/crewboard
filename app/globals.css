@@ -1218,3 +1218,57 @@ body.whitepaper-invert { --star-rgb: 0,0,0; } /* on whitepaper: black stars */
   flex-wrap: wrap;
   gap: 5px;
 }
+
+/* =========================
+   RESPONSIVE — MOBILE
+   ========================= */
+
+/* Nav */
+@media (max-width: 700px) {
+  nav { padding: 0.9rem 1.25rem; }
+  /* hide icon buttons on very small screens */
+  .nav-icon-btn { display: none !important; }
+}
+
+/* Hero section */
+.hero-h1 {
+  font-size: clamp(2.2rem, 9vw, 7.5rem);
+}
+@media (max-width: 520px) {
+  .hero-h1 { font-size: clamp(2rem, 10vw, 7.5rem) !important; line-height: 1.0 !important; }
+  .hero-stats-row { gap: 2rem !important; }
+  .hero-divider { margin-top: 2.5rem !important; }
+}
+
+/* Inner page padding */
+@media (max-width: 640px) {
+  .page { padding-top: 72px; }
+
+  /* Auth / login / onboarding / dashboard panels */
+  .auth-wrap { padding: 1.25rem 1rem 3rem; align-items: flex-start; }
+  .auth-card { padding: 1.5rem 1.1rem; border-radius: 14px; }
+
+  /* Talent directory */
+  .talent-wrap { padding: 20px 14px 60px; }
+
+  /* Dashboard: profile row — role badge drops below on small screens */
+  .dash-profile { flex-wrap: wrap; gap: 10px; }
+  .dash-role-badge { margin-left: 0; }
+
+  /* Dashboard: action buttons stack vertically */
+  .dash-actions {
+    flex-direction: column;
+  }
+  .dash-actions .btn-primary,
+  .dash-actions .btn-secondary {
+    width: 100%;
+    flex: none;
+    min-width: unset;
+  }
+}
+
+/* Single-column grids on very small screens */
+@media (max-width: 400px) {
+  .talent-grid { grid-template-columns: 1fr; }
+  .projects-grid { grid-template-columns: 1fr; }
+}

@@ -83,10 +83,9 @@ export default async function HomePage() {
         </div>
 
         {/* Headline */}
-        <h1 style={{
+        <h1 className="hero-h1" style={{
           fontFamily: "Rajdhani, sans-serif",
           fontWeight: 700,
-          fontSize: "clamp(3rem, 9vw, 7.5rem)",
           letterSpacing: "-0.01em",
           lineHeight: 0.93,
           marginBottom: "2rem",
@@ -131,7 +130,7 @@ export default async function HomePage() {
         </div>
 
         {/* Thin vertical divider */}
-        <div style={{
+        <div className="hero-divider" style={{
           width: 1,
           height: "2.5rem",
           background: "rgba(255,255,255,0.07)",
@@ -141,7 +140,7 @@ export default async function HomePage() {
         }} />
 
         {/* Stats row */}
-        <div style={{
+        <div className="hero-stats-row" style={{
           display: "flex",
           gap: "4rem",
           flexWrap: "wrap",
