@@ -122,10 +122,10 @@ export default async function HomePage() {
           opacity: 0,
           animation: "fadeUp 0.6s 0.55s forwards",
         }}>
-          <Link className="btn-hero-primary" href={isLoggedIn ? "/dashboard" : "/login"}>
+          <Link className="btn-primary" href={isLoggedIn ? "/dashboard" : "/login"}>
             {isLoggedIn ? "Go to Dashboard" : "Join the Platform"}
           </Link>
-          <Link className="btn-hero-secondary" href="/talent">
+          <Link className="btn-outline" href="/talent">
             Browse Talent →
           </Link>
         </div>
