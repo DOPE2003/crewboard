@@ -104,7 +104,7 @@ export default function OnboardingPage() {
           <button
             type="button"
             onClick={() => signOut({ callbackUrl: "/login" })}
-            style={{ background: "none", border: "none", color: "rgba(255,255,255,0.35)", cursor: "pointer", fontSize: 12, padding: 0, marginBottom: 8, textDecoration: "underline" }}
+            style={{ background: "none", border: "none", color: "rgba(0,0,0,0.35)", cursor: "pointer", fontSize: 12, padding: 0, marginBottom: 8, textDecoration: "underline" }}
           >
             Sign out
           </button>

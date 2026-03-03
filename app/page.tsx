@@ -69,13 +69,13 @@ export default async function HomePage() {
           fontFamily: "Space Mono, monospace",
           fontSize: "0.58rem",
           letterSpacing: "0.28em",
-          color: "rgba(255,255,255,0.45)",
+          color: "rgba(0,0,0,0.45)",
           textTransform: "uppercase",
           marginBottom: "2.5rem",
           padding: "0.45rem 1rem",
-          border: "1px solid rgba(255,255,255,0.1)",
+          border: "1px solid rgba(0,0,0,0.1)",
           borderRadius: "999px",
-          background: "rgba(255,255,255,0.04)",
+          background: "rgba(0,0,0,0.04)",
           opacity: 0,
           animation: "fadeUp 0.6s 0.1s forwards",
         }}>
@@ -89,7 +89,7 @@ export default async function HomePage() {
           letterSpacing: "-0.01em",
           lineHeight: 0.93,
           marginBottom: "2rem",
-          color: "#fff",
+          color: "#000",
           opacity: 0,
           animation: "fadeUp 0.6s 0.25s forwards",
         }}>
@@ -99,7 +99,7 @@ export default async function HomePage() {
 
         {/* Subtitle */}
         <p style={{
-          color: "rgba(255,255,255,0.38)",
+          color: "rgba(0,0,0,0.55)",
           fontSize: "1rem",
           lineHeight: 1.85,
           maxWidth: "26rem",
@@ -108,8 +108,8 @@ export default async function HomePage() {
           opacity: 0,
           animation: "fadeUp 0.6s 0.4s forwards",
         }}>
-          On-chain reputation. Escrow-secured payments.<br />
-          The professional layer Web3 has been missing.
+          Connect with builders. Ship real products.<br />
+          The professional network Web3 deserves.
         </p>
 
         {/* CTAs */}
@@ -129,74 +129,65 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Thin vertical divider */}
-        <div className="hero-divider" style={{
-          width: 1,
-          height: "2.5rem",
-          background: "rgba(255,255,255,0.07)",
-          margin: "4rem auto 0",
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.7s forwards",
-        }} />
-
-        {/* Stats row */}
-        <div className="hero-stats-row" style={{
-          display: "flex",
-          gap: "4rem",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          marginTop: "2rem",
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.75s forwards",
-        }}>
-          {([
-            { value: builderCount.toString(), label: "Builders" },
-            { value: projectCount.toString(), label: "Projects" },
-            { value: "4", label: "Chains" },
-          ] as const).map((stat) => (
-            <div key={stat.label} style={{ textAlign: "center" }}>
-              <div style={{
-                fontFamily: "Rajdhani, sans-serif",
-                fontWeight: 700,
-                fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
-                color: "#fff",
-                letterSpacing: "0.01em",
-                lineHeight: 1,
-                marginBottom: "0.4rem",
-              }}>
-                {stat.value}
-              </div>
-              <div style={{
-                fontFamily: "Space Mono, monospace",
-                fontSize: "0.54rem",
-                letterSpacing: "0.22em",
-                textTransform: "uppercase",
-                color: "rgba(255,255,255,0.22)",
-              }}>
-                {stat.label}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Scroll hint — in flow, directly under stats */}
+        {/* Scroll hint + divider + stats */}
         <div style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          gap: "0.6rem",
-          marginTop: "2.5rem",
+          gap: 0,
+          marginTop: "4rem",
           opacity: 0,
-          animation: "fadeUp 0.6s 0.9s forwards",
+          animation: "fadeUp 0.6s 0.7s forwards",
         }}>
+          {/* Scroll label */}
           <span style={{
             fontFamily: "Space Mono, monospace",
             fontSize: "0.52rem",
             letterSpacing: "0.25em",
-            color: "rgba(255,255,255,0.2)",
+            color: "rgba(0,0,0,0.5)",
             textTransform: "uppercase",
+            marginBottom: "0.5rem",
           }}>Scroll</span>
-          <div className="scroll-line" />
+
+          {/* Animated scroll line */}
+          <div className="scroll-line" style={{ marginBottom: "2rem" }} />
+
+          {/* Stats row */}
+          <div className="hero-stats-row" style={{
+            display: "flex",
+            gap: "4rem",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}>
+            {([
+              { value: builderCount.toString(), label: "Builders" },
+              { value: projectCount.toString(), label: "Projects" },
+              { value: "4", label: "Chains" },
+            ] as const).map((stat) => (
+              <div key={stat.label} style={{ textAlign: "center" }}>
+                <div style={{
+                  fontFamily: "Rajdhani, sans-serif",
+                  fontWeight: 700,
+                  fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
+                  color: "#000",
+                  letterSpacing: "0.01em",
+                  lineHeight: 1,
+                  marginBottom: "0.4rem",
+                }}>
+                  {stat.value}
+                </div>
+                <div style={{
+                  fontFamily: "Space Mono, monospace",
+                  fontSize: "0.54rem",
+                  letterSpacing: "0.22em",
+                  textTransform: "uppercase",
+                  color: "rgba(0,0,0,0.4)",
+                }}>
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
@@ -209,12 +200,12 @@ export default async function HomePage() {
             fontFamily: "Rajdhani, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(2rem, 4vw, 2.8rem)",
-            color: "#fff",
+            color: "#000",
             marginBottom: "3.5rem",
             lineHeight: 1.15,
           }}>
             Built different.<br />
-            <span style={{ color: "rgba(255,255,255,0.45)", fontWeight: 400 }}>
+            <span style={{ color: "rgba(0,0,0,0.45)", fontWeight: 400 }}>
               Built for Web3.
             </span>
           </h2>
@@ -228,8 +219,8 @@ export default async function HomePage() {
               <div key={f.title} style={{
                 padding: "1.75rem",
                 borderRadius: 16,
-                border: "1px solid rgba(255,255,255,0.07)",
-                background: "rgba(255,255,255,0.03)",
+                border: "1px solid rgba(0,0,0,0.08)",
+                background: "rgba(0,0,0,0.02)",
                 transition: "border-color 0.2s, background 0.2s",
               }}>
                 <div style={{ fontSize: "1.6rem", marginBottom: "1rem", lineHeight: 1 }}>{f.icon}</div>
@@ -238,12 +229,12 @@ export default async function HomePage() {
                   fontWeight: 700,
                   fontSize: "1.05rem",
                   letterSpacing: "0.02em",
-                  color: "#fff",
+                  color: "#000",
                   marginBottom: "0.5rem",
                 }}>
                   {f.title}
                 </h3>
-                <p style={{ color: "rgba(255,255,255,0.45)", fontSize: "0.875rem", lineHeight: 1.65 }}>
+                <p style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.875rem", lineHeight: 1.65 }}>
                   {f.desc}
                 </p>
               </div>
@@ -259,8 +250,8 @@ export default async function HomePage() {
             borderRadius: 20,
             padding: "4rem 2.5rem",
             textAlign: "center",
-            border: "1px solid rgba(255,255,255,0.08)",
-            background: "rgba(255,255,255,0.03)",
+            border: "1px solid rgba(0,0,0,0.08)",
+            background: "rgba(0,0,0,0.02)",
             position: "relative",
             overflow: "hidden",
           }}>
@@ -272,7 +263,7 @@ export default async function HomePage() {
               transform: "translate(-50%,-50%)",
               width: "60%",
               height: "60%",
-              background: "radial-gradient(ellipse, rgba(20,184,166,0.12) 0%, transparent 70%)",
+              background: "radial-gradient(ellipse, rgba(20,184,166,0.08) 0%, transparent 70%)",
               pointerEvents: "none",
             }} />
 
@@ -281,13 +272,13 @@ export default async function HomePage() {
               fontFamily: "Rajdhani, sans-serif",
               fontWeight: 700,
               fontSize: "clamp(2rem, 4vw, 3rem)",
-              color: "#fff",
+              color: "#000",
               margin: "1rem 0",
             }}>
               Ready to build with the best?
             </h2>
             <p style={{
-              color: "rgba(255,255,255,0.5)",
+              color: "rgba(0,0,0,0.55)",
               fontSize: "1rem",
               lineHeight: 1.7,
               maxWidth: "32rem",

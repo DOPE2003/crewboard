@@ -23,7 +23,7 @@ export default async function Navbar() {
             <Link href="/messages" aria-label="Messages" style={{
               display: "flex", alignItems: "center", justifyContent: "center",
               width: 36, height: 36, borderRadius: 8,
-              color: "rgba(255,255,255,0.55)",
+              color: "rgba(0,0,0,0.45)",
               transition: "color 0.2s, background 0.2s",
               textDecoration: "none",
             }}
@@ -35,7 +35,7 @@ export default async function Navbar() {
             <Link href="/notifications" aria-label="Notifications" style={{
               display: "flex", alignItems: "center", justifyContent: "center",
               width: 36, height: 36, borderRadius: 8, position: "relative",
-              color: "rgba(255,255,255,0.55)",
+              color: "rgba(0,0,0,0.45)",
               transition: "color 0.2s, background 0.2s",
               textDecoration: "none",
             }}
@@ -49,7 +49,7 @@ export default async function Navbar() {
                 position: "absolute", top: 7, right: 7,
                 width: 6, height: 6, borderRadius: "50%",
                 background: "#14b8a6",
-                border: "1.5px solid #000",
+                border: "1.5px solid #fff",
               }} />
             </Link>
           </>
