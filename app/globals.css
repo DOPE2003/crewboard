@@ -1150,8 +1150,23 @@ nav {
 
 /* Nav */
 @media (max-width: 700px) {
-  nav { padding: 0.9rem 1.25rem; }
-  .nav-icon-btn { display: none !important; }
+  nav { padding: 0; }
+  .nav-search-wrap { display: none !important; }
+}
+
+/* Nav row 1 padding on mobile */
+@media (max-width: 700px) {
+  nav > div:first-child { padding: 0.75rem 1rem !important; gap: 0.5rem !important; }
+}
+
+/* Categories row on mobile — tighter */
+@media (max-width: 700px) {
+  nav > div:last-child { padding: 0 0.75rem !important; gap: 0 !important; }
+}
+
+/* Keep icons visible and white on mobile */
+@media (max-width: 700px) {
+  .nav-icon-btn { color: rgba(255,255,255,0.8) !important; }
 }
 
 /* Hero section */
@@ -1166,9 +1181,7 @@ nav {
 
 /* Inner page padding */
 @media (max-width: 640px) {
-  .page { padding-top: 72px; }
-
-  .page { padding-top: 100px; }
+  .page { padding-top: 96px; }
   .auth-wrap { padding: 1.25rem 1rem 3rem; align-items: flex-start; }
   .auth-card { padding: 1.5rem 1.1rem; border-radius: 14px; }
 

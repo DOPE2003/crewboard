@@ -46,8 +46,10 @@ export default async function Navbar() {
         {/* Right: search + icons + auth */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
 
-          {/* Search */}
-          <NavSearch />
+          {/* Search — hidden on mobile */}
+          <div className="nav-search-wrap">
+            <NavSearch />
+          </div>
 
           {/* Icons — logged in only */}
           {user && (
