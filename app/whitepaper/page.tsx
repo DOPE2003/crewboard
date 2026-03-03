@@ -4,7 +4,9 @@ export default function WhitepaperPage() {
       {/* HERO */}
       <div className="hero">
         <div className="hero-tag">Whitepaper · 2026</div>
-        <h1 className="hero-logo">CREWBOARD</h1>
+        <h1 className="hero-logo" style={{ fontWeight: 300, fontSize: "clamp(2rem, 7vw, 5rem)" }}>
+          The Protocol<br />for Web3 Talent
+        </h1>
         <p className="hero-tagline">
           Connecting talents. Building crews. The future of collaboration is here.
         </p>

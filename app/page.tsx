@@ -85,7 +85,7 @@ export default async function HomePage() {
         {/* Headline */}
         <h1 className="hero-h1" style={{
           fontFamily: "Rajdhani, sans-serif",
-          fontWeight: 700,
+          fontWeight: 300,
           letterSpacing: "-0.01em",
           lineHeight: 0.93,
           marginBottom: "2rem",
@@ -139,25 +139,13 @@ export default async function HomePage() {
           opacity: 0,
           animation: "fadeUp 0.6s 0.7s forwards",
         }}>
-          {/* Scroll label */}
-          <span style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.52rem",
-            letterSpacing: "0.25em",
-            color: "rgba(0,0,0,0.5)",
-            textTransform: "uppercase",
-            marginBottom: "0.5rem",
-          }}>Scroll</span>
-
-          {/* Animated scroll line */}
-          <div className="scroll-line" style={{ marginBottom: "2rem" }} />
-
           {/* Stats row */}
           <div className="hero-stats-row" style={{
             display: "flex",
             gap: "4rem",
             flexWrap: "wrap",
             justifyContent: "center",
+            marginBottom: "2rem",
           }}>
             {([
               { value: builderCount.toString(), label: "Builders" },
@@ -188,6 +176,19 @@ export default async function HomePage() {
               </div>
             ))}
           </div>
+
+          {/* Scroll label */}
+          <span style={{
+            fontFamily: "Space Mono, monospace",
+            fontSize: "0.52rem",
+            letterSpacing: "0.25em",
+            color: "rgba(0,0,0,0.5)",
+            textTransform: "uppercase",
+            marginBottom: "0.5rem",
+          }}>Scroll</span>
+
+          {/* Animated scroll line */}
+          <div className="scroll-line" />
         </div>
       </div>
 
@@ -422,8 +423,15 @@ export default async function HomePage() {
               letterSpacing: "0.08em",
               color: "rgba(0,0,0,0.35)",
             }}>
-              BUILT{" "}
-              <span style={{ color: "#2DD4BF", fontWeight: 700 }}>TEJO</span>
+              BUILT BY{" "}
+              <a
+                href="https://x.com/SAAD190914"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: "#2DD4BF", fontWeight: 700, textDecoration: "none" }}
+              >
+                TEJO
+              </a>
             </span>
           </div>
 

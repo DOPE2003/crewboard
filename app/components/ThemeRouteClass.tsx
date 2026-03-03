@@ -10,11 +10,11 @@ export default function ThemeRouteClass() {
     const body = document.body;
     const isWhitepaper = pathname === "/whitepaper";
 
-    if (isWhitepaper) body.classList.add("whitepaper-invert");
-    else body.classList.remove("whitepaper-invert");
+    if (isWhitepaper) body.classList.add("whitepaper-page");
+    else body.classList.remove("whitepaper-page");
 
     return () => {
-      body.classList.remove("whitepaper-invert");
+      body.classList.remove("whitepaper-page");
     };
   }, [pathname]);
 

@@ -38,25 +38,22 @@ nav {
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 100;
-  padding: 1.2rem 2.5rem;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  background: rgba(255,255,255,0.92);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border);
+  flex-direction: column;
+  background: #000;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
 }
 .nav-logo {
   font-family: 'Rajdhani', sans-serif;
   font-size: 1.4rem;
   font-weight: 700;
   text-decoration: none;
-  color: #000;
+  color: #fff;
   letter-spacing: 0.05em;
 }
 .nav-links { display: flex; gap: 2rem; list-style: none; }
 .nav-links a {
-  color: var(--muted);
+  color: #fff;
   text-decoration: none;
   font-size: 0.82rem;
   font-family: 'Rajdhani', sans-serif;
@@ -65,7 +62,7 @@ nav {
   text-transform: uppercase;
   transition: color 0.2s;
 }
-.nav-links a:hover { color: #000; }
+.nav-links a:hover { color: #fff; }
 @media (max-width: 700px) { .nav-links { display: none; } }
 
 .nav-pill {
@@ -78,13 +75,13 @@ nav {
   text-decoration: none;
   padding: 0.6rem 1rem;
   border-radius: 999px;
-  border: 1px solid rgba(0,0,0,0.14);
-  background: rgba(0,0,0,0.05);
-  transition: border-color 0.2s, transform 0.2s;
+  border: none;
+  background: #fff;
+  transition: opacity 0.2s, transform 0.2s;
 }
-.nav-pill:hover { border-color: rgba(0,0,0,0.28); transform: translateY(-1px); }
+.nav-pill:hover { opacity: 0.88; transform: translateY(-1px); }
 
-.nav-icon-btn:hover { color: #000 !important; background: rgba(0,0,0,0.06) !important; }
+.nav-icon-btn:hover { color: #fff !important; background: rgba(255,255,255,0.1) !important; }
 
 /* Hero CTA buttons */
 .btn-hero-primary {
@@ -214,7 +211,7 @@ nav {
 .page {
   position: relative;
   z-index: 1;
-  padding-top: 90px;
+  padding-top: 116px;
 }
 
 /* =========================
@@ -1159,10 +1156,10 @@ nav {
 
 /* Hero section */
 .hero-h1 {
-  font-size: clamp(2.2rem, 9vw, 7.5rem);
+  font-size: clamp(1.6rem, 4.5vw, 3.5rem);
 }
 @media (max-width: 520px) {
-  .hero-h1 { font-size: clamp(2rem, 10vw, 7.5rem) !important; line-height: 1.0 !important; }
+  .hero-h1 { font-size: clamp(1.4rem, 7vw, 3.5rem) !important; line-height: 1.05 !important; }
   .hero-stats-row { gap: 2rem !important; }
   .hero-divider { margin-top: 2.5rem !important; }
 }
@@ -1171,6 +1168,7 @@ nav {
 @media (max-width: 640px) {
   .page { padding-top: 72px; }
 
+  .page { padding-top: 100px; }
   .auth-wrap { padding: 1.25rem 1rem 3rem; align-items: flex-start; }
   .auth-card { padding: 1.5rem 1.1rem; border-radius: 14px; }
 
