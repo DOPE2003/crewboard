@@ -299,6 +299,137 @@ export default async function HomePage() {
         </div>
       </div>
 
+      {/* ── FOOTER ── */}
+      <footer style={{
+        borderTop: "1px solid rgba(0,0,0,0.08)",
+        padding: "3rem 2rem 2rem",
+        position: "relative",
+        zIndex: 1,
+      }}>
+        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+
+          {/* Top row */}
+          <div style={{
+            display: "flex",
+            alignItems: "flex-start",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "2rem",
+            marginBottom: "2.5rem",
+          }}>
+            {/* Brand */}
+            <div>
+              <div style={{
+                fontFamily: "Rajdhani, sans-serif",
+                fontWeight: 700,
+                fontSize: "1.2rem",
+                letterSpacing: "0.05em",
+                color: "#000",
+                marginBottom: "0.4rem",
+              }}>
+                CREWBOARD
+              </div>
+              <div style={{
+                fontFamily: "Space Mono, monospace",
+                fontSize: "0.62rem",
+                letterSpacing: "0.08em",
+                color: "rgba(0,0,0,0.4)",
+                maxWidth: "18rem",
+                lineHeight: 1.6,
+              }}>
+                The professional network for Web3 builders.
+              </div>
+            </div>
+
+            {/* Nav links */}
+            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+              {[
+                { label: "Talent", href: "/talent" },
+                { label: "Projects", href: "/projects" },
+                { label: "Whitepaper", href: "/whitepaper" },
+                { label: "Dashboard", href: "/dashboard" },
+              ].map((l) => (
+                <Link key={l.label} href={l.href} style={{
+                  fontFamily: "Rajdhani, sans-serif",
+                  fontWeight: 600,
+                  fontSize: "0.82rem",
+                  letterSpacing: "0.1em",
+                  textTransform: "uppercase",
+                  color: "rgba(0,0,0,0.5)",
+                  textDecoration: "none",
+                  transition: "color 0.2s",
+                }}>
+                  {l.label}
+                </Link>
+              ))}
+            </div>
+
+            {/* X / Twitter */}
+            <a
+              href="https://x.com/crewboard_"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                fontFamily: "Rajdhani, sans-serif",
+                fontWeight: 700,
+                fontSize: "0.82rem",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#000",
+                textDecoration: "none",
+                padding: "0.5rem 1rem",
+                border: "1.5px solid rgba(0,0,0,0.55)",
+                borderRadius: "999px",
+                transition: "background 0.2s",
+              }}
+            >
+              {/* X icon */}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              @crewboard_
+            </a>
+          </div>
+
+          {/* Bottom row */}
+          <div style={{
+            borderTop: "1px solid rgba(0,0,0,0.06)",
+            paddingTop: "1.5rem",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            flexWrap: "wrap",
+            gap: "1rem",
+          }}>
+            <span style={{
+              fontFamily: "Space Mono, monospace",
+              fontSize: "0.6rem",
+              letterSpacing: "0.1em",
+              color: "rgba(0,0,0,0.35)",
+            }}>
+              © 2026 Crewboard ·{" "}
+              <Link href="/terms" style={{ color: "rgba(0,0,0,0.35)", textDecoration: "none" }}>Terms</Link>
+              {" "}·{" "}
+              <Link href="/privacy" style={{ color: "rgba(0,0,0,0.35)", textDecoration: "none" }}>Privacy</Link>
+            </span>
+
+            <span style={{
+              fontFamily: "Space Mono, monospace",
+              fontSize: "0.6rem",
+              letterSpacing: "0.08em",
+              color: "rgba(0,0,0,0.35)",
+            }}>
+              BUILT{" "}
+              <span style={{ color: "#2DD4BF", fontWeight: 700 }}>TEJO</span>
+            </span>
+          </div>
+
+        </div>
+      </footer>
+
     </main>
   );
 }
