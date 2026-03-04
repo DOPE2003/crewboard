@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/auth";
 import NavSearch from "./NavSearch";
+import NavMobileMenu from "./NavMobileMenu";
 
 const CATEGORIES = [
   { label: "Smart Contracts", href: "/talent?category=smart-contracts" },
@@ -91,11 +92,14 @@ export default async function Navbar() {
           ) : (
             <Link href="/login" className="nav-pill">Login</Link>
           )}
+
+          {/* Hamburger — mobile only */}
+          <NavMobileMenu />
         </div>
       </div>
 
       {/* ── ROW 2 — Categories ── */}
-      <div style={{
+      <div className="nav-categories-row" style={{
         borderTop: "1px solid rgba(255,255,255,0.08)",
         padding: "0 2.5rem",
         display: "flex",
