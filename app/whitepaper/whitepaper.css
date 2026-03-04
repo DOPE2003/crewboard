@@ -8,6 +8,7 @@ body.whitepaper-page {
   --text: #ffffff;
   --muted: #888888;
   --subtle: #444444;
+  --star-rgb: 255,255,255;
   background: #000;
   color: #fff;
   font-family: 'Outfit', sans-serif;

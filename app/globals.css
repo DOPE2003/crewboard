@@ -1215,6 +1215,33 @@ nav {
   .nav-icon-btn { color: rgba(255,255,255,0.8) !important; }
 }
 
+/* Hero mobile search */
+.hero-mobile-search {
+  display: none;
+  align-items: center;
+  gap: 0.6rem;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 999px;
+  padding: 0.6rem 1.1rem;
+  margin-bottom: 2rem;
+  width: 100%;
+  max-width: 320px;
+}
+.hero-mobile-search input {
+  background: none;
+  border: none;
+  outline: none;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.9rem;
+  color: #000;
+  width: 100%;
+}
+.hero-mobile-search input::placeholder { color: rgba(0,0,0,0.4); }
+@media (max-width: 700px) {
+  .hero-mobile-search { display: flex; }
+}
+
 /* Hero section */
 .hero-h1 {
   font-size: clamp(1.6rem, 4.5vw, 3.5rem);

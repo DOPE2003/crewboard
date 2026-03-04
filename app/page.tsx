@@ -46,6 +46,13 @@ export default async function HomePage() {
   const [builderCount, projectCount] = counts as [number, number];
   const isLoggedIn = !!session?.user;
 
+  const topBuilders = await db.user.findMany({
+    where: { profileComplete: true },
+    orderBy: { createdAt: "desc" },
+    take: 6,
+    select: { twitterHandle: true, name: true, image: true, role: true, skills: true },
+  }).catch(() => []);
+
   return (
     <main className="page">
 
@@ -60,6 +67,20 @@ export default async function HomePage() {
         padding: "2rem",
         position: "relative",
       }}>
+
+        {/* Glow behind hero text */}
+        <div style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -55%)",
+          width: "clamp(360px, 60vw, 720px)",
+          height: "clamp(200px, 30vw, 380px)",
+          background: "radial-gradient(ellipse at center, rgba(45,212,191,0.18) 0%, rgba(20,184,166,0.10) 35%, transparent 70%)",
+          pointerEvents: "none",
+          zIndex: 0,
+          filter: "blur(18px)",
+        }} />
 
         {/* Status chip */}
         <div style={{
@@ -82,6 +103,19 @@ export default async function HomePage() {
           CREWBOARD · PLATFORM
         </div>
 
+        {/* Teal glow strip behind headline */}
+        <div style={{
+          position: "absolute",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: "70%",
+          height: "2px",
+          background: "linear-gradient(90deg, transparent 0%, #2DD4BF 30%, #14b8a6 50%, #2DD4BF 70%, transparent 100%)",
+          opacity: 0.55,
+          pointerEvents: "none",
+          zIndex: 0,
+        }} />
+
         {/* Headline */}
         <h1 className="hero-h1" style={{
           fontFamily: "Rajdhani, sans-serif",
@@ -92,6 +126,8 @@ export default async function HomePage() {
           color: "#000",
           opacity: 0,
           animation: "fadeUp 0.6s 0.25s forwards",
+          position: "relative",
+          zIndex: 1,
         }}>
           Where Web3 builders<br />
           find their <span style={{ color: "#2DD4BF" }}>crew.</span>
@@ -128,6 +164,21 @@ export default async function HomePage() {
             Browse Talent →
           </Link>
         </div>
+
+        {/* Mobile search bar — hidden on desktop */}
+        <form action="/talent" method="get" className="hero-mobile-search" style={{
+          opacity: 0,
+          animation: "fadeUp 0.6s 0.62s forwards",
+        }}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
+          </svg>
+          <input
+            name="q"
+            placeholder="Search talent..."
+            autoComplete="off"
+          />
+        </form>
 
         {/* Scroll hint + divider + stats */}
         <div style={{
@@ -191,6 +242,111 @@ export default async function HomePage() {
           <div className="scroll-line" />
         </div>
       </div>
+
+      {/* ── TOP FREELANCERS ── */}
+      {topBuilders.length > 0 && (
+        <div style={{ padding: "4rem 2rem 2rem", position: "relative", zIndex: 1 }}>
+          <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              marginBottom: "2rem",
+              flexWrap: "wrap",
+              gap: "0.75rem",
+            }}>
+              <div>
+                <div className="section-label">Most Searched</div>
+                <h2 style={{
+                  fontFamily: "Rajdhani, sans-serif",
+                  fontWeight: 700,
+                  fontSize: "clamp(1.4rem, 3vw, 2rem)",
+                  color: "#000",
+                  lineHeight: 1.1,
+                }}>
+                  Top Freelancers
+                </h2>
+              </div>
+              <Link href="/talent" style={{
+                fontFamily: "Rajdhani, sans-serif",
+                fontWeight: 700,
+                fontSize: "0.82rem",
+                letterSpacing: "0.1em",
+                textTransform: "uppercase",
+                color: "#2DD4BF",
+                textDecoration: "none",
+              }}>
+                View all →
+              </Link>
+            </div>
+
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+              gap: "1rem",
+            }}>
+              {topBuilders.map((u) => (
+                <Link key={u.twitterHandle} href={`/u/${u.twitterHandle}`} style={{ textDecoration: "none" }}>
+                  <div style={{
+                    padding: "1.25rem",
+                    borderRadius: 14,
+                    border: "1px solid rgba(0,0,0,0.08)",
+                    background: "#fff",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    textAlign: "center",
+                    gap: "0.5rem",
+                    transition: "border-color 0.2s, box-shadow 0.2s",
+                  }}>
+                    {u.image ? (
+                      /* eslint-disable-next-line @next/next/no-img-element */
+                      <img src={u.image} alt="" width={52} height={52} style={{ borderRadius: "50%", objectFit: "cover" }} />
+                    ) : (
+                      <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
+                    )}
+                    <div style={{
+                      fontFamily: "Rajdhani, sans-serif",
+                      fontWeight: 700,
+                      fontSize: "0.95rem",
+                      color: "#000",
+                      lineHeight: 1.2,
+                    }}>
+                      {u.name ?? u.twitterHandle}
+                    </div>
+                    {u.role && (
+                      <div style={{
+                        fontFamily: "Space Mono, monospace",
+                        fontSize: "0.58rem",
+                        letterSpacing: "0.1em",
+                        textTransform: "uppercase",
+                        color: "#2DD4BF",
+                        fontWeight: 600,
+                      }}>
+                        {u.role}
+                      </div>
+                    )}
+                    {u.skills.length > 0 && (
+                      <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap", justifyContent: "center" }}>
+                        {u.skills.slice(0, 3).map((s) => (
+                          <span key={s} style={{
+                            fontFamily: "Space Mono, monospace",
+                            fontSize: "0.52rem",
+                            padding: "0.2rem 0.5rem",
+                            borderRadius: 999,
+                            background: "rgba(0,0,0,0.05)",
+                            color: "rgba(0,0,0,0.55)",
+                          }}>{s}</span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── FEATURES ── */}
       <div style={{ padding: "6rem 2rem", position: "relative", zIndex: 1 }}>

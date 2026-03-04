@@ -12,12 +12,16 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // Twitter OAuth 2.0 wraps user data inside a `data` field.
         const data = (p?.data ?? p) as Record<string, unknown>;
         const handle = (data?.username as string) || "";
-        await db.user.upsert({
+        const existing = await db.user.findUnique({
+          where: { twitterId: account.providerAccountId },
+          select: { id: true },
+        });
+
+        const dbUser = await db.user.upsert({
           where: { twitterId: account.providerAccountId },
           update: {
             name: user.name ?? undefined,
             image: user.image ?? undefined,
-            // Patch any existing empty handle on every sign-in.
             ...(handle ? { twitterHandle: handle } : {}),
           },
           create: {
@@ -26,7 +30,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             name: user.name,
             image: user.image,
           },
+          select: { id: true },
         });
+
+        // Send welcome notification only on first-ever sign-up
+        if (!existing) {
+          await db.notification.create({
+            data: {
+              userId: dbUser.id,
+              type: "welcome",
+              title: "Welcome to Crewboard!",
+              body: "Your account is set up. Complete your profile to appear in the talent directory and start connecting with Web3 builders.",
+            },
+          });
+        }
       }
       return true;
     },
