@@ -26,7 +26,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Role is required." }, { status: 400 });
   }
 
-  if (bio && bio.length > 200) {
+  if (!bio || !bio.trim()) {
+    return NextResponse.json({ error: "Bio is required." }, { status: 400 });
+  }
+
+  if (bio.length > 200) {
     return NextResponse.json({ error: "Bio must be 200 characters or less." }, { status: 400 });
   }
 

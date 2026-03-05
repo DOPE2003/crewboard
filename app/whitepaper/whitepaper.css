@@ -40,6 +40,30 @@ body.whitepaper-page nav {
 }
 @media (max-width: 600px) { body.whitepaper-page .nav-links { display: none; } }
 
+/* Keep mobile drawer dark on whitepaper */
+body.whitepaper-page .nav-hamburger { color: #fff; }
+body.whitepaper-page .nav-mobile-drawer {
+  background: #111;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+body.whitepaper-page .nav-mobile-link { color: #fff; }
+body.whitepaper-page .nav-mobile-link:active { background: rgba(255,255,255,0.06); }
+body.whitepaper-page .nav-mobile-cat { color: rgba(255,255,255,0.7); }
+body.whitepaper-page .nav-mobile-divider { background: rgba(255,255,255,0.1); }
+body.whitepaper-page .nav-mobile-section-label { color: rgba(255,255,255,0.35); }
+body.whitepaper-page .nav-search-input { color: rgba(255,255,255,0.85) !important; }
+body.whitepaper-page .nav-search-input::placeholder { color: rgba(255,255,255,0.3); }
+body.whitepaper-page .nav-search-box { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.15) !important; }
+body.whitepaper-page .nav-search-box svg { stroke: rgba(255,255,255,0.4); }
+body.whitepaper-page .nav-icon-btn { color: rgba(255,255,255,0.6) !important; }
+body.whitepaper-page .nav-links a { color: rgba(255,255,255,0.65); }
+body.whitepaper-page .nav-links a:hover { color: #fff; }
+body.whitepaper-page .nav-pill { color: #fff; border-color: rgba(255,255,255,0.4); }
+body.whitepaper-page .nav-pill:hover { background: rgba(255,255,255,0.08); }
+/* Invert logo only — not avatars */
+body.whitepaper-page nav img[alt="Crewboard"] { filter: brightness(0) invert(1); }
+
 /* HERO */
 .hero {
   min-height: 100vh;
@@ -48,7 +72,7 @@ body.whitepaper-page nav {
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem;
+  padding: 7rem 2rem 3rem;
   position: relative;
 }
 .hero-tag {
@@ -431,6 +455,20 @@ body.whitepaper-page .section-label::before {
   margin: 0 auto 2.5rem;
   font-size: 1rem;
   line-height: 1.7;
+}
+
+/* =========================
+   WHITEPAPER MOBILE
+   ========================= */
+@media (max-width: 640px) {
+  .hero { padding: 5rem 1.25rem 3rem; }
+  section { padding: 3.5rem 1.25rem; }
+  .cta-section { padding: 4rem 1.25rem; }
+  .features-grid { grid-template-columns: 1fr; }
+  .model-row { grid-template-columns: 1fr; }
+  .diagram-wrap { padding: 1.5rem 1rem 1rem; overflow-x: auto; }
+  .flow { min-width: max-content; }
+  .hero-logo { font-size: clamp(2.2rem, 11vw, 5rem) !important; }
 }
 
 /* FOOTER */

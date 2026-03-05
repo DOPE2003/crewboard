@@ -3,13 +3,18 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import MarkAllRead from "./MarkAllRead";
+import AutoMarkRead from "./AutoMarkRead";
 
 export const metadata = { title: "Notifications — Crewboard" };
 
 const TYPE_ICON: Record<string, string> = {
-  welcome: "👋",
-  system:  "🔔",
-  message: "💬",
+  welcome:       "👋",
+  signin:        "✦",
+  system:        "🔔",
+  message:       "💬",
+  profile_view:  "👁",
+  project_apply: "📋",
+  project_invite:"🚀",
 };
 
 export default async function NotificationsPage() {
@@ -25,6 +30,8 @@ export default async function NotificationsPage() {
 
   return (
     <main className="page" style={{ minHeight: "100vh" }}>
+      {/* Silently marks all unread as read after page renders */}
+      {unreadCount > 0 && <AutoMarkRead userId={session.user.userId} />}
       <div style={{ maxWidth: "680px", margin: "0 auto", padding: "3rem 1.5rem 6rem" }}>
 
         {/* Header */}

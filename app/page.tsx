@@ -36,21 +36,14 @@ const FEATURES = [
 ];
 
 export default async function HomePage() {
-  const [session, counts] = await Promise.all([
-    auth(),
-    Promise.all([
-      db.user.count({ where: { profileComplete: true } }),
-      db.project.count(),
-    ]).catch(() => [0, 0] as [number, number]),
-  ]);
-  const [builderCount, projectCount] = counts as [number, number];
+  const session = await auth();
   const isLoggedIn = !!session?.user;
 
   const topBuilders = await db.user.findMany({
     where: { profileComplete: true },
     orderBy: { createdAt: "desc" },
     take: 6,
-    select: { twitterHandle: true, name: true, image: true, role: true, skills: true },
+    select: { twitterHandle: true, name: true, image: true, role: true, skills: true, bio: true },
   }).catch(() => []);
 
   return (
@@ -58,28 +51,29 @@ export default async function HomePage() {
 
       {/* ── HERO ── */}
       <div style={{
-        minHeight: "calc(100vh - 90px)",
+        minHeight: "88vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        justifyContent: "center",
+        justifyContent: "flex-start",
         textAlign: "center",
-        padding: "2rem",
+        padding: "5rem 2rem 4rem",
         position: "relative",
-      }}>
+        overflow: "hidden",
+      }} className="landing-hero">
 
-        {/* Glow behind hero text */}
+        {/* Glow — centered behind headline */}
         <div style={{
           position: "absolute",
-          top: "50%",
+          top: "12%",
           left: "50%",
-          transform: "translate(-50%, -55%)",
-          width: "clamp(360px, 60vw, 720px)",
-          height: "clamp(200px, 30vw, 380px)",
-          background: "radial-gradient(ellipse at center, rgba(45,212,191,0.18) 0%, rgba(20,184,166,0.10) 35%, transparent 70%)",
+          transform: "translateX(-50%)",
+          width: "clamp(360px, 65vw, 760px)",
+          height: "clamp(180px, 32vw, 380px)",
+          background: "radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.28) 0%, rgba(20,184,166,0.12) 50%, transparent 75%)",
+          filter: "blur(28px)",
           pointerEvents: "none",
           zIndex: 0,
-          filter: "blur(18px)",
         }} />
 
         {/* Status chip */}
@@ -92,7 +86,7 @@ export default async function HomePage() {
           letterSpacing: "0.28em",
           color: "rgba(0,0,0,0.45)",
           textTransform: "uppercase",
-          marginBottom: "2.5rem",
+          marginBottom: "2rem",
           padding: "0.45rem 1rem",
           border: "1px solid rgba(0,0,0,0.1)",
           borderRadius: "999px",
@@ -100,21 +94,8 @@ export default async function HomePage() {
           opacity: 0,
           animation: "fadeUp 0.6s 0.1s forwards",
         }}>
-          CREWBOARD · PLATFORM
+          ✦ Now in Beta
         </div>
-
-        {/* Teal glow strip behind headline */}
-        <div style={{
-          position: "absolute",
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: "70%",
-          height: "2px",
-          background: "linear-gradient(90deg, transparent 0%, #2DD4BF 30%, #14b8a6 50%, #2DD4BF 70%, transparent 100%)",
-          opacity: 0.55,
-          pointerEvents: "none",
-          zIndex: 0,
-        }} />
 
         {/* Headline */}
         <h1 className="hero-h1" style={{
@@ -122,7 +103,7 @@ export default async function HomePage() {
           fontWeight: 300,
           letterSpacing: "-0.01em",
           lineHeight: 0.93,
-          marginBottom: "2rem",
+          marginBottom: "1.5rem",
           color: "#000",
           opacity: 0,
           animation: "fadeUp 0.6s 0.25s forwards",
@@ -133,37 +114,87 @@ export default async function HomePage() {
           find their <span style={{ color: "#2DD4BF" }}>crew.</span>
         </h1>
 
+        {/* Small sign-in button */}
+        {!isLoggedIn && (
+          <Link href="/login" style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.55rem",
+            fontFamily: "Rajdhani, sans-serif",
+            fontWeight: 700,
+            fontSize: "0.82rem",
+            letterSpacing: "0.14em",
+            textTransform: "uppercase",
+            color: "#fff",
+            textDecoration: "none",
+            padding: "0.7rem 1.75rem",
+            borderRadius: "999px",
+            border: "1.5px solid #000",
+            background: "#000",
+            marginBottom: "2.5rem",
+            opacity: 0,
+            animation: "fadeUp 0.6s 0.38s forwards",
+            position: "relative",
+            zIndex: 1,
+            transition: "background 0.18s, border-color 0.18s, color 0.18s",
+          }}>
+            {/* X icon */}
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
+            Sign in with X
+          </Link>
+        )}
+        {isLoggedIn && (
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            marginBottom: "2.5rem",
+            opacity: 0,
+            animation: "fadeUp 0.6s 0.38s forwards",
+            position: "relative",
+            zIndex: 1,
+          }}>
+            <span style={{
+              fontFamily: "Space Mono, monospace",
+              fontSize: "0.62rem",
+              letterSpacing: "0.18em",
+              textTransform: "uppercase",
+              color: "rgba(0,0,0,0.4)",
+            }}>
+              Welcome back,
+            </span>
+            <span style={{
+              fontFamily: "Rajdhani, sans-serif",
+              fontWeight: 700,
+              fontSize: "0.82rem",
+              letterSpacing: "0.1em",
+              textTransform: "uppercase",
+              color: "#000",
+            }}>
+              {session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder"}
+            </span>
+          </div>
+        )}
+
+
         {/* Subtitle */}
         <p style={{
-          color: "rgba(0,0,0,0.55)",
-          fontSize: "1rem",
+          color: "rgba(0,0,0,0.5)",
+          fontSize: "0.88rem",
           lineHeight: 1.85,
-          maxWidth: "26rem",
+          maxWidth: "22rem",
           letterSpacing: "0.01em",
           marginBottom: "3rem",
           opacity: 0,
-          animation: "fadeUp 0.6s 0.4s forwards",
+          animation: "fadeUp 0.6s 0.58s forwards",
+          position: "relative",
+          zIndex: 1,
         }}>
           Connect with builders. Ship real products.<br />
           The professional network Web3 deserves.
         </p>
-
-        {/* CTAs */}
-        <div style={{
-          display: "flex",
-          gap: "0.75rem",
-          flexWrap: "wrap",
-          justifyContent: "center",
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.55s forwards",
-        }}>
-          <Link className="btn-primary" href={isLoggedIn ? "/dashboard" : "/login"}>
-            {isLoggedIn ? "Go to Dashboard" : "Join the Platform"}
-          </Link>
-          <Link className="btn-outline" href="/talent">
-            Browse Talent →
-          </Link>
-        </div>
 
         {/* Mobile search bar — hidden on desktop */}
         <form action="/talent" method="get" className="hero-mobile-search" style={{
@@ -180,55 +211,27 @@ export default async function HomePage() {
           />
         </form>
 
-        {/* Scroll hint + divider + stats */}
+        {/* Stats + scroll */}
         <div style={{
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           gap: 0,
-          marginTop: "4rem",
           opacity: 0,
           animation: "fadeUp 0.6s 0.7s forwards",
+          position: "relative",
+          zIndex: 1,
         }}>
-          {/* Stats row */}
-          <div className="hero-stats-row" style={{
-            display: "flex",
-            gap: "4rem",
-            flexWrap: "wrap",
-            justifyContent: "center",
+          <p style={{
+            fontFamily: "Space Mono, monospace",
+            fontSize: "0.6rem",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "rgba(0,0,0,0.38)",
             marginBottom: "2rem",
           }}>
-            {([
-              { value: builderCount.toString(), label: "Builders" },
-              { value: projectCount.toString(), label: "Projects" },
-              { value: "4", label: "Chains" },
-            ] as const).map((stat) => (
-              <div key={stat.label} style={{ textAlign: "center" }}>
-                <div style={{
-                  fontFamily: "Rajdhani, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(1.5rem, 2.5vw, 2rem)",
-                  color: "#000",
-                  letterSpacing: "0.01em",
-                  lineHeight: 1,
-                  marginBottom: "0.4rem",
-                }}>
-                  {stat.value}
-                </div>
-                <div style={{
-                  fontFamily: "Space Mono, monospace",
-                  fontSize: "0.54rem",
-                  letterSpacing: "0.22em",
-                  textTransform: "uppercase",
-                  color: "rgba(0,0,0,0.4)",
-                }}>
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Scroll label */}
+            The first Web3-native builder network
+          </p>
           <span style={{
             fontFamily: "Space Mono, monospace",
             fontSize: "0.52rem",
@@ -237,8 +240,6 @@ export default async function HomePage() {
             textTransform: "uppercase",
             marginBottom: "0.5rem",
           }}>Scroll</span>
-
-          {/* Animated scroll line */}
           <div className="scroll-line" />
         </div>
       </div>
@@ -326,6 +327,21 @@ export default async function HomePage() {
                         {u.role}
                       </div>
                     )}
+                    {u.bio && (
+                      <p style={{
+                        fontFamily: "Outfit, sans-serif",
+                        fontSize: "0.75rem",
+                        color: "rgba(0,0,0,0.5)",
+                        lineHeight: 1.55,
+                        margin: "0.1rem 0",
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}>
+                        {u.bio}
+                      </p>
+                    )}
                     {u.skills.length > 0 && (
                       <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap", justifyContent: "center" }}>
                         {u.skills.slice(0, 3).map((s) => (
@@ -347,6 +363,126 @@ export default async function HomePage() {
           </div>
         </div>
       )}
+
+      {/* ── HOW IT WORKS ── */}
+      <div style={{ padding: "5rem 2rem", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+          <div className="section-label">Simple Process</div>
+          <h2 style={{
+            fontFamily: "Rajdhani, sans-serif",
+            fontWeight: 700,
+            fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
+            color: "#000",
+            marginBottom: "0.75rem",
+            lineHeight: 1.15,
+          }}>
+            How it works
+          </h2>
+          <p style={{
+            color: "rgba(0,0,0,0.5)",
+            fontSize: "0.9rem",
+            lineHeight: 1.7,
+            maxWidth: "36rem",
+            marginBottom: "3rem",
+          }}>
+            From signing up to shipping your first project — here's the full journey on Crewboard.
+          </p>
+
+          <div style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            gap: "1.25rem",
+          }}>
+            {[
+              {
+                step: "01",
+                title: "Connect your X account",
+                desc: "Sign in with Twitter/X in one click. No forms, no passwords — your Web3 identity starts here.",
+                tag: "Sign up",
+              },
+              {
+                step: "02",
+                title: "Build your profile",
+                desc: "Choose your role, add your skills, and write a short bio. Your profile is your on-chain resume.",
+                tag: "Identity",
+              },
+              {
+                step: "03",
+                title: "Browse the talent pool",
+                desc: "Search and filter builders by role, skill, chain, and availability. Find exactly who you need.",
+                tag: "Discover",
+              },
+              {
+                step: "04",
+                title: "Post or join a project",
+                desc: "Founders post projects with roles needed. Builders apply directly — no middlemen, no agencies.",
+                tag: "Collaborate",
+              },
+              {
+                step: "05",
+                title: "Communicate in-platform",
+                desc: "All coordination happens inside Crewboard. No DMs scattered across Discord, Telegram, or X.",
+                tag: "Communicate",
+              },
+              {
+                step: "06",
+                title: "Ship & build reputation",
+                desc: "Completed work builds your track record. Every project adds to your verifiable on-chain history.",
+                tag: "Grow",
+              },
+            ].map((item) => (
+              <div key={item.step} style={{
+                padding: "1.75rem",
+                borderRadius: 16,
+                border: "1px solid rgba(0,0,0,0.08)",
+                background: "rgba(0,0,0,0.015)",
+                position: "relative",
+                display: "flex",
+                flexDirection: "column",
+                gap: "0.5rem",
+              }}>
+                {/* Step number + tag row */}
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }}>
+                  <div style={{
+                    fontFamily: "Space Mono, monospace",
+                    fontSize: "0.6rem",
+                    letterSpacing: "0.22em",
+                    color: "#2DD4BF",
+                    fontWeight: 700,
+                  }}>
+                    {item.step}
+                  </div>
+                  <span style={{
+                    fontFamily: "Space Mono, monospace",
+                    fontSize: "0.5rem",
+                    letterSpacing: "0.15em",
+                    textTransform: "uppercase",
+                    color: "rgba(0,0,0,0.35)",
+                    background: "rgba(0,0,0,0.05)",
+                    padding: "0.2rem 0.55rem",
+                    borderRadius: 999,
+                  }}>
+                    {item.tag}
+                  </span>
+                </div>
+                <h3 style={{
+                  fontFamily: "Rajdhani, sans-serif",
+                  fontWeight: 700,
+                  fontSize: "1rem",
+                  letterSpacing: "0.02em",
+                  color: "#000",
+                  lineHeight: 1.2,
+                }}>
+                  {item.title}
+                </h3>
+                <p style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.83rem", lineHeight: 1.65, margin: 0 }}>
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
 
       {/* ── FEATURES ── */}
       <div style={{ padding: "6rem 2rem", position: "relative", zIndex: 1 }}>
@@ -403,7 +539,7 @@ export default async function HomePage() {
       {/* ── CTA ── */}
       <div style={{ padding: "4rem 2rem 8rem", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "56rem", margin: "0 auto" }}>
-          <div style={{
+          <div className="landing-cta-card" style={{
             borderRadius: 20,
             padding: "4rem 2.5rem",
             textAlign: "center",
@@ -424,7 +560,7 @@ export default async function HomePage() {
               pointerEvents: "none",
             }} />
 
-            <div className="section-label" style={{ justifyContent: "center" }}>Join the Crew</div>
+            <div className="section-label" style={{ width: "fit-content", margin: "0 auto" }}>Join the Crew</div>
             <h2 style={{
               fontFamily: "Rajdhani, sans-serif",
               fontWeight: 700,
@@ -466,7 +602,7 @@ export default async function HomePage() {
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           {/* Top row */}
-          <div style={{
+          <div className="landing-footer-cols" style={{
             display: "flex",
             alignItems: "flex-start",
             justifyContent: "space-between",

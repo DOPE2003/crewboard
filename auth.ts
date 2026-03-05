@@ -33,8 +33,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           select: { id: true },
         });
 
-        // Send welcome notification only on first-ever sign-up
         if (!existing) {
+          // First-ever sign-up — onboarding welcome
           await db.notification.create({
             data: {
               userId: dbUser.id,
@@ -43,6 +43,29 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               body: "Your account is set up. Complete your profile to appear in the talent directory and start connecting with Web3 builders.",
             },
           });
+        } else {
+          // Returning sign-in — welcome back (once per day max)
+          const todayStart = new Date();
+          todayStart.setHours(0, 0, 0, 0);
+          const alreadyToday = await db.notification.findFirst({
+            where: {
+              userId: dbUser.id,
+              type: "signin",
+              createdAt: { gte: todayStart },
+            },
+            select: { id: true },
+          });
+          if (!alreadyToday) {
+            const firstName = (user.name ?? handle ?? "Builder").split(" ")[0];
+            await db.notification.create({
+              data: {
+                userId: dbUser.id,
+                type: "signin",
+                title: `Welcome back, ${firstName}!`,
+                body: "Good to see you again. Check out new builders, browse open projects, and update your availability.",
+              },
+            });
+          }
         }
       }
       return true;

@@ -1,23 +1,29 @@
 import Link from "next/link";
 import Image from "next/image";
 import { auth } from "@/auth";
+import db from "@/lib/db";
 import NavSearch from "./NavSearch";
 import NavMobileMenu from "./NavMobileMenu";
+import NavProfileMenu from "./NavProfileMenu";
 
-const CATEGORIES = [
-  { label: "Smart Contracts", href: "/talent?category=smart-contracts" },
-  { label: "DeFi & Protocol",  href: "/talent?category=defi" },
-  { label: "NFT & Gaming",     href: "/talent?category=nft" },
-  { label: "Frontend",         href: "/talent?category=frontend" },
-  { label: "Design & UI",      href: "/talent?category=design" },
-  { label: "Community",        href: "/talent?category=community" },
-  { label: "Marketing",        href: "/talent?category=marketing" },
-  { label: "Research",         href: "/talent?category=research" },
-];
 
 export default async function Navbar() {
   const session = await auth();
   const user = session?.user;
+
+  // Fetch role + availability for the profile popup + unread notification count
+  let dbUser: { role: string | null; availability: string | null } | null = null;
+  let unreadCount = 0;
+  const userId = (user as any)?.userId as string | undefined;
+  if (userId) {
+    [dbUser, unreadCount] = await Promise.all([
+      db.user.findUnique({
+        where: { id: userId },
+        select: { role: true, availability: true },
+      }),
+      db.notification.count({ where: { userId, read: false } }),
+    ]);
+  }
 
   return (
     <nav style={{ flexDirection: "column", padding: 0, height: "auto" }}>
@@ -34,13 +40,16 @@ export default async function Navbar() {
 
         {/* Logo */}
         <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
-          <Image src="/logo.png" alt="Crewboard" width={120} height={40} style={{ objectFit: "contain" }} priority />
+          <Image src="/logo.png" alt="Crewboard" width={60} height={60} style={{ objectFit: "contain" }} priority />
         </Link>
 
         {/* Center links */}
         <ul className="nav-links" style={{ margin: 0 }}>
           <li><Link href="/talent">Find Talent</Link></li>
           <li><Link href="/projects">Browse Projects</Link></li>
+          <li><Link href="/jobs">Jobs</Link></li>
+          <li><Link href="/daos">DAOs</Link></li>
+          <li><Link href="/leaderboard">Leaderboard</Link></li>
           <li><Link href="/whitepaper">Whitepaper</Link></li>
         </ul>
 
@@ -58,7 +67,7 @@ export default async function Navbar() {
               <Link href="/messages" aria-label="Messages" className="nav-icon-btn" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 width: 34, height: 34, borderRadius: 8,
-                color: "rgba(255,255,255,0.55)",
+                color: "rgba(0,0,0,0.5)",
                 transition: "color 0.2s, background 0.2s",
                 textDecoration: "none",
               }}>
@@ -69,7 +78,7 @@ export default async function Navbar() {
               <Link href="/notifications" aria-label="Notifications" className="nav-icon-btn" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 width: 34, height: 34, borderRadius: 8, position: "relative",
-                color: "rgba(255,255,255,0.55)",
+                color: "rgba(0,0,0,0.5)",
                 transition: "color 0.2s, background 0.2s",
                 textDecoration: "none",
               }}>
@@ -77,54 +86,40 @@ export default async function Navbar() {
                   <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
                   <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
                 </svg>
-                <span style={{
-                  position: "absolute", top: 7, right: 7,
-                  width: 6, height: 6, borderRadius: "50%",
-                  background: "#14b8a6",
-                  border: "1.5px solid #fff",
-                }} />
+                {unreadCount > 0 && (
+                  <span style={{
+                    position: "absolute", top: 4, right: 4,
+                    minWidth: 15, height: 15, borderRadius: "999px",
+                    background: "#14b8a6",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    fontFamily: "Space Mono, monospace",
+                    fontSize: "0.48rem", fontWeight: 700,
+                    color: "#fff", lineHeight: 1,
+                    padding: "0 3px",
+                  }}>
+                    {unreadCount > 99 ? "99+" : unreadCount}
+                  </span>
+                )}
               </Link>
+
+              {/* Profile avatar with dropdown */}
+              <NavProfileMenu
+                image={user.image ?? null}
+                name={user.name ?? null}
+                twitterHandle={(user as any).twitterHandle ?? null}
+                role={dbUser?.role ?? null}
+                availability={dbUser?.availability ?? null}
+              />
             </>
           )}
 
-          {user ? (
-            <Link href="/dashboard" className="nav-pill">Dashboard</Link>
-          ) : (
+          {!user && (
             <Link href="/login" className="nav-pill">Login</Link>
           )}
 
           {/* Hamburger — mobile only */}
           <NavMobileMenu />
         </div>
-      </div>
-
-      {/* ── ROW 2 — Categories ── */}
-      <div className="nav-categories-row" style={{
-        borderTop: "1px solid rgba(255,255,255,0.08)",
-        padding: "0 2.5rem",
-        display: "flex",
-        alignItems: "center",
-        gap: "0.25rem",
-        overflowX: "auto",
-        scrollbarWidth: "none",
-      }}>
-        {CATEGORIES.map((cat) => (
-          <Link key={cat.label} href={cat.href} style={{
-            fontFamily: "Rajdhani, sans-serif",
-            fontWeight: 600,
-            fontSize: "0.78rem",
-            letterSpacing: "0.06em",
-            textTransform: "uppercase",
-            color: "#fff",
-            textDecoration: "none",
-            padding: "0.55rem 0.85rem",
-            borderRadius: "6px",
-            whiteSpace: "nowrap",
-            transition: "color 0.15s, background 0.15s",
-          }}>
-            {cat.label}
-          </Link>
-        ))}
       </div>
 
     </nav>

@@ -1,4 +1,5 @@
 import db from "@/lib/db";
+import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
@@ -20,11 +21,36 @@ export default async function PublicProfilePage({
 }) {
   const { handle } = await params;
 
-  const user = await db.user.findUnique({
-    where: { twitterHandle: handle },
-  });
+  const [user, session] = await Promise.all([
+    db.user.findUnique({ where: { twitterHandle: handle } }),
+    auth(),
+  ]);
 
   if (!user || !user.profileComplete) notFound();
+
+  // Notify profile owner when someone else views their profile (rate: once per hour)
+  const viewerId = (session?.user as any)?.userId as string | undefined;
+  if (viewerId && viewerId !== user.id) {
+    const recentView = await db.notification.findFirst({
+      where: {
+        userId: user.id,
+        type: "profile_view",
+        createdAt: { gte: new Date(Date.now() - 60 * 60 * 1000) },
+      },
+      select: { id: true },
+    });
+    if (!recentView) {
+      const viewerName = session?.user?.name ?? (session?.user as any)?.twitterHandle ?? "Someone";
+      await db.notification.create({
+        data: {
+          userId: user.id,
+          type: "profile_view",
+          title: "Someone viewed your profile",
+          body: `${viewerName} visited your profile.`,
+        },
+      });
+    }
+  }
 
   const avail = user.availability ?? "available";
 

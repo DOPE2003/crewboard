@@ -75,17 +75,17 @@ export default function NavSearch() {
   return (
     <div ref={wrapRef} style={{ position: "relative" }}>
       {/* Search box */}
-      <div style={{
+      <div className="nav-search-box" style={{
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        background: "rgba(255,255,255,0.08)",
-        border: "1px solid rgba(255,255,255,0.15)",
-        borderRadius: "8px",
-        padding: "0.45rem 0.85rem",
+        background: "rgba(0,0,0,0.04)",
+        border: "1px solid rgba(0,0,0,0.12)",
+        borderRadius: "999px",
+        padding: "0.45rem 1rem",
       }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="rgba(255,255,255,0.45)" strokeWidth="2"
+          stroke="rgba(0,0,0,0.4)" strokeWidth="2"
           strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
@@ -96,14 +96,14 @@ export default function NavSearch() {
           onFocus={() => results.length > 0 && setOpen(true)}
           placeholder="Search talent..."
           autoComplete="off"
+          className="nav-search-input"
           style={{
             background: "none",
             border: "none",
             outline: "none",
             fontFamily: "Outfit, sans-serif",
             fontSize: "0.82rem",
-            color: "#fff",
-            width: "180px",
+            width: "260px",
           }}
         />
       </div>
@@ -115,13 +115,13 @@ export default function NavSearch() {
           top: "calc(100% + 6px)",
           left: 0,
           right: 0,
-          background: "#111",
-          border: "1px solid rgba(255,255,255,0.12)",
+          background: "#fff",
+          border: "1px solid rgba(0,0,0,0.1)",
           borderRadius: "10px",
           overflow: "hidden",
           zIndex: 9999,
           minWidth: "260px",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.45)",
+          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
         }}>
           {results.map((r, i) => (
             <button
@@ -134,7 +134,7 @@ export default function NavSearch() {
                 alignItems: "center",
                 gap: "0.75rem",
                 padding: "0.65rem 0.9rem",
-                background: focused === i ? "rgba(255,255,255,0.07)" : "transparent",
+                background: focused === i ? "rgba(0,0,0,0.04)" : "transparent",
                 border: "none",
                 cursor: "pointer",
                 textAlign: "left",
@@ -152,7 +152,7 @@ export default function NavSearch() {
               ) : (
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
-                  background: "rgba(255,255,255,0.12)", flexShrink: 0,
+                  background: "rgba(0,0,0,0.08)", flexShrink: 0,
                 }} />
               )}
               <div>
@@ -160,7 +160,7 @@ export default function NavSearch() {
                   fontFamily: "Outfit, sans-serif",
                   fontSize: "0.85rem",
                   fontWeight: 600,
-                  color: "#fff",
+                  color: "#000",
                   lineHeight: 1.2,
                 }}>
                   {r.name ?? r.twitterHandle}
@@ -168,7 +168,7 @@ export default function NavSearch() {
                 <div style={{
                   fontFamily: "Space Mono, monospace",
                   fontSize: "0.65rem",
-                  color: "rgba(255,255,255,0.4)",
+                  color: "rgba(0,0,0,0.45)",
                   letterSpacing: "0.04em",
                 }}>
                   @{r.twitterHandle}{r.role ? ` · ${r.role}` : ""}

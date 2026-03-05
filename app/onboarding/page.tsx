@@ -60,6 +60,7 @@ export default function OnboardingPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!role) { setError("Please select a role."); return; }
+    if (!bio.trim()) { setError("Bio is required. Tell the crew who you are."); return; }
     setLoading(true);
     setError("");
 
@@ -166,7 +167,7 @@ export default function OnboardingPage() {
 
             {/* Bio */}
             <div className="ob-field">
-              <div className="dash-section-label">Bio <span className="ob-char-count">{bio.length}/200</span></div>
+              <div className="dash-section-label">Bio <span style={{ color: "#ef4444", marginLeft: 2 }}>*</span> <span className="ob-char-count">{bio.length}/200</span></div>
               <textarea
                 className="ob-textarea"
                 placeholder="One or two sentences about what you build and what you're looking for."
