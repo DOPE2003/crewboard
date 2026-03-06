@@ -96,8 +96,81 @@ export default async function NotificationsPage() {
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-            {notifications.map((n) => (
-              <div key={n.id} style={{
+            {notifications.map((n) => {
+              const inner = (
+                <>
+                  {/* Unread dot */}
+                  {!n.read && (
+                    <span style={{
+                      position: "absolute",
+                      top: 14,
+                      right: 14,
+                      width: 7,
+                      height: 7,
+                      borderRadius: "50%",
+                      background: "#2DD4BF",
+                    }} />
+                  )}
+
+                  {/* Icon */}
+                  <div style={{
+                    fontSize: "1.3rem",
+                    lineHeight: 1,
+                    flexShrink: 0,
+                    marginTop: 2,
+                  }}>
+                    {TYPE_ICON[n.type] ?? "🔔"}
+                  </div>
+
+                  {/* Content */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontFamily: "Rajdhani, sans-serif",
+                      fontWeight: 700,
+                      fontSize: "1rem",
+                      color: "#000",
+                      marginBottom: "0.25rem",
+                      letterSpacing: "0.02em",
+                    }}>
+                      {n.title}
+                    </div>
+                    <p style={{
+                      fontSize: "0.85rem",
+                      color: "rgba(0,0,0,0.55)",
+                      lineHeight: 1.6,
+                      margin: 0,
+                    }}>
+                      {n.body}
+                    </p>
+                    <div style={{
+                      fontFamily: "Space Mono, monospace",
+                      fontSize: "0.58rem",
+                      color: "rgba(0,0,0,0.3)",
+                      letterSpacing: "0.06em",
+                      marginTop: "0.5rem",
+                    }}>
+                      {new Date(n.createdAt).toLocaleDateString("en-US", {
+                        month: "short", day: "numeric", year: "numeric",
+                      })}
+                    </div>
+                    {n.link && (
+                      <div style={{
+                        marginTop: "0.4rem",
+                        fontFamily: "Rajdhani, sans-serif",
+                        fontWeight: 700,
+                        fontSize: "0.75rem",
+                        letterSpacing: "0.08em",
+                        textTransform: "uppercase",
+                        color: "#2DD4BF",
+                      }}>
+                        Open →
+                      </div>
+                    )}
+                  </div>
+                </>
+              );
+
+              const cardStyle: React.CSSProperties = {
                 display: "flex",
                 gap: "1rem",
                 padding: "1.1rem 1.25rem",
@@ -106,64 +179,20 @@ export default async function NotificationsPage() {
                 background: n.read ? "transparent" : "rgba(45,212,191,0.05)",
                 position: "relative",
                 transition: "background 0.2s",
-              }}>
-                {/* Unread dot */}
-                {!n.read && (
-                  <span style={{
-                    position: "absolute",
-                    top: 14,
-                    right: 14,
-                    width: 7,
-                    height: 7,
-                    borderRadius: "50%",
-                    background: "#2DD4BF",
-                  }} />
-                )}
+                textDecoration: "none",
+                color: "inherit",
+              };
 
-                {/* Icon */}
-                <div style={{
-                  fontSize: "1.3rem",
-                  lineHeight: 1,
-                  flexShrink: 0,
-                  marginTop: 2,
-                }}>
-                  {TYPE_ICON[n.type] ?? "🔔"}
+              return n.link ? (
+                <Link key={n.id} href={n.link} style={{ ...cardStyle, cursor: "pointer" }}>
+                  {inner}
+                </Link>
+              ) : (
+                <div key={n.id} style={cardStyle}>
+                  {inner}
                 </div>
-
-                {/* Content */}
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{
-                    fontFamily: "Rajdhani, sans-serif",
-                    fontWeight: 700,
-                    fontSize: "1rem",
-                    color: "#000",
-                    marginBottom: "0.25rem",
-                    letterSpacing: "0.02em",
-                  }}>
-                    {n.title}
-                  </div>
-                  <p style={{
-                    fontSize: "0.85rem",
-                    color: "rgba(0,0,0,0.55)",
-                    lineHeight: 1.6,
-                    margin: 0,
-                  }}>
-                    {n.body}
-                  </p>
-                  <div style={{
-                    fontFamily: "Space Mono, monospace",
-                    fontSize: "0.58rem",
-                    color: "rgba(0,0,0,0.3)",
-                    letterSpacing: "0.06em",
-                    marginTop: "0.5rem",
-                  }}>
-                    {new Date(n.createdAt).toLocaleDateString("en-US", {
-                      month: "short", day: "numeric", year: "numeric",
-                    })}
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
 

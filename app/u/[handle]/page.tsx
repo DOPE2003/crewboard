@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
+import { startConversation } from "@/app/actions/messages";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
   available: "rgba(120,255,180,0.8)",
@@ -83,7 +84,6 @@ export default async function PublicProfilePage({
             <div className="profile-meta">
               <h1 className="profile-name">{user.name ?? user.twitterHandle}</h1>
               <div className="profile-handle">@{user.twitterHandle}</div>
-              <div className="profile-verified">Verified via X</div>
             </div>
           </div>
 
@@ -108,14 +108,13 @@ export default async function PublicProfilePage({
 
           <div className="dash-divider" />
 
-          <a
-            href={`https://x.com/${user.twitterHandle}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn-secondary profile-x-link"
-          >
-            View on X →
-          </a>
+          {viewerId && viewerId !== user.id && (
+            <form action={startConversation.bind(null, user.id)}>
+              <button type="submit" className="btn-primary" style={{ width: "100%", cursor: "pointer" }}>
+                Send Message
+              </button>
+            </form>
+          )}
         </div>
       </section>
     </main>

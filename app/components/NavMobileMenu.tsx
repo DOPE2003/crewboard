@@ -5,23 +5,17 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
-  { label: "Find Talent", href: "/talent" },
-  { label: "Browse Projects", href: "/projects" },
-  { label: "Jobs", href: "/jobs" },
-  { label: "DAOs", href: "/daos" },
-  { label: "Leaderboard", href: "/leaderboard" },
-  { label: "Whitepaper", href: "/whitepaper" },
-];
-
-const CATEGORIES = [
-  { label: "Smart Contracts", href: "/talent?category=smart-contracts" },
-  { label: "DeFi & Protocol",  href: "/talent?category=defi" },
-  { label: "NFT & Gaming",     href: "/talent?category=nft" },
-  { label: "Frontend",         href: "/talent?category=frontend" },
-  { label: "Design & UI",      href: "/talent?category=design" },
-  { label: "Community",        href: "/talent?category=community" },
-  { label: "Marketing",        href: "/talent?category=marketing" },
-  { label: "Research",         href: "/talent?category=research" },
+  { label: "KOL Manager",       href: "/talent?role=KOL+Manager" },
+  { label: "Exchange Listings", href: "/talent?role=Exchange+Listings+Manager" },
+  { label: "Web3 Designer",     href: "/talent?role=Web3+Web+Designer" },
+  { label: "Social Marketing",  href: "/talent?role=Social+Marketing" },
+  { label: "Artist",            href: "/talent?role=Artist" },
+  { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
+  { label: "Coding & Tech",     href: "/talent?role=Coding+%26+Tech" },
+  { label: "AI Engineer",       href: "/talent?role=AI+Engineer" },
+  { label: "Content Creator",   href: "/talent?role=Content+Creator" },
+  { label: "Graphic & Design",  href: "/talent?role=Graphic+%26+Design" },
+  { label: "Whitepaper",        href: "/whitepaper" },
 ];
 
 export default function NavMobileMenu() {
@@ -52,20 +46,9 @@ export default function NavMobileMenu() {
       {/* Drawer */}
       {open && (
         <div className="nav-mobile-drawer">
-          {/* Main nav links */}
           {NAV_LINKS.map((l) => (
             <Link key={l.href} href={l.href} className="nav-mobile-link">
               {l.label}
-            </Link>
-          ))}
-
-          <div className="nav-mobile-divider" />
-
-          {/* Category links */}
-          <div className="nav-mobile-section-label">Categories</div>
-          {CATEGORIES.map((c) => (
-            <Link key={c.href} href={c.href} className="nav-mobile-link nav-mobile-cat">
-              {c.label}
             </Link>
           ))}
         </div>

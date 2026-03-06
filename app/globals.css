@@ -51,19 +51,55 @@ nav {
   color: #000;
   letter-spacing: 0.05em;
 }
-.nav-links { display: flex; gap: 1.4rem; list-style: none; }
-.nav-links a {
-  color: #000;
-  text-decoration: none;
-  font-size: 0.82rem;
+.nav-brand-name {
   font-family: 'Rajdhani', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #000;
+}
+/* Separator before Whitepaper in row 2 */
+.nav-link-sep {
+  list-style: none;
+  width: 1px;
+  height: 14px;
+  background: rgba(0,0,0,0.15);
+  align-self: center;
+  flex-shrink: 0;
+}
+/* Whitepaper distinct style */
+.nav-link-whitepaper {
+  color: rgba(0,0,0,0.4) !important;
+  font-style: italic;
+}
+.nav-link-whitepaper:hover { color: #000 !important; }
+/* Row 2 — category links bar */
+.nav-links-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 2rem;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.nav-links-row::-webkit-scrollbar { display: none; }
+
+.nav-links { display: flex; gap: 1.5rem; list-style: none; margin: 0; }
+.nav-links a {
+  color: rgba(0,0,0,0.55);
+  text-decoration: none;
+  font-size: 0.68rem;
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   transition: color 0.2s;
+  white-space: nowrap;
 }
-.nav-links a:hover { color: rgba(0,0,0,0.6); }
-@media (max-width: 700px) { .nav-links { display: none; } }
+.nav-links a:hover { color: #000; }
+@media (max-width: 700px) { .nav-links-row { display: none; } }
 
 .nav-pill {
   font-family: 'Rajdhani', sans-serif;
@@ -235,7 +271,10 @@ nav {
 .page {
   position: relative;
   z-index: 1;
-  padding-top: 90px;
+  padding-top: 120px; /* row1 ~68px + row2 ~38px + buffer */
+}
+@media (max-width: 700px) {
+  .page { padding-top: 70px; } /* mobile: only row1 */
 }
 
 /* =========================
@@ -1239,17 +1278,21 @@ nav {
 }
 
 /* Hero mobile search */
-.hero-mobile-search {
+.hero-mobile-search-wrap {
   display: none;
+  position: relative;
+  width: 100%;
+  margin-bottom: 2rem;
+}
+.hero-mobile-search {
+  display: flex;
   align-items: center;
   gap: 0.6rem;
   background: rgba(0,0,0,0.05);
   border: 1px solid rgba(0,0,0,0.12);
   border-radius: 999px;
   padding: 0.6rem 1.1rem;
-  margin-bottom: 2rem;
   width: 100%;
-  max-width: 320px;
 }
 .hero-mobile-search input {
   background: none;
@@ -1262,7 +1305,7 @@ nav {
 }
 .hero-mobile-search input::placeholder { color: rgba(0,0,0,0.4); }
 @media (max-width: 700px) {
-  .hero-mobile-search { display: flex; }
+  .hero-mobile-search-wrap { display: block; }
 }
 
 /* Hero section */
@@ -1348,4 +1391,452 @@ nav {
     flex-direction: column !important;
     align-items: flex-start !important;
   }
+}
+
+/* =========================
+   MESSAGES
+   ========================= */
+
+.msgs-shell {
+  display: flex;
+  height: calc(100vh - 120px);
+  border-top: 1px solid rgba(0,0,0,0.07);
+  overflow: hidden;
+}
+
+/* Sidebar */
+.msgs-sidebar {
+  width: 300px;
+  flex-shrink: 0;
+  border-right: 1px solid rgba(0,0,0,0.07);
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: #fff;
+}
+
+.msgs-sidebar-header {
+  padding: 1.1rem 1.25rem 0.75rem;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  flex-shrink: 0;
+}
+
+.msgs-title {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #000;
+}
+
+.msgs-empty {
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+  color: rgba(0,0,0,0.45);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  letter-spacing: 0.05em;
+}
+
+.msgs-conv-row {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.85rem 1.25rem;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  text-decoration: none;
+  color: inherit;
+  transition: background 0.15s;
+  cursor: pointer;
+}
+.msgs-conv-row:hover { background: rgba(0,0,0,0.03); }
+.msgs-conv-row.active { background: rgba(45,212,191,0.07); border-right: 2px solid #2DD4BF; }
+
+.msgs-conv-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: rgba(0,0,0,0.07);
+}
+.msgs-conv-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.msgs-conv-avatar-fallback { width: 100%; height: 100%; background: rgba(0,0,0,0.08); }
+
+.msgs-conv-info { flex: 1; min-width: 0; }
+
+.msgs-conv-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  color: #000;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.msgs-unread-dot {
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  background: #14b8a6;
+  color: #fff;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.48rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 4px;
+  flex-shrink: 0;
+}
+
+.msgs-conv-preview {
+  font-size: 0.75rem;
+  color: rgba(0,0,0,0.45);
+  font-family: 'Outfit', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 2px;
+}
+
+/* Empty panel (right side on inbox page) */
+.msgs-empty-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: rgba(0,0,0,0.01);
+}
+
+.msgs-empty-hint {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.3);
+}
+
+/* Thread panel */
+.msgs-thread-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: #fff;
+}
+
+.msgs-thread-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem 1.25rem;
+  border-bottom: 1px solid rgba(0,0,0,0.07);
+  flex-shrink: 0;
+}
+
+.msgs-back-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: rgba(0,0,0,0.5);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.msgs-back-btn:hover { background: rgba(0,0,0,0.06); color: #000; }
+
+.msgs-thread-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(0,0,0,0.07);
+  flex-shrink: 0;
+}
+.msgs-thread-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.msgs-thread-avatar-fallback { width: 100%; height: 100%; background: rgba(0,0,0,0.08); }
+
+.msgs-thread-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  color: #000;
+}
+
+.msgs-thread-role {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.4);
+  margin-top: 1px;
+}
+
+/* Thread body */
+.msgs-thread {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.msgs-thread-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.msgs-thread-empty {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  color: rgba(0,0,0,0.3);
+  margin: auto;
+  padding: 2rem 0;
+}
+
+.msgs-date-sep {
+  text-align: center;
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.3);
+  margin: 0.75rem 0 0.25rem;
+}
+
+.msgs-bubble-row {
+  display: flex;
+  margin-bottom: 2px;
+}
+.msgs-bubble-row.mine { justify-content: flex-end; }
+.msgs-bubble-row.theirs { justify-content: flex-start; }
+
+.msgs-bubble {
+  max-width: 68%;
+  padding: 0.6rem 0.9rem;
+  border-radius: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.msgs-bubble-mine {
+  background: #000;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msgs-bubble-theirs {
+  background: rgba(0,0,0,0.06);
+  color: #000;
+  border-bottom-left-radius: 4px;
+}
+
+.msgs-bubble-text {
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.msgs-bubble-time {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.48rem;
+  letter-spacing: 0.08em;
+  opacity: 0.5;
+  align-self: flex-end;
+}
+
+/* Input row */
+.msgs-input-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 0.65rem;
+  padding: 0.9rem 1.25rem;
+  border-top: 1px solid rgba(0,0,0,0.07);
+  flex-shrink: 0;
+}
+
+.msgs-input {
+  flex: 1;
+  resize: none;
+  background: rgba(0,0,0,0.04);
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 0.65rem 1rem;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.88rem;
+  color: #000;
+  outline: none;
+  transition: border-color 0.2s;
+  max-height: 120px;
+  overflow-y: auto;
+  line-height: 1.5;
+}
+.msgs-input:focus { border-color: rgba(0,0,0,0.25); }
+.msgs-input::placeholder { color: rgba(0,0,0,0.35); }
+
+.msgs-send-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  border: none;
+  background: #000;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: opacity 0.2s;
+}
+.msgs-send-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+.msgs-send-btn:not(:disabled):hover { opacity: 0.8; }
+
+/* Mobile: sidebar full-width on inbox, thread full-width on thread page */
+@media (max-width: 700px) {
+  .msgs-shell { height: calc(100vh - 70px); }
+  .msgs-sidebar { width: 100%; border-right: none; }
+  .msgs-empty-panel { display: none; }
+  .msgs-thread-panel {
+    position: fixed;
+    inset: 70px 0 0 0;
+    z-index: 50;
+    background: #fff;
+  }
+}
+
+/* =========================
+   LANDING PAGE SECTIONS — mobile padding compression
+   ========================= */
+
+/* Outer section wrapper gets this class → compress vertical padding */
+.landing-section {
+  /* desktop padding set inline; these only kick in on mobile */
+}
+
+@media (max-width: 640px) {
+  .landing-section {
+    padding-top: 2.5rem !important;
+    padding-bottom: 2.5rem !important;
+    padding-left: 1.25rem !important;
+    padding-right: 1.25rem !important;
+  }
+
+  /* CTA section: remove the giant 8rem bottom padding */
+  .landing-cta-section {
+    padding-bottom: 3.5rem !important;
+  }
+
+  /* Freelancers mini-card grid: 2 columns on mobile */
+  .landing-builders-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+
+  /* How it works steps: 2 columns on mobile */
+  .landing-steps-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  /* Footer section: reduce padding */
+  .landing-footer { padding: 2rem 1.25rem 1.5rem !important; }
+
+  /* Talent wrap: already has padding reduction, reinforce */
+  .talent-wrap { padding: 1.5rem 1rem 3rem !important; }
+
+  /* Notifications page padding */
+  .notifications-wrap { padding-bottom: 3rem !important; }
+}
+
+/* =========================
+   NAVBAR — tiny screen fixes
+   ========================= */
+
+/* Hide brand text on very small phones to prevent overflow */
+@media (max-width: 360px) {
+  .nav-brand-name { display: none !important; }
+}
+
+/* Shrink nav icon buttons slightly on small screens */
+@media (max-width: 400px) {
+  .nav-icon-btn {
+    width: 28px !important;
+    height: 28px !important;
+  }
+}
+
+/* =========================
+   GENERAL MOBILE POLISH
+   ========================= */
+
+/* Auth card: ensure full-width usage on small screens */
+@media (max-width: 480px) {
+  .auth-card { padding: 1.25rem 1rem; }
+  .auth-title { font-size: 1.8rem; }
+}
+
+/* Profile page: avatar + meta on small screens */
+@media (max-width: 480px) {
+  .profile-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+  .profile-avatar { width: 60px; height: 60px; }
+}
+
+/* Dashboard profile: tighten on very small screens */
+@media (max-width: 380px) {
+  .dash-profile { flex-direction: column; }
+  .dash-role-badge { margin-left: 0; width: fit-content; }
+  .dash-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Onboarding: availability options wrap better */
+@media (max-width: 480px) {
+  .ob-availability { flex-direction: column; gap: 8px; }
+  .ob-avail-option { width: 100%; justify-content: flex-start; }
+}
+
+/* Messages thread body: slightly smaller padding */
+@media (max-width: 480px) {
+  .msgs-thread-body { padding: 1rem; }
+  .msgs-input-row { padding: 0.75rem 1rem; }
+  .msgs-bubble { max-width: 82%; }
+}
+
+/* Talent grid: ensure 1-col on very narrow */
+@media (max-width: 360px) {
+  .talent-grid { grid-template-columns: 1fr; }
+}
+
+/* Projects grid: 1-col on all phones */
+@media (max-width: 640px) {
+  .projects-grid { grid-template-columns: 1fr; }
+}
+
+/* Dash actions: always stack on mobile */
+@media (max-width: 640px) {
+  .dash-actions { flex-direction: column; }
+  .dash-actions .btn-secondary { width: 100%; }
 }

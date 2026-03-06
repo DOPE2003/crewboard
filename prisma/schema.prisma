@@ -29,6 +29,7 @@ model Notification {
   type      String   @default("system")
   title     String
   body      String
+  link      String?
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
 
@@ -44,4 +45,22 @@ model Project {
   rolesNeeded String[]
   status      String   @default("open")
   createdAt   DateTime @default(now())
+}
+
+model Conversation {
+  id           String    @id @default(cuid())
+  participants String[]
+  messages     Message[]
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  body           String
+  read           Boolean      @default(false)
+  createdAt      DateTime     @default(now())
 }

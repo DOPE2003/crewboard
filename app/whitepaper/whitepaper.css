@@ -57,8 +57,13 @@ body.whitepaper-page .nav-search-input::placeholder { color: rgba(255,255,255,0.
 body.whitepaper-page .nav-search-box { background: rgba(255,255,255,0.08) !important; border-color: rgba(255,255,255,0.15) !important; }
 body.whitepaper-page .nav-search-box svg { stroke: rgba(255,255,255,0.4); }
 body.whitepaper-page .nav-icon-btn { color: rgba(255,255,255,0.6) !important; }
-body.whitepaper-page .nav-links a { color: rgba(255,255,255,0.65); }
+body.whitepaper-page .nav-links-row { background: rgba(0,0,0,0.75); border-bottom-color: rgba(255,255,255,0.08) !important; }
+body.whitepaper-page .nav-brand-name { color: #fff; }
+body.whitepaper-page .nav-link-sep { background: rgba(255,255,255,0.2); }
+body.whitepaper-page .nav-links a { color: rgba(255,255,255,0.55); }
 body.whitepaper-page .nav-links a:hover { color: #fff; }
+body.whitepaper-page .nav-link-whitepaper { color: rgba(255,255,255,0.35) !important; }
+body.whitepaper-page .nav-link-whitepaper:hover { color: #fff !important; }
 body.whitepaper-page .nav-pill { color: #fff; border-color: rgba(255,255,255,0.4); }
 body.whitepaper-page .nav-pill:hover { background: rgba(255,255,255,0.08); }
 /* Invert logo only — not avatars */

@@ -28,33 +28,25 @@ export default async function Navbar() {
   return (
     <nav style={{ flexDirection: "column", padding: 0, height: "auto" }}>
 
-      {/* ── ROW 1 ── */}
+      {/* ── ROW 1: Logo + Search/Icons ── */}
       <div style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0.9rem 2.5rem",
+        padding: "0.65rem 2.5rem",
         width: "100%",
-        gap: "1.5rem",
+        gap: "1rem",
+        borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}>
 
-        {/* Logo */}
-        <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center" }}>
-          <Image src="/logo.png" alt="Crewboard" width={60} height={60} style={{ objectFit: "contain" }} priority />
+        {/* Logo + brand name */}
+        <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none" }}>
+          <Image src="/logo.png" alt="Crewboard" width={54} height={54} style={{ objectFit: "contain" }} priority />
+          <span className="nav-brand-name">Crewboard</span>
         </Link>
 
-        {/* Center links */}
-        <ul className="nav-links" style={{ margin: 0 }}>
-          <li><Link href="/talent">Find Talent</Link></li>
-          <li><Link href="/projects">Browse Projects</Link></li>
-          <li><Link href="/jobs">Jobs</Link></li>
-          <li><Link href="/daos">DAOs</Link></li>
-          <li><Link href="/leaderboard">Leaderboard</Link></li>
-          <li><Link href="/whitepaper">Whitepaper</Link></li>
-        </ul>
-
         {/* Right: search + icons + auth */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0, marginLeft: "auto" }}>
 
           {/* Search — hidden on mobile */}
           <div className="nav-search-wrap">
@@ -120,6 +112,24 @@ export default async function Navbar() {
           {/* Hamburger — mobile only */}
           <NavMobileMenu />
         </div>
+      </div>
+
+      {/* ── ROW 2: Category links (desktop only) ── */}
+      <div className="nav-links-row">
+        <ul className="nav-links" style={{ margin: 0 }}>
+          <li><Link href="/talent?role=KOL+Manager">KOL Manager</Link></li>
+          <li><Link href="/talent?role=Exchange+Listings+Manager">Exchange Listings</Link></li>
+          <li><Link href="/talent?role=Web3+Web+Designer">Web3 Designer</Link></li>
+          <li><Link href="/talent?role=Social+Marketing">Social Marketing</Link></li>
+          <li><Link href="/talent?role=Artist">Artist</Link></li>
+          <li><Link href="/talent?role=Video+%26+Animation">Video & Animation</Link></li>
+          <li><Link href="/talent?role=Coding+%26+Tech">Coding & Tech</Link></li>
+          <li><Link href="/talent?role=AI+Engineer">AI Engineer</Link></li>
+          <li><Link href="/talent?role=Content+Creator">Content Creator</Link></li>
+          <li><Link href="/talent?role=Graphic+%26+Design">Graphic & Design</Link></li>
+          <li className="nav-link-sep" />
+          <li><Link href="/whitepaper" className="nav-link-whitepaper">Whitepaper</Link></li>
+        </ul>
       </div>
 
     </nav>

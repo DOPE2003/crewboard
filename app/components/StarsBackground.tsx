@@ -94,9 +94,19 @@ export default function StarsBackground() {
     initStars();
     draw();
 
+    let lastWidth = window.innerWidth;
+
     const onResize = () => {
-      resize();
-      initStars();
+      const newWidth = window.innerWidth;
+      // Only reinitialize stars if the WIDTH changed (not just height).
+      // On mobile, keyboard open/close only changes height — ignore those.
+      if (newWidth !== lastWidth) {
+        lastWidth = newWidth;
+        resize();
+        initStars();
+      } else {
+        resize();
+      }
     };
 
     window.addEventListener("resize", onResize);

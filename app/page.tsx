@@ -1,35 +1,60 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
+import HeroMobileSearch from "./components/HeroMobileSearch";
 
 const FEATURES = [
   {
-    icon: "🔒",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    ),
     title: "Escrow Smart Contracts",
     desc: "Payments are held in automated smart contracts and released only on delivery. Zero counterparty risk.",
   },
   {
-    icon: "⚡",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
+      </svg>
+    ),
     title: "Instant Crypto Payouts",
     desc: "Get paid in ETH, USDC, or any token. No banks, no delays, no fees eating your earnings.",
   },
   {
-    icon: "🏆",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/>
+      </svg>
+    ),
     title: "On-Chain Reputation",
     desc: "Your track record lives on the blockchain — immutable, portable, and owned by you, not the platform.",
   },
   {
-    icon: "🌐",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+      </svg>
+    ),
     title: "Multi-Chain Support",
     desc: "Deploy and collaborate across Ethereum, Polygon, Arbitrum, Solana. One profile, every chain.",
   },
   {
-    icon: "🗳️",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M2 20h20M6 20V10l6-8 6 8v10"/>
+      </svg>
+    ),
     title: "DAO Governance",
     desc: "Token holders decide fees, features, and upgrades. The platform is built and owned by the community.",
   },
   {
-    icon: "🎓",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
+      </svg>
+    ),
     title: "Verified Credentials",
     desc: "NFT-based skill certificates verify your expertise on-chain. Prove what you know, not just what you claim.",
   },
@@ -197,19 +222,9 @@ export default async function HomePage() {
         </p>
 
         {/* Mobile search bar — hidden on desktop */}
-        <form action="/talent" method="get" className="hero-mobile-search" style={{
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.62s forwards",
-        }}>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
-          </svg>
-          <input
-            name="q"
-            placeholder="Search talent..."
-            autoComplete="off"
-          />
-        </form>
+        <div style={{ opacity: 0, animation: "fadeUp 0.6s 0.62s forwards", width: "100%", maxWidth: 320 }}>
+          <HeroMobileSearch />
+        </div>
 
         {/* Stats + scroll */}
         <div style={{
@@ -246,7 +261,7 @@ export default async function HomePage() {
 
       {/* ── TOP FREELANCERS ── */}
       {topBuilders.length > 0 && (
-        <div style={{ padding: "4rem 2rem 2rem", position: "relative", zIndex: 1 }}>
+        <div className="landing-section" style={{ padding: "4rem 2rem 2rem", position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
             <div style={{
               display: "flex",
@@ -281,7 +296,7 @@ export default async function HomePage() {
               </Link>
             </div>
 
-            <div style={{
+            <div className="landing-builders-grid" style={{
               display: "grid",
               gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
               gap: "1rem",
@@ -365,7 +380,7 @@ export default async function HomePage() {
       )}
 
       {/* ── HOW IT WORKS ── */}
-      <div style={{ padding: "5rem 2rem", position: "relative", zIndex: 1 }}>
+      <div className="landing-section" style={{ padding: "5rem 2rem", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
           <div className="section-label">Simple Process</div>
           <h2 style={{
@@ -388,7 +403,7 @@ export default async function HomePage() {
             From signing up to shipping your first project — here's the full journey on Crewboard.
           </p>
 
-          <div style={{
+          <div className="landing-steps-grid" style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
             gap: "1.25rem",
@@ -485,7 +500,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── FEATURES ── */}
-      <div style={{ padding: "6rem 2rem", position: "relative", zIndex: 1 }}>
+      <div className="landing-section" style={{ padding: "6rem 2rem", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           <div className="section-label">Platform Features</div>
@@ -516,7 +531,7 @@ export default async function HomePage() {
                 background: "rgba(0,0,0,0.02)",
                 transition: "border-color 0.2s, background 0.2s",
               }}>
-                <div style={{ fontSize: "1.6rem", marginBottom: "1rem", lineHeight: 1 }}>{f.icon}</div>
+                <div style={{ color: "#2DD4BF", marginBottom: "1rem", lineHeight: 1 }}>{f.icon}</div>
                 <h3 style={{
                   fontFamily: "Rajdhani, sans-serif",
                   fontWeight: 700,
@@ -537,7 +552,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── CTA ── */}
-      <div style={{ padding: "4rem 2rem 8rem", position: "relative", zIndex: 1 }}>
+      <div className="landing-section landing-cta-section" style={{ padding: "4rem 2rem 8rem", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "56rem", margin: "0 auto" }}>
           <div className="landing-cta-card" style={{
             borderRadius: 20,
@@ -577,13 +592,15 @@ export default async function HomePage() {
               maxWidth: "32rem",
               margin: "0 auto 2.5rem",
             }}>
-              Thousands of Web3 builders are already here. Find your next collaborator, or your next project.
+              Early builders are already here. Be part of the founding crew — find your next collaborator or your next project.
             </p>
 
             <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
-              <Link className="btn-primary" href="/login">
-                Join as Freelancer
-              </Link>
+              {!isLoggedIn && (
+                <Link className="btn-primary" href="/login">
+                  Join as Freelancer
+                </Link>
+              )}
               <Link className="btn-outline" href="/talent">
                 Find Talent
               </Link>
@@ -593,7 +610,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── FOOTER ── */}
-      <footer style={{
+      <footer className="landing-footer" style={{
         borderTop: "1px solid rgba(0,0,0,0.08)",
         padding: "3rem 2rem 2rem",
         position: "relative",
@@ -637,10 +654,11 @@ export default async function HomePage() {
             {/* Nav links */}
             <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
               {[
-                { label: "Talent", href: "/talent" },
+                { label: "KOL Manager", href: "/talent?role=KOL+Manager" },
+                { label: "Coding & Tech", href: "/talent?role=Coding+%26+Tech" },
+                { label: "AI Engineer", href: "/talent?role=AI+Engineer" },
                 { label: "Projects", href: "/projects" },
                 { label: "Whitepaper", href: "/whitepaper" },
-                { label: "Dashboard", href: "/dashboard" },
               ].map((l) => (
                 <Link key={l.label} href={l.href} style={{
                   fontFamily: "Rajdhani, sans-serif",
