@@ -1840,3 +1840,372 @@ nav {
   .dash-actions { flex-direction: column; }
   .dash-actions .btn-secondary { width: 100%; }
 }
+
+/* =========================
+   GIG CARDS & BROWSE PAGE
+   ========================= */
+
+.gig-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.gig-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 14px;
+  padding: 1.25rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.gig-card:hover {
+  border-color: rgba(45,212,191,0.35);
+  box-shadow: 0 4px 24px rgba(45,212,191,0.1);
+  transform: translateY(-2px);
+}
+
+.gig-card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.gig-category-badge {
+  font-family: "Space Mono", monospace;
+  font-size: 0.6rem;
+  letter-spacing: 0.06em;
+  color: #2dd4bf;
+  background: rgba(45,212,191,0.1);
+  border: 1px solid rgba(45,212,191,0.25);
+  border-radius: 999px;
+  padding: 3px 10px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 160px;
+}
+
+.gig-price {
+  font-family: "Space Mono", monospace;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #2dd4bf;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.gig-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.35;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.gig-desc {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.82rem;
+  color: rgba(0,0,0,0.55);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.gig-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.gig-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(0,0,0,0.06);
+}
+
+.gig-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+.gig-user-avatar {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.gig-user-avatar-fallback {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+.gig-user-name {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  color: rgba(0,0,0,0.65);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gig-delivery {
+  font-family: "Space Mono", monospace;
+  font-size: 0.65rem;
+  color: rgba(0,0,0,0.4);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Filter bar */
+.gigs-filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 0.5rem;
+  margin-top: 1.25rem;
+}
+
+.gigs-filter-input {
+  flex: 1;
+  min-width: 160px;
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.03);
+  font-family: "Outfit", sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+.gigs-filter-input:focus { border-color: rgba(45,212,191,0.5); }
+
+.gigs-filter-price { flex: 0 1 140px; min-width: 110px; }
+
+.gigs-filter-select {
+  padding: 0.55rem 0.9rem;
+  border: 1px solid rgba(0,0,0,0.12);
+  border-radius: 8px;
+  background: rgba(0,0,0,0.03);
+  font-family: "Outfit", sans-serif;
+  font-size: 0.85rem;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.gigs-filter-select:focus { border-color: rgba(45,212,191,0.5); }
+
+/* Gig detail page */
+.gig-back-link {
+  font-family: "Space Mono", monospace;
+  font-size: 0.72rem;
+  color: rgba(0,0,0,0.4);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 1.25rem;
+  transition: color 0.2s;
+}
+.gig-back-link:hover { color: #2dd4bf; }
+
+.gig-detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.gig-detail-price {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+.gig-detail-price-label {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.72rem;
+  color: rgba(0,0,0,0.4);
+}
+.gig-detail-price-value {
+  font-family: "Space Mono", monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #2dd4bf;
+  line-height: 1.1;
+}
+
+.gig-detail-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #111;
+  line-height: 1.3;
+  margin: 0.75rem 0 0;
+}
+
+.gig-detail-meta {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.gig-meta-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: "Outfit", sans-serif;
+  font-size: 0.82rem;
+  color: rgba(0,0,0,0.5);
+}
+
+.gig-detail-description {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: rgba(0,0,0,0.7);
+  margin: 0.5rem 0 0;
+  white-space: pre-wrap;
+}
+
+.gig-seller-card {
+  background: rgba(0,0,0,0.025);
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 12px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.gig-seller-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.gig-seller-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+.gig-seller-avatar-fallback {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.08);
+  flex-shrink: 0;
+}
+
+.gig-seller-name {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #111;
+}
+
+.gig-seller-handle {
+  font-family: "Space Mono", monospace;
+  font-size: 0.7rem;
+  color: rgba(0,0,0,0.4);
+  letter-spacing: 0.04em;
+  margin-top: 2px;
+}
+
+.gig-seller-bio {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.82rem;
+  color: rgba(0,0,0,0.55);
+  line-height: 1.5;
+  margin: 0.75rem 0 0;
+}
+
+/* Profile page gig cards */
+.profile-gigs {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.profile-gig-card {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(0,0,0,0.025);
+  border: 1px solid rgba(0,0,0,0.07);
+  border-radius: 10px;
+  padding: 0.9rem;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.profile-gig-card:hover {
+  border-color: rgba(45,212,191,0.3);
+  box-shadow: 0 2px 12px rgba(45,212,191,0.08);
+}
+
+.profile-gig-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 4px;
+}
+
+.profile-gig-title {
+  font-family: "Outfit", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #111;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.profile-gig-meta {
+  font-family: "Space Mono", monospace;
+  font-size: 0.62rem;
+  color: rgba(0,0,0,0.4);
+}
+
+/* Responsive gig grid */
+@media (max-width: 640px) {
+  .gig-grid { grid-template-columns: 1fr; gap: 0.9rem; }
+  .gigs-filter-bar { gap: 0.5rem; }
+  .gigs-filter-input { min-width: 0; }
+  .gig-detail-title { font-size: 1.2rem; }
+  .profile-gigs { grid-template-columns: 1fr; }
+}

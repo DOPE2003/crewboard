@@ -10,8 +10,10 @@ export async function GET(req: NextRequest) {
     where: {
       profileComplete: true,
       OR: [
-        { name: { contains: q, mode: "insensitive" } },
+        { name:          { contains: q, mode: "insensitive" } },
         { twitterHandle: { contains: q, mode: "insensitive" } },
+        { role:          { contains: q, mode: "insensitive" } },
+        { bio:           { contains: q, mode: "insensitive" } },
       ],
     },
     select: { name: true, twitterHandle: true, image: true, role: true },

@@ -54,27 +54,31 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
 
   // Pusher real-time subscription
   useEffect(() => {
-    const pusher = new PusherClient(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
-      cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-    });
+    const key = process.env.NEXT_PUBLIC_PUSHER_KEY;
+    const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
+    if (!key || !cluster) return; // env vars not set — skip real-time, rely on initial fetch
 
-    const channel = pusher.subscribe(`conversation-${conversationId}`);
-
-    channel.bind("new-message", (msg: Msg) => {
-      // Only append if it's from the other person (our own messages are added optimistically)
-      if (msg.senderId !== currentUserId) {
-        setMessages((prev) => {
-          // Avoid duplicates
-          if (prev.some((m) => m.id === msg.id)) return prev;
-          return [...prev, msg];
-        });
-      }
-    });
+    let pusher: InstanceType<typeof PusherClient> | null = null;
+    try {
+      pusher = new PusherClient(key, { cluster });
+      const channel = pusher.subscribe(`conversation-${conversationId}`);
+      channel.bind("new-message", (msg: Msg) => {
+        if (msg.senderId !== currentUserId) {
+          setMessages((prev) => {
+            if (prev.some((m) => m.id === msg.id)) return prev;
+            return [...prev, msg];
+          });
+        }
+      });
+    } catch {
+      // Pusher failed to initialize — real-time disabled, messages still load on page open
+    }
 
     return () => {
-      channel.unbind_all();
-      pusher.unsubscribe(`conversation-${conversationId}`);
-      pusher.disconnect();
+      try {
+        pusher?.unsubscribe(`conversation-${conversationId}`);
+        pusher?.disconnect();
+      } catch { /* ignore */ }
     };
   }, [conversationId, currentUserId]);
 

@@ -4,14 +4,34 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 
-const ROLES = ["Developer", "Designer", "Founder", "Marketer", "Other"];
+const ROLES = [
+  "KOL Manager",
+  "Exchange Listings Manager",
+  "Web3 Web Designer",
+  "Social Marketing",
+  "Artist",
+  "Video & Animation",
+  "Coding & Tech",
+  "AI Engineer",
+  "Content Creator",
+  "Graphic & Design",
+  "Founder",
+  "Other",
+];
 
 const ROLE_SKILLS: Record<string, string[]> = {
-  Developer: ["Solidity", "Rust", "Move", "TypeScript", "React", "Next.js", "Python", "Go", "Anchor", "Cairo"],
-  Designer:  ["Figma", "UI/UX", "Branding", "Motion", "Web Design", "Prototyping", "Illustration", "3D"],
-  Founder:   ["Product", "Strategy", "Fundraising", "Tokenomics", "Go-to-market", "Ops", "Legal", "DAO Governance"],
-  Marketer:  ["Community", "Content", "Twitter/X", "KOL", "SEO", "Paid Ads", "Partnerships", "PR"],
-  Other:     ["TypeScript", "React", "Python", "Research", "Data", "DevRel", "Moderation", "Support"],
+  "KOL Manager":               ["KOL", "Community", "Twitter/X", "Telegram", "Discord", "Influencer Marketing", "Partnerships", "PR"],
+  "Exchange Listings Manager": ["Exchange Listings", "Market Making", "Tokenomics", "Liquidity", "CEX", "DEX", "Partnerships", "Market Research"],
+  "Web3 Web Designer":         ["Figma", "UI/UX", "Web Design", "Prototyping", "Web3 Design", "Branding", "CSS", "Webflow"],
+  "Social Marketing":          ["Community", "Content", "Twitter/X", "Discord", "Telegram", "SEO", "Paid Ads", "PR", "Growth"],
+  "Artist":                    ["Illustration", "NFT Art", "Digital Art", "3D", "Motion", "Branding", "Character Design", "Concept Art"],
+  "Video & Animation":         ["Video Editing", "Motion Graphics", "After Effects", "3D Animation", "YouTube", "TikTok", "Premiere Pro", "Blender"],
+  "Coding & Tech":             ["Solidity", "Rust", "TypeScript", "React", "Next.js", "Python", "Go", "Smart Contracts", "Anchor", "Cairo"],
+  "AI Engineer":               ["Python", "Machine Learning", "LLMs", "RAG", "Fine-tuning", "OpenAI", "LangChain", "Agents", "Data Science"],
+  "Content Creator":           ["Content Writing", "Twitter/X", "Copywriting", "Research", "Ghostwriting", "Newsletters", "Threads", "Mirror.xyz"],
+  "Graphic & Design":          ["Figma", "Photoshop", "Illustrator", "Branding", "Logo Design", "UI/UX", "Typography", "Canva"],
+  "Founder":                   ["Product", "Strategy", "Fundraising", "Tokenomics", "Go-to-market", "Ops", "DAO Governance", "Legal"],
+  "Other":                     ["Research", "Data", "DevRel", "Moderation", "Support", "Operations", "Community", "QA"],
 };
 
 const AVAILABILITY_OPTIONS = [

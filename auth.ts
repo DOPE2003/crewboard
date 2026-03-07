@@ -17,18 +17,22 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           select: { id: true },
         });
 
+        // Upgrade image to 400x400 (Twitter returns _normal by default)
+        const rawImage = user.image ?? "";
+        const image = rawImage ? rawImage.replace("_normal", "_400x400") : undefined;
+
         const dbUser = await db.user.upsert({
           where: { twitterId: account.providerAccountId },
           update: {
             name: user.name ?? undefined,
-            image: user.image ?? undefined,
+            image: image ?? undefined,
             ...(handle ? { twitterHandle: handle } : {}),
           },
           create: {
             twitterId: account.providerAccountId,
             twitterHandle: handle,
             name: user.name,
-            image: user.image,
+            image,
           },
           select: { id: true },
         });
@@ -84,12 +88,42 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.userId = dbUser?.id;
         token.twitterHandle = dbUser?.twitterHandle || handleFromProfile;
         token.profileComplete = dbUser?.profileComplete ?? false;
+        // Store access token so we can refresh the avatar periodically
+        if (account.access_token) token.twitterAccessToken = account.access_token;
+        token.imageRefreshedAt = Date.now();
       } else if (trigger === "update") {
-        // Called after useSession().update({ profileComplete: true }) from onboarding.
-        // Accept the value passed directly to avoid a DB round-trip.
         const passed = session as { profileComplete?: boolean } | null;
         if (passed?.profileComplete !== undefined) {
           token.profileComplete = passed.profileComplete;
+        }
+      } else if (token.twitterAccessToken && token.userId) {
+        // Refresh avatar from Twitter API once per day
+        const lastRefresh = (token.imageRefreshedAt as number) ?? 0;
+        const oneDayMs = 24 * 60 * 60 * 1000;
+        if (Date.now() - lastRefresh > oneDayMs) {
+          try {
+            const res = await fetch(
+              "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name",
+              { headers: { Authorization: `Bearer ${token.twitterAccessToken}` } }
+            );
+            if (res.ok) {
+              const json = await res.json();
+              const twitterData = json?.data as Record<string, string> | undefined;
+              if (twitterData?.profile_image_url) {
+                // Use higher-res version (_normal → _400x400)
+                const imageUrl = twitterData.profile_image_url.replace("_normal", "_400x400");
+                await db.user.update({
+                  where: { id: token.userId as string },
+                  data: {
+                    image: imageUrl,
+                    ...(twitterData.name ? { name: twitterData.name } : {}),
+                  },
+                });
+                token.picture = imageUrl;
+              }
+            }
+          } catch { /* ignore — image stays as-is */ }
+          token.imageRefreshedAt = Date.now();
         }
       }
       return token;

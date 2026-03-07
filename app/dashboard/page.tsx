@@ -80,7 +80,8 @@ export default async function DashboardPage() {
           <div className="dash-section-label">Quick Actions</div>
           <div className="dash-actions">
             <Link href="/talent" className="btn-secondary">Explore Talent</Link>
-            <Link href="/projects" className="btn-secondary">Browse Projects</Link>
+            <Link href="/gigs" className="btn-secondary">Browse Gigs</Link>
+            <Link href="/gigs/new" className="btn-secondary">+ Post a Gig</Link>
             <Link href={`/u/${dbUser.twitterHandle}`} className="btn-secondary">My Profile</Link>
           </div>
 

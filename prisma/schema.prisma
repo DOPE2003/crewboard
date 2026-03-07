@@ -8,9 +8,9 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  twitterId       String   @unique
-  twitterHandle   String   @unique
+  id              String         @id @default(cuid())
+  twitterId       String         @unique
+  twitterHandle   String         @unique
   name            String?
   image           String?
   role            String?
@@ -21,6 +21,7 @@ model User {
   createdAt       DateTime       @default(now())
   updatedAt       DateTime       @updatedAt
   notifications   Notification[]
+  gigs            Gig[]
 }
 
 model Notification {
@@ -63,4 +64,19 @@ model Message {
   body           String
   read           Boolean      @default(false)
   createdAt      DateTime     @default(now())
+}
+
+model Gig {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title        String
+  description  String
+  price        Int
+  deliveryDays Int
+  category     String
+  tags         String[]
+  status       String   @default("active")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 }

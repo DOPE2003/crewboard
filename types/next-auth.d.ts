@@ -17,5 +17,7 @@ declare module "next-auth/jwt" {
     userId?: string;
     twitterHandle?: string;
     profileComplete?: boolean;
+    twitterAccessToken?: string;
+    imageRefreshedAt?: number;
   }
 }

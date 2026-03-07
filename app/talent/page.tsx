@@ -13,9 +13,20 @@ const AVAILABILITY_LABELS: Record<string, string> = {
   busy: "Busy",
 };
 
-export default async function TalentPage() {
+export default async function TalentPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ role?: string }>;
+}) {
+  const { role = "" } = await searchParams;
+
+  const where: Record<string, unknown> = { profileComplete: true };
+  if (role.trim()) {
+    where.role = { equals: role.trim(), mode: "insensitive" };
+  }
+
   const users = await db.user.findMany({
-    where: { profileComplete: true },
+    where,
     orderBy: { createdAt: "desc" },
     select: {
       twitterHandle: true,
@@ -33,13 +44,33 @@ export default async function TalentPage() {
       <section className="talent-wrap">
         <div className="talent-header">
           <div className="auth-kicker">— CREWBOARD</div>
-          <h1 className="auth-title">Talent</h1>
-          <p className="auth-sub">Verified Web3 builders, ready to crew up.</p>
+          <h1 className="auth-title">{role ? role : "Talent"}</h1>
+          <p className="auth-sub">
+            {role
+              ? `Verified Web3 ${role} builders, ready to crew up.`
+              : "Verified Web3 builders, ready to crew up."}
+          </p>
+          {role && (
+            <Link
+              href="/talent"
+              style={{
+                marginTop: "0.75rem",
+                display: "inline-flex",
+                fontFamily: "Space Mono, monospace",
+                fontSize: "0.7rem",
+                color: "rgba(0,0,0,0.4)",
+                textDecoration: "none",
+                letterSpacing: "0.04em",
+              }}
+            >
+              ← All talent
+            </Link>
+          )}
         </div>
 
         {users.length === 0 ? (
           <div className="talent-empty">
-            <p>No builders here yet — be the first.</p>
+            <p>No {role ? `${role} builders` : "builders"} here yet — be the first.</p>
             <Link href="/dashboard" className="btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
               Go to Dashboard
             </Link>

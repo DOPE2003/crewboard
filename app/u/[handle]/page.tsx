@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
+import Link from "next/link";
 import { startConversation } from "@/app/actions/messages";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
@@ -23,13 +24,21 @@ export default async function PublicProfilePage({
   const { handle } = await params;
 
   const [user, session] = await Promise.all([
-    db.user.findUnique({ where: { twitterHandle: handle } }),
+    db.user.findUnique({
+      where: { twitterHandle: handle },
+      include: {
+        gigs: {
+          where: { status: "active" },
+          orderBy: { createdAt: "desc" },
+        },
+      },
+    }),
     auth(),
   ]);
 
   if (!user || !user.profileComplete) notFound();
 
-  // Notify profile owner when someone else views their profile (rate: once per hour)
+  // Notify profile owner when someone else views (rate: once per hour)
   const viewerId = (session?.user as any)?.userId as string | undefined;
   if (viewerId && viewerId !== user.id) {
     const recentView = await db.notification.findFirst({
@@ -58,7 +67,7 @@ export default async function PublicProfilePage({
   return (
     <main className="page">
       <section className="auth-wrap">
-        <div className="auth-card profile-card">
+        <div className="auth-card profile-card" style={{ maxWidth: 720, width: "100%" }}>
 
           {/* Availability badge */}
           <div className="dash-badge">
@@ -87,13 +96,8 @@ export default async function PublicProfilePage({
             </div>
           </div>
 
-          {user.role && (
-            <div className="profile-role">{user.role}</div>
-          )}
-
-          {user.bio && (
-            <p className="profile-bio">{user.bio}</p>
-          )}
+          {user.role && <div className="profile-role">{user.role}</div>}
+          {user.bio  && <p className="profile-bio">{user.bio}</p>}
 
           {user.skills.length > 0 && (
             <div className="ob-field">
@@ -104,6 +108,26 @@ export default async function PublicProfilePage({
                 ))}
               </div>
             </div>
+          )}
+
+          {/* Gigs section */}
+          {user.gigs.length > 0 && (
+            <>
+              <div className="dash-divider" />
+              <div className="dash-section-label">Services Offered</div>
+              <div className="profile-gigs">
+                {user.gigs.map((gig) => (
+                  <Link key={gig.id} href={`/gigs/${gig.id}`} className="profile-gig-card">
+                    <div className="profile-gig-top">
+                      <span className="gig-category-badge" style={{ fontSize: "0.65rem" }}>{gig.category}</span>
+                      <span className="gig-price">${gig.price}</span>
+                    </div>
+                    <div className="profile-gig-title">{gig.title}</div>
+                    <div className="profile-gig-meta">{gig.deliveryDays}d delivery</div>
+                  </Link>
+                ))}
+              </div>
+            </>
           )}
 
           <div className="dash-divider" />
