@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
-import HeroMobileSearch from "./components/HeroMobileSearch";
+import HeroMobileSearch from "@/components/HeroMobileSearch";
 
 const FEATURES = [
   {

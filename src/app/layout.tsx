@@ -1,8 +1,8 @@
 import "./globals.css";
 import AuthProvider from "./SessionProvider";
-import StarsBackground from "./components/StarsBackground";
-import Navbar from "./components/Navbar";
-import ThemeRouteClass from "./components/ThemeRouteClass";
+import StarsBackground from "@/components/StarsBackground";
+import Navbar from "@/components/Navbar";
+import ThemeRouteClass from "@/components/ThemeRouteClass";
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
