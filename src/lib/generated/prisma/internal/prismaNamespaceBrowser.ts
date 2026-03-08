@@ -79,6 +79,7 @@ export const UserScalarFieldEnum = {
   id: 'id',
   twitterId: 'twitterId',
   twitterHandle: 'twitterHandle',
+  walletAddress: 'walletAddress',
   name: 'name',
   image: 'image',
   role: 'role',

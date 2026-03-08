@@ -11,6 +11,7 @@ model User {
   id              String         @id @default(cuid())
   twitterId       String         @unique
   twitterHandle   String         @unique
+  walletAddress   String?        @unique
   name            String?
   image           String?
   role            String?
