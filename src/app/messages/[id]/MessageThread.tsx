@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import PusherClient from "pusher-js";
+import { sendMessage, getMessages, markMessagesAsRead } from "@/actions/messages";
 
 interface Msg {
   id: string;
@@ -39,18 +40,18 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // Load initial messages
-  const fetchMessages = useCallback(async () => {
+  const loadMessages = useCallback(async () => {
     try {
-      const res = await fetch(`/api/messages/${conversationId}`, { cache: "no-store" });
-      if (!res.ok) return;
-      const data: Msg[] = await res.json();
+      const data = await getMessages(conversationId);
       setMessages(data);
+      // Mark as read when opening
+      await markMessagesAsRead(conversationId);
     } catch { /* ignore */ }
   }, [conversationId]);
 
   useEffect(() => {
-    fetchMessages();
-  }, [fetchMessages]);
+    loadMessages();
+  }, [loadMessages]);
 
   // Pusher real-time subscription
   useEffect(() => {
@@ -104,18 +105,11 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
     setBody("");
 
     try {
-      const res = await fetch(`/api/messages/${conversationId}`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ body: text }),
-      });
-      if (res.ok) {
-        const confirmed: Msg = await res.json();
-        // Replace optimistic message with real one
-        setMessages((prev) =>
-          prev.map((m) => (m.id === optimisticMsg.id ? confirmed : m))
-        );
-      }
+      const confirmed = await sendMessage(conversationId, text);
+      // Replace optimistic message with real one
+      setMessages((prev) =>
+        prev.map((m) => (m.id === optimisticMsg.id ? confirmed : m))
+      );
     } catch {
       // Remove optimistic on failure
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));

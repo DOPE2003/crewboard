@@ -2,18 +2,17 @@
 
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
+import { markAllNotificationsAsRead } from "@/actions/notifications";
 
 export default function MarkAllRead({ userId }: { userId: string }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
 
   const handleClick = async () => {
-    await fetch("/api/notifications/read-all", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId }),
+    startTransition(async () => {
+      await markAllNotificationsAsRead();
+      router.refresh();
     });
-    startTransition(() => router.refresh());
   };
 
   return (

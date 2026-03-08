@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import { searchBuilders } from "@/actions/search";
 
 interface Result {
   name: string | null;
@@ -26,8 +27,7 @@ export default function NavSearch() {
     if (query.trim().length < 2) { setResults([]); setOpen(false); return; }
     timer.current = setTimeout(async () => {
       try {
-        const res = await fetch(`/api/search?q=${encodeURIComponent(query)}`);
-        const data: Result[] = await res.json();
+        const data = await searchBuilders(query);
         setResults(data);
         setOpen(data.length > 0);
         setFocused(-1);

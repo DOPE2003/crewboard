@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { toggleGigStatus, deleteGig } from "@/actions/gigs";
 
 interface Props {
   gigId: string;
@@ -12,37 +13,42 @@ export default function GigOwnerActions({ gigId, currentStatus }: Props) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
-  async function toggleStatus() {
+  async function handleToggle() {
     setLoading(true);
-    const newStatus = currentStatus === "active" ? "paused" : "active";
-    await fetch(`/api/gigs/${gigId}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ status: newStatus }),
-    });
-    router.refresh();
-    setLoading(false);
+    try {
+      await toggleGigStatus(gigId, currentStatus);
+      router.refresh();
+    } catch (e: any) {
+      alert(e.message);
+    } finally {
+      setLoading(false);
+    }
   }
 
-  async function deleteGig() {
+  async function handleDelete() {
     if (!confirm("Delete this gig? This cannot be undone.")) return;
     setLoading(true);
-    await fetch(`/api/gigs/${gigId}`, { method: "DELETE" });
-    router.push("/gigs");
+    try {
+      await deleteGig(gigId);
+      router.push("/gigs");
+    } catch (e: any) {
+      alert(e.message);
+      setLoading(false);
+    }
   }
 
   return (
     <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
       <button
         className="btn-secondary"
-        onClick={toggleStatus}
+        onClick={handleToggle}
         disabled={loading}
         style={{ flex: 1 }}
       >
         {loading ? "..." : currentStatus === "active" ? "Pause Gig" : "Activate Gig"}
       </button>
       <button
-        onClick={deleteGig}
+        onClick={handleDelete}
         disabled={loading}
         style={{
           flex: 1,

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
+import { searchBuilders } from "@/actions/search";
 
 interface Result {
   name: string | null;
@@ -22,8 +23,7 @@ export default function HeroMobileSearch() {
   const fetchResults = useCallback(async (q: string) => {
     if (q.trim().length < 2) { setResults([]); setOpen(false); return; }
     try {
-      const res = await fetch(`/api/search?q=${encodeURIComponent(q)}`);
-      const data: Result[] = await res.json();
+      const data = await searchBuilders(q);
       setResults(data);
       setOpen(data.length > 0);
       setFocused(-1);

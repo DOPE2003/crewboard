@@ -2,7 +2,7 @@ import db from "@/lib/db";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { startConversation } from "@/app/actions/messages";
+import { startConversation } from "@/actions/messages";
 import GigOwnerActions from "./GigOwnerActions";
 
 export default async function GigPage({

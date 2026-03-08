@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { createGig } from "@/actions/gigs";
 
 const GIG_CATEGORIES = [
   "KOL Manager",
@@ -61,16 +62,17 @@ export default function NewGigPage() {
 
     setLoading(true);
     try {
-      const res = await fetch("/api/gigs", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ title, description, category, price: parseInt(price), deliveryDays: parseInt(deliveryDays), tags }),
+      const gig = await createGig({
+        title,
+        description,
+        category,
+        price: parseInt(price),
+        deliveryDays: parseInt(deliveryDays),
+        tags
       });
-      const data = await res.json();
-      if (!res.ok) { setError(data.error ?? "Failed to create gig."); return; }
-      router.push(`/gigs/${data.id}`);
-    } catch {
-      setError("Network error. Please try again.");
+      router.push(`/gigs/${gig.id}`);
+    } catch (e: any) {
+      setError(e.message ?? "Failed to create gig.");
     } finally {
       setLoading(false);
     }

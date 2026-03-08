@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
+import { completeOnboarding } from "@/actions/onboarding";
 
 const ROLES = [
   "KOL Manager",
@@ -85,23 +86,15 @@ export default function OnboardingPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/onboarding", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ role, skills, bio, availability }),
-      });
+      const result = await completeOnboarding({ role, skills, bio, availability });
 
-      if (res.ok) {
+      if (result.ok) {
         // Pass profileComplete directly so the jwt callback doesn't need a DB round-trip.
         await update({ profileComplete: true });
         router.push("/dashboard");
-      } else {
-        const data = await res.json().catch(() => ({}));
-        setError(data.error ?? "Something went wrong. Try again.");
-        setLoading(false);
       }
-    } catch {
-      setError("Network error. Please try again.");
+    } catch (e: any) {
+      setError(e.message ?? "Something went wrong. Try again.");
       setLoading(false);
     }
   }

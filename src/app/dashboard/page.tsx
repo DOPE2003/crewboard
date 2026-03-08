@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import LogoutButton from "@/app/components/LogoutButton";
-import EditProfileForm from "@/app/components/EditProfileForm";
+import LogoutButton from "@/components/ui/LogoutButton";
+import EditProfileForm from "@/components/forms/EditProfileForm";
 import db from "@/lib/db";
 
 export default async function DashboardPage() {
