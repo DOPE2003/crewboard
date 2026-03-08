@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroMobileSearch from "@/components/home/HeroMobileSearch";
+import "@/styles/landing.css";
 
 const FEATURES = [
   {

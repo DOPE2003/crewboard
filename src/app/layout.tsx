@@ -1,4 +1,4 @@
-import "./globals.css";
+import "@/styles/globals.css";
 import AuthProvider from "./SessionProvider";
 import StarsBackground from "@/components/ui/StarsBackground";
 import Navbar from "@/components/layout/Navbar";
