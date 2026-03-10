@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import LogoutButton from "@/components/ui/LogoutButton";
 import EditProfileForm from "@/components/forms/EditProfileForm";
+import LinkWallet from "@/components/forms/LinkWallet";
 import db from "@/lib/db";
 
 export default async function DashboardPage() {
@@ -73,6 +74,7 @@ export default async function DashboardPage() {
               <div className="dash-stat-value">0</div>
               <div className="dash-stat-label">Crew</div>
             </div>
+            <LinkWallet currentWallet={dbUser.walletAddress} />
           </div>
 
           <div className="dash-divider" />
