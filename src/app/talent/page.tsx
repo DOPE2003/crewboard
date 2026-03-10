@@ -20,24 +20,29 @@ export default async function TalentPage({
 }) {
   const { role = "" } = await searchParams;
 
-  const where: Record<string, unknown> = { profileComplete: true };
-  if (role.trim()) {
-    where.role = { equals: role.trim(), mode: "insensitive" };
-  }
+  let users: any[] = [];
+  try {
+    const where: Record<string, unknown> = { profileComplete: true };
+    if (role.trim()) {
+      where.role = { equals: role.trim(), mode: "insensitive" };
+    }
 
-  const users = await db.user.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    select: {
-      twitterHandle: true,
-      name: true,
-      image: true,
-      role: true,
-      skills: true,
-      availability: true,
-      bio: true,
-    },
-  });
+    users = await db.user.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      select: {
+        twitterHandle: true,
+        name: true,
+        image: true,
+        role: true,
+        skills: true,
+        availability: true,
+        bio: true,
+      },
+    });
+  } catch (error) {
+    console.error("Talent Page DB Error:", error);
+  }
 
   return (
     <main className="page">

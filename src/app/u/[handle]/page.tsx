@@ -23,18 +23,25 @@ export default async function PublicProfilePage({
 }) {
   const { handle } = await params;
 
-  const [user, session] = await Promise.all([
-    db.user.findUnique({
-      where: { twitterHandle: handle },
-      include: {
-        gigs: {
-          where: { status: "active" },
-          orderBy: { createdAt: "desc" },
+  let user: any = null;
+  let session: any = null;
+
+  try {
+    [user, session] = await Promise.all([
+      db.user.findUnique({
+        where: { twitterHandle: handle },
+        include: {
+          gigs: {
+            where: { status: "active" },
+            orderBy: { createdAt: "desc" },
+          },
         },
-      },
-    }),
-    auth(),
-  ]);
+      }),
+      auth(),
+    ]);
+  } catch (error) {
+    console.error("Profile Page Error:", error);
+  }
 
   if (!user || !user.profileComplete) notFound();
 
