@@ -92,9 +92,13 @@ export default function EditProfileForm({ initialRole, initialSkills, initialBio
     setIsEditing(false);
   }
 
+  const SOCIAL_RE = /(@[a-zA-Z0-9_]{2,}|https?:\/\/|www\.|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|t\.me\/|discord\.gg\/|telegram\.me\/|x\.com\/|twitter\.com\/)/i;
+  const bioHasSocial = SOCIAL_RE.test(bio);
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!role) { setError("Please select a role."); return; }
+    if (bioHasSocial) { setError("Remove social handles, emails, or links from your bio."); return; }
     setLoading(true);
     setError("");
 
@@ -199,7 +203,13 @@ export default function EditProfileForm({ initialRole, initialSkills, initialBio
           value={bio}
           onChange={(e) => setBio(e.target.value.slice(0, 200))}
           rows={3}
+          style={bioHasSocial ? { borderColor: "#ef4444" } : {}}
         />
+        {bioHasSocial && (
+          <div style={{ fontSize: "0.7rem", color: "#ef4444", marginTop: 4 }}>
+            Remove social handles, emails, or links — keep all contact on Crewboard.
+          </div>
+        )}
       </div>
 
       {/* Availability */}

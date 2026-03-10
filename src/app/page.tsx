@@ -238,16 +238,7 @@ export default async function HomePage() {
           position: "relative",
           zIndex: 1,
         }}>
-          <p style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.6rem",
-            letterSpacing: "0.2em",
-            textTransform: "uppercase",
-            color: "rgba(0,0,0,0.38)",
-            marginBottom: "2rem",
-          }}>
-            The first Web3-native builder network
-          </p>
+
           <span style={{
             fontFamily: "Space Mono, monospace",
             fontSize: "0.52rem",

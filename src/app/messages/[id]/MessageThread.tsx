@@ -32,10 +32,13 @@ function formatDate(iso: string) {
   return d.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
+const SOCIAL_RE = /(@[a-zA-Z0-9_]{2,}|https?:\/\/|www\.|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|t\.me\/|discord\.gg\/|telegram\.me\/|x\.com\/|twitter\.com\/)/i;
+
 export default function MessageThread({ conversationId, currentUserId }: Props) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
+  const [socialWarning, setSocialWarning] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
@@ -91,6 +94,11 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
   const send = async () => {
     if (!body.trim() || sending) return;
     const text = body.trim();
+    if (SOCIAL_RE.test(text)) {
+      setSocialWarning(true);
+      return;
+    }
+    setSocialWarning(false);
     setSending(true);
 
     // Optimistic: add message immediately to local state
@@ -157,15 +165,21 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
         <div ref={bottomRef} />
       </div>
 
+      {socialWarning && (
+        <div style={{ padding: "6px 14px", fontSize: "0.72rem", color: "#ef4444", background: "rgba(239,68,68,0.06)", borderTop: "1px solid rgba(239,68,68,0.15)" }}>
+          Social handles, emails, and links are not allowed. Keep all contact on Crewboard.
+        </div>
+      )}
       <div className="msgs-input-row">
         <textarea
           ref={inputRef}
           className="msgs-input"
           placeholder="Write a message… (Enter to send)"
           value={body}
-          onChange={(e) => setBody(e.target.value)}
+          onChange={(e) => { setBody(e.target.value); if (socialWarning) setSocialWarning(false); }}
           onKeyDown={handleKey}
           rows={1}
+          style={socialWarning ? { borderColor: "#ef4444" } : {}}
         />
         <button
           className="msgs-send-btn"

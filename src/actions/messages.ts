@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import { pusher } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
+import { containsSocial } from "@/lib/filterSocials";
 
 export async function sendMessage(conversationId: string, body: string) {
   const session = await auth();
@@ -18,6 +19,10 @@ export async function sendMessage(conversationId: string, body: string) {
 
   if (!conv || !conv.participants.includes(userId)) {
     throw new Error("Conversation not found");
+  }
+
+  if (containsSocial(body)) {
+    throw new Error("Messages cannot contain social handles, emails, phone numbers, or links. Keep all contact on Crewboard.");
   }
 
   const message = await db.message.create({

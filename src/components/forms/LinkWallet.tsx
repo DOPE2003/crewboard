@@ -55,7 +55,6 @@ export default function LinkWallet({ currentWallet }: { currentWallet?: string |
 
   return (
     <div className="dash-stat" style={{ gridColumn: "span 2" }}>
-      <div className="dash-stat-label">Payments & Infrastructure</div>
       {!isConnected ? (
         <div style={{ marginTop: "0.5rem" }}>
           <ConnectKitButton />

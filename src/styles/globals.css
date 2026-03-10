@@ -51,6 +51,26 @@ nav {
   color: #000;
   letter-spacing: 0.05em;
 }
+.nav-tagline {
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #2DD4BF;
+  padding-left: 2px;
+  opacity: 0;
+  transform: translateY(-4px);
+  animation: taglineIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s forwards;
+}
+
+@keyframes taglineIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 480px) {
+  .nav-tagline { display: none; }
+}
+
 .nav-brand-name {
   font-family: 'Rajdhani', sans-serif;
   font-weight: 700;
@@ -1810,6 +1830,37 @@ nav {
   .dash-profile { flex-direction: column; }
   .dash-role-badge { margin-left: 0; width: fit-content; }
   .dash-stats { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* Profile page */
+.profile-gig-row:hover { border-color: rgba(45,212,191,0.3) !important; }
+
+@media (max-width: 680px) {
+  .profile-grid { grid-template-columns: 1fr !important; }
+}
+
+/* Dashboard sidebar layout */
+.dash-layout { position: relative; z-index: 1; }
+.dash-sidebar { scrollbar-width: none; }
+.dash-sidebar::-webkit-scrollbar { display: none; }
+.dash-workspace-card:hover { background: #f1f5f9 !important; }
+.dash-nav-link:hover { background: rgba(0,0,0,0.04) !important; color: #0f172a !important; }
+
+@media (max-width: 768px) {
+  .dash-layout { flex-direction: column !important; }
+  .dash-sidebar {
+    width: 100% !important; height: auto !important;
+    position: static !important; border-right: none !important;
+    border-bottom: 1px solid rgba(0,0,0,0.07) !important;
+    padding: 0.75rem 1rem !important;
+  }
+  .dash-sidebar nav { flex-direction: row !important; flex-wrap: wrap !important; gap: 2px !important; }
+  .dash-sidebar nav a svg { display: none; }
+}
+
+@media (max-width: 640px) {
+  .dash-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .dash-two-col { grid-template-columns: 1fr !important; }
 }
 
 /* Onboarding: availability options wrap better */

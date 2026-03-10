@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import NavSearch from "./NavSearch";
@@ -11,17 +10,19 @@ export default async function Navbar() {
   const session = await auth();
   const user = session?.user;
 
-  // Fetch role + availability for the profile popup + unread notification count
+  // Fetch role + availability for the profile popup + unread notification count + gig count
   let dbUser: { role: string | null; availability: string | null } | null = null;
   let unreadCount = 0;
+  let gigsCount = 0;
   const userId = (user as any)?.userId as string | undefined;
   if (userId) {
-    [dbUser, unreadCount] = await Promise.all([
+    [dbUser, unreadCount, gigsCount] = await Promise.all([
       db.user.findUnique({
         where: { id: userId },
         select: { role: true, availability: true },
       }),
       db.notification.count({ where: { userId, read: false } }),
+      db.gig.count({ where: { userId, status: "active" } }),
     ]);
   }
 
@@ -40,9 +41,22 @@ export default async function Navbar() {
       }}>
 
         {/* Logo + brand name */}
-        <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: "0.5rem", textDecoration: "none" }}>
-          <Image src="/logo.png" alt="Crewboard" width={54} height={54} style={{ objectFit: "contain" }} priority />
-          <span className="nav-brand-name">Crewboard</span>
+        <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", textDecoration: "none", gap: 1 }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" style={{ width: 210, height: 52 }}>
+            <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
+              fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
+            <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+            <line x1="72" y1="54" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+            <line x1="52" y1="94" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+            <circle cx="72" cy="54" r="6.4" fill="currentColor"/>
+            <circle cx="52" cy="94" r="6.4" fill="currentColor"/>
+            <circle cx="92" cy="94" r="6.4" fill="currentColor"/>
+            <text x="152" y="102" fill="currentColor"
+              style={{ fontFamily: "Inter,'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: 68, letterSpacing: -2.4 }}>
+              <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
+            </text>
+          </svg>
+          <span className="nav-tagline">Web3 Talent Marketplace</span>
         </Link>
 
         {/* Right: search + icons + auth */}
@@ -101,6 +115,8 @@ export default async function Navbar() {
                 twitterHandle={(user as any).twitterHandle ?? null}
                 role={dbUser?.role ?? null}
                 availability={dbUser?.availability ?? null}
+                unreadCount={unreadCount}
+                gigsCount={gigsCount}
               />
             </>
           )}
