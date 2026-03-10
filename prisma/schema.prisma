@@ -23,6 +23,8 @@ model User {
   updatedAt       DateTime       @updatedAt
   notifications   Notification[]
   gigs            Gig[]
+  buyerOrders     Order[]        @relation("BuyerOrders")
+  sellerOrders    Order[]        @relation("SellerOrders")
 }
 
 model Notification {
@@ -80,4 +82,21 @@ model Gig {
   status       String   @default("active")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  orders       Order[]
+}
+
+model Order {
+  id             String   @id @default(cuid())
+  gigId          String
+  gig            Gig      @relation(fields: [gigId], references: [id])
+  buyerId        String
+  buyer          User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+  sellerId       String
+  seller         User     @relation("SellerOrders", fields: [sellerId], references: [id])
+  amount         Int      // Price in USDC
+  status         String   @default("pending") // pending, funded, completed, disputed, cancelled
+  escrowAddress  String?  @unique // Solana PDA or account
+  txHash         String?  // Funding transaction hash
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

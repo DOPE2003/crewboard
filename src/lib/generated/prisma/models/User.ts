@@ -244,6 +244,8 @@ export type UserWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   notifications?: Prisma.NotificationListRelationFilter
   gigs?: Prisma.GigListRelationFilter
+  buyerOrders?: Prisma.OrderListRelationFilter
+  sellerOrders?: Prisma.OrderListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -262,6 +264,8 @@ export type UserOrderByWithRelationInput = {
   updatedAt?: Prisma.SortOrder
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   gigs?: Prisma.GigOrderByRelationAggregateInput
+  buyerOrders?: Prisma.OrderOrderByRelationAggregateInput
+  sellerOrders?: Prisma.OrderOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -283,6 +287,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   notifications?: Prisma.NotificationListRelationFilter
   gigs?: Prisma.GigListRelationFilter
+  buyerOrders?: Prisma.OrderListRelationFilter
+  sellerOrders?: Prisma.OrderListRelationFilter
 }, "id" | "twitterId" | "twitterHandle" | "walletAddress">
 
 export type UserOrderByWithAggregationInput = {
@@ -339,6 +345,8 @@ export type UserCreateInput = {
   updatedAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -357,6 +365,8 @@ export type UserUncheckedCreateInput = {
   updatedAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserUpdateInput = {
@@ -375,6 +385,8 @@ export type UserUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -393,6 +405,8 @@ export type UserUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -555,6 +569,34 @@ export type UserUpdateOneRequiredWithoutGigsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGigsInput, Prisma.UserUpdateWithoutGigsInput>, Prisma.UserUncheckedUpdateWithoutGigsInput>
 }
 
+export type UserCreateNestedOneWithoutBuyerOrdersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBuyerOrdersInput, Prisma.UserUncheckedCreateWithoutBuyerOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBuyerOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutSellerOrdersInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSellerOrdersInput, Prisma.UserUncheckedCreateWithoutSellerOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSellerOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutBuyerOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutBuyerOrdersInput, Prisma.UserUncheckedCreateWithoutBuyerOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutBuyerOrdersInput
+  upsert?: Prisma.UserUpsertWithoutBuyerOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutBuyerOrdersInput, Prisma.UserUpdateWithoutBuyerOrdersInput>, Prisma.UserUncheckedUpdateWithoutBuyerOrdersInput>
+}
+
+export type UserUpdateOneRequiredWithoutSellerOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSellerOrdersInput, Prisma.UserUncheckedCreateWithoutSellerOrdersInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSellerOrdersInput
+  upsert?: Prisma.UserUpsertWithoutSellerOrdersInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSellerOrdersInput, Prisma.UserUpdateWithoutSellerOrdersInput>, Prisma.UserUncheckedUpdateWithoutSellerOrdersInput>
+}
+
 export type UserCreateWithoutNotificationsInput = {
   id?: string
   twitterId: string
@@ -570,6 +612,8 @@ export type UserCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -587,6 +631,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -620,6 +666,8 @@ export type UserUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -637,6 +685,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
 }
 
 export type UserCreateWithoutGigsInput = {
@@ -654,6 +704,8 @@ export type UserCreateWithoutGigsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
 }
 
 export type UserUncheckedCreateWithoutGigsInput = {
@@ -671,6 +723,8 @@ export type UserUncheckedCreateWithoutGigsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
 }
 
 export type UserCreateOrConnectWithoutGigsInput = {
@@ -704,6 +758,8 @@ export type UserUpdateWithoutGigsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGigsInput = {
@@ -721,6 +777,192 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+}
+
+export type UserCreateWithoutBuyerOrdersInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+}
+
+export type UserUncheckedCreateWithoutBuyerOrdersInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+}
+
+export type UserCreateOrConnectWithoutBuyerOrdersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutBuyerOrdersInput, Prisma.UserUncheckedCreateWithoutBuyerOrdersInput>
+}
+
+export type UserCreateWithoutSellerOrdersInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+}
+
+export type UserUncheckedCreateWithoutSellerOrdersInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+}
+
+export type UserCreateOrConnectWithoutSellerOrdersInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSellerOrdersInput, Prisma.UserUncheckedCreateWithoutSellerOrdersInput>
+}
+
+export type UserUpsertWithoutBuyerOrdersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutBuyerOrdersInput, Prisma.UserUncheckedUpdateWithoutBuyerOrdersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutBuyerOrdersInput, Prisma.UserUncheckedCreateWithoutBuyerOrdersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutBuyerOrdersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutBuyerOrdersInput, Prisma.UserUncheckedUpdateWithoutBuyerOrdersInput>
+}
+
+export type UserUpdateWithoutBuyerOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+}
+
+export type UserUpsertWithoutSellerOrdersInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSellerOrdersInput, Prisma.UserUncheckedUpdateWithoutSellerOrdersInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSellerOrdersInput, Prisma.UserUncheckedCreateWithoutSellerOrdersInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSellerOrdersInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSellerOrdersInput, Prisma.UserUncheckedUpdateWithoutSellerOrdersInput>
+}
+
+export type UserUpdateWithoutSellerOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSellerOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
 }
 
 
@@ -731,11 +973,15 @@ export type UserUncheckedUpdateWithoutGigsInput = {
 export type UserCountOutputType = {
   notifications: number
   gigs: number
+  buyerOrders: number
+  sellerOrders: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   gigs?: boolean | UserCountOutputTypeCountGigsArgs
+  buyerOrders?: boolean | UserCountOutputTypeCountBuyerOrdersArgs
+  sellerOrders?: boolean | UserCountOutputTypeCountSellerOrdersArgs
 }
 
 /**
@@ -762,6 +1008,20 @@ export type UserCountOutputTypeCountGigsArgs<ExtArgs extends runtime.Types.Exten
   where?: Prisma.GigWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountBuyerOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSellerOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -779,6 +1039,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   updatedAt?: boolean
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
+  buyerOrders?: boolean | Prisma.User$buyerOrdersArgs<ExtArgs>
+  sellerOrders?: boolean | Prisma.User$sellerOrdersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -834,6 +1096,8 @@ export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = run
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
+  buyerOrders?: boolean | Prisma.User$buyerOrdersArgs<ExtArgs>
+  sellerOrders?: boolean | Prisma.User$sellerOrdersArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -844,6 +1108,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   objects: {
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     gigs: Prisma.$GigPayload<ExtArgs>[]
+    buyerOrders: Prisma.$OrderPayload<ExtArgs>[]
+    sellerOrders: Prisma.$OrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1255,6 +1521,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   readonly [Symbol.toStringTag]: "PrismaPromise"
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   gigs<T extends Prisma.User$gigsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gigsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  buyerOrders<T extends Prisma.User$buyerOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$buyerOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sellerOrders<T extends Prisma.User$sellerOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sellerOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1730,6 +1998,54 @@ export type User$gigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.GigScalarFieldEnum | Prisma.GigScalarFieldEnum[]
+}
+
+/**
+ * User.buyerOrders
+ */
+export type User$buyerOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.sellerOrders
+ */
+export type User$sellerOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
 }
 
 /**
