@@ -62,7 +62,7 @@ export default function LinkWallet({ currentWallet }: { currentWallet?: string |
       ) : (
         <div style={{ marginTop: "0.5rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <div style={{ fontSize: "0.8rem", color: "rgba(0,0,0,0.5)" }}>
-            Connected: {address.slice(0, 6)}...{address.slice(-4)}
+            Connected: {address!.slice(0, 6)}...{address!.slice(-4)}
           </div>
           <button
             onClick={handleLink}
