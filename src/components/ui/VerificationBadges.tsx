@@ -22,7 +22,7 @@ export function WalletVerifiedBadge() {
 
 // Human Verified badge — shown when humanVerified is true
 export function HumanVerifiedBadge({ level }: { level?: string | null }) {
-  const label = level === "face" ? "Face Verified" : level === "orb" ? "Orb Verified" : "Verified";
+  const label = level === "stripe" ? "ID Verified" : level === "face" ? "Face Verified" : level === "orb" ? "Orb Verified" : "Verified";
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 4,

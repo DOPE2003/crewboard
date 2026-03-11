@@ -8,7 +8,7 @@ import LinkWallet from "@/components/forms/LinkWallet";
 import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
 import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
-import FaceVerify from "@/components/ui/FaceVerify";
+import StripeVerify from "@/components/ui/StripeVerify";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
   available: "#22c55e",
@@ -286,10 +286,10 @@ export default async function PublicProfilePage({
                     : <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>No wallet linked — connect one below</div>
                   }
                 </div>
-                {/* Face Verification */}
+                {/* Identity Verification */}
                 <div>
-                  <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "#334155", marginBottom: 6 }}>Face Verification</div>
-                  <FaceVerify humanVerified={user.humanVerified} />
+                  <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "#334155", marginBottom: 6 }}>Identity Verification</div>
+                  <StripeVerify humanVerified={user.humanVerified} />
                 </div>
               </div>
             </div>
