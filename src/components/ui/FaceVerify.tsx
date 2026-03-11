@@ -46,22 +46,12 @@ export default function FaceVerify({ humanVerified }: Props) {
       // Dynamically import face-api.js (browser only)
       const faceapi = await import("face-api.js");
 
-      // Load tiny face detector model — try multiple CDN sources
-      const MODEL_URLS = [
-        "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights",
-        "https://unpkg.com/face-api.js@0.22.2/weights",
-      ];
-      let loaded = false;
-      for (const url of MODEL_URLS) {
-        try {
-          await faceapi.nets.tinyFaceDetector.loadFromUri(url);
-          loaded = true;
-          break;
-        } catch { /* try next */ }
-      }
-      if (!loaded) {
+      // Load tiny face detector model from same-origin /models/ (no CDN, no CORS/shield issues)
+      try {
+        await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
+      } catch {
         setStatus("error");
-        setMessage("Failed to load face detection model. Check your internet connection or try disabling browser shields.");
+        setMessage("Failed to load face detection model. Please try again.");
         stopCamera();
         return;
       }
