@@ -97,10 +97,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           token.profileComplete = passed.profileComplete;
         }
       } else if (token.twitterAccessToken && token.userId) {
-        // Refresh avatar from Twitter API once per day
+        // Refresh avatar from Twitter API once per hour
         const lastRefresh = (token.imageRefreshedAt as number) ?? 0;
-        const oneDayMs = 24 * 60 * 60 * 1000;
-        if (Date.now() - lastRefresh > oneDayMs) {
+        const oneHourMs = 60 * 60 * 1000;
+        if (Date.now() - lastRefresh > oneHourMs) {
           try {
             const res = await fetch(
               "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name",
