@@ -22,20 +22,14 @@ export function WalletVerifiedBadge() {
 
 // Human Verified badge — shown when humanVerified is true
 export function HumanVerifiedBadge({ level }: { level?: string | null }) {
-  const isOrb = level === "orb";
+  const label = level === "face" ? "Face Verified" : level === "orb" ? "Orb Verified" : "Verified";
   return (
     <span style={{
       display: "inline-flex", alignItems: "center", gap: 4,
       padding: "2px 8px", borderRadius: 99,
-      background: isOrb
-        ? "linear-gradient(135deg, #14532d 0%, #166534 100%)"
-        : "linear-gradient(135deg, #14532d 0%, #15803d 100%)",
-      border: isOrb
-        ? "1px solid rgba(74,222,128,0.5)"
-        : "1px solid rgba(74,222,128,0.35)",
-      boxShadow: isOrb
-        ? "0 0 8px rgba(74,222,128,0.25)"
-        : "0 0 6px rgba(74,222,128,0.15)",
+      background: "linear-gradient(135deg, #14532d 0%, #166534 100%)",
+      border: "1px solid rgba(74,222,128,0.5)",
+      boxShadow: "0 0 8px rgba(74,222,128,0.25)",
       fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.06em",
       color: "#86efac",
       flexShrink: 0,
@@ -45,7 +39,7 @@ export function HumanVerifiedBadge({ level }: { level?: string | null }) {
         <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
         <polyline points="22 4 12 14.01 9 11.01"/>
       </svg>
-      {isOrb ? "Orb Verified" : "Human Verified"}
+      {label}
     </span>
   );
 }
