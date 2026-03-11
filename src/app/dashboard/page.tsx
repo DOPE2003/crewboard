@@ -10,11 +10,30 @@ export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.userId) redirect("/login");
 
-  const dbUser = await db.user.findUnique({
-    where: { id: session.user.userId },
-  });
+  console.log("DB Models:", Object.keys(db).filter(k => !k.startsWith("_")));
 
-  if (!dbUser) redirect("/login");
+  const [dbUserRaw, buyerOrdersRaw, sellerOrdersRaw] = await Promise.all([
+    db.user.findUnique({
+      where: { id: session.user.userId },
+    }),
+    db.order.findMany({
+      where: { buyerId: session.user.userId },
+      include: { gig: true, seller: true },
+      orderBy: { createdAt: "desc" },
+    }),
+    db.order.findMany({
+      where: { sellerId: session.user.userId },
+      include: { gig: true, buyer: true },
+      orderBy: { createdAt: "desc" },
+    }),
+  ]);
+
+  if (!dbUserRaw) redirect("/login");
+
+  // Serialize dates for Client Components
+  const dbUser = JSON.parse(JSON.stringify(dbUserRaw));
+  const buyerOrders = JSON.parse(JSON.stringify(buyerOrdersRaw));
+  const sellerOrders = JSON.parse(JSON.stringify(sellerOrdersRaw));
 
   return (
     <main className="page">
@@ -67,8 +86,8 @@ export default async function DashboardPage() {
               <div className="dash-stat-label">Reputation</div>
             </div>
             <div className="dash-stat">
-              <div className="dash-stat-value">0</div>
-              <div className="dash-stat-label">Projects</div>
+              <div className="dash-stat-value">{buyerOrders.length + sellerOrders.length}</div>
+              <div className="dash-stat-label">Orders</div>
             </div>
             <div className="dash-stat">
               <div className="dash-stat-value">0</div>
@@ -78,6 +97,52 @@ export default async function DashboardPage() {
           </div>
 
           <div className="dash-divider" />
+
+          {/* Orders Section */}
+          {(buyerOrders.length > 0 || sellerOrders.length > 0) && (
+            <>
+              <div className="dash-section-label">Active Orders</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem", marginBottom: "2rem" }}>
+                {/* As Buyer */}
+                {buyerOrders.map((order: any) => (
+                  <div key={order.id} className="profile-gig-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div className="profile-gig-top">
+                        <span className="gig-category-badge" style={{ fontSize: "0.6rem" }}>BUYING</span>
+                        <span className={`gig-category-badge status-${order.status}`} style={{ fontSize: "0.6rem", background: order.status === "funded" ? "#2DD4BF" : "#f59e0b", color: "#000" }}>
+                          {order.status.toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="profile-gig-title">{order.gig.title}</div>
+                      <div className="profile-gig-meta">Seller: @{order.seller.twitterHandle} • ${order.amount}</div>
+                    </div>
+                    {order.status === "pending" && (
+                      <Link href={`/orders/${order.id}/pay`} className="btn-primary" style={{ padding: "0.4rem 0.8rem", fontSize: "0.75rem", height: "auto" }}>
+                        PAY NOW
+                      </Link>
+                    )}
+                  </div>
+                ))}
+
+                {/* As Seller */}
+                {sellerOrders.map((order: any) => (
+                  <div key={order.id} className="profile-gig-card" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div className="profile-gig-top">
+                        <span className="gig-category-badge" style={{ fontSize: "0.6rem", background: "rgba(0,0,0,0.05)" }}>SELLING</span>
+                        <span className={`gig-category-badge status-${order.status}`} style={{ fontSize: "0.6rem", background: order.status === "funded" ? "#2DD4BF" : "#f59e0b", color: "#000" }}>
+                          {order.status.toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="profile-gig-title">{order.gig.title}</div>
+                      <div className="profile-gig-meta">Buyer: @{order.buyer.twitterHandle} • ${order.amount}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="dash-divider" />
+            </>
+          )}
 
           <div className="dash-section-label">Quick Actions</div>
           <div className="dash-actions">

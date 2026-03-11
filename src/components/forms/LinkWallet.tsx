@@ -6,24 +6,18 @@ import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { linkWallet } from "@/actions/wallet";
 import bs58 from "bs58";
 
-export default function LinkWallet({ currentWallet }: { currentWallet?: string | null }) {
-  const { publicKey, signMessage, connected, disconnect, wallet, wallets, select } = useWallet();
+// Sub-component that actually uses the wallet context
+function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
+  const { publicKey, signMessage, connected, disconnect, wallet } = useWallet();
   const { setVisible } = useWalletModal();
-  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   // Debug logging
   useEffect(() => {
-    if (mounted) {
-      console.log("Wallet State:", { connected, wallet: wallet?.adapter.name, publicKey: publicKey?.toBase58() });
-    }
-  }, [mounted, connected, wallet, publicKey]);
+    console.log("Wallet State:", { connected, wallet: wallet?.adapter.name, publicKey: publicKey?.toBase58() });
+  }, [connected, wallet, publicKey]);
 
   const handleLink = async () => {
     if (!publicKey || !signMessage) {
@@ -69,15 +63,6 @@ export default function LinkWallet({ currentWallet }: { currentWallet?: string |
           </div>
           <span style={{ fontSize: "0.8rem", color: "rgba(0,0,0,0.3)" }}>✓ Linked</span>
         </div>
-      </div>
-    );
-  }
-
-  if (!mounted) {
-    return (
-      <div className="dash-stat" style={{ gridColumn: "span 2" }}>
-        <div className="dash-stat-label">Payments & Infrastructure</div>
-        <div style={{ height: "40px", marginTop: "0.5rem" }} />
       </div>
     );
   }
@@ -132,4 +117,24 @@ export default function LinkWallet({ currentWallet }: { currentWallet?: string |
       </div>
     </div>
   );
+}
+
+// Main component that handles the client-only mounting
+export default function LinkWallet({ currentWallet }: { currentWallet?: string | null }) {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return (
+      <div className="dash-stat" style={{ gridColumn: "span 2" }}>
+        <div className="dash-stat-label">Payments & Infrastructure</div>
+        <div style={{ height: "40px", marginTop: "0.5rem" }} />
+      </div>
+    );
+  }
+
+  return <LinkWalletInner currentWallet={currentWallet} />;
 }
