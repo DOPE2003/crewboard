@@ -36,6 +36,9 @@ export type UserMinAggregateOutputType = {
   availability: string | null
   profileComplete: boolean | null
   isOG: boolean | null
+  humanVerified: boolean | null
+  worldIdNullifier: string | null
+  worldIdLevel: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -52,6 +55,9 @@ export type UserMaxAggregateOutputType = {
   availability: string | null
   profileComplete: boolean | null
   isOG: boolean | null
+  humanVerified: boolean | null
+  worldIdNullifier: string | null
+  worldIdLevel: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -69,6 +75,9 @@ export type UserCountAggregateOutputType = {
   availability: number
   profileComplete: number
   isOG: number
+  humanVerified: number
+  worldIdNullifier: number
+  worldIdLevel: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -87,6 +96,9 @@ export type UserMinAggregateInputType = {
   availability?: true
   profileComplete?: true
   isOG?: true
+  humanVerified?: true
+  worldIdNullifier?: true
+  worldIdLevel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -103,6 +115,9 @@ export type UserMaxAggregateInputType = {
   availability?: true
   profileComplete?: true
   isOG?: true
+  humanVerified?: true
+  worldIdNullifier?: true
+  worldIdLevel?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,6 +135,9 @@ export type UserCountAggregateInputType = {
   availability?: true
   profileComplete?: true
   isOG?: true
+  humanVerified?: true
+  worldIdNullifier?: true
+  worldIdLevel?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -210,6 +228,9 @@ export type UserGroupByOutputType = {
   availability: string | null
   profileComplete: boolean
   isOG: boolean
+  humanVerified: boolean
+  worldIdNullifier: string | null
+  worldIdLevel: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -248,6 +269,9 @@ export type UserWhereInput = {
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
   isOG?: Prisma.BoolFilter<"User"> | boolean
+  humanVerified?: Prisma.BoolFilter<"User"> | boolean
+  worldIdNullifier?: Prisma.StringNullableFilter<"User"> | string | null
+  worldIdLevel?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   notifications?: Prisma.NotificationListRelationFilter
@@ -268,6 +292,9 @@ export type UserOrderByWithRelationInput = {
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
+  worldIdNullifier?: Prisma.SortOrderInput | Prisma.SortOrder
+  worldIdLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
@@ -280,6 +307,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   twitterId?: string
   twitterHandle?: string
   walletAddress?: string
+  worldIdNullifier?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -291,12 +319,14 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
   isOG?: Prisma.BoolFilter<"User"> | boolean
+  humanVerified?: Prisma.BoolFilter<"User"> | boolean
+  worldIdLevel?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   notifications?: Prisma.NotificationListRelationFilter
   gigs?: Prisma.GigListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
-}, "id" | "twitterId" | "twitterHandle" | "walletAddress">
+}, "id" | "twitterId" | "twitterHandle" | "walletAddress" | "worldIdNullifier">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -311,6 +341,9 @@ export type UserOrderByWithAggregationInput = {
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
+  worldIdNullifier?: Prisma.SortOrderInput | Prisma.SortOrder
+  worldIdLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -334,6 +367,9 @@ export type UserScalarWhereWithAggregatesInput = {
   availability?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isOG?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  humanVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  worldIdNullifier?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  worldIdLevel?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -351,6 +387,9 @@ export type UserCreateInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -371,6 +410,9 @@ export type UserUncheckedCreateInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -391,6 +433,9 @@ export type UserUpdateInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -411,6 +456,9 @@ export type UserUncheckedUpdateInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -431,6 +479,9 @@ export type UserCreateManyInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -448,6 +499,9 @@ export type UserUpdateManyMutationInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -465,6 +519,9 @@ export type UserUncheckedUpdateManyInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -490,6 +547,9 @@ export type UserCountOrderByAggregateInput = {
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
+  worldIdNullifier?: Prisma.SortOrder
+  worldIdLevel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -506,6 +566,9 @@ export type UserMaxOrderByAggregateInput = {
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
+  worldIdNullifier?: Prisma.SortOrder
+  worldIdLevel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -522,6 +585,9 @@ export type UserMinOrderByAggregateInput = {
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
+  worldIdNullifier?: Prisma.SortOrder
+  worldIdLevel?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -611,6 +677,9 @@ export type UserCreateWithoutNotificationsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -630,6 +699,9 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -665,6 +737,9 @@ export type UserUpdateWithoutNotificationsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -684,6 +759,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -703,6 +781,9 @@ export type UserCreateWithoutSentMessagesInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -722,6 +803,9 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -757,6 +841,9 @@ export type UserUpdateWithoutSentMessagesInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -776,6 +863,9 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -795,6 +885,9 @@ export type UserCreateWithoutGigsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -814,6 +907,9 @@ export type UserUncheckedCreateWithoutGigsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -849,6 +945,9 @@ export type UserUpdateWithoutGigsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -868,6 +967,9 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -936,6 +1038,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: boolean
+  worldIdLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
@@ -957,6 +1062,9 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: boolean
+  worldIdLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -974,6 +1082,9 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: boolean
+  worldIdLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -991,11 +1102,14 @@ export type UserSelectScalar = {
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: boolean
+  worldIdLevel?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "walletAddress" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isOG" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "walletAddress" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isOG" | "humanVerified" | "worldIdNullifier" | "worldIdLevel" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
@@ -1025,6 +1139,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     availability: string | null
     profileComplete: boolean
     isOG: boolean
+    humanVerified: boolean
+    worldIdNullifier: string | null
+    worldIdLevel: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1465,6 +1582,9 @@ export interface UserFieldRefs {
   readonly availability: Prisma.FieldRef<"User", 'String'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
   readonly isOG: Prisma.FieldRef<"User", 'Boolean'>
+  readonly humanVerified: Prisma.FieldRef<"User", 'Boolean'>
+  readonly worldIdNullifier: Prisma.FieldRef<"User", 'String'>
+  readonly worldIdLevel: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }

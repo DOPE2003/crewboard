@@ -1,6 +1,7 @@
 import db from "@/lib/db";
 import Link from "next/link";
 import OGBadge from "@/components/ui/OGBadge";
+import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
   available: "rgba(120,255,180,0.8)",
@@ -38,6 +39,9 @@ export default async function TalentPage({
       availability: true,
       bio: true,
       isOG: true,
+      walletAddress: true,
+      humanVerified: true,
+      worldIdLevel: true,
     },
   });
 
@@ -96,9 +100,11 @@ export default async function TalentPage({
                       )}
                     </div>
                     <div className="talent-card-meta">
-                      <div className="talent-name" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <div className="talent-name" style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
                         {user.name ?? user.twitterHandle}
                         {user.isOG && <OGBadge />}
+                        {user.walletAddress && <WalletVerifiedBadge />}
+                        {user.humanVerified && <HumanVerifiedBadge level={user.worldIdLevel} />}
                       </div>
                       {user.role && <div className="talent-role">{user.role}</div>}
                     </div>

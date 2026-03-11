@@ -7,6 +7,8 @@ import EditProfileForm from "@/components/forms/EditProfileForm";
 import LinkWallet from "@/components/forms/LinkWallet";
 import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
+import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
+import VerifyHuman from "@/components/ui/VerifyHuman";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
   available: "#22c55e",
@@ -98,12 +100,14 @@ export default async function PublicProfilePage({
               </div>
             </div>
 
-            {/* Name + handle */}
-            <div style={{ marginTop: "0.75rem", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
+            {/* Name + badges */}
+            <div style={{ marginTop: "0.75rem", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
               <h1 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>
                 {user.name ?? user.twitterHandle}
               </h1>
               {user.isOG && <OGBadge size="lg" />}
+              {user.walletAddress && <WalletVerifiedBadge />}
+              {user.humanVerified && <HumanVerifiedBadge level={user.worldIdLevel} />}
             </div>
 
             {/* Role + chips */}
@@ -262,6 +266,34 @@ export default async function PublicProfilePage({
         {/* ── Edit section (own profile only) ── */}
         {isOwnProfile && (
           <div id="edit-profile" style={{ marginTop: "1.1rem", display: "flex", flexDirection: "column", gap: "1.1rem" }}>
+
+            {/* Verification */}
+            <div style={{ borderRadius: 16, padding: "1.4rem 1.5rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
+              <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.9rem" }}>
+                Verification
+              </div>
+              <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                {/* Wallet */}
+                <div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "#334155", marginBottom: 4 }}>Wallet</div>
+                  {user.walletAddress
+                    ? <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <WalletVerifiedBadge />
+                        <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.62rem", color: "#64748b" }}>
+                          {user.walletAddress.slice(0, 6)}...{user.walletAddress.slice(-4)}
+                        </span>
+                      </div>
+                    : <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>No wallet linked — connect one below</div>
+                  }
+                </div>
+                {/* World ID */}
+                <div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 600, color: "#334155", marginBottom: 6 }}>World ID</div>
+                  <VerifyHuman humanVerified={user.humanVerified} worldIdLevel={user.worldIdLevel} userId={user.id} />
+                </div>
+              </div>
+            </div>
+
             <div style={{ borderRadius: 16, padding: "1.4rem 1.5rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
               <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.75rem" }}>Wallet</div>
               <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.65rem", color: "#94a3b8", marginBottom: "0.6rem" }}>

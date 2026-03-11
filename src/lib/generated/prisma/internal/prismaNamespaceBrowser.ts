@@ -88,6 +88,9 @@ export const UserScalarFieldEnum = {
   availability: 'availability',
   profileComplete: 'profileComplete',
   isOG: 'isOG',
+  humanVerified: 'humanVerified',
+  worldIdNullifier: 'worldIdNullifier',
+  worldIdLevel: 'worldIdLevel',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
