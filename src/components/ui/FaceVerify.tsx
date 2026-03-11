@@ -46,12 +46,35 @@ export default function FaceVerify({ humanVerified }: Props) {
       // Dynamically import face-api.js (browser only)
       const faceapi = await import("face-api.js");
 
-      // Load tiny face detector model from CDN
-      const MODEL_URL = "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights";
-      await faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL);
+      // Load tiny face detector model — try multiple CDN sources
+      const MODEL_URLS = [
+        "https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/weights",
+        "https://unpkg.com/face-api.js@0.22.2/weights",
+      ];
+      let loaded = false;
+      for (const url of MODEL_URLS) {
+        try {
+          await faceapi.nets.tinyFaceDetector.loadFromUri(url);
+          loaded = true;
+          break;
+        } catch { /* try next */ }
+      }
+      if (!loaded) {
+        setStatus("error");
+        setMessage("Failed to load face detection model. Check your internet connection or try disabling browser shields.");
+        stopCamera();
+        return;
+      }
 
       // Start camera
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true });
+      } catch {
+        setStatus("error");
+        setMessage("Camera access denied. Please allow camera permissions for this site and try again.");
+        return;
+      }
       streamRef.current = stream;
 
       if (videoRef.current) {
@@ -102,15 +125,10 @@ export default function FaceVerify({ humanVerified }: Props) {
           }
         }
       }, 300);
-    } catch (err: unknown) {
+    } catch {
       stopCamera();
       setStatus("error");
-      const msg = err instanceof Error ? err.message : "Unknown error";
-      if (msg.includes("Permission") || msg.includes("denied") || msg.includes("NotAllowed")) {
-        setMessage("Camera access denied. Please allow camera access and try again.");
-      } else {
-        setMessage("Could not start verification. Check camera permissions.");
-      }
+      setMessage("Something went wrong. Please try again.");
     }
   };
 
