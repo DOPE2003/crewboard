@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import Link from "next/link";
+import OGBadge from "@/components/ui/OGBadge";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
   available: "rgba(120,255,180,0.8)",
@@ -36,6 +37,7 @@ export default async function TalentPage({
       skills: true,
       availability: true,
       bio: true,
+      isOG: true,
     },
   });
 
@@ -94,8 +96,10 @@ export default async function TalentPage({
                       )}
                     </div>
                     <div className="talent-card-meta">
-                      <div className="talent-name">{user.name ?? user.twitterHandle}</div>
-                      <div className="talent-handle">@{user.twitterHandle}</div>
+                      <div className="talent-name" style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                        {user.name ?? user.twitterHandle}
+                        {user.isOG && <OGBadge />}
+                      </div>
                       {user.role && <div className="talent-role">{user.role}</div>}
                     </div>
                     <span

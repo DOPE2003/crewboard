@@ -6,6 +6,7 @@ import { startConversation } from "@/actions/messages";
 import EditProfileForm from "@/components/forms/EditProfileForm";
 import LinkWallet from "@/components/forms/LinkWallet";
 import LogoutButton from "@/components/ui/LogoutButton";
+import OGBadge from "@/components/ui/OGBadge";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
   available: "#22c55e",
@@ -98,10 +99,11 @@ export default async function PublicProfilePage({
             </div>
 
             {/* Name + handle */}
-            <div style={{ marginTop: "0.75rem" }}>
+            <div style={{ marginTop: "0.75rem", display: "flex", alignItems: "center", gap: 10, flexWrap: "wrap" }}>
               <h1 style={{ fontSize: "1.45rem", fontWeight: 800, color: "#0f172a", margin: 0, letterSpacing: "-0.02em" }}>
                 {user.name ?? user.twitterHandle}
               </h1>
+              {user.isOG && <OGBadge size="lg" />}
             </div>
 
             {/* Role + chips */}
