@@ -38,6 +38,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         });
 
         if (!existing) {
+          // Check if this user is in the first 20 — auto-grant OG badge
+          const userCount = await db.user.count();
+          if (userCount <= 20) {
+            await db.user.update({
+              where: { id: dbUser.id },
+              data: { isOG: true },
+            });
+            await db.notification.create({
+              data: {
+                userId: dbUser.id,
+                type: "og_badge",
+                title: "You're an OG!",
+                body: "You joined Crewboard in the first 20 builders. You've been awarded the OG badge — wear it with pride.",
+              },
+            });
+          }
+
           // First-ever sign-up — onboarding welcome
           await db.notification.create({
             data: {
