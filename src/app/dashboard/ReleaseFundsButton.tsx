@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
-import { PublicKey, TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
+import { PublicKey } from "@solana/web3.js";
+import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress } from "@solana/spl-token";
 import * as anchor from "@coral-xyz/anchor";
 import { completeOrder } from "@/actions/orders";
 import { IDL, CrewboardEscrow } from "@/lib/crewboard_escrow";
