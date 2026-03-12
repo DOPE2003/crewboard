@@ -4,6 +4,7 @@ import db from "@/lib/db";
 import NavSearch from "./NavSearch";
 import NavMobileMenu from "./NavMobileMenu";
 import NavProfileMenu from "./NavProfileMenu";
+import WalletButton from "@/components/ui/WalletButton";
 
 
 export default async function Navbar() {
@@ -107,6 +108,9 @@ export default async function Navbar() {
                   </span>
                 )}
               </Link>
+
+              {/* Wallet connect/disconnect */}
+              <WalletButton />
 
               {/* Profile avatar with dropdown */}
               <NavProfileMenu

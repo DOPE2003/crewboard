@@ -25,6 +25,7 @@
     "@worldcoin/idkit": "^1.5.0",
     "bs58": "^6.0.0",
     "face-api.js": "^0.22.2",
+    "lightningcss": "1.32.0",
     "motion": "^12.34.2",
     "next": "16.1.6",
     "next-auth": "^5.0.0-beta.30",
@@ -46,5 +47,8 @@
     "eslint-config-next": "16.1.6",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "optionalDependencies": {
+    "lightningcss-darwin-x64": "^1.32.0"
   }
 }
