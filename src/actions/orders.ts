@@ -67,3 +67,42 @@ export async function updateOrderFunding(orderId: string, txHash: string) {
   revalidatePath("/dashboard");
   return order;
 }
+
+export async function markOrderDelivered(orderId: string) {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) throw new Error("Unauthorized");
+
+  const order = await db.order.update({
+    where: { id: orderId, sellerId: userId },
+    data: { status: "delivered" },
+  });
+
+  // Notify the buyer
+  await db.notification.create({
+    data: {
+      userId: order.buyerId,
+      type: "system",
+      title: "Work Delivered",
+      body: `The seller has marked your order as delivered. Review and release funds.`,
+      link: "/dashboard",
+    },
+  });
+
+  revalidatePath("/dashboard");
+  return { ok: true };
+}
+
+export async function completeOrder(orderId: string, releaseTxHash: string) {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) throw new Error("Unauthorized");
+
+  await db.order.update({
+    where: { id: orderId, buyerId: userId },
+    data: { status: "completed" },
+  });
+
+  revalidatePath("/dashboard");
+  return { ok: true };
+}

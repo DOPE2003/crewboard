@@ -4,6 +4,8 @@ import Link from "next/link";
 import LogoutButton from "@/components/ui/LogoutButton";
 import EditProfileForm from "@/components/forms/EditProfileForm";
 import LinkWallet from "@/components/forms/LinkWallet";
+import ReleaseFundsButton from "./ReleaseFundsButton";
+import MarkAsDeliveredButton from "./MarkAsDeliveredButton";
 import db from "@/lib/db";
 
 export default async function DashboardPage() {
@@ -116,11 +118,20 @@ export default async function DashboardPage() {
                       <div className="profile-gig-title">{order.gig.title}</div>
                       <div className="profile-gig-meta">Seller: @{order.seller.twitterHandle} • ${order.amount}</div>
                     </div>
-                    {order.status === "pending" && (
-                      <Link href={`/orders/${order.id}/pay`} className="btn-primary" style={{ padding: "0.4rem 0.8rem", fontSize: "0.75rem", height: "auto" }}>
-                        PAY NOW
-                      </Link>
-                    )}
+                    <div style={{ display: "flex", gap: "0.5rem" }}>
+                      {order.status === "pending" && (
+                        <Link href={`/orders/${order.id}/pay`} className="btn-primary" style={{ padding: "0.4rem 0.8rem", fontSize: "0.75rem", height: "auto" }}>
+                          PAY NOW
+                        </Link>
+                      )}
+                      {(order.status === "funded" || order.status === "delivered") && (
+                        <ReleaseFundsButton 
+                          orderId={order.id} 
+                          sellerWallet={order.seller.walletAddress} 
+                          amount={order.amount} 
+                        />
+                      )}
+                    </div>
                   </div>
                 ))}
 
@@ -130,13 +141,16 @@ export default async function DashboardPage() {
                     <div>
                       <div className="profile-gig-top">
                         <span className="gig-category-badge" style={{ fontSize: "0.6rem", background: "rgba(0,0,0,0.05)" }}>SELLING</span>
-                        <span className={`gig-category-badge status-${order.status}`} style={{ fontSize: "0.6rem", background: order.status === "funded" ? "#2DD4BF" : "#f59e0b", color: "#000" }}>
+                        <span className={`gig-category-badge status-${order.status}`} style={{ fontSize: "0.6rem", background: order.status === "funded" || order.status === "delivered" ? "#2DD4BF" : "#f59e0b", color: "#000" }}>
                           {order.status.toUpperCase()}
                         </span>
                       </div>
                       <div className="profile-gig-title">{order.gig.title}</div>
                       <div className="profile-gig-meta">Buyer: @{order.buyer.twitterHandle} • ${order.amount}</div>
                     </div>
+                    {order.status === "funded" && (
+                      <MarkAsDeliveredButton orderId={order.id} />
+                    )}
                   </div>
                 ))}
               </div>
