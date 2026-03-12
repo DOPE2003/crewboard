@@ -41,3 +41,7 @@ yarn-error.log*
 next-env.d.ts
 
 /lib/generated/prisma
+crewboard_escrow/target/
+crewboard_escrow/node_modules/
+crewboard_escrow/.anchor/
+crewboard_escrow/Cargo.lock
