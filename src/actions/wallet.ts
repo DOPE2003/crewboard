@@ -2,13 +2,14 @@
 
 import { auth } from "@/auth";
 import db from "@/lib/db";
-import { verifyMessage } from "viem";
 import { revalidatePath } from "next/cache";
+import nacl from "tweetnacl";
+import bs58 from "bs58";
 
 export async function linkWallet(data: {
-  address: string;
+  publicKey: string;
   message: string;
-  signature: `0x${string}`;
+  signature: string;
 }) {
   const session = await auth();
   const userId = session?.user?.userId;
@@ -17,22 +18,25 @@ export async function linkWallet(data: {
     throw new Error("You must be logged in to link a wallet.");
   }
 
-  const { address, message, signature } = data;
+  const { publicKey, message, signature } = data;
 
-  // 1. Cryptographic Verification
-  const isValid = await verifyMessage({
-    address: address as `0x${string}`,
-    message,
-    signature,
-  });
+  try {
+    const signatureUint8 = bs58.decode(signature);
+    const messageUint8 = new TextEncoder().encode(message);
+    const pubKeyUint8 = bs58.decode(publicKey);
 
-  if (!isValid) {
-    throw new Error("Invalid signature. Ownership could not be verified.");
+    const isValid = nacl.sign.detached.verify(messageUint8, signatureUint8, pubKeyUint8);
+
+    if (!isValid) {
+      throw new Error("Invalid signature. Ownership could not be verified.");
+    }
+  } catch (error) {
+    throw new Error("Signature verification failed.");
   }
 
-  // 2. Prevent Duplicate Wallets
+  // Prevent Duplicate Wallets
   const existing = await db.user.findUnique({
-    where: { walletAddress: address.toLowerCase() },
+    where: { walletAddress: publicKey },
     select: { id: true },
   });
 
@@ -40,14 +44,14 @@ export async function linkWallet(data: {
     throw new Error("This wallet is already linked to another account.");
   }
 
-  // 3. Update User
+  // Update User
   await db.user.update({
     where: { id: userId },
-    data: { walletAddress: address.toLowerCase() },
+    data: { walletAddress: publicKey },
   });
 
   revalidatePath("/dashboard");
-  revalidatePath(`/u/${session.user.twitterHandle}`);
+  revalidatePath(`/u/${session?.user?.twitterHandle}`);
 
-  return { ok: true, address };
+  return { ok: true, address: publicKey };
 }

@@ -265,6 +265,7 @@ export type GigWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  orders?: Prisma.OrderListRelationFilter
 }
 
 export type GigOrderByWithRelationInput = {
@@ -280,6 +281,7 @@ export type GigOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  orders?: Prisma.OrderOrderByRelationAggregateInput
 }
 
 export type GigWhereUniqueInput = Prisma.AtLeast<{
@@ -298,6 +300,7 @@ export type GigWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  orders?: Prisma.OrderListRelationFilter
 }, "id">
 
 export type GigOrderByWithAggregationInput = {
@@ -348,6 +351,7 @@ export type GigCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutGigsInput
+  orders?: Prisma.OrderCreateNestedManyWithoutGigInput
 }
 
 export type GigUncheckedCreateInput = {
@@ -362,6 +366,7 @@ export type GigUncheckedCreateInput = {
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutGigInput
 }
 
 export type GigUpdateInput = {
@@ -376,6 +381,7 @@ export type GigUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutGigsNestedInput
+  orders?: Prisma.OrderUpdateManyWithoutGigNestedInput
 }
 
 export type GigUncheckedUpdateInput = {
@@ -390,6 +396,7 @@ export type GigUncheckedUpdateInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutGigNestedInput
 }
 
 export type GigCreateManyInput = {
@@ -493,6 +500,11 @@ export type GigSumOrderByAggregateInput = {
   deliveryDays?: Prisma.SortOrder
 }
 
+export type GigScalarRelationFilter = {
+  is?: Prisma.GigWhereInput
+  isNot?: Prisma.GigWhereInput
+}
+
 export type GigCreateNestedManyWithoutUserInput = {
   create?: Prisma.XOR<Prisma.GigCreateWithoutUserInput, Prisma.GigUncheckedCreateWithoutUserInput> | Prisma.GigCreateWithoutUserInput[] | Prisma.GigUncheckedCreateWithoutUserInput[]
   connectOrCreate?: Prisma.GigCreateOrConnectWithoutUserInput | Prisma.GigCreateOrConnectWithoutUserInput[]
@@ -552,6 +564,20 @@ export type GigUpdatetagsInput = {
   push?: string | string[]
 }
 
+export type GigCreateNestedOneWithoutOrdersInput = {
+  create?: Prisma.XOR<Prisma.GigCreateWithoutOrdersInput, Prisma.GigUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.GigCreateOrConnectWithoutOrdersInput
+  connect?: Prisma.GigWhereUniqueInput
+}
+
+export type GigUpdateOneRequiredWithoutOrdersNestedInput = {
+  create?: Prisma.XOR<Prisma.GigCreateWithoutOrdersInput, Prisma.GigUncheckedCreateWithoutOrdersInput>
+  connectOrCreate?: Prisma.GigCreateOrConnectWithoutOrdersInput
+  upsert?: Prisma.GigUpsertWithoutOrdersInput
+  connect?: Prisma.GigWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.GigUpdateToOneWithWhereWithoutOrdersInput, Prisma.GigUpdateWithoutOrdersInput>, Prisma.GigUncheckedUpdateWithoutOrdersInput>
+}
+
 export type GigCreateWithoutUserInput = {
   id?: string
   title: string
@@ -563,6 +589,7 @@ export type GigCreateWithoutUserInput = {
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  orders?: Prisma.OrderCreateNestedManyWithoutGigInput
 }
 
 export type GigUncheckedCreateWithoutUserInput = {
@@ -576,6 +603,7 @@ export type GigUncheckedCreateWithoutUserInput = {
   status?: string
   createdAt?: Date | string
   updatedAt?: Date | string
+  orders?: Prisma.OrderUncheckedCreateNestedManyWithoutGigInput
 }
 
 export type GigCreateOrConnectWithoutUserInput = {
@@ -621,6 +649,78 @@ export type GigScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
 }
 
+export type GigCreateWithoutOrdersInput = {
+  id?: string
+  title: string
+  description: string
+  price: number
+  deliveryDays: number
+  category: string
+  tags?: Prisma.GigCreatetagsInput | string[]
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutGigsInput
+}
+
+export type GigUncheckedCreateWithoutOrdersInput = {
+  id?: string
+  userId: string
+  title: string
+  description: string
+  price: number
+  deliveryDays: number
+  category: string
+  tags?: Prisma.GigCreatetagsInput | string[]
+  status?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type GigCreateOrConnectWithoutOrdersInput = {
+  where: Prisma.GigWhereUniqueInput
+  create: Prisma.XOR<Prisma.GigCreateWithoutOrdersInput, Prisma.GigUncheckedCreateWithoutOrdersInput>
+}
+
+export type GigUpsertWithoutOrdersInput = {
+  update: Prisma.XOR<Prisma.GigUpdateWithoutOrdersInput, Prisma.GigUncheckedUpdateWithoutOrdersInput>
+  create: Prisma.XOR<Prisma.GigCreateWithoutOrdersInput, Prisma.GigUncheckedCreateWithoutOrdersInput>
+  where?: Prisma.GigWhereInput
+}
+
+export type GigUpdateToOneWithWhereWithoutOrdersInput = {
+  where?: Prisma.GigWhereInput
+  data: Prisma.XOR<Prisma.GigUpdateWithoutOrdersInput, Prisma.GigUncheckedUpdateWithoutOrdersInput>
+}
+
+export type GigUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.GigUpdatetagsInput | string[]
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutGigsNestedInput
+}
+
+export type GigUncheckedUpdateWithoutOrdersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  title?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  price?: Prisma.IntFieldUpdateOperationsInput | number
+  deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
+  category?: Prisma.StringFieldUpdateOperationsInput | string
+  tags?: Prisma.GigUpdatetagsInput | string[]
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 export type GigCreateManyUserInput = {
   id?: string
   title: string
@@ -645,6 +745,7 @@ export type GigUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUpdateManyWithoutGigNestedInput
 }
 
 export type GigUncheckedUpdateWithoutUserInput = {
@@ -658,6 +759,7 @@ export type GigUncheckedUpdateWithoutUserInput = {
   status?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  orders?: Prisma.OrderUncheckedUpdateManyWithoutGigNestedInput
 }
 
 export type GigUncheckedUpdateManyWithoutUserInput = {
@@ -674,6 +776,35 @@ export type GigUncheckedUpdateManyWithoutUserInput = {
 }
 
 
+/**
+ * Count Type GigCountOutputType
+ */
+
+export type GigCountOutputType = {
+  orders: number
+}
+
+export type GigCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  orders?: boolean | GigCountOutputTypeCountOrdersArgs
+}
+
+/**
+ * GigCountOutputType without action
+ */
+export type GigCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the GigCountOutputType
+   */
+  select?: Prisma.GigCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * GigCountOutputType without action
+ */
+export type GigCountOutputTypeCountOrdersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OrderWhereInput
+}
+
 
 export type GigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -688,6 +819,8 @@ export type GigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  orders?: boolean | Prisma.Gig$ordersArgs<ExtArgs>
+  _count?: boolean | Prisma.GigCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["gig"]>
 
 export type GigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -737,6 +870,8 @@ export type GigSelectScalar = {
 export type GigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "price" | "deliveryDays" | "category" | "tags" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["gig"]>
 export type GigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  orders?: boolean | Prisma.Gig$ordersArgs<ExtArgs>
+  _count?: boolean | Prisma.GigCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type GigIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -749,6 +884,7 @@ export type $GigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   name: "Gig"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    orders: Prisma.$OrderPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1157,6 +1293,7 @@ readonly fields: GigFieldRefs;
 export interface Prisma__GigClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  orders<T extends Prisma.Gig$ordersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Gig$ordersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1590,6 +1727,30 @@ export type GigDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.InternalA
    * Limit how many Gigs to delete.
    */
   limit?: number
+}
+
+/**
+ * Gig.orders
+ */
+export type Gig$ordersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Order
+   */
+  select?: Prisma.OrderSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Order
+   */
+  omit?: Prisma.OrderOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OrderInclude<ExtArgs> | null
+  where?: Prisma.OrderWhereInput
+  orderBy?: Prisma.OrderOrderByWithRelationInput | Prisma.OrderOrderByWithRelationInput[]
+  cursor?: Prisma.OrderWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
 }
 
 /**

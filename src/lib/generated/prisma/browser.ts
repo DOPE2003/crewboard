@@ -47,3 +47,8 @@ export type Message = Prisma.MessageModel
  * 
  */
 export type Gig = Prisma.GigModel
+/**
+ * Model Order
+ * 
+ */
+export type Order = Prisma.OrderModel

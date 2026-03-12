@@ -22,28 +22,33 @@ export default async function TalentPage({
 }) {
   const { role = "" } = await searchParams;
 
-  const where: Record<string, unknown> = { profileComplete: true };
-  if (role.trim()) {
-    where.role = { equals: role.trim(), mode: "insensitive" };
-  }
+  let users: any[] = [];
+  try {
+    const where: Record<string, unknown> = { profileComplete: true };
+    if (role.trim()) {
+      where.role = { equals: role.trim(), mode: "insensitive" };
+    }
 
-  const users = await db.user.findMany({
-    where,
-    orderBy: { createdAt: "desc" },
-    select: {
-      twitterHandle: true,
-      name: true,
-      image: true,
-      role: true,
-      skills: true,
-      availability: true,
-      bio: true,
-      isOG: true,
-      walletAddress: true,
-      humanVerified: true,
-      worldIdLevel: true,
-    },
-  });
+    users = await db.user.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      select: {
+        twitterHandle: true,
+        name: true,
+        image: true,
+        role: true,
+        skills: true,
+        availability: true,
+        bio: true,
+        isOG: true,
+        walletAddress: true,
+        humanVerified: true,
+        worldIdLevel: true,
+      },
+    });
+  } catch (error) {
+    console.error("Talent Page DB Error:", error);
+  }
 
   return (
     <main className="page">
@@ -83,7 +88,7 @@ export default async function TalentPage({
           </div>
         ) : (
           <div className="talent-grid">
-            {users.map((user: typeof users[number]) => {
+            {users.map((user: any) => {
               const avail = user.availability ?? "available";
               return (
                 <Link

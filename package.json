@@ -10,13 +10,20 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@coral-xyz/anchor": "^0.30.1",
     "@neondatabase/serverless": "^1.0.2",
     "@prisma/adapter-neon": "^7.4.2",
     "@prisma/client": "^7.4.2",
+    "@solana/spl-token": "^0.4.12",
+    "@solana/wallet-adapter-base": "^0.9.27",
+    "@solana/wallet-adapter-react": "^0.15.39",
+    "@solana/wallet-adapter-react-ui": "^0.9.39",
+    "@solana/wallet-adapter-wallets": "^0.19.37",
+    "@solana/web3.js": "^1.98.4",
     "@tanstack/react-query": "^5.90.21",
     "@vercel/analytics": "^2.0.0",
     "@worldcoin/idkit": "^1.5.0",
-    "connectkit": "^1.9.1",
+    "bs58": "^6.0.0",
     "face-api.js": "^0.22.2",
     "motion": "^12.34.2",
     "next": "16.1.6",
@@ -27,8 +34,7 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "stripe": "^20.4.1",
-    "viem": "^2.47.1",
-    "wagmi": "^3.5.0"
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

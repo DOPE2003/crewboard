@@ -29,15 +29,22 @@ export default async function PublicProfilePage({
 }) {
   const { handle } = await params;
 
-  const [user, session] = await Promise.all([
-    db.user.findUnique({
-      where: { twitterHandle: handle },
-      include: {
-        gigs: { where: { status: "active" }, orderBy: { createdAt: "desc" } },
-      },
-    }),
-    auth(),
-  ]);
+  let user: any = null;
+  let session: any = null;
+
+  try {
+    [user, session] = await Promise.all([
+      db.user.findUnique({
+        where: { twitterHandle: handle },
+        include: {
+          gigs: { where: { status: "active" }, orderBy: { createdAt: "desc" } },
+        },
+      }),
+      auth(),
+    ]);
+  } catch (error) {
+    console.error("Profile Page Error:", error);
+  }
 
   if (!user || !user.profileComplete) notFound();
 
@@ -153,7 +160,7 @@ export default async function PublicProfilePage({
                   Skills
                 </div>
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 7 }}>
-                  {user.skills.map((s) => (
+                  {user.skills.map((s: string) => (
                     <span key={s} style={{
                       fontSize: "0.73rem", fontWeight: 500, padding: "6px 14px", borderRadius: 8,
                       background: "#f8fafc", color: "#334155", border: "1px solid #e2e8f0",
@@ -172,7 +179,7 @@ export default async function PublicProfilePage({
                   Services Offered
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  {user.gigs.map((gig) => (
+                  {user.gigs.map((gig: any) => (
                     <Link key={gig.id} href={`/gigs/${gig.id}`} className="profile-gig-row" style={{
                       display: "flex", alignItems: "center", justifyContent: "space-between",
                       padding: "0.9rem 1.1rem", borderRadius: 12, textDecoration: "none",
@@ -295,12 +302,7 @@ export default async function PublicProfilePage({
             </div>
 
             <div style={{ borderRadius: 16, padding: "1.4rem 1.5rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
-              <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.75rem" }}>Wallet</div>
-              <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.65rem", color: "#94a3b8", marginBottom: "0.6rem" }}>
-                {user.walletAddress
-                  ? `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`
-                  : "No wallet linked"}
-              </div>
+              <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.75rem" }}>Wallet Link</div>
               <LinkWallet currentWallet={user.walletAddress} />
             </div>
 

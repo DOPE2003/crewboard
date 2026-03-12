@@ -56,7 +56,8 @@ export const ModelName = {
   Project: 'Project',
   Conversation: 'Conversation',
   Message: 'Message',
-  Gig: 'Gig'
+  Gig: 'Gig',
+  Order: 'Order'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -164,6 +165,22 @@ export const GigScalarFieldEnum = {
 } as const
 
 export type GigScalarFieldEnum = (typeof GigScalarFieldEnum)[keyof typeof GigScalarFieldEnum]
+
+
+export const OrderScalarFieldEnum = {
+  id: 'id',
+  gigId: 'gigId',
+  buyerId: 'buyerId',
+  sellerId: 'sellerId',
+  amount: 'amount',
+  status: 'status',
+  escrowAddress: 'escrowAddress',
+  txHash: 'txHash',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
 
 
 export const SortOrder = {
