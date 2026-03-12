@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::token::{self, CloseAccount, Mint, Token, TokenAccount, Transfer};
 
-declare_id!("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+declare_id!("8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo");
 
 #[program]
 pub mod crewboard_escrow {

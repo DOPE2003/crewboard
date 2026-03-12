@@ -10,7 +10,7 @@ import { updateOrderFunding } from "@/actions/orders";
 import { IDL, CrewboardEscrow } from "@/lib/crewboard_escrow";
 
 // The Program ID from our lib.rs
-const PROGRAM_ID = new PublicKey("Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS");
+const PROGRAM_ID = new PublicKey("8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo");
 // Devnet USDC Mint
 const USDC_MINT = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
 

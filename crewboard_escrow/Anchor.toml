@@ -1,12 +1,12 @@
 [toolchain]
-anchor_version = "0.29.0"
+anchor_version = "0.30.1"
 
 [features]
 seeds = false
 skip-lint = false
 
 [programs.localnet]
-crewboard_escrow = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+crewboard_escrow = "8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo"
 
 [registry]
 url = "https://api.apr.dev"
