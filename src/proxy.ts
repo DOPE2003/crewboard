@@ -10,6 +10,24 @@ export default auth((req) => {
   const isLoggedIn = !!req.auth;
   const profileComplete = req.auth?.user?.profileComplete ?? false;
 
+  // 1. GLOBAL SITE PASSWORD PROTECTION
+  // Allow access to static assets, images, API, and the locked page itself
+  const isPublicAsset = 
+    pathname.startsWith('/_next') ||
+    pathname.startsWith('/api') ||
+    pathname.startsWith('/locked') ||
+    pathname.startsWith('/logo.png') ||
+    pathname.startsWith('/favicon.ico');
+
+  const hasAccessCookie = req.cookies.get('site-access')?.value === process.env.SITE_PASSWORD;
+
+  if (!isPublicAsset && !hasAccessCookie && process.env.SITE_PASSWORD) {
+    const url = req.nextUrl.clone();
+    url.pathname = '/locked';
+    return NextResponse.redirect(url);
+  }
+
+  // 2. AUTHENTICATION REDIRECTS
   const isDashboard = pathname.startsWith("/dashboard");
   const isOnboarding = pathname.startsWith("/onboarding");
 
@@ -38,5 +56,6 @@ export default auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/onboarding/:path*"],
+  // Broad matcher to catch all pages for password protection
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|logo.png).*)'],
 };
