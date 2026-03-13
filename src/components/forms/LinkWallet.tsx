@@ -2,14 +2,12 @@
 
 import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { linkWallet } from "@/actions/wallet";
 import bs58 from "bs58";
 
 // Sub-component that actually uses the wallet context
 function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
   const { publicKey, signMessage, connected, disconnect, wallet } = useWallet();
-  const { setVisible } = useWalletModal();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
@@ -71,13 +69,9 @@ function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
     return (
       <div className="dash-stat" style={{ gridColumn: "span 2" }}>
         <div className="dash-stat-label">Payments & Infrastructure</div>
-        <button
-          onClick={() => setVisible(true)}
-          className="btn-primary"
-          style={{ marginTop: "0.5rem", padding: "0.6rem 1.2rem", fontSize: "0.8rem" }}
-        >
-          SELECT WALLET
-        </button>
+        <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "rgba(0,0,0,0.5)" }}>
+          Connect your wallet using the button in the navbar to link it here.
+        </div>
         <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.3)", marginTop: "0.4rem" }}>
           Solana Devnet · USDC Support
         </div>

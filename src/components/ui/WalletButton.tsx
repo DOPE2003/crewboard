@@ -8,6 +8,13 @@ function shortAddr(addr: string) {
 }
 
 export default function WalletButton() {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
+  if (!mounted) return null;
+  return <WalletButtonInner />;
+}
+
+function WalletButtonInner() {
   const { connected, publicKey, connect, disconnect, wallets, select } = useWallet();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
