@@ -2260,3 +2260,53 @@ nav {
   .gig-detail-title { font-size: 1.2rem; }
   .profile-gigs { grid-template-columns: 1fr; }
 }
+
+/* =========================
+   DASHBOARD MAIN WRAP — responsive top padding
+   ========================= */
+.dash-main-wrap {
+  padding-top: 8.5rem; /* desktop: row1 + row2 nav */
+}
+@media (max-width: 700px) {
+  .dash-main-wrap {
+    padding-top: 5rem; /* mobile: only row1 nav */
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+
+/* =========================
+   GLOBAL MOBILE SAFETY NET
+   ========================= */
+
+/* Prevent any element from causing horizontal overflow */
+@media (max-width: 640px) {
+  /* Dashboard inner container: full width */
+  .dash-main-wrap > div { max-width: 100% !important; }
+
+  /* Dashboard header row: stack on small screens */
+  .dash-main-wrap > div > div:first-child {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+
+  /* Dashboard stats: always 2-col on phones */
+  .dash-stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Dashboard notifications + messages: stack */
+  .dash-two-col {
+    grid-template-columns: 1fr !important;
+  }
+
+  /* Wallet button in navbar: shrink label */
+  .wallet-btn-label { display: none; }
+}
+
+@media (max-width: 400px) {
+  /* Extra small phones: single column everywhere */
+  .dash-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .talent-grid { grid-template-columns: 1fr !important; }
+  .gig-grid { grid-template-columns: 1fr !important; }
+}

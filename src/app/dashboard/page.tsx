@@ -59,7 +59,7 @@ export default async function DashboardPage() {
     dbUser.availability === "open"      ? "#f59e0b" : "#ef4444";
 
   return (
-    <main style={{ minHeight: "100vh", paddingTop: "8.5rem", paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingBottom: "5rem" }}>
+    <main className="dash-main-wrap" style={{ minHeight: "100vh", paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingBottom: "5rem" }}>
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
 
         {/* Header */}
