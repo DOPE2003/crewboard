@@ -55,3 +55,22 @@ export async function linkWallet(data: {
 
   return { ok: true, address: publicKey };
 }
+
+export async function unlinkWallet() {
+  const session = await auth();
+  const userId = session?.user?.userId;
+
+  if (!userId) {
+    throw new Error("You must be logged in.");
+  }
+
+  await db.user.update({
+    where: { id: userId },
+    data: { walletAddress: null },
+  });
+
+  revalidatePath("/dashboard");
+  revalidatePath(`/u/${session?.user?.twitterHandle}`);
+
+  return { ok: true };
+}

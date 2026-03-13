@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { linkWallet } from "@/actions/wallet";
+import { linkWallet, unlinkWallet } from "@/actions/wallet";
 import bs58 from "bs58";
 
 // Sub-component that actually uses the wallet context
@@ -11,6 +11,15 @@ function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+
+  const handleDisconnect = async () => {
+    try {
+      await unlinkWallet();
+    } catch {
+      // best-effort — still disconnect adapter
+    }
+    disconnect();
+  };
 
   // Debug logging
   useEffect(() => {
@@ -55,11 +64,18 @@ function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
     return (
       <div className="dash-stat" style={{ gridColumn: "span 2" }}>
         <div className="dash-stat-label">Verified Wallet</div>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginTop: "0.5rem" }}>
           <div className="dash-stat-value" style={{ fontSize: "0.9rem", color: "#2DD4BF" }}>
             {currentWallet.slice(0, 6)}...{currentWallet.slice(-4)}
           </div>
           <span style={{ fontSize: "0.8rem", color: "rgba(0,0,0,0.3)" }}>✓ Linked</span>
+          <button
+            onClick={handleDisconnect}
+            className="btn-secondary"
+            style={{ padding: "0.35rem 0.75rem", fontSize: "0.75rem", height: "auto" }}
+          >
+            DISCONNECT
+          </button>
         </div>
       </div>
     );
@@ -98,7 +114,7 @@ function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
           </button>
           
           <button
-            onClick={() => disconnect()}
+            onClick={handleDisconnect}
             className="btn-secondary"
             style={{ padding: "0.5rem 1rem", fontSize: "0.8rem", height: "auto", minWidth: "100px" }}
           >
