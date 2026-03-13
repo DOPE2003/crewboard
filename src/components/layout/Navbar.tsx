@@ -43,7 +43,7 @@ export default async function Navbar() {
 
         {/* Logo + brand name */}
         <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", textDecoration: "none", gap: 1 }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" style={{ width: 210, height: 52 }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 210, height: 52 }}>
             <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
               fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
             <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
@@ -109,8 +109,10 @@ export default async function Navbar() {
                 )}
               </Link>
 
-              {/* Wallet connect/disconnect */}
-              <WalletButton />
+              {/* Wallet connect/disconnect — hidden on mobile */}
+              <div className="nav-wallet-wrap">
+                <WalletButton />
+              </div>
 
               {/* Profile avatar with dropdown */}
               <NavProfileMenu

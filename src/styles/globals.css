@@ -1291,10 +1291,16 @@ nav {
 /* Nav mobile overrides */
 @media (max-width: 700px) {
   nav { padding: 0; }
-  nav > div:first-child { padding: 0.75rem 1rem !important; gap: 0.5rem !important; }
+  nav > div:first-child { padding: 0.75rem 1rem !important; gap: 0.4rem !important; }
   .nav-search-wrap { display: none !important; }
+  .nav-wallet-wrap { display: none !important; }
   .nav-hamburger { display: flex; }
   .nav-icon-btn { color: rgba(0,0,0,0.6) !important; }
+}
+
+/* Shrink logo SVG on mobile */
+@media (max-width: 700px) {
+  .nav-logo-svg { width: 140px !important; height: 35px !important; }
 }
 
 /* Hero mobile search */
