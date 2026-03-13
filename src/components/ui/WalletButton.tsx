@@ -107,31 +107,39 @@ function WalletButtonInner() {
               }}>
                 Choose Wallet
               </div>
-              {["Phantom", "Solflare"].map((name) => (
-                <button
-                  key={name}
-                  onClick={() => handleConnect(name)}
-                  style={{
-                    width: "100%", display: "flex", alignItems: "center", gap: "0.6rem",
-                    padding: "0.5rem 0.75rem", borderRadius: "8px",
-                    fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600,
-                    color: "#0f172a", background: "transparent", border: "none",
-                    cursor: "pointer", textAlign: "left",
-                  }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.05)")}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
-                >
-                  <span style={{
-                    width: 22, height: 22, borderRadius: 6, flexShrink: 0,
-                    background: name === "Phantom" ? "#ab9ff2" : "#ff6b00",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontSize: "0.7rem", fontWeight: 800, color: "#fff",
-                  }}>
-                    {name[0]}
-                  </span>
-                  {name}
-                </button>
-              ))}
+              {["Phantom", "Solflare"].map((name) => {
+                const w = wallets.find((w) => w.adapter.name === name);
+                return (
+                  <button
+                    key={name}
+                    onClick={() => handleConnect(name)}
+                    style={{
+                      width: "100%", display: "flex", alignItems: "center", gap: "0.6rem",
+                      padding: "0.5rem 0.75rem", borderRadius: "8px",
+                      fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600,
+                      color: "#0f172a", background: "transparent", border: "none",
+                      cursor: "pointer", textAlign: "left",
+                    }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.05)")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                  >
+                    {w?.adapter.icon ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={w.adapter.icon} alt={name} style={{ width: 22, height: 22, borderRadius: 6, flexShrink: 0 }} />
+                    ) : (
+                      <span style={{
+                        width: 22, height: 22, borderRadius: 6, flexShrink: 0,
+                        background: name === "Phantom" ? "#ab9ff2" : "#ff6b00",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: "0.7rem", fontWeight: 800, color: "#fff",
+                      }}>
+                        {name[0]}
+                      </span>
+                    )}
+                    {name}
+                  </button>
+                );
+              })}
             </>
           )}
         </div>
