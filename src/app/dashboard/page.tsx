@@ -3,8 +3,6 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import db from "@/lib/db";
 import LinkWallet from "@/components/forms/LinkWallet";
-import ReleaseFundsButton from "./ReleaseFundsButton";
-import MarkAsDeliveredButton from "./MarkAsDeliveredButton";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -12,7 +10,7 @@ export default async function DashboardPage() {
 
   const userId = session.user.userId;
 
-  const [dbUserRaw, notifications, recentConvos, buyerOrdersRaw, sellerOrdersRaw] = await Promise.all([
+  const [dbUserRaw, notifications, recentConvos] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
       include: { gigs: { where: { status: "active" } } },
@@ -34,24 +32,11 @@ export default async function DashboardPage() {
         },
       },
     }),
-    db.order.findMany({
-      where: { buyerId: userId },
-      include: { gig: true, seller: true },
-      orderBy: { createdAt: "desc" },
-    }),
-    db.order.findMany({
-      where: { sellerId: userId },
-      include: { gig: true, buyer: true },
-      orderBy: { createdAt: "desc" },
-    }),
   ]);
 
   if (!dbUserRaw) redirect("/login");
 
-  // Serialize for Client Components
   const dbUser = JSON.parse(JSON.stringify(dbUserRaw));
-  const buyerOrders = JSON.parse(JSON.stringify(buyerOrdersRaw));
-  const sellerOrders = JSON.parse(JSON.stringify(sellerOrdersRaw));
 
   // Fetch the other participant for each conversation
   const otherParticipantIds = recentConvos.flatMap((c) =>
@@ -107,7 +92,7 @@ export default async function DashboardPage() {
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.75rem", marginBottom: "1.5rem" }} className="dash-stats-grid">
           {[
             { label: "Active Gigs",  value: dbUser.gigs.length },
-            { label: "Orders",      value: buyerOrders.length + sellerOrders.length },
+            { label: "Orders",      value: 0 },
             { label: "Projects",     value: 0 },
             { label: "Applications", value: 0 },
           ].map((s) => (
@@ -123,63 +108,6 @@ export default async function DashboardPage() {
           <LinkWallet currentWallet={dbUser.walletAddress} />
         </div>
 
-        {/* Active Orders Section */}
-        {(buyerOrders.length > 0 || sellerOrders.length > 0) && (
-          <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)", marginBottom: "1.5rem" }}>
-            <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "1.25rem" }}>Active Orders</div>
-            
-            <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-              {/* As Buyer */}
-              {buyerOrders.map((order: any) => (
-                <div key={order.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem", borderRadius: 12, background: "#f8fafc", border: "1px solid rgba(0,0,0,0.03)" }}>
-                  <div>
-                    <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.4rem" }}>
-                      <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "rgba(0,0,0,0.05)" }}>BUYING</span>
-                      <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: order.status === "funded" || order.status === "delivered" ? "#ccfbf1" : "#fef3c7", color: order.status === "funded" || order.status === "delivered" ? "#0f766e" : "#92400e" }}>
-                        {order.status.toUpperCase()}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0f172a" }}>{order.gig.title}</div>
-                    <div style={{ fontSize: "0.72rem", color: "#64748b", marginTop: 2 }}>Seller: @{order.seller.twitterHandle} • ${order.amount}</div>
-                  </div>
-                  <div style={{ display: "flex", gap: "0.5rem" }}>
-                    {order.status === "pending" && (
-                      <Link href={`/orders/${order.id}/pay`} style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 8, background: "#0f172a", color: "#fff", textDecoration: "none" }}>
-                        PAY NOW
-                      </Link>
-                    )}
-                    {(order.status === "funded" || order.status === "delivered") && (
-                      <ReleaseFundsButton 
-                        orderId={order.id} 
-                        sellerWallet={order.seller.walletAddress} 
-                        amount={order.amount} 
-                      />
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {/* As Seller */}
-              {sellerOrders.map((order: any) => (
-                <div key={order.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem", borderRadius: 12, background: "#f8fafc", border: "1px solid rgba(0,0,0,0.03)" }}>
-                  <div>
-                    <div style={{ display: "flex", gap: "0.5rem", marginBottom: "0.4rem" }}>
-                      <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: "rgba(0,0,0,0.05)" }}>SELLING</span>
-                      <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 6px", borderRadius: 4, background: order.status === "funded" || order.status === "delivered" ? "#ccfbf1" : "#fef3c7", color: order.status === "funded" || order.status === "delivered" ? "#0f766e" : "#92400e" }}>
-                        {order.status.toUpperCase()}
-                      </span>
-                    </div>
-                    <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "#0f172a" }}>{order.gig.title}</div>
-                    <div style={{ fontSize: "0.72rem", color: "#64748b", marginTop: 2 }}>Buyer: @{order.buyer.twitterHandle} • ${order.amount}</div>
-                  </div>
-                  {order.status === "funded" && (
-                    <MarkAsDeliveredButton orderId={order.id} />
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
 
         {/* Notifications + Messages */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }} className="dash-two-col">
