@@ -8,11 +8,14 @@ skip-lint = false
 [programs.localnet]
 crewboard_escrow = "8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo"
 
+[programs.devnet]
+crewboard_escrow = "8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "Localnet"
+cluster = "https://devnet.helius-rpc.com/?api-key=3a32eb83-58a1-441d-89c2-15b7c7564a97"
 wallet = "~/.config/solana/id.json"
 
 [scripts]
