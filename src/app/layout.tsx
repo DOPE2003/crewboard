@@ -12,7 +12,11 @@ export const metadata: Metadata = {
   title: "Crewboard — Web3 Freelancer Marketplace",
   description: "Hire and get hired in Web3. The talent marketplace for crypto-native freelancers.",
   icons: {
-    icon: "/logo.png",
+    icon: [
+      { url: "/icon.svg", type: "image/svg+xml" },
+      { url: "/icon-32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+    ],
     apple: "/apple-touch-icon.png",
   },
 };

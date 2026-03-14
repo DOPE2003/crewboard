@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 144 160">
+  <!-- Hexagon -->
+  <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
+    fill="none" stroke="#2DD4BF" stroke-width="6" stroke-linejoin="round"/>
+  <!-- Triangle edges -->
+  <line x1="72" y1="54" x2="52" y2="94" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="72" y1="54" x2="92" y2="94" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round"/>
+  <line x1="52" y1="94" x2="92" y2="94" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round"/>
+  <!-- Nodes -->
+  <circle cx="72" cy="54" r="8" fill="#2DD4BF"/>
+  <circle cx="52" cy="94" r="8" fill="#2DD4BF"/>
+  <circle cx="92" cy="94" r="8" fill="#2DD4BF"/>
+</svg>
