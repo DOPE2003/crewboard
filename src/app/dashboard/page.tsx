@@ -99,7 +99,7 @@ export default async function DashboardPage() {
             { label: "Completed",        value: completedOrderCount },
             { label: "Profile Views",    value: profileViewCount },
           ]).map((s) => (
-            <div key={s.labelKey} style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
+            <div key={s.label} style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
               <div style={{ fontFamily: "Space Mono,monospace", fontSize: "1.5rem", fontWeight: 700, color: "#0f172a" }}>{s.value}</div>
               <div style={{ fontSize: "0.6rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>{s.label}</div>
             </div>
