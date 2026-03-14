@@ -13,7 +13,9 @@ export default async function VerifyPage() {
       alignItems: "flex-start",
       justifyContent: "center",
       background: "#0f1624",
-      padding: "3rem 1.5rem 4rem",
+      paddingLeft: "1.5rem",
+      paddingRight: "1.5rem",
+      paddingBottom: "4rem",
       minHeight: "100vh",
     }}>
       <div className="verify-card-inner verify-card" style={{
