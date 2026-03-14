@@ -182,7 +182,7 @@ export default function SettingsClient() {
           {LANGUAGES.map((l) => (
             <button
               key={l.code}
-              onClick={() => applyLang(l.code)}
+              onClick={() => applyLang(l.code as any)}
               style={{
                 padding: "0.75rem 1rem",
                 borderRadius: 10,
