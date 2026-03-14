@@ -97,7 +97,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // First sign-in — populate token from DB
         const dbUser = await db.user.findUnique({
           where: { twitterId: account.providerAccountId },
-          select: { id: true, twitterHandle: true, profileComplete: true },
+          select: { id: true, twitterHandle: true, profileComplete: true, humanVerified: true },
         });
         const p = profile as Record<string, unknown>;
         const data = (p?.data ?? p) as Record<string, unknown>;
@@ -105,13 +105,24 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.userId = dbUser?.id;
         token.twitterHandle = dbUser?.twitterHandle || handleFromProfile;
         token.profileComplete = dbUser?.profileComplete ?? false;
+        token.humanVerified = dbUser?.humanVerified ?? false;
         // Store access token so we can refresh the avatar periodically
         if (account.access_token) token.twitterAccessToken = account.access_token;
         token.imageRefreshedAt = Date.now();
       } else if (trigger === "update") {
-        const passed = session as { profileComplete?: boolean } | null;
-        if (passed?.profileComplete !== undefined) {
-          token.profileComplete = passed.profileComplete;
+        const passed = session as { profileComplete?: boolean; humanVerified?: boolean } | null;
+        if (passed?.profileComplete !== undefined) token.profileComplete = passed.profileComplete;
+        if (passed?.humanVerified !== undefined) token.humanVerified = passed.humanVerified;
+        // Re-fetch humanVerified from DB on update trigger
+        if (token.userId) {
+          const fresh = await db.user.findUnique({
+            where: { id: token.userId as string },
+            select: { humanVerified: true, profileComplete: true },
+          });
+          if (fresh) {
+            token.humanVerified = fresh.humanVerified;
+            token.profileComplete = fresh.profileComplete;
+          }
         }
       } else if (token.twitterAccessToken && token.userId) {
         // Refresh avatar from Twitter API once per hour
@@ -151,6 +162,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.userId = token.userId as string | undefined;
       session.user.twitterHandle = token.twitterHandle as string | undefined;
       session.user.profileComplete = token.profileComplete as boolean | undefined;
+      session.user.humanVerified = token.humanVerified as boolean | undefined;
       return session;
     },
   },

@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState, useCallback } from "react";
 import PusherClient from "pusher-js";
 import { sendMessage, getMessages, markMessagesAsRead } from "@/actions/messages";
@@ -33,21 +34,106 @@ function formatDate(iso: string) {
 }
 
 const SOCIAL_RE = /(@[a-zA-Z0-9_]{2,}|https?:\/\/|www\.|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|t\.me\/|discord\.gg\/|telegram\.me\/|x\.com\/|twitter\.com\/)/i;
+const GIG_PREFIX = "__GIGREQUEST__:";
+
+interface GigCard {
+  id: string;
+  title: string;
+  price: number;
+  days: number;
+}
+
+function parseGigCard(body: string): GigCard | null {
+  if (!body.startsWith(GIG_PREFIX)) return null;
+  try {
+    return JSON.parse(body.slice(GIG_PREFIX.length));
+  } catch {
+    return null;
+  }
+}
+
+function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
+  return (
+    <Link href={`/gigs/${gig.id}`} className="msgs-gig-card" style={{
+      display: "block",
+      textDecoration: "none",
+      borderRadius: 14,
+      border: mine ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(45,212,191,0.25)",
+      background: mine ? "rgba(0,0,0,0.12)" : "rgba(45,212,191,0.06)",
+      padding: "0.85rem 1rem",
+      maxWidth: 280,
+      cursor: "pointer",
+    }}>
+      <div style={{
+        fontFamily: "Space Mono, monospace",
+        fontSize: "0.5rem",
+        letterSpacing: "0.14em",
+        textTransform: "uppercase",
+        color: "#2DD4BF",
+        marginBottom: "0.35rem",
+      }}>
+        Gig Request
+      </div>
+      <div style={{
+        fontFamily: "Rajdhani, sans-serif",
+        fontWeight: 700,
+        fontSize: "0.95rem",
+        color: mine ? "#fff" : "#0f172a",
+        lineHeight: 1.3,
+        marginBottom: "0.5rem",
+      }}>
+        {gig.title}
+      </div>
+      <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
+        <span style={{
+          fontFamily: "Space Mono, monospace",
+          fontWeight: 700,
+          fontSize: "0.88rem",
+          color: "#2DD4BF",
+        }}>
+          ${gig.price}
+        </span>
+        <span style={{
+          fontFamily: "Outfit, sans-serif",
+          fontSize: "0.7rem",
+          color: mine ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.45)",
+        }}>
+          {gig.days} day{gig.days !== 1 ? "s" : ""} delivery
+        </span>
+      </div>
+      <div style={{
+        marginTop: "0.6rem",
+        paddingTop: "0.5rem",
+        borderTop: mine ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(45,212,191,0.15)",
+        fontFamily: "Outfit, sans-serif",
+        fontSize: "0.68rem",
+        color: mine ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)",
+      }}>
+        Tap to view gig →
+      </div>
+    </Link>
+  );
+}
 
 export default function MessageThread({ conversationId, currentUserId }: Props) {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [socialWarning, setSocialWarning] = useState(false);
-  const bottomRef = useRef<HTMLDivElement>(null);
+  const threadBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+
+  const scrollToBottom = useCallback((smooth = false) => {
+    const el = threadBodyRef.current;
+    if (!el) return;
+    el.scrollTop = el.scrollHeight;
+  }, []);
 
   // Load initial messages
   const loadMessages = useCallback(async () => {
     try {
       const data = await getMessages(conversationId);
       setMessages(data);
-      // Mark as read when opening
       await markMessagesAsRead(conversationId);
     } catch { /* ignore */ }
   }, [conversationId]);
@@ -60,7 +146,7 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
-    if (!key || !cluster) return; // env vars not set — skip real-time, rely on initial fetch
+    if (!key || !cluster) return;
 
     let pusher: InstanceType<typeof PusherClient> | null = null;
     try {
@@ -74,22 +160,20 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
           });
         }
       });
-    } catch {
-      // Pusher failed to initialize — real-time disabled, messages still load on page open
-    }
+    } catch {}
 
     return () => {
       try {
         pusher?.unsubscribe(`conversation-${conversationId}`);
         pusher?.disconnect();
-      } catch { /* ignore */ }
+      } catch {}
     };
   }, [conversationId, currentUserId]);
 
-  // Auto-scroll on new messages
+  // Scroll to bottom when messages change — scroll CONTAINER not the page
   useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+    scrollToBottom();
+  }, [messages, scrollToBottom]);
 
   const send = async () => {
     if (!body.trim() || sending) return;
@@ -101,7 +185,6 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
     setSocialWarning(false);
     setSending(true);
 
-    // Optimistic: add message immediately to local state
     const optimisticMsg: Msg = {
       id: `optimistic-${Date.now()}`,
       senderId: currentUserId,
@@ -114,12 +197,10 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
 
     try {
       const confirmed = await sendMessage(conversationId, text);
-      // Replace optimistic message with real one
       setMessages((prev) =>
         prev.map((m) => (m.id === optimisticMsg.id ? confirmed : m))
       );
     } catch {
-      // Remove optimistic on failure
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));
     } finally {
       setSending(false);
@@ -138,7 +219,7 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
 
   return (
     <div className="msgs-thread">
-      <div className="msgs-thread-body">
+      <div className="msgs-thread-body" ref={threadBodyRef}>
         {messages.length === 0 && (
           <div className="msgs-thread-empty">Send the first message to start the conversation.</div>
         )}
@@ -147,6 +228,7 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
           const dateLabel = formatDate(m.createdAt);
           const showDate = dateLabel !== lastDate;
           lastDate = dateLabel;
+          const gigCard = parseGigCard(m.body);
 
           return (
             <div key={m.id}>
@@ -154,15 +236,24 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
                 <div className="msgs-date-sep">{dateLabel}</div>
               )}
               <div className={`msgs-bubble-row ${mine ? "mine" : "theirs"}`}>
-                <div className={`msgs-bubble ${mine ? "msgs-bubble-mine" : "msgs-bubble-theirs"}`}>
-                  <span className="msgs-bubble-text">{m.body}</span>
-                  <span className="msgs-bubble-time">{formatTime(m.createdAt)}</span>
-                </div>
+                {gigCard ? (
+                  <div style={{ display: "flex", flexDirection: "column", alignItems: mine ? "flex-end" : "flex-start", gap: "0.25rem" }}>
+                    <GigCardBubble gig={gigCard} mine={mine} />
+                    <span className="msgs-bubble-time" style={{ marginRight: mine ? "0.25rem" : 0, marginLeft: mine ? 0 : "0.25rem" }}>
+                      {formatTime(m.createdAt)}
+                    </span>
+                  </div>
+                ) : (
+                  <div className={`msgs-bubble ${mine ? "msgs-bubble-mine" : "msgs-bubble-theirs"}`}>
+                    <span className="msgs-bubble-text">{m.body}</span>
+                    <span className="msgs-bubble-time">{formatTime(m.createdAt)}</span>
+                  </div>
+                )}
               </div>
             </div>
           );
         })}
-        <div ref={bottomRef} />
+        <div style={{ height: 1 }} />
       </div>
 
       {socialWarning && (

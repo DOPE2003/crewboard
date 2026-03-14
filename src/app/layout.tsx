@@ -1,10 +1,11 @@
 import "@/styles/globals.css";
 import type { Viewport } from "next";
 import AuthProvider from "./SessionProvider";
-import StarsBackground from "@/components/ui/StarsBackground";
 import Navbar from "@/components/layout/Navbar";
+import Footer from "@/components/layout/Footer";
 import ThemeRouteClass from "@/components/ui/ThemeRouteClass";
-import { SolanaProvider } from "@/components/ui/SolanaProvider";
+import ThemeProvider from "@/components/ui/ThemeProvider";
+import { LanguageProvider } from "@/contexts/LanguageContext";
 import { Analytics } from "@vercel/analytics/next";
 
 export const viewport: Viewport = {
@@ -19,12 +20,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <AuthProvider>
-          <SolanaProvider>
+          <LanguageProvider>
+            <ThemeProvider />
             <ThemeRouteClass />
-            <StarsBackground />
             <Navbar />
             {children}
-          </SolanaProvider>
+            <Footer />
+          </LanguageProvider>
         </AuthProvider>
         <Analytics />
       </body>

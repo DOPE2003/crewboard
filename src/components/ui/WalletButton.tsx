@@ -2,6 +2,7 @@
 
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect, useRef, useState } from "react";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 function shortAddr(addr: string) {
   return addr.slice(0, 4) + "..." + addr.slice(-4);
@@ -15,8 +16,10 @@ export default function WalletButton() {
 }
 
 function WalletButtonInner() {
-  const { connected, publicKey, connect, disconnect, wallets, select } = useWallet();
+  const { connected, publicKey, connect, disconnect, wallets, select, wallet } = useWallet();
+  const { t } = useLanguage();
   const [open, setOpen] = useState(false);
+  const [pendingConnect, setPendingConnect] = useState<string | null>(null);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,12 +30,17 @@ function WalletButtonInner() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const handleConnect = async (walletName: string) => {
-    const w = wallets.find((w) => w.adapter.name === walletName);
-    if (!w) return;
-    select(w.adapter.name);
+  useEffect(() => {
+    if (pendingConnect && wallet?.adapter.name === pendingConnect && !connected) {
+      connect().catch(() => setPendingConnect(null));
+    }
+    if (connected) setPendingConnect(null);
+  }, [wallet, pendingConnect, connected, connect]);
+
+  const handleConnect = (walletName: string) => {
+    select(walletName as any);
+    setPendingConnect(walletName);
     setOpen(false);
-    try { await connect(); } catch {}
   };
 
   const handleDisconnect = async () => {
@@ -59,14 +67,13 @@ function WalletButtonInner() {
           width: 7, height: 7, borderRadius: "50%", flexShrink: 0,
           background: connected ? "#14b8a6" : "rgba(0,0,0,0.2)",
         }} />
-        {connected && publicKey ? shortAddr(publicKey.toBase58()) : "Connect Wallet"}
+        {connected && publicKey ? shortAddr(publicKey.toBase58()) : t("wallet.connect")}
       </button>
 
       {open && (
-        <div style={{
+        <div className="wallet-dropdown" style={{
           position: "absolute", top: "calc(100% + 8px)", right: 0,
-          background: "#fff", border: "1px solid rgba(0,0,0,0.09)",
-          borderRadius: "12px", boxShadow: "0 12px 40px rgba(0,0,0,0.12)",
+          borderRadius: "12px",
           minWidth: "180px", zIndex: 9999, overflow: "hidden", padding: "0.4rem",
         }}>
           {connected ? (
@@ -95,7 +102,7 @@ function WalletButtonInner() {
                   <polyline points="16 17 21 12 16 7"/>
                   <line x1="21" y1="12" x2="9" y2="12"/>
                 </svg>
-                Disconnect
+                {t("wallet.disconnect")}
               </button>
             </>
           ) : (
@@ -105,7 +112,7 @@ function WalletButtonInner() {
                 fontFamily: "Space Mono, monospace", fontSize: "0.6rem",
                 color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase",
               }}>
-                Choose Wallet
+                {t("wallet.choose")}
               </div>
               {["Phantom", "Solflare"].map((name) => {
                 const w = wallets.find((w) => w.adapter.name === name);

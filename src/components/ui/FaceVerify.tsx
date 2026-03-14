@@ -46,15 +46,7 @@ export default function FaceVerify({ humanVerified }: Props) {
       // Dynamically import face-api.js (browser only)
       const faceapi = await import("face-api.js");
 
-      // Load tiny face detector model from same-origin /models/ (no CDN, no CORS/shield issues)
-      try {
-        await faceapi.nets.tinyFaceDetector.loadFromUri("/models");
-      } catch {
-        setStatus("error");
-        setMessage("Failed to load face detection model. Please try again.");
-        stopCamera();
-        return;
-      }
+      await faceapi.nets.tinyFaceDetector.loadFromUri(window.location.origin + "/models");
 
       // Start camera
       let stream: MediaStream;
@@ -162,9 +154,6 @@ export default function FaceVerify({ humanVerified }: Props) {
           </svg>
           Verify Your Identity
         </button>
-        <div style={{ fontSize: "0.68rem", color: "#94a3b8", lineHeight: 1.65, maxWidth: 320 }}>
-          Uses your camera to confirm you are a real, live person. Detection runs entirely in your browser — no images are uploaded or stored.
-        </div>
       </div>
 
       {open && (

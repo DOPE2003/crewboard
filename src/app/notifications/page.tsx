@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import MarkAllRead from "./MarkAllRead";
 import AutoMarkRead from "./AutoMarkRead";
+import T from "@/components/ui/T";
 
 export const metadata = { title: "Notifications — Crewboard" };
 
@@ -29,7 +30,7 @@ export default async function NotificationsPage() {
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <main className="page" style={{ minHeight: "100vh" }}>
+    <main className="page notif-page" style={{ minHeight: "100vh" }}>
       {/* Silently marks all unread as read after page renders */}
       {unreadCount > 0 && <AutoMarkRead userId={session.user.userId} />}
       <div style={{ maxWidth: "680px", margin: "0 auto", padding: "3rem 1.5rem 6rem" }}>
@@ -45,7 +46,7 @@ export default async function NotificationsPage() {
               color: "rgba(0,0,0,0.38)",
               marginBottom: "0.4rem",
             }}>
-              — Inbox
+              <T k="notif.inbox" />
             </div>
             <h1 style={{
               fontFamily: "Rajdhani, sans-serif",
@@ -54,7 +55,7 @@ export default async function NotificationsPage() {
               color: "#000",
               lineHeight: 1,
             }}>
-              Notifications
+              <T k="notif.title" />
               {unreadCount > 0 && (
                 <span style={{
                   display: "inline-flex",
@@ -92,7 +93,7 @@ export default async function NotificationsPage() {
             fontSize: "0.75rem",
             letterSpacing: "0.08em",
           }}>
-            No notifications yet.
+            <T k="notif.empty" />
           </div>
         ) : (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
@@ -184,11 +185,11 @@ export default async function NotificationsPage() {
               };
 
               return n.link ? (
-                <Link key={n.id} href={n.link} style={{ ...cardStyle, cursor: "pointer" }}>
+                <Link key={n.id} href={n.link} className={`notif-card${n.read ? "" : " notif-card--unread"}`} style={{ ...cardStyle, cursor: "pointer" }}>
                   {inner}
                 </Link>
               ) : (
-                <div key={n.id} style={cardStyle}>
+                <div key={n.id} className={`notif-card${n.read ? "" : " notif-card--unread"}`} style={cardStyle}>
                   {inner}
                 </div>
               );
@@ -206,7 +207,7 @@ export default async function NotificationsPage() {
             color: "rgba(0,0,0,0.45)",
             textDecoration: "none",
           }}>
-            ← Back to Dashboard
+            <T k="notif.back" />
           </Link>
         </div>
 

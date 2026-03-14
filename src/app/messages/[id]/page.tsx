@@ -95,9 +95,16 @@ export default async function ConversationPage({
                   </div>
                   <div className="msgs-conv-preview">
                     {lastMsg
-                      ? (lastMsg.senderId === userId ? "You: " : "") +
-                        lastMsg.body.slice(0, 48) +
-                        (lastMsg.body.length > 48 ? "…" : "")
+                      ? (() => {
+                          const prefix = lastMsg.senderId === userId ? "You: " : "";
+                          if (lastMsg.body.startsWith("__GIGREQUEST__:")) {
+                            try {
+                              const gig = JSON.parse(lastMsg.body.slice("__GIGREQUEST__:".length));
+                              return prefix + `Gig Request: ${gig.title}`;
+                            } catch { return prefix + "Gig Request"; }
+                          }
+                          return prefix + lastMsg.body.slice(0, 48) + (lastMsg.body.length > 48 ? "…" : "");
+                        })()
                       : "No messages yet"}
                   </div>
                 </div>

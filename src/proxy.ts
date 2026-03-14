@@ -9,13 +9,14 @@ export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
   const profileComplete = req.auth?.user?.profileComplete ?? false;
+  const humanVerified = req.auth?.user?.humanVerified ?? false;
 
   // 1. GLOBAL SITE PASSWORD PROTECTION
-  // Allow access to static assets, images, API, and the locked page itself
-  const isPublicAsset = 
+  const isPublicAsset =
     pathname.startsWith('/_next') ||
     pathname.startsWith('/api') ||
     pathname.startsWith('/locked') ||
+    pathname.startsWith('/models') ||
     pathname.startsWith('/logo.png') ||
     pathname.startsWith('/favicon.ico');
 
@@ -30,25 +31,42 @@ export default auth((req) => {
   // 2. AUTHENTICATION REDIRECTS
   const isDashboard = pathname.startsWith("/dashboard");
   const isOnboarding = pathname.startsWith("/onboarding");
+  const isVerify = pathname.startsWith("/verify");
+  const isLogin = pathname.startsWith("/login");
 
-  // Not logged in → login
-  if ((isDashboard || isOnboarding) && !isLoggedIn) {
+  // Not logged in → login (for protected pages)
+  if ((isDashboard || isOnboarding || isVerify) && !isLoggedIn) {
     const url = req.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Logged in, profile incomplete → onboarding
-  if (isLoggedIn && !profileComplete && isDashboard) {
+  // Logged in but not face-verified → /verify
+  // Allow /verify, /login, /api, public pages through
+  if (isLoggedIn && !humanVerified && !isVerify && !isLogin && !isPublicAsset) {
+    const url = req.nextUrl.clone();
+    url.pathname = "/verify";
+    return NextResponse.redirect(url);
+  }
+
+  // Logged in, face-verified, profile incomplete → onboarding
+  if (isLoggedIn && humanVerified && !profileComplete && isDashboard) {
     const url = req.nextUrl.clone();
     url.pathname = "/onboarding";
     return NextResponse.redirect(url);
   }
 
-  // Logged in, profile complete, on onboarding → dashboard
-  if (isLoggedIn && profileComplete && isOnboarding) {
+  // Logged in, face-verified, profile complete, on onboarding → dashboard
+  if (isLoggedIn && humanVerified && profileComplete && isOnboarding) {
     const url = req.nextUrl.clone();
     url.pathname = "/dashboard";
+    return NextResponse.redirect(url);
+  }
+
+  // Already verified, redirect away from /verify
+  if (isLoggedIn && humanVerified && isVerify) {
+    const url = req.nextUrl.clone();
+    url.pathname = profileComplete ? "/dashboard" : "/onboarding";
     return NextResponse.redirect(url);
   }
 

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { searchBuilders } from "@/actions/search";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 interface Result {
   name: string | null;
@@ -13,6 +14,7 @@ interface Result {
 }
 
 export default function NavSearch() {
+  const { t } = useLanguage();
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<Result[]>([]);
   const [open, setOpen] = useState(false);
@@ -94,7 +96,7 @@ export default function NavSearch() {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKey}
           onFocus={() => results.length > 0 && setOpen(true)}
-          placeholder="Search talent..."
+          placeholder={t("nav.search")}
           autoComplete="off"
           className="nav-search-input"
           style={{
@@ -103,25 +105,22 @@ export default function NavSearch() {
             outline: "none",
             fontFamily: "Outfit, sans-serif",
             fontSize: "0.82rem",
-            width: "260px",
+            width: "440px",
           }}
         />
       </div>
 
       {/* Dropdown */}
       {open && results.length > 0 && (
-        <div style={{
+        <div className="nav-search-dropdown" style={{
           position: "absolute",
           top: "calc(100% + 6px)",
           left: 0,
           right: 0,
-          background: "#fff",
-          border: "1px solid rgba(0,0,0,0.1)",
           borderRadius: "10px",
           overflow: "hidden",
           zIndex: 9999,
           minWidth: "260px",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.12)",
         }}>
           {results.map((r, i) => (
             <button

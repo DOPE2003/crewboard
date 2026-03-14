@@ -287,6 +287,10 @@ export type UserWhereInput = {
   sentMessages?: Prisma.MessageListRelationFilter
   buyerOrders?: Prisma.OrderListRelationFilter
   sellerOrders?: Prisma.OrderListRelationFilter
+  savedTalents?: Prisma.SavedTalentListRelationFilter
+  savedByTalents?: Prisma.SavedTalentListRelationFilter
+  reviewsGiven?: Prisma.ReviewListRelationFilter
+  reviewsReceived?: Prisma.ReviewListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -313,6 +317,10 @@ export type UserOrderByWithRelationInput = {
   sentMessages?: Prisma.MessageOrderByRelationAggregateInput
   buyerOrders?: Prisma.OrderOrderByRelationAggregateInput
   sellerOrders?: Prisma.OrderOrderByRelationAggregateInput
+  savedTalents?: Prisma.SavedTalentOrderByRelationAggregateInput
+  savedByTalents?: Prisma.SavedTalentOrderByRelationAggregateInput
+  reviewsGiven?: Prisma.ReviewOrderByRelationAggregateInput
+  reviewsReceived?: Prisma.ReviewOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -342,6 +350,10 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   sentMessages?: Prisma.MessageListRelationFilter
   buyerOrders?: Prisma.OrderListRelationFilter
   sellerOrders?: Prisma.OrderListRelationFilter
+  savedTalents?: Prisma.SavedTalentListRelationFilter
+  savedByTalents?: Prisma.SavedTalentListRelationFilter
+  reviewsGiven?: Prisma.ReviewListRelationFilter
+  reviewsReceived?: Prisma.ReviewListRelationFilter
 }, "id" | "twitterId" | "twitterHandle" | "walletAddress" | "worldIdNullifier" | "stripeVerificationId">
 
 export type UserOrderByWithAggregationInput = {
@@ -416,6 +428,10 @@ export type UserCreateInput = {
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -442,6 +458,10 @@ export type UserUncheckedCreateInput = {
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUpdateInput = {
@@ -468,6 +488,10 @@ export type UserUpdateInput = {
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -494,6 +518,10 @@ export type UserUncheckedUpdateInput = {
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -658,6 +686,34 @@ export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
 
+export type UserCreateNestedOneWithoutSavedTalentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedTalentsInput, Prisma.UserUncheckedCreateWithoutSavedTalentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedTalentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutSavedByTalentsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedByTalentsInput, Prisma.UserUncheckedCreateWithoutSavedByTalentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedByTalentsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSavedTalentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedTalentsInput, Prisma.UserUncheckedCreateWithoutSavedTalentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedTalentsInput
+  upsert?: Prisma.UserUpsertWithoutSavedTalentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedTalentsInput, Prisma.UserUpdateWithoutSavedTalentsInput>, Prisma.UserUncheckedUpdateWithoutSavedTalentsInput>
+}
+
+export type UserUpdateOneRequiredWithoutSavedByTalentsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedByTalentsInput, Prisma.UserUncheckedCreateWithoutSavedByTalentsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedByTalentsInput
+  upsert?: Prisma.UserUpsertWithoutSavedByTalentsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedByTalentsInput, Prisma.UserUpdateWithoutSavedByTalentsInput>, Prisma.UserUncheckedUpdateWithoutSavedByTalentsInput>
+}
+
 export type UserCreateNestedOneWithoutNotificationsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutNotificationsInput, Prisma.UserUncheckedCreateWithoutNotificationsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutNotificationsInput
@@ -728,6 +784,298 @@ export type UserUpdateOneRequiredWithoutSellerOrdersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSellerOrdersInput, Prisma.UserUpdateWithoutSellerOrdersInput>, Prisma.UserUncheckedUpdateWithoutSellerOrdersInput>
 }
 
+export type UserCreateNestedOneWithoutReviewsGivenInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsGivenInput, Prisma.UserUncheckedCreateWithoutReviewsGivenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsGivenInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserCreateNestedOneWithoutReviewsReceivedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutReviewsGivenNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsGivenInput, Prisma.UserUncheckedCreateWithoutReviewsGivenInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsGivenInput
+  upsert?: Prisma.UserUpsertWithoutReviewsGivenInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsGivenInput, Prisma.UserUpdateWithoutReviewsGivenInput>, Prisma.UserUncheckedUpdateWithoutReviewsGivenInput>
+}
+
+export type UserUpdateOneRequiredWithoutReviewsReceivedNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutReviewsReceivedInput
+  upsert?: Prisma.UserUpsertWithoutReviewsReceivedInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReviewsReceivedInput, Prisma.UserUpdateWithoutReviewsReceivedInput>, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
+}
+
+export type UserCreateWithoutSavedTalentsInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+}
+
+export type UserUncheckedCreateWithoutSavedTalentsInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+}
+
+export type UserCreateOrConnectWithoutSavedTalentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedTalentsInput, Prisma.UserUncheckedCreateWithoutSavedTalentsInput>
+}
+
+export type UserCreateWithoutSavedByTalentsInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+}
+
+export type UserUncheckedCreateWithoutSavedByTalentsInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+}
+
+export type UserCreateOrConnectWithoutSavedByTalentsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedByTalentsInput, Prisma.UserUncheckedCreateWithoutSavedByTalentsInput>
+}
+
+export type UserUpsertWithoutSavedTalentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedTalentsInput, Prisma.UserUncheckedUpdateWithoutSavedTalentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedTalentsInput, Prisma.UserUncheckedCreateWithoutSavedTalentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSavedTalentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedTalentsInput, Prisma.UserUncheckedUpdateWithoutSavedTalentsInput>
+}
+
+export type UserUpdateWithoutSavedTalentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSavedTalentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+}
+
+export type UserUpsertWithoutSavedByTalentsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedByTalentsInput, Prisma.UserUncheckedUpdateWithoutSavedByTalentsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedByTalentsInput, Prisma.UserUncheckedCreateWithoutSavedByTalentsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSavedByTalentsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedByTalentsInput, Prisma.UserUncheckedUpdateWithoutSavedByTalentsInput>
+}
+
+export type UserUpdateWithoutSavedByTalentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+}
+
 export type UserCreateWithoutNotificationsInput = {
   id?: string
   twitterId: string
@@ -751,6 +1099,10 @@ export type UserCreateWithoutNotificationsInput = {
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -776,6 +1128,10 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -817,6 +1173,10 @@ export type UserUpdateWithoutNotificationsInput = {
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -842,6 +1202,10 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -867,6 +1231,10 @@ export type UserCreateWithoutSentMessagesInput = {
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -892,6 +1260,10 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -933,6 +1305,10 @@ export type UserUpdateWithoutSentMessagesInput = {
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -958,6 +1334,10 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserCreateWithoutGigsInput = {
@@ -983,6 +1363,10 @@ export type UserCreateWithoutGigsInput = {
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUncheckedCreateWithoutGigsInput = {
@@ -1008,6 +1392,10 @@ export type UserUncheckedCreateWithoutGigsInput = {
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserCreateOrConnectWithoutGigsInput = {
@@ -1049,6 +1437,10 @@ export type UserUpdateWithoutGigsInput = {
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGigsInput = {
@@ -1074,6 +1466,10 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserCreateWithoutBuyerOrdersInput = {
@@ -1099,6 +1495,10 @@ export type UserCreateWithoutBuyerOrdersInput = {
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUncheckedCreateWithoutBuyerOrdersInput = {
@@ -1124,6 +1524,10 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserCreateOrConnectWithoutBuyerOrdersInput = {
@@ -1154,6 +1558,10 @@ export type UserCreateWithoutSellerOrdersInput = {
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserUncheckedCreateWithoutSellerOrdersInput = {
@@ -1179,6 +1587,10 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
 }
 
 export type UserCreateOrConnectWithoutSellerOrdersInput = {
@@ -1220,6 +1632,10 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
@@ -1245,6 +1661,10 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUpsertWithoutSellerOrdersInput = {
@@ -1281,6 +1701,10 @@ export type UserUpdateWithoutSellerOrdersInput = {
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSellerOrdersInput = {
@@ -1306,6 +1730,274 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+}
+
+export type UserCreateWithoutReviewsGivenInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+}
+
+export type UserUncheckedCreateWithoutReviewsGivenInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+}
+
+export type UserCreateOrConnectWithoutReviewsGivenInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsGivenInput, Prisma.UserUncheckedCreateWithoutReviewsGivenInput>
+}
+
+export type UserCreateWithoutReviewsReceivedInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+}
+
+export type UserUncheckedCreateWithoutReviewsReceivedInput = {
+  id?: string
+  twitterId: string
+  twitterHandle: string
+  walletAddress?: string | null
+  name?: string | null
+  image?: string | null
+  role?: string | null
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  isOG?: boolean
+  humanVerified?: boolean
+  worldIdNullifier?: string | null
+  worldIdLevel?: string | null
+  stripeVerificationId?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+}
+
+export type UserCreateOrConnectWithoutReviewsReceivedInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+}
+
+export type UserUpsertWithoutReviewsGivenInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewsGivenInput, Prisma.UserUncheckedUpdateWithoutReviewsGivenInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsGivenInput, Prisma.UserUncheckedCreateWithoutReviewsGivenInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewsGivenInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewsGivenInput, Prisma.UserUncheckedUpdateWithoutReviewsGivenInput>
+}
+
+export type UserUpdateWithoutReviewsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewsGivenInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+}
+
+export type UserUpsertWithoutReviewsReceivedInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutReviewsReceivedInput, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutReviewsReceivedInput, Prisma.UserUncheckedCreateWithoutReviewsReceivedInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutReviewsReceivedInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutReviewsReceivedInput, Prisma.UserUncheckedUpdateWithoutReviewsReceivedInput>
+}
+
+export type UserUpdateWithoutReviewsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+}
+
+export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
 }
 
 
@@ -1319,6 +2011,10 @@ export type UserCountOutputType = {
   sentMessages: number
   buyerOrders: number
   sellerOrders: number
+  savedTalents: number
+  savedByTalents: number
+  reviewsGiven: number
+  reviewsReceived: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1327,6 +2023,10 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   sentMessages?: boolean | UserCountOutputTypeCountSentMessagesArgs
   buyerOrders?: boolean | UserCountOutputTypeCountBuyerOrdersArgs
   sellerOrders?: boolean | UserCountOutputTypeCountSellerOrdersArgs
+  savedTalents?: boolean | UserCountOutputTypeCountSavedTalentsArgs
+  savedByTalents?: boolean | UserCountOutputTypeCountSavedByTalentsArgs
+  reviewsGiven?: boolean | UserCountOutputTypeCountReviewsGivenArgs
+  reviewsReceived?: boolean | UserCountOutputTypeCountReviewsReceivedArgs
 }
 
 /**
@@ -1374,6 +2074,34 @@ export type UserCountOutputTypeCountSellerOrdersArgs<ExtArgs extends runtime.Typ
   where?: Prisma.OrderWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSavedTalentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedTalentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSavedByTalentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedTalentWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountReviewsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ReviewWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1399,6 +2127,10 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
   buyerOrders?: boolean | Prisma.User$buyerOrdersArgs<ExtArgs>
   sellerOrders?: boolean | Prisma.User$sellerOrdersArgs<ExtArgs>
+  savedTalents?: boolean | Prisma.User$savedTalentsArgs<ExtArgs>
+  savedByTalents?: boolean | Prisma.User$savedByTalentsArgs<ExtArgs>
+  reviewsGiven?: boolean | Prisma.User$reviewsGivenArgs<ExtArgs>
+  reviewsReceived?: boolean | Prisma.User$reviewsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -1472,6 +2204,10 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
   buyerOrders?: boolean | Prisma.User$buyerOrdersArgs<ExtArgs>
   sellerOrders?: boolean | Prisma.User$sellerOrdersArgs<ExtArgs>
+  savedTalents?: boolean | Prisma.User$savedTalentsArgs<ExtArgs>
+  savedByTalents?: boolean | Prisma.User$savedByTalentsArgs<ExtArgs>
+  reviewsGiven?: boolean | Prisma.User$reviewsGivenArgs<ExtArgs>
+  reviewsReceived?: boolean | Prisma.User$reviewsReceivedArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1485,6 +2221,10 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     sentMessages: Prisma.$MessagePayload<ExtArgs>[]
     buyerOrders: Prisma.$OrderPayload<ExtArgs>[]
     sellerOrders: Prisma.$OrderPayload<ExtArgs>[]
+    savedTalents: Prisma.$SavedTalentPayload<ExtArgs>[]
+    savedByTalents: Prisma.$SavedTalentPayload<ExtArgs>[]
+    reviewsGiven: Prisma.$ReviewPayload<ExtArgs>[]
+    reviewsReceived: Prisma.$ReviewPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1904,6 +2644,10 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   sentMessages<T extends Prisma.User$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   buyerOrders<T extends Prisma.User$buyerOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$buyerOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sellerOrders<T extends Prisma.User$sellerOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sellerOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedTalents<T extends Prisma.User$savedTalentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedTalentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedTalentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedByTalents<T extends Prisma.User$savedByTalentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedByTalentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedTalentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewsGiven<T extends Prisma.User$reviewsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  reviewsReceived<T extends Prisma.User$reviewsReceivedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsReceivedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2461,6 +3205,102 @@ export type User$sellerOrdersArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.OrderScalarFieldEnum | Prisma.OrderScalarFieldEnum[]
+}
+
+/**
+ * User.savedTalents
+ */
+export type User$savedTalentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedTalent
+   */
+  select?: Prisma.SavedTalentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedTalent
+   */
+  omit?: Prisma.SavedTalentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedTalentInclude<ExtArgs> | null
+  where?: Prisma.SavedTalentWhereInput
+  orderBy?: Prisma.SavedTalentOrderByWithRelationInput | Prisma.SavedTalentOrderByWithRelationInput[]
+  cursor?: Prisma.SavedTalentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedTalentScalarFieldEnum | Prisma.SavedTalentScalarFieldEnum[]
+}
+
+/**
+ * User.savedByTalents
+ */
+export type User$savedByTalentsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedTalent
+   */
+  select?: Prisma.SavedTalentSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedTalent
+   */
+  omit?: Prisma.SavedTalentOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedTalentInclude<ExtArgs> | null
+  where?: Prisma.SavedTalentWhereInput
+  orderBy?: Prisma.SavedTalentOrderByWithRelationInput | Prisma.SavedTalentOrderByWithRelationInput[]
+  cursor?: Prisma.SavedTalentWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedTalentScalarFieldEnum | Prisma.SavedTalentScalarFieldEnum[]
+}
+
+/**
+ * User.reviewsGiven
+ */
+export type User$reviewsGivenArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * User.reviewsReceived
+ */
+export type User$reviewsReceivedArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Review
+   */
+  select?: Prisma.ReviewSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Review
+   */
+  omit?: Prisma.ReviewOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ReviewInclude<ExtArgs> | null
+  where?: Prisma.ReviewWhereInput
+  orderBy?: Prisma.ReviewOrderByWithRelationInput | Prisma.ReviewOrderByWithRelationInput[]
+  cursor?: Prisma.ReviewWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
 }
 
 /**

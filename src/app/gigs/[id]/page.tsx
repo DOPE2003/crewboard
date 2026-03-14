@@ -2,7 +2,7 @@ import db from "@/lib/db";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { startConversation } from "@/actions/messages";
+import { startConversation, hireFromGig } from "@/actions/messages";
 import GigOwnerActions from "./GigOwnerActions";
 
 export default async function GigPage({
@@ -105,8 +105,11 @@ export default async function GigPage({
           {/* CTA */}
           {canHire && (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              <button className="btn-primary" style={{ width: "100%", cursor: "pointer" }}>Hire — Coming Soon</button>
-              
+              <form action={hireFromGig.bind(null, gig.id, gig.userId)}>
+                <button type="submit" className="btn-primary" style={{ width: "100%", cursor: "pointer" }}>
+                  Hire — Send Offer
+                </button>
+              </form>
               <form action={startConversation.bind(null, gig.userId)}>
                 <button type="submit" className="btn-secondary" style={{ width: "100%", cursor: "pointer" }}>
                   Send Message

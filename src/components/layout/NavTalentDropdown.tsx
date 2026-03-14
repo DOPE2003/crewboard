@@ -50,7 +50,7 @@ export default function NavTalentDropdown() {
           transition: "color 0.2s",
         }}
       >
-        Find Talent
+        Freelancers
         {/* chevron */}
         <svg
           width="10" height="10" viewBox="0 0 24 24" fill="none"
@@ -155,7 +155,7 @@ export default function NavTalentDropdown() {
               onMouseEnter={(e) => (e.currentTarget.style.color = "#000")}
               onMouseLeave={(e) => (e.currentTarget.style.color = "rgba(0,0,0,0.45)")}
             >
-              Browse all talent →
+              Browse all freelancers →
             </Link>
           </div>
         </div>

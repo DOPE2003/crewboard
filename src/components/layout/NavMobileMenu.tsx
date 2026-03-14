@@ -3,24 +3,26 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useLanguage } from "@/contexts/LanguageContext";
+import type { TranslationKey } from "@/lib/i18n";
 
-const NAV_LINKS = [
-  { label: "KOL Manager",       href: "/talent?role=KOL+Manager" },
-  { label: "Exchange Listings", href: "/talent?role=Exchange+Listings+Manager" },
-  { label: "Web3 Designer",     href: "/talent?role=Web3+Web+Designer" },
-  { label: "Social Marketing",  href: "/talent?role=Social+Marketing" },
-  { label: "Artist",            href: "/talent?role=Artist" },
-  { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
-  { label: "Coding & Tech",     href: "/talent?role=Coding+%26+Tech" },
-  { label: "AI Engineer",       href: "/talent?role=AI+Engineer" },
-  { label: "Content Creator",   href: "/talent?role=Content+Creator" },
-  { label: "Graphic & Design",  href: "/talent?role=Graphic+%26+Design" },
-  { label: "Whitepaper",        href: "/whitepaper" },
+const NAV_LINKS: { key: TranslationKey; href: string }[] = [
+  { key: "cat.kol",       href: "/talent?role=KOL+Manager" },
+  { key: "cat.exchange",  href: "/talent?role=Exchange+Listings+Manager" },
+  { key: "cat.web3design",href: "/talent?role=Web3+Web+Designer" },
+  { key: "cat.social",    href: "/talent?role=Social+Marketing" },
+  { key: "cat.artist",    href: "/talent?role=Artist" },
+  { key: "cat.video",     href: "/talent?role=Video+%26+Animation" },
+  { key: "cat.coding",    href: "/talent?role=Coding+%26+Tech" },
+  { key: "cat.ai",        href: "/talent?role=AI+Engineer" },
+  { key: "cat.content",   href: "/talent?role=Content+Creator" },
+  { key: "cat.graphic",   href: "/talent?role=Graphic+%26+Design" },
 ];
 
 export default function NavMobileMenu() {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   useEffect(() => { setOpen(false); }, [pathname]);
 
@@ -48,7 +50,7 @@ export default function NavMobileMenu() {
         <div className="nav-mobile-drawer">
           {NAV_LINKS.map((l) => (
             <Link key={l.href} href={l.href} className="nav-mobile-link">
-              {l.label}
+              {t(l.key)}
             </Link>
           ))}
         </div>

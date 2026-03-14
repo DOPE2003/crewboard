@@ -4,7 +4,7 @@ import db from "@/lib/db";
 import NavSearch from "./NavSearch";
 import NavMobileMenu from "./NavMobileMenu";
 import NavProfileMenu from "./NavProfileMenu";
-import WalletButton from "@/components/ui/WalletButton";
+import T from "@/components/ui/T";
 
 
 export default async function Navbar() {
@@ -42,8 +42,8 @@ export default async function Navbar() {
       }}>
 
         {/* Logo + brand name */}
-        <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", textDecoration: "none", gap: 1 }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 210, height: 52 }}>
+        <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-start", textDecoration: "none", gap: "0.15rem" }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 280, height: 70 }}>
             <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
               fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
             <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
@@ -57,7 +57,7 @@ export default async function Navbar() {
               <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
             </text>
           </svg>
-          <span className="nav-tagline">Web3 Talent Marketplace</span>
+          <span className="nav-tagline" style={{ paddingLeft: "0.3rem" }}><T k="nav.tagline" /></span>
         </Link>
 
         {/* Right: search + icons + auth */}
@@ -82,6 +82,7 @@ export default async function Navbar() {
                   <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
                 </svg>
               </Link>
+
               <Link href="/notifications" aria-label="Notifications" className="nav-icon-btn" style={{
                 display: "flex", alignItems: "center", justifyContent: "center",
                 width: 34, height: 34, borderRadius: 8, position: "relative",
@@ -109,11 +110,6 @@ export default async function Navbar() {
                 )}
               </Link>
 
-              {/* Wallet connect/disconnect — hidden on mobile */}
-              <div className="nav-wallet-wrap">
-                <WalletButton />
-              </div>
-
               {/* Profile avatar with dropdown */}
               <NavProfileMenu
                 image={user.image ?? null}
@@ -128,7 +124,7 @@ export default async function Navbar() {
           )}
 
           {!user && (
-            <Link href="/login" className="nav-pill">Login</Link>
+            <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
           )}
 
           {/* Hamburger — mobile only */}
@@ -139,18 +135,16 @@ export default async function Navbar() {
       {/* ── ROW 2: Category links (desktop only) ── */}
       <div className="nav-links-row">
         <ul className="nav-links" style={{ margin: 0 }}>
-          <li><Link href="/talent?role=KOL+Manager">KOL Manager</Link></li>
-          <li><Link href="/talent?role=Exchange+Listings+Manager">Exchange Listings</Link></li>
-          <li><Link href="/talent?role=Web3+Web+Designer">Web3 Designer</Link></li>
-          <li><Link href="/talent?role=Social+Marketing">Social Marketing</Link></li>
-          <li><Link href="/talent?role=Artist">Artist</Link></li>
-          <li><Link href="/talent?role=Video+%26+Animation">Video & Animation</Link></li>
-          <li><Link href="/talent?role=Coding+%26+Tech">Coding & Tech</Link></li>
-          <li><Link href="/talent?role=AI+Engineer">AI Engineer</Link></li>
-          <li><Link href="/talent?role=Content+Creator">Content Creator</Link></li>
-          <li><Link href="/talent?role=Graphic+%26+Design">Graphic & Design</Link></li>
-          <li className="nav-link-sep" />
-          <li><Link href="/whitepaper" className="nav-link-whitepaper">Whitepaper</Link></li>
+          <li><Link href="/talent?role=KOL+Manager"><T k="cat.kol" /></Link></li>
+          <li><Link href="/talent?role=Exchange+Listings+Manager"><T k="cat.exchange" /></Link></li>
+          <li><Link href="/talent?role=Web3+Web+Designer"><T k="cat.web3design" /></Link></li>
+          <li><Link href="/talent?role=Social+Marketing"><T k="cat.social" /></Link></li>
+          <li><Link href="/talent?role=Artist"><T k="cat.artist" /></Link></li>
+          <li><Link href="/talent?role=Video+%26+Animation"><T k="cat.video" /></Link></li>
+          <li><Link href="/talent?role=Coding+%26+Tech"><T k="cat.coding" /></Link></li>
+          <li><Link href="/talent?role=AI+Engineer"><T k="cat.ai" /></Link></li>
+          <li><Link href="/talent?role=Content+Creator"><T k="cat.content" /></Link></li>
+          <li><Link href="/talent?role=Graphic+%26+Design"><T k="cat.graphic" /></Link></li>
         </ul>
       </div>
 

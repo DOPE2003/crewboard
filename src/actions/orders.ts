@@ -1,0 +1,196 @@
+"use server";
+
+import { auth } from "@/auth";
+import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+
+export async function createOrder(gigId: string, sellerId: string) {
+  const session = await auth();
+  const buyerId = (session?.user as any)?.userId as string | undefined;
+  if (!buyerId) throw new Error("Unauthorized");
+  if (buyerId === sellerId) throw new Error("Cannot hire yourself");
+
+  const gig = await db.gig.findUnique({ where: { id: gigId }, select: { price: true, title: true } });
+  if (!gig) throw new Error("Gig not found");
+
+  const order = await db.order.create({
+    data: { gigId, buyerId, sellerId, amount: gig.price, status: "pending" },
+    select: { id: true },
+  });
+
+  // Notify seller
+  const buyer = await db.user.findUnique({ where: { id: buyerId }, select: { name: true, twitterHandle: true } });
+  const buyerName = buyer?.name ?? buyer?.twitterHandle ?? "Someone";
+  await db.notification.create({
+    data: {
+      userId: sellerId,
+      type: "order",
+      title: "New Order",
+      body: `${buyerName} placed an order for "${gig.title}"`,
+      link: `/orders/${order.id}`,
+    },
+  });
+
+  revalidatePath("/orders");
+  return order.id;
+}
+
+export async function updateOrderStatus(orderId: string, status: string) {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) throw new Error("Unauthorized");
+
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+  });
+  if (!order) throw new Error("Order not found");
+
+  // Permission rules
+  const isBuyer = order.buyerId === userId;
+  const isSeller = order.sellerId === userId;
+  if (!isBuyer && !isSeller) throw new Error("Unauthorized");
+
+  const allowed: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
+    accepted:  { by: "seller", from: ["pending"] },
+    delivered: { by: "seller", from: ["accepted"] },
+    completed: { by: "buyer",  from: ["delivered"] },
+    cancelled: { by: "both",   from: ["pending"] },
+    disputed:  { by: "both",   from: ["accepted", "delivered"] },
+  };
+
+  const rule = allowed[status];
+  if (!rule) throw new Error("Invalid status");
+  if (!rule.from.includes(order.status)) throw new Error(`Cannot move from ${order.status} to ${status}`);
+  if (rule.by === "buyer" && !isBuyer) throw new Error("Only buyer can do this");
+  if (rule.by === "seller" && !isSeller) throw new Error("Only seller can do this");
+
+  await db.order.update({ where: { id: orderId }, data: { status } });
+
+  // Notify the other party
+  const notifyId = isBuyer ? order.sellerId : order.buyerId;
+  const actor = await db.user.findUnique({ where: { id: userId }, select: { name: true, twitterHandle: true } });
+  const actorName = actor?.name ?? actor?.twitterHandle ?? "Someone";
+
+  const statusLabels: Record<string, string> = {
+    funded: "accepted your order",
+    delivered: "marked the order as delivered",
+    completed: "confirmed order completion",
+    cancelled: "cancelled the order",
+    disputed: "opened a dispute",
+  };
+
+  await db.notification.create({
+    data: {
+      userId: notifyId,
+      type: "order",
+      title: "Order Update",
+      body: `${actorName} ${statusLabels[status]} — ${order.gig.title}`,
+      link: `/orders/${orderId}`,
+    },
+  });
+
+  revalidatePath(`/orders/${orderId}`);
+  revalidatePath("/orders");
+}
+
+// Re-request: create a new order from the same cancelled order
+export async function reRequestOrder(orderId: string) {
+  const session = await auth();
+  const buyerId = (session?.user as any)?.userId as string | undefined;
+  if (!buyerId) throw new Error("Unauthorized");
+
+  const original = await db.order.findUnique({
+    where: { id: orderId },
+    select: { gigId: true, sellerId: true, buyerId: true, status: true, gig: { select: { price: true, title: true } } },
+  });
+  if (!original) throw new Error("Order not found");
+  if (original.buyerId !== buyerId) throw new Error("Unauthorized");
+  if (original.status !== "cancelled") throw new Error("Can only re-request a cancelled order");
+
+  const newOrder = await db.order.create({
+    data: { gigId: original.gigId, buyerId, sellerId: original.sellerId, amount: original.gig.price, status: "pending" },
+    select: { id: true },
+  });
+
+  const buyer = await db.user.findUnique({ where: { id: buyerId }, select: { name: true, twitterHandle: true } });
+  const buyerName = buyer?.name ?? buyer?.twitterHandle ?? "Someone";
+  await db.notification.create({
+    data: {
+      userId: original.sellerId,
+      type: "order",
+      title: "New Order",
+      body: `${buyerName} re-requested "${original.gig.title}"`,
+      link: `/orders/${newOrder.id}`,
+    },
+  });
+
+  redirect(`/orders/${newOrder.id}`);
+}
+
+// Called from client after on-chain escrow funding tx confirms
+export async function syncEscrowFunded(orderId: string, txHash: string, escrowAddress: string) {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) throw new Error("Unauthorized");
+
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+  });
+  if (!order) throw new Error("Order not found");
+  if (order.buyerId !== userId) throw new Error("Only buyer can fund");
+  if (order.status !== "pending") throw new Error("Order is not pending");
+
+  await db.order.update({
+    where: { id: orderId },
+    data: { status: "funded", txHash, escrowAddress },
+  });
+
+  await db.notification.create({
+    data: {
+      userId: order.sellerId,
+      type: "order",
+      title: "Order Funded",
+      body: `Payment for "${order.gig.title}" is locked in escrow — start working!`,
+      link: `/orders/${orderId}`,
+    },
+  });
+
+  revalidatePath(`/orders/${orderId}`);
+  revalidatePath("/orders");
+}
+
+// Called from client after on-chain release tx confirms
+export async function syncEscrowReleased(orderId: string, txHash: string) {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) throw new Error("Unauthorized");
+
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+  });
+  if (!order) throw new Error("Order not found");
+  if (order.buyerId !== userId) throw new Error("Only buyer can release");
+  if (order.status !== "delivered") throw new Error("Order is not delivered");
+
+  await db.order.update({
+    where: { id: orderId },
+    data: { status: "completed", txHash },
+  });
+
+  await db.notification.create({
+    data: {
+      userId: order.sellerId,
+      type: "order",
+      title: "Payment Released!",
+      body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
+      link: `/orders/${orderId}`,
+    },
+  });
+
+  revalidatePath(`/orders/${orderId}`);
+  revalidatePath("/orders");
+}

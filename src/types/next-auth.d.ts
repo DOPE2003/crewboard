@@ -8,6 +8,7 @@ declare module "next-auth" {
       userId?: string;
       twitterHandle?: string;
       profileComplete?: boolean;
+      humanVerified?: boolean;
     } & DefaultSession["user"];
   }
 }
@@ -17,6 +18,7 @@ declare module "next-auth/jwt" {
     userId?: string;
     twitterHandle?: string;
     profileComplete?: boolean;
+    humanVerified?: boolean;
     twitterAccessToken?: string;
     imageRefreshedAt?: number;
   }

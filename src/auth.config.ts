@@ -18,6 +18,9 @@ export const authConfig = {
     // No DB calls here — Edge-safe.
     session({ session, token }) {
       session.user.profileComplete = token.profileComplete as boolean | undefined;
+      session.user.humanVerified = token.humanVerified as boolean | undefined;
+      session.user.userId = token.userId as string | undefined;
+      session.user.twitterHandle = token.twitterHandle as string | undefined;
       return session;
     },
   },

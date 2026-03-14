@@ -52,12 +52,14 @@ export const AnyNull = runtime.AnyNull
 
 export const ModelName = {
   User: 'User',
+  SavedTalent: 'SavedTalent',
   Notification: 'Notification',
   Project: 'Project',
   Conversation: 'Conversation',
   Message: 'Message',
   Gig: 'Gig',
-  Order: 'Order'
+  Order: 'Order',
+  Review: 'Review'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -98,6 +100,16 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SavedTalentScalarFieldEnum = {
+  id: 'id',
+  saverId: 'saverId',
+  savedUserId: 'savedUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedTalentScalarFieldEnum = (typeof SavedTalentScalarFieldEnum)[keyof typeof SavedTalentScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -181,6 +193,19 @@ export const OrderScalarFieldEnum = {
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const ReviewScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  reviewerId: 'reviewerId',
+  revieweeId: 'revieweeId',
+  rating: 'rating',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -7,10 +7,11 @@ import bs58 from "bs58";
 
 // Sub-component that actually uses the wallet context
 function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
-  const { publicKey, signMessage, connected, disconnect, wallet } = useWallet();
+  const { publicKey, signMessage, connected, disconnect, wallet, wallets, select, connect } = useWallet();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  const [connectingTo, setConnectingTo] = useState<string | null>(null);
 
   const handleDisconnect = async () => {
     try {
@@ -21,10 +22,13 @@ function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
     disconnect();
   };
 
-  // Debug logging
+  // After select(), wallet state updates — then call connect()
   useEffect(() => {
-    console.log("Wallet State:", { connected, wallet: wallet?.adapter.name, publicKey: publicKey?.toBase58() });
-  }, [connected, wallet, publicKey]);
+    if (connectingTo && wallet?.adapter.name === connectingTo && !connected) {
+      connect().catch(() => setConnectingTo(null));
+    }
+    if (connected) setConnectingTo(null);
+  }, [wallet, connectingTo, connected, connect]);
 
   const handleLink = async () => {
     if (!publicKey || !signMessage) {
@@ -81,14 +85,43 @@ function LinkWalletInner({ currentWallet }: { currentWallet?: string | null }) {
     );
   }
 
+  const handleConnect = (walletName: string) => {
+    select(walletName as any);
+    setConnectingTo(walletName);
+  };
+
   if (!connected) {
+    const knownWallets = wallets.filter((w) =>
+      ["Phantom", "Solflare"].includes(w.adapter.name)
+    );
     return (
       <div className="dash-stat" style={{ gridColumn: "span 2" }}>
         <div className="dash-stat-label">Payments & Infrastructure</div>
-        <div style={{ marginTop: "0.5rem", fontSize: "0.8rem", color: "rgba(0,0,0,0.5)" }}>
-          Connect your wallet using the button in the navbar to link it here.
+        <div style={{ marginTop: "0.75rem", display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          {knownWallets.length > 0 ? knownWallets.map((w) => (
+            <button
+              key={w.adapter.name}
+              onClick={() => handleConnect(w.adapter.name)}
+              disabled={connectingTo === w.adapter.name}
+              className="btn-secondary"
+              style={{ display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.5rem 0.85rem", fontSize: "0.8rem", height: "auto", justifyContent: "flex-start" }}
+            >
+              {w.adapter.icon ? (
+                <img src={w.adapter.icon} alt={w.adapter.name} style={{ width: 20, height: 20, borderRadius: 4, flexShrink: 0 }} />
+              ) : (
+                <span style={{ width: 20, height: 20, borderRadius: 4, background: "rgba(0,0,0,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.65rem", fontWeight: 700 }}>
+                  {w.adapter.name[0]}
+                </span>
+              )}
+              {connectingTo === w.adapter.name ? "CONNECTING..." : `Connect ${w.adapter.name}`}
+            </button>
+          )) : (
+            <div style={{ fontSize: "0.8rem", color: "rgba(0,0,0,0.5)" }}>
+              No wallet extension detected. Install Phantom or Solflare.
+            </div>
+          )}
         </div>
-        <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.3)", marginTop: "0.4rem" }}>
+        <div style={{ fontSize: "0.65rem", color: "rgba(0,0,0,0.3)", marginTop: "0.5rem" }}>
           Solana Devnet · USDC Support
         </div>
       </div>

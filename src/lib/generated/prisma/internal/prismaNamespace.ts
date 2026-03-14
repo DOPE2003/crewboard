@@ -385,12 +385,14 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  SavedTalent: 'SavedTalent',
   Notification: 'Notification',
   Project: 'Project',
   Conversation: 'Conversation',
   Message: 'Message',
   Gig: 'Gig',
-  Order: 'Order'
+  Order: 'Order',
+  Review: 'Review'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "notification" | "project" | "conversation" | "message" | "gig" | "order"
+    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "order" | "review"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -481,6 +483,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    SavedTalent: {
+      payload: Prisma.$SavedTalentPayload<ExtArgs>
+      fields: Prisma.SavedTalentFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedTalentFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedTalentFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedTalentFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedTalentFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>
+        }
+        findMany: {
+          args: Prisma.SavedTalentFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>[]
+        }
+        create: {
+          args: Prisma.SavedTalentCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>
+        }
+        createMany: {
+          args: Prisma.SavedTalentCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedTalentCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedTalentDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>
+        }
+        update: {
+          args: Prisma.SavedTalentUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedTalentDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedTalentUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedTalentUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedTalentUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedTalentPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedTalentAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedTalent>
+        }
+        groupBy: {
+          args: Prisma.SavedTalentGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedTalentGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedTalentCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedTalentCountAggregateOutputType> | number
         }
       }
     }
@@ -928,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Review: {
+      payload: Prisma.$ReviewPayload<ExtArgs>
+      fields: Prisma.ReviewFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ReviewFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ReviewFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
+        }
+        findFirst: {
+          args: Prisma.ReviewFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ReviewFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
+        }
+        findMany: {
+          args: Prisma.ReviewFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>[]
+        }
+        create: {
+          args: Prisma.ReviewCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
+        }
+        createMany: {
+          args: Prisma.ReviewCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ReviewCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>[]
+        }
+        delete: {
+          args: Prisma.ReviewDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
+        }
+        update: {
+          args: Prisma.ReviewUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
+        }
+        deleteMany: {
+          args: Prisma.ReviewDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ReviewUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ReviewUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>[]
+        }
+        upsert: {
+          args: Prisma.ReviewUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ReviewPayload>
+        }
+        aggregate: {
+          args: Prisma.ReviewAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateReview>
+        }
+        groupBy: {
+          args: Prisma.ReviewGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ReviewCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ReviewCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -989,6 +1139,16 @@ export const UserScalarFieldEnum = {
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const SavedTalentScalarFieldEnum = {
+  id: 'id',
+  saverId: 'saverId',
+  savedUserId: 'savedUserId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedTalentScalarFieldEnum = (typeof SavedTalentScalarFieldEnum)[keyof typeof SavedTalentScalarFieldEnum]
 
 
 export const NotificationScalarFieldEnum = {
@@ -1072,6 +1232,19 @@ export const OrderScalarFieldEnum = {
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
+
+
+export const ReviewScalarFieldEnum = {
+  id: 'id',
+  orderId: 'orderId',
+  reviewerId: 'reviewerId',
+  revieweeId: 'revieweeId',
+  rating: 'rating',
+  body: 'body',
+  createdAt: 'createdAt'
+} as const
+
+export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1262,12 +1435,14 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  savedTalent?: Prisma.SavedTalentOmit
   notification?: Prisma.NotificationOmit
   project?: Prisma.ProjectOmit
   conversation?: Prisma.ConversationOmit
   message?: Prisma.MessageOmit
   gig?: Prisma.GigOmit
   order?: Prisma.OrderOmit
+  review?: Prisma.ReviewOmit
 }
 
 /* Types for Logging */

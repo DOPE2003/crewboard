@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroMobileSearch from "@/components/home/HeroMobileSearch";
+import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
 import "@/styles/landing.css";
 
 const FEATURES = [
@@ -65,12 +66,22 @@ export default async function HomePage() {
   const session = await auth();
   const isLoggedIn = !!session?.user;
 
-  const topBuilders = await db.user.findMany({
-    where: { profileComplete: true },
-    orderBy: { createdAt: "desc" },
-    take: 6,
-    select: { twitterHandle: true, name: true, image: true, role: true, skills: true, bio: true },
-  }).catch(() => []);
+  const [floatingProfiles] = await Promise.all([
+    db.user.findMany({
+      where: {
+        OR: [
+          { name: { in: ["Shane Simpson", "MIZU", "Leon", "mmio369"] } },
+          { twitterHandle: { in: ["Shane Simpson", "MIZU", "Leon", "mmio369"] } },
+        ],
+      },
+      select: { twitterHandle: true, name: true, image: true, role: true, availability: true, skills: true, bio: true },
+    }).then((users) => {
+      const order = ["Shane Simpson", "MIZU", "Leon", "mmio369"];
+      return order
+        .map((n) => users.find((u) => u.name === n || u.twitterHandle === n))
+        .filter(Boolean) as typeof users;
+    }).catch(() => []),
+  ]);
 
   return (
     <main className="page">
@@ -85,7 +96,7 @@ export default async function HomePage() {
         textAlign: "center",
         padding: "5rem 2rem 4rem",
         position: "relative",
-        overflow: "hidden",
+        overflow: "visible",
       }} className="landing-hero">
 
         {/* Glow — centered behind headline */}
@@ -101,6 +112,11 @@ export default async function HomePage() {
           pointerEvents: "none",
           zIndex: 0,
         }} />
+
+        {/* Floating profile cards */}
+        {floatingProfiles.length >= 2 && (
+          <HeroFloatingProfiles profiles={floatingProfiles} />
+        )}
 
         {/* Status chip */}
         <div style={{
@@ -136,8 +152,8 @@ export default async function HomePage() {
           position: "relative",
           zIndex: 1,
         }}>
-          Where Web3 builders<br />
-          find their <span style={{ color: "#2DD4BF" }}>crew.</span>
+          Hire your next<br />
+          Web3 <span style={{ color: "#2DD4BF" }}>freelancer.</span>
         </h1>
 
         {/* Small sign-in button */}
@@ -251,125 +267,6 @@ export default async function HomePage() {
         </div>
       </div>
 
-      {/* ── TOP FREELANCERS ── */}
-      {topBuilders.length > 0 && (
-        <div className="landing-section" style={{ padding: "4rem 2rem 2rem", position: "relative", zIndex: 1 }}>
-          <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-            <div style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              marginBottom: "2rem",
-              flexWrap: "wrap",
-              gap: "0.75rem",
-            }}>
-              <div>
-                <div className="section-label">Most Searched</div>
-                <h2 style={{
-                  fontFamily: "Rajdhani, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "clamp(1.4rem, 3vw, 2rem)",
-                  color: "#000",
-                  lineHeight: 1.1,
-                }}>
-                  Top Freelancers
-                </h2>
-              </div>
-              <Link href="/talent" style={{
-                fontFamily: "Rajdhani, sans-serif",
-                fontWeight: 700,
-                fontSize: "0.82rem",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "#2DD4BF",
-                textDecoration: "none",
-              }}>
-                View all →
-              </Link>
-            </div>
-
-            <div className="landing-builders-grid" style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-              gap: "1rem",
-            }}>
-              {topBuilders.map((u) => (
-                <Link key={u.twitterHandle} href={`/u/${u.twitterHandle}`} style={{ textDecoration: "none" }}>
-                  <div style={{
-                    padding: "1.25rem",
-                    borderRadius: 14,
-                    border: "1px solid rgba(0,0,0,0.08)",
-                    background: "#fff",
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    textAlign: "center",
-                    gap: "0.5rem",
-                    transition: "border-color 0.2s, box-shadow 0.2s",
-                  }}>
-                    {u.image ? (
-                      /* eslint-disable-next-line @next/next/no-img-element */
-                      <img src={u.image} alt="" width={52} height={52} style={{ borderRadius: "50%", objectFit: "cover" }} />
-                    ) : (
-                      <div style={{ width: 52, height: 52, borderRadius: "50%", background: "rgba(0,0,0,0.08)" }} />
-                    )}
-                    <div style={{
-                      fontFamily: "Rajdhani, sans-serif",
-                      fontWeight: 700,
-                      fontSize: "0.95rem",
-                      color: "#000",
-                      lineHeight: 1.2,
-                    }}>
-                      {u.name ?? u.twitterHandle}
-                    </div>
-                    {u.role && (
-                      <div style={{
-                        fontFamily: "Space Mono, monospace",
-                        fontSize: "0.58rem",
-                        letterSpacing: "0.1em",
-                        textTransform: "uppercase",
-                        color: "#2DD4BF",
-                        fontWeight: 600,
-                      }}>
-                        {u.role}
-                      </div>
-                    )}
-                    {u.bio && (
-                      <p style={{
-                        fontFamily: "Outfit, sans-serif",
-                        fontSize: "0.75rem",
-                        color: "rgba(0,0,0,0.5)",
-                        lineHeight: 1.55,
-                        margin: "0.1rem 0",
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}>
-                        {u.bio}
-                      </p>
-                    )}
-                    {u.skills.length > 0 && (
-                      <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap", justifyContent: "center" }}>
-                        {u.skills.slice(0, 3).map((s) => (
-                          <span key={s} style={{
-                            fontFamily: "Space Mono, monospace",
-                            fontSize: "0.52rem",
-                            padding: "0.2rem 0.5rem",
-                            borderRadius: 999,
-                            background: "rgba(0,0,0,0.05)",
-                            color: "rgba(0,0,0,0.55)",
-                          }}>{s}</span>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* ── HOW IT WORKS ── */}
       <div className="landing-section" style={{ padding: "5rem 2rem", position: "relative", zIndex: 1 }}>
@@ -600,145 +497,6 @@ export default async function HomePage() {
           </div>
         </div>
       </div>
-
-      {/* ── FOOTER ── */}
-      <footer className="landing-footer" style={{
-        borderTop: "1px solid rgba(0,0,0,0.08)",
-        padding: "3rem 2rem 2rem",
-        position: "relative",
-        zIndex: 1,
-      }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-
-          {/* Top row */}
-          <div className="landing-footer-cols" style={{
-            display: "flex",
-            alignItems: "flex-start",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "2rem",
-            marginBottom: "2.5rem",
-          }}>
-            {/* Brand */}
-            <div>
-              <div style={{
-                fontFamily: "Rajdhani, sans-serif",
-                fontWeight: 700,
-                fontSize: "1.2rem",
-                letterSpacing: "0.05em",
-                color: "#000",
-                marginBottom: "0.4rem",
-              }}>
-                CREWBOARD
-              </div>
-              <div style={{
-                fontFamily: "Space Mono, monospace",
-                fontSize: "0.62rem",
-                letterSpacing: "0.08em",
-                color: "rgba(0,0,0,0.4)",
-                maxWidth: "18rem",
-                lineHeight: 1.6,
-              }}>
-                The professional network for Web3 builders.
-              </div>
-            </div>
-
-            {/* Nav links */}
-            <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
-              {[
-                { label: "KOL Manager", href: "/talent?role=KOL+Manager" },
-                { label: "Coding & Tech", href: "/talent?role=Coding+%26+Tech" },
-                { label: "AI Engineer", href: "/talent?role=AI+Engineer" },
-                { label: "Projects", href: "/projects" },
-                { label: "Whitepaper", href: "/whitepaper" },
-              ].map((l) => (
-                <Link key={l.label} href={l.href} style={{
-                  fontFamily: "Rajdhani, sans-serif",
-                  fontWeight: 600,
-                  fontSize: "0.82rem",
-                  letterSpacing: "0.1em",
-                  textTransform: "uppercase",
-                  color: "rgba(0,0,0,0.5)",
-                  textDecoration: "none",
-                  transition: "color 0.2s",
-                }}>
-                  {l.label}
-                </Link>
-              ))}
-            </div>
-
-            {/* X / Twitter */}
-            <a
-              href="https://x.com/crewboard_"
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-flex",
-                alignItems: "center",
-                gap: "0.5rem",
-                fontFamily: "Rajdhani, sans-serif",
-                fontWeight: 700,
-                fontSize: "0.82rem",
-                letterSpacing: "0.1em",
-                textTransform: "uppercase",
-                color: "#000",
-                textDecoration: "none",
-                padding: "0.5rem 1rem",
-                border: "1.5px solid rgba(0,0,0,0.55)",
-                borderRadius: "999px",
-                transition: "background 0.2s",
-              }}
-            >
-              {/* X icon */}
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-              </svg>
-              @crewboard_
-            </a>
-          </div>
-
-          {/* Bottom row */}
-          <div style={{
-            borderTop: "1px solid rgba(0,0,0,0.06)",
-            paddingTop: "1.5rem",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexWrap: "wrap",
-            gap: "1rem",
-          }}>
-            <span style={{
-              fontFamily: "Space Mono, monospace",
-              fontSize: "0.6rem",
-              letterSpacing: "0.1em",
-              color: "rgba(0,0,0,0.35)",
-            }}>
-              © 2026 Crewboard ·{" "}
-              <Link href="/terms" style={{ color: "rgba(0,0,0,0.35)", textDecoration: "none" }}>Terms</Link>
-              {" "}·{" "}
-              <Link href="/privacy" style={{ color: "rgba(0,0,0,0.35)", textDecoration: "none" }}>Privacy</Link>
-            </span>
-
-            <span style={{
-              fontFamily: "Space Mono, monospace",
-              fontSize: "0.6rem",
-              letterSpacing: "0.08em",
-              color: "rgba(0,0,0,0.35)",
-            }}>
-              BUILT BY{" "}
-              <a
-                href="https://x.com/SAAD190914"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: "#2DD4BF", fontWeight: 700, textDecoration: "none" }}
-              >
-                TEJO
-              </a>
-            </span>
-          </div>
-
-        </div>
-      </footer>
 
     </main>
   );

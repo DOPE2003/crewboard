@@ -31,6 +31,21 @@ model User {
   sentMessages    Message[]
   buyerOrders     Order[]        @relation("BuyerOrders")
   sellerOrders    Order[]        @relation("SellerOrders")
+  savedTalents    SavedTalent[]  @relation("SavedByMe")
+  savedByTalents  SavedTalent[]  @relation("SavedMe")
+  reviewsGiven    Review[]       @relation("ReviewsGiven")
+  reviewsReceived Review[]       @relation("ReviewsReceived")
+}
+
+model SavedTalent {
+  id          String   @id @default(cuid())
+  saverId     String
+  savedUserId String
+  saver       User     @relation("SavedByMe", fields: [saverId], references: [id], onDelete: Cascade)
+  savedUser   User     @relation("SavedMe", fields: [savedUserId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+
+  @@unique([saverId, savedUserId])
 }
 
 model Notification {
@@ -101,9 +116,25 @@ model Order {
   sellerId       String
   seller         User     @relation("SellerOrders", fields: [sellerId], references: [id])
   amount         Int      // Price in USDC
-  status         String   @default("pending") // pending, funded, completed, disputed, cancelled
+  status         String   @default("pending") // pending, funded, delivered, completed, disputed, cancelled
   escrowAddress  String?  @unique // Solana PDA or account
   txHash         String?  // Funding transaction hash
   createdAt      DateTime @default(now())
   updatedAt      DateTime @updatedAt
+  reviews        Review[]
+}
+
+model Review {
+  id          String   @id @default(cuid())
+  orderId     String
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  reviewerId  String
+  reviewer    User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
+  revieweeId  String
+  reviewee    User     @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
+  rating      Int      // 1-5
+  body        String?
+  createdAt   DateTime @default(now())
+
+  @@unique([orderId, reviewerId]) // one review per person per order
 }

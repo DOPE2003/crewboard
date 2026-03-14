@@ -2,6 +2,7 @@ import db from "@/lib/db";
 import Link from "next/link";
 import { auth } from "@/auth";
 import GigsFilters from "./GigsFilters";
+import T from "@/components/ui/T";
 
 export const GIG_CATEGORIES = [
   "KOL Manager",
@@ -49,12 +50,12 @@ export default async function GigsPage({
     <main className="page">
       <section className="talent-wrap">
         <div className="talent-header">
-          <div className="auth-kicker">— CREWBOARD</div>
-          <h1 className="auth-title">Gigs</h1>
-          <p className="auth-sub">Services offered by verified Web3 builders.</p>
+          <div className="auth-kicker"><T k="gigs.kicker" /></div>
+          <h1 className="auth-title"><T k="gigs.title" /></h1>
+          <p className="auth-sub"><T k="gigs.subtitle" /></p>
           {isLoggedIn && (
             <Link href="/gigs/new" className="btn-primary" style={{ marginTop: "1rem", display: "inline-flex" }}>
-              + Post a Gig
+              <T k="gigs.post" />
             </Link>
           )}
         </div>
@@ -66,7 +67,7 @@ export default async function GigsPage({
             <p>No gigs found{q || category ? " for this search" : ""}.</p>
             {isLoggedIn && (
               <Link href="/gigs/new" className="btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
-                Post the first gig
+                <T k="gigs.postFirst" />
               </Link>
             )}
           </div>

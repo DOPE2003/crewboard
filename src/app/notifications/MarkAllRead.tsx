@@ -3,10 +3,12 @@
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { markAllNotificationsAsRead } from "@/actions/notifications";
+import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function MarkAllRead({ userId }: { userId: string }) {
   const router = useRouter();
   const [pending, startTransition] = useTransition();
+  const { t } = useLanguage();
 
   const handleClick = async () => {
     startTransition(async () => {
@@ -36,7 +38,7 @@ export default function MarkAllRead({ userId }: { userId: string }) {
         flexShrink: 0,
       }}
     >
-      {pending ? "Marking…" : "Mark all read"}
+      {pending ? "…" : t("notif.markAll")}
     </button>
   );
 }
