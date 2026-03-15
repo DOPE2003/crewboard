@@ -53,6 +53,14 @@ export default auth((req) => {
     return NextResponse.redirect(url);
   }
 
+  // Already logged in and lands on /login or /register → send to dashboard/onboarding
+  const isRegister = pathname.startsWith("/register");
+  if (isLoggedIn && (isLogin || isRegister)) {
+    const url = req.nextUrl.clone();
+    url.pathname = profileComplete ? "/dashboard" : "/onboarding";
+    return NextResponse.redirect(url);
+  }
+
   return NextResponse.next();
 });
 

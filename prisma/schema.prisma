@@ -9,7 +9,11 @@ datasource db {
 
 model User {
   id              String         @id @default(cuid())
-  twitterId       String         @unique
+  // Crewboard native auth
+  email           String?        @unique
+  passwordHash    String?
+  // Twitter OAuth (optional — for users who signed up via Twitter)
+  twitterId       String?        @unique
   twitterHandle   String         @unique
   walletAddress   String?        @unique
   name            String?

@@ -26,6 +26,8 @@ export type AggregateUser = {
 
 export type UserMinAggregateOutputType = {
   id: string | null
+  email: string | null
+  passwordHash: string | null
   twitterId: string | null
   twitterHandle: string | null
   walletAddress: string | null
@@ -45,6 +47,8 @@ export type UserMinAggregateOutputType = {
 
 export type UserMaxAggregateOutputType = {
   id: string | null
+  email: string | null
+  passwordHash: string | null
   twitterId: string | null
   twitterHandle: string | null
   walletAddress: string | null
@@ -64,6 +68,8 @@ export type UserMaxAggregateOutputType = {
 
 export type UserCountAggregateOutputType = {
   id: number
+  email: number
+  passwordHash: number
   twitterId: number
   twitterHandle: number
   walletAddress: number
@@ -86,6 +92,8 @@ export type UserCountAggregateOutputType = {
 
 export type UserMinAggregateInputType = {
   id?: true
+  email?: true
+  passwordHash?: true
   twitterId?: true
   twitterHandle?: true
   walletAddress?: true
@@ -105,6 +113,8 @@ export type UserMinAggregateInputType = {
 
 export type UserMaxAggregateInputType = {
   id?: true
+  email?: true
+  passwordHash?: true
   twitterId?: true
   twitterHandle?: true
   walletAddress?: true
@@ -124,6 +134,8 @@ export type UserMaxAggregateInputType = {
 
 export type UserCountAggregateInputType = {
   id?: true
+  email?: true
+  passwordHash?: true
   twitterId?: true
   twitterHandle?: true
   walletAddress?: true
@@ -217,7 +229,9 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
 
 export type UserGroupByOutputType = {
   id: string
-  twitterId: string
+  email: string | null
+  passwordHash: string | null
+  twitterId: string | null
   twitterHandle: string
   walletAddress: string | null
   name: string | null
@@ -258,7 +272,9 @@ export type UserWhereInput = {
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   id?: Prisma.StringFilter<"User"> | string
-  twitterId?: Prisma.StringFilter<"User"> | string
+  email?: Prisma.StringNullableFilter<"User"> | string | null
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  twitterId?: Prisma.StringNullableFilter<"User"> | string | null
   twitterHandle?: Prisma.StringFilter<"User"> | string
   walletAddress?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringNullableFilter<"User"> | string | null
@@ -287,7 +303,9 @@ export type UserWhereInput = {
 
 export type UserOrderByWithRelationInput = {
   id?: Prisma.SortOrder
-  twitterId?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  twitterId?: Prisma.SortOrderInput | Prisma.SortOrder
   twitterHandle?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -316,6 +334,7 @@ export type UserOrderByWithRelationInput = {
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  email?: string
   twitterId?: string
   twitterHandle?: string
   walletAddress?: string
@@ -324,6 +343,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
+  passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.StringNullableFilter<"User"> | string | null
@@ -344,11 +364,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   savedByTalents?: Prisma.SavedTalentListRelationFilter
   reviewsGiven?: Prisma.ReviewListRelationFilter
   reviewsReceived?: Prisma.ReviewListRelationFilter
-}, "id" | "twitterId" | "twitterHandle" | "walletAddress" | "worldIdNullifier" | "stripeVerificationId">
+}, "id" | "email" | "twitterId" | "twitterHandle" | "walletAddress" | "worldIdNullifier" | "stripeVerificationId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
-  twitterId?: Prisma.SortOrder
+  email?: Prisma.SortOrderInput | Prisma.SortOrder
+  passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  twitterId?: Prisma.SortOrderInput | Prisma.SortOrder
   twitterHandle?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -374,7 +396,9 @@ export type UserScalarWhereWithAggregatesInput = {
   OR?: Prisma.UserScalarWhereWithAggregatesInput[]
   NOT?: Prisma.UserScalarWhereWithAggregatesInput | Prisma.UserScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"User"> | string
-  twitterId?: Prisma.StringWithAggregatesFilter<"User"> | string
+  email?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  twitterId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   twitterHandle?: Prisma.StringWithAggregatesFilter<"User"> | string
   walletAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -394,7 +418,9 @@ export type UserScalarWhereWithAggregatesInput = {
 
 export type UserCreateInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -423,7 +449,9 @@ export type UserCreateInput = {
 
 export type UserUncheckedCreateInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -452,7 +480,9 @@ export type UserUncheckedCreateInput = {
 
 export type UserUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -481,7 +511,9 @@ export type UserUpdateInput = {
 
 export type UserUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -510,7 +542,9 @@ export type UserUncheckedUpdateInput = {
 
 export type UserCreateManyInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -530,7 +564,9 @@ export type UserCreateManyInput = {
 
 export type UserUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -550,7 +586,9 @@ export type UserUpdateManyMutationInput = {
 
 export type UserUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -578,6 +616,8 @@ export type StringNullableListFilter<$PrismaModel = never> = {
 
 export type UserCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   twitterId?: Prisma.SortOrder
   twitterHandle?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -598,6 +638,8 @@ export type UserCountOrderByAggregateInput = {
 
 export type UserMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   twitterId?: Prisma.SortOrder
   twitterHandle?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -617,6 +659,8 @@ export type UserMaxOrderByAggregateInput = {
 
 export type UserMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
+  email?: Prisma.SortOrder
+  passwordHash?: Prisma.SortOrder
   twitterId?: Prisma.SortOrder
   twitterHandle?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -792,7 +836,9 @@ export type UserUpdateOneRequiredWithoutReviewsReceivedNestedInput = {
 
 export type UserCreateWithoutSavedTalentsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -820,7 +866,9 @@ export type UserCreateWithoutSavedTalentsInput = {
 
 export type UserUncheckedCreateWithoutSavedTalentsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -853,7 +901,9 @@ export type UserCreateOrConnectWithoutSavedTalentsInput = {
 
 export type UserCreateWithoutSavedByTalentsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -881,7 +931,9 @@ export type UserCreateWithoutSavedByTalentsInput = {
 
 export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -925,7 +977,9 @@ export type UserUpdateToOneWithWhereWithoutSavedTalentsInput = {
 
 export type UserUpdateWithoutSavedTalentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -953,7 +1007,9 @@ export type UserUpdateWithoutSavedTalentsInput = {
 
 export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -992,7 +1048,9 @@ export type UserUpdateToOneWithWhereWithoutSavedByTalentsInput = {
 
 export type UserUpdateWithoutSavedByTalentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1020,7 +1078,9 @@ export type UserUpdateWithoutSavedByTalentsInput = {
 
 export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1048,7 +1108,9 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
 
 export type UserCreateWithoutNotificationsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1076,7 +1138,9 @@ export type UserCreateWithoutNotificationsInput = {
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1120,7 +1184,9 @@ export type UserUpdateToOneWithWhereWithoutNotificationsInput = {
 
 export type UserUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1148,7 +1214,9 @@ export type UserUpdateWithoutNotificationsInput = {
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1176,7 +1244,9 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
 
 export type UserCreateWithoutSentMessagesInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1204,7 +1274,9 @@ export type UserCreateWithoutSentMessagesInput = {
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1248,7 +1320,9 @@ export type UserUpdateToOneWithWhereWithoutSentMessagesInput = {
 
 export type UserUpdateWithoutSentMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1276,7 +1350,9 @@ export type UserUpdateWithoutSentMessagesInput = {
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1304,7 +1380,9 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
 
 export type UserCreateWithoutGigsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1332,7 +1410,9 @@ export type UserCreateWithoutGigsInput = {
 
 export type UserUncheckedCreateWithoutGigsInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1376,7 +1456,9 @@ export type UserUpdateToOneWithWhereWithoutGigsInput = {
 
 export type UserUpdateWithoutGigsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1404,7 +1486,9 @@ export type UserUpdateWithoutGigsInput = {
 
 export type UserUncheckedUpdateWithoutGigsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1432,7 +1516,9 @@ export type UserUncheckedUpdateWithoutGigsInput = {
 
 export type UserCreateWithoutBuyerOrdersInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1460,7 +1546,9 @@ export type UserCreateWithoutBuyerOrdersInput = {
 
 export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1493,7 +1581,9 @@ export type UserCreateOrConnectWithoutBuyerOrdersInput = {
 
 export type UserCreateWithoutSellerOrdersInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1521,7 +1611,9 @@ export type UserCreateWithoutSellerOrdersInput = {
 
 export type UserUncheckedCreateWithoutSellerOrdersInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1565,7 +1657,9 @@ export type UserUpdateToOneWithWhereWithoutBuyerOrdersInput = {
 
 export type UserUpdateWithoutBuyerOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1593,7 +1687,9 @@ export type UserUpdateWithoutBuyerOrdersInput = {
 
 export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1632,7 +1728,9 @@ export type UserUpdateToOneWithWhereWithoutSellerOrdersInput = {
 
 export type UserUpdateWithoutSellerOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1660,7 +1758,9 @@ export type UserUpdateWithoutSellerOrdersInput = {
 
 export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1688,7 +1788,9 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
 
 export type UserCreateWithoutReviewsGivenInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1716,7 +1818,9 @@ export type UserCreateWithoutReviewsGivenInput = {
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1749,7 +1853,9 @@ export type UserCreateOrConnectWithoutReviewsGivenInput = {
 
 export type UserCreateWithoutReviewsReceivedInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1777,7 +1883,9 @@ export type UserCreateWithoutReviewsReceivedInput = {
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   id?: string
-  twitterId: string
+  email?: string | null
+  passwordHash?: string | null
+  twitterId?: string | null
   twitterHandle: string
   walletAddress?: string | null
   name?: string | null
@@ -1821,7 +1929,9 @@ export type UserUpdateToOneWithWhereWithoutReviewsGivenInput = {
 
 export type UserUpdateWithoutReviewsGivenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1849,7 +1959,9 @@ export type UserUpdateWithoutReviewsGivenInput = {
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1888,7 +2000,9 @@ export type UserUpdateToOneWithWhereWithoutReviewsReceivedInput = {
 
 export type UserUpdateWithoutReviewsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1916,7 +2030,9 @@ export type UserUpdateWithoutReviewsReceivedInput = {
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  twitterId?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2047,6 +2163,8 @@ export type UserCountOutputTypeCountReviewsReceivedArgs<ExtArgs extends runtime.
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  passwordHash?: boolean
   twitterId?: boolean
   twitterHandle?: boolean
   walletAddress?: boolean
@@ -2077,6 +2195,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
 
 export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  passwordHash?: boolean
   twitterId?: boolean
   twitterHandle?: boolean
   walletAddress?: boolean
@@ -2097,6 +2217,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
+  email?: boolean
+  passwordHash?: boolean
   twitterId?: boolean
   twitterHandle?: boolean
   walletAddress?: boolean
@@ -2117,6 +2239,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
 
 export type UserSelectScalar = {
   id?: boolean
+  email?: boolean
+  passwordHash?: boolean
   twitterId?: boolean
   twitterHandle?: boolean
   walletAddress?: boolean
@@ -2135,7 +2259,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "walletAddress" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isOG" | "worldIdNullifier" | "worldIdLevel" | "stripeVerificationId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "twitterId" | "twitterHandle" | "walletAddress" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isOG" | "worldIdNullifier" | "worldIdLevel" | "stripeVerificationId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
@@ -2166,7 +2290,9 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
-    twitterId: string
+    email: string | null
+    passwordHash: string | null
+    twitterId: string | null
     twitterHandle: string
     walletAddress: string | null
     name: string | null
@@ -2615,6 +2741,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
  */
 export interface UserFieldRefs {
   readonly id: Prisma.FieldRef<"User", 'String'>
+  readonly email: Prisma.FieldRef<"User", 'String'>
+  readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly twitterId: Prisma.FieldRef<"User", 'String'>
   readonly twitterHandle: Prisma.FieldRef<"User", 'String'>
   readonly walletAddress: Prisma.FieldRef<"User", 'String'>

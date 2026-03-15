@@ -1,9 +1,35 @@
 import NextAuth from "next-auth";
+import Credentials from "next-auth/providers/credentials";
+import bcrypt from "bcryptjs";
 import { authConfig } from "./auth.config";
 import db from "@/lib/db";
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
+
+  providers: [
+    // Inherit Twitter provider from authConfig, then add Credentials
+    ...(authConfig.providers ?? []),
+    Credentials({
+      credentials: {
+        email: { label: "Email", type: "email" },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials) {
+        const email = (credentials?.email as string | undefined)?.toLowerCase();
+        const password = credentials?.password as string | undefined;
+        if (!email || !password) return null;
+        const user = await db.user.findFirst({
+          where: { email },
+          select: { id: true, email: true, passwordHash: true, name: true, twitterHandle: true, image: true },
+        });
+        if (!user?.passwordHash) return null;
+        const valid = await bcrypt.compare(password, user.passwordHash);
+        if (!valid) return null;
+        return { id: user.id, email: user.email, name: user.name, image: user.image };
+      },
+    }),
+  ],
 
   callbacks: {
     async signIn({ user, account, profile }) {
@@ -92,8 +118,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return true;
     },
 
-    async jwt({ token, account, profile, trigger, session }) {
-      if (account?.provider === "twitter") {
+    async jwt({ token, account, profile, trigger, session, user }) {
+      if (account?.provider === "credentials") {
+        // Credentials sign-in — look up by email (user.id = DB id from authorize())
+        const dbUser = await db.user.findUnique({
+          where: { id: user.id as string },
+          select: { id: true, twitterHandle: true, profileComplete: true },
+        });
+        token.userId = dbUser?.id;
+        token.twitterHandle = dbUser?.twitterHandle;
+        token.profileComplete = dbUser?.profileComplete ?? false;
+      } else if (account?.provider === "twitter") {
         // First sign-in — populate token from DB
         const dbUser = await db.user.findUnique({
           where: { twitterId: account.providerAccountId },
