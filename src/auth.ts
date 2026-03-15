@@ -4,6 +4,10 @@ import bcrypt from "bcryptjs";
 import { authConfig } from "./auth.config";
 import db from "@/lib/db";
 
+// All sessions issued before this timestamp are invalid.
+// Update this value to force sign-out of all users.
+const SESSION_VALID_FROM = 1742041200000; // 2026-03-15 — new auth system
+
 export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
 
@@ -119,6 +123,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     },
 
     async jwt({ token, account, profile, trigger, session, user }) {
+      // Invalidate all tokens issued before SESSION_VALID_FROM
+      if (account) {
+        // Fresh sign-in — stamp it
+        token.issuedAt = Date.now();
+      } else if (!token.issuedAt || (token.issuedAt as number) < SESSION_VALID_FROM) {
+        // Old token — wipe it so NextAuth treats user as logged out
+        return {} as typeof token;
+      }
+
       if (account?.provider === "credentials") {
         // Credentials sign-in — look up by email (user.id = DB id from authorize())
         const dbUser = await db.user.findUnique({

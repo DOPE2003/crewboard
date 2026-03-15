@@ -158,10 +158,9 @@ export default async function HomePage() {
 
         {/* Small sign-in button */}
         {!isLoggedIn && (
-          <Link href="/login" style={{
+          <Link href="/register" style={{
             display: "inline-flex",
             alignItems: "center",
-            gap: "0.55rem",
             fontFamily: "Rajdhani, sans-serif",
             fontWeight: 700,
             fontSize: "0.82rem",
@@ -180,11 +179,7 @@ export default async function HomePage() {
             zIndex: 1,
             transition: "background 0.18s, border-color 0.18s, color 0.18s",
           }}>
-            {/* X icon */}
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-            </svg>
-            Sign in with X
+            Join Crewboard
           </Link>
         )}
         {isLoggedIn && (
