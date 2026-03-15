@@ -1,5 +1,6 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Twitter from "next-auth/providers/twitter";
 import bcrypt from "bcryptjs";
 import { authConfig } from "./auth.config";
 import db from "@/lib/db";
@@ -12,8 +13,10 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ...authConfig,
 
   providers: [
-    // Inherit Twitter provider from authConfig, then add Credentials
-    ...(authConfig.providers ?? []),
+    Twitter({
+      clientId: process.env.TWITTER_CLIENT_ID!,
+      clientSecret: process.env.TWITTER_CLIENT_SECRET!,
+    }),
     Credentials({
       credentials: {
         email: { label: "Email", type: "email" },

@@ -1,6 +1,5 @@
 import type { NextAuthConfig } from "next-auth";
 import Twitter from "next-auth/providers/twitter";
-import Credentials from "next-auth/providers/credentials";
 
 // Lightweight config — NO database imports.
 // Safe to use in Edge Runtime (middleware/proxy).
@@ -10,9 +9,6 @@ export const authConfig = {
       clientId: process.env.TWITTER_CLIENT_ID!,
       clientSecret: process.env.TWITTER_CLIENT_SECRET!,
     }),
-    // Credentials provider declared here so NextAuth edge config knows about it.
-    // Actual authorize() logic lives in auth.ts (non-edge).
-    Credentials({ credentials: {} }),
   ],
   session: { strategy: "jwt" as const },
   pages: { signIn: "/login" },
