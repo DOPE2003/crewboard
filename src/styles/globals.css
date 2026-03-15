@@ -2504,7 +2504,7 @@ body.dark .msgs-send-btn { background: #fff !important; color: #000 !important; 
    DASHBOARD MAIN WRAP — responsive top padding
    ========================= */
 .dash-main-wrap {
-  padding-top: 8.5rem; /* desktop: row1 + row2 nav */
+  padding-top: 10rem; /* desktop: row1 + row2 nav */
 }
 @media (max-width: 700px) {
   .dash-main-wrap {
