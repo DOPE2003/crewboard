@@ -5,7 +5,7 @@ import { sendWelcomeEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
-    const { handle, email, password, name } = await req.json();
+    const { handle, email, password, name, image } = await req.json();
 
     // Validate
     if (!handle || !email || !password) {
@@ -37,6 +37,7 @@ export async function POST(req: NextRequest) {
         email: email.toLowerCase(),
         passwordHash,
         name: name || handle,
+        image: image || null,
         isOG: userCount < 20,
       },
       select: { id: true, isOG: true },
