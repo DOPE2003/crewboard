@@ -9,6 +9,7 @@ import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
 import { WalletVerifiedBadge } from "@/components/ui/VerificationBadges";
 import SaveTalentButton from "@/components/ui/SaveTalentButton";
+import AvatarUpload from "@/components/ui/AvatarUpload";
 
 const AVAIL_COLOR: Record<string, string> = {
   available: "#22c55e", open: "#f59e0b", busy: "#ef4444",
@@ -142,14 +143,18 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <SectionCard>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
                 <div style={{ display: "flex", alignItems: "flex-start", gap: "1.25rem" }}>
-                  {/* Avatar */}
-                  <div style={{
-                    width: 90, height: 90, borderRadius: "50%", flexShrink: 0,
-                    background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden",
-                    border: "3px solid #f1f5f9",
-                  }}>
-                    {user.image && <img src={user.image} alt={user.name ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                  </div>
+                  {/* Avatar — clickable to change if own profile */}
+                  {isOwnProfile ? (
+                    <AvatarUpload currentImage={user.image} name={user.name} />
+                  ) : (
+                    <div style={{
+                      width: 90, height: 90, borderRadius: "50%", flexShrink: 0,
+                      background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden",
+                      border: "3px solid #f1f5f9",
+                    }}>
+                      {user.image && <img src={user.image} alt={user.name ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                    </div>
+                  )}
 
                   {/* Info */}
                   <div>
