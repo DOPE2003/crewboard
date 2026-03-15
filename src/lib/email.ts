@@ -1,7 +1,10 @@
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = "Crewboard <noreply@crewboard.xyz>";
+function getResend() {
+  if (!process.env.RESEND_API_KEY) return null;
+  return new Resend(process.env.RESEND_API_KEY);
+}
 
 export async function sendWelcomeEmail({
   to,
@@ -12,7 +15,8 @@ export async function sendWelcomeEmail({
   name: string;
   handle: string;
 }) {
-  if (!process.env.RESEND_API_KEY) return; // skip if not configured
+  const resend = getResend();
+  if (!resend) return;
   await resend.emails.send({
     from: FROM,
     to,
@@ -42,7 +46,8 @@ export async function sendNotificationEmail({
   body: string;
   link?: string;
 }) {
-  if (!process.env.RESEND_API_KEY) return;
+  const resend = getResend();
+  if (!resend) return;
   await resend.emails.send({
     from: FROM,
     to,
