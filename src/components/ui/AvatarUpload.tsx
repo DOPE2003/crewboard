@@ -11,26 +11,45 @@ export default function AvatarUpload({ currentImage, name }: { currentImage?: st
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     if (!file) return;
-    if (file.size > 2 * 1024 * 1024) { setError("Max 2MB"); return; }
+    if (!file.type.startsWith("image/")) { setError("Must be an image"); return; }
     setError("");
-    setPreview(URL.createObjectURL(file));
     setUploading(true);
 
-    const fd = new FormData();
-    fd.append("file", file);
-    const res = await fetch("/api/upload", { method: "POST", body: fd });
-    const data = await res.json();
-
-    if (!res.ok) { setError(data.error || "Upload failed"); setUploading(false); return; }
+    // Resize to 256x256 via canvas, export as JPEG data URL
+    const dataUrl = await resizeImage(file, 256);
+    setPreview(dataUrl);
 
     // Save to DB
-    await fetch("/api/user/avatar", {
+    const res = await fetch("/api/user/avatar", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: data.url }),
+      body: JSON.stringify({ url: dataUrl }),
     });
 
+    if (!res.ok) setError("Failed to save. Try again.");
     setUploading(false);
+  }
+
+  function resizeImage(file: File, size: number): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const url = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        const canvas = document.createElement("canvas");
+        canvas.width = size;
+        canvas.height = size;
+        const ctx = canvas.getContext("2d")!;
+        // Center-crop to square
+        const s = Math.min(img.width, img.height);
+        const sx = (img.width - s) / 2;
+        const sy = (img.height - s) / 2;
+        ctx.drawImage(img, sx, sy, s, s, 0, 0, size, size);
+        resolve(canvas.toDataURL("image/jpeg", 0.85));
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
   }
 
   return (
