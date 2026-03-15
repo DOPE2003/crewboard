@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import Link from "next/link";
 import OGBadge from "@/components/ui/OGBadge";
-import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
+import { WalletVerifiedBadge } from "@/components/ui/VerificationBadges";
 import T from "@/components/ui/T";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
@@ -64,7 +64,6 @@ export default async function TalentPage({
           bio: true,
           isOG: true,
           walletAddress: true,
-          humanVerified: true,
           worldIdLevel: true,
         },
       }),
@@ -195,7 +194,6 @@ export default async function TalentPage({
                           {user.name ?? user.twitterHandle}
                           {user.isOG && <OGBadge />}
                           {user.walletAddress && <WalletVerifiedBadge />}
-                          {user.humanVerified && <HumanVerifiedBadge level={user.worldIdLevel} />}
                         </div>
                         {user.role && <div className="talent-role">{user.role}</div>}
                       </div>

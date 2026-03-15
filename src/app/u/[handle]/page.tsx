@@ -7,8 +7,7 @@ import EditProfileForm from "@/components/forms/EditProfileForm";
 import LinkWallet from "@/components/forms/LinkWallet";
 import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
-import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
-import StripeVerify from "@/components/ui/StripeVerify";
+import { WalletVerifiedBadge } from "@/components/ui/VerificationBadges";
 import SaveTalentButton from "@/components/ui/SaveTalentButton";
 
 const AVAILABILITY_COLORS: Record<string, string> = {
@@ -132,7 +131,6 @@ export default async function PublicProfilePage({
               </h1>
               {user.isOG && <OGBadge size="lg" />}
               {user.walletAddress && <WalletVerifiedBadge />}
-              {user.humanVerified && <HumanVerifiedBadge level={user.worldIdLevel} />}
             </div>
 
             {/* Role + chips */}
@@ -324,11 +322,6 @@ export default async function PublicProfilePage({
                       </div>
                     : <div style={{ fontSize: "0.72rem", color: "#94a3b8" }}>No wallet linked — connect one below</div>
                   }
-                </div>
-                {/* Identity Verification */}
-                <div>
-                  <div className="profile-label-text" style={{ fontSize: "0.72rem", fontWeight: 600, marginBottom: 6 }}>Identity Verification</div>
-                  <StripeVerify humanVerified={user.humanVerified} />
                 </div>
               </div>
             </div>
