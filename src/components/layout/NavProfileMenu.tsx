@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
+
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { useLanguage } from "@/contexts/LanguageContext";
@@ -89,8 +89,8 @@ export default function NavProfileMenu({
         style={{ background: "none", border: "none", padding: 0, cursor: "pointer", display: "flex", alignItems: "center" }}
       >
         {image ? (
-          <Image src={image} alt="Profile" width={36} height={36} style={{
-            borderRadius: "50%", objectFit: "cover",
+          <img src={image} alt="Profile" width={36} height={36} style={{
+            borderRadius: "50%", objectFit: "cover", width: 36, height: 36,
             border: open ? "2px solid #14b8a6" : "2px solid rgba(0,0,0,0.1)",
             transition: "border-color 0.2s",
           }} />
@@ -123,8 +123,7 @@ export default function NavProfileMenu({
             padding: "1rem 1rem 0.85rem", borderBottom: "1px solid rgba(0,0,0,0.07)",
           }}>
             {image ? (
-              <Image src={image} alt="" width={46} height={46}
-                style={{ borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+              <img src={image} alt="" style={{ borderRadius: "50%", objectFit: "cover", width: 46, height: 46, flexShrink: 0 }} />
             ) : (
               <div style={{
                 width: 46, height: 46, borderRadius: "50%", background: "rgba(0,0,0,0.08)", flexShrink: 0,
