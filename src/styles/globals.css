@@ -3046,3 +3046,13 @@ body:not(.dark) .verify-page-wrap p { color: #475569 !important; }
   color: #ef4444;
   font-size: 0.6em;
 }
+
+/* ── Profile page grid ── */
+.profile-page-grid {
+  grid-template-columns: 1fr 300px;
+}
+@media (max-width: 768px) {
+  .profile-page-grid {
+    grid-template-columns: 1fr;
+  }
+}
