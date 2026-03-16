@@ -1504,6 +1504,19 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
     align-items: center;
     justify-content: center;
   }
+  /* Collapse Orders text button to icon-size on mobile */
+  .nav-orders-link {
+    font-size: 0 !important;
+    padding: 0.25rem 0.35rem !important;
+    min-width: 34px !important;
+    height: 34px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .nav-orders-link span {
+    font-size: 0.46rem !important;
+  }
 }
 
 /* Shrink logo SVG on mobile */
@@ -3147,9 +3160,16 @@ img { max-width: 100%; }
 }
 
 /* ── Hero section ── */
+@media (max-width: 767px) {
+  /* Pull hero up to fill the page padding-top gap so teal bg starts at navbar bottom */
+  .landing-hero {
+    margin-top: -70px;
+    padding-top: calc(70px + 2.5rem) !important;
+  }
+}
 @media (max-width: 700px) {
   .landing-hero {
-    padding: 2.5rem 1.25rem 3rem !important;
+    padding-bottom: 3rem !important;
     min-height: auto !important;
   }
   .hero-h1 {
