@@ -115,16 +115,8 @@ nav {
   white-space: nowrap;
 }
 .nav-links a:hover { color: #000; }
-@media (max-width: 700px) {
-  .nav-links-row {
-    padding: 0 0.5rem;
-    overflow: visible;
-  }
-  .nav-links {
-    justify-content: space-between !important;
-    gap: 0 !important;
-    width: 100%;
-  }
+@media (max-width: 767px) {
+  .nav-links-row { display: none !important; }
 }
 
 .nav-pill {
@@ -1487,12 +1479,23 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 }
 
 /* Nav mobile overrides */
-@media (max-width: 700px) {
+@media (max-width: 767px) {
   nav { padding: 0; overflow: visible; }
-  nav > div:first-child { padding: 0.75rem 1rem !important; gap: 0.4rem !important; }
+  /* Single compact header bar: target height 56-64px */
+  .nav-row1 {
+    padding: 0 1rem !important;
+    min-height: 56px;
+    gap: 0.35rem !important;
+  }
   .nav-search-wrap { display: none !important; }
   .nav-wallet-wrap { display: none !important; }
-  .nav-hamburger { display: flex; }
+  .nav-hamburger {
+    display: flex !important;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
   .nav-icon-btn {
     color: rgba(0,0,0,0.6) !important;
     min-width: 40px;
@@ -3139,11 +3142,8 @@ html, body {
 img { max-width: 100%; }
 
 /* ── Page padding — correct for single-row nav on mobile ── */
-@media (max-width: 700px) {
-  .page { padding-top: 100px; }
-}
-@media (max-width: 480px) {
-  .page { padding-top: 90px; }
+@media (max-width: 767px) {
+  .page { padding-top: 70px; }
 }
 
 /* ── Hero section ── */
@@ -3380,17 +3380,17 @@ img { max-width: 100%; }
   }
 }
 
-/* ── Logo: scale down on small phones ── */
-@media (max-width: 480px) {
+/* ── Logo: scale down on mobile for compact 56px header ── */
+@media (max-width: 767px) {
   .nav-logo-svg {
-    width: 200px !important;
-    height: 50px !important;
+    width: 190px !important;
+    height: 48px !important;
   }
 }
 @media (max-width: 375px) {
   .nav-logo-svg {
-    width: 170px !important;
-    height: 43px !important;
+    width: 160px !important;
+    height: 40px !important;
   }
 }
 
