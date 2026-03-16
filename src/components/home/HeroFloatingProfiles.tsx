@@ -167,32 +167,44 @@ export default function HeroFloatingProfiles({ profiles }: Props) {
 
   return (
     <>
-      {/* Card 1 — left upper */}
+      {/* Left column — 3 cards */}
       <FloatCard
         profile={profiles[0]}
         animClass="hero-float-1"
-        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "26%", zIndex: 2 }}
+        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "16%", zIndex: 2 }}
       />
-      {/* Card 2 — left lower */}
       <FloatCard
         profile={profiles[1]}
         animClass="hero-float-2"
-        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "55%", zIndex: 2 }}
+        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "46%", zIndex: 2 }}
       />
-      {/* Card 3 — right upper */}
+      {profiles[4] && (
+        <FloatCard
+          profile={profiles[4]}
+          animClass="hero-float-5"
+          style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "74%", zIndex: 2 }}
+        />
+      )}
+      {/* Right column — 3 cards */}
       {profiles[2] && (
         <FloatCard
           profile={profiles[2]}
           animClass="hero-float-3"
-          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "30%", zIndex: 2 }}
+          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "20%", zIndex: 2 }}
         />
       )}
-      {/* Card 4 — right lower */}
       {profiles[3] && (
         <FloatCard
           profile={profiles[3]}
           animClass="hero-float-4"
-          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "58%", zIndex: 2 }}
+          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "50%", zIndex: 2 }}
+        />
+      )}
+      {profiles[5] && (
+        <FloatCard
+          profile={profiles[5]}
+          animClass="hero-float-6"
+          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "78%", zIndex: 2 }}
         />
       )}
     </>

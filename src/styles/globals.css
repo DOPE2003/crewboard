@@ -330,6 +330,12 @@ nav {
 .hero-float-4 {
   animation: fadeUp 0.7s 1.5s forwards, heroFloat1 5.5s 2.2s ease-in-out infinite;
 }
+.hero-float-5 {
+  animation: fadeUp 0.7s 1.7s forwards, heroFloat2 5s 2.4s ease-in-out infinite;
+}
+.hero-float-6 {
+  animation: fadeUp 0.7s 1.9s forwards, heroFloat3 6s 2.6s ease-in-out infinite;
+}
 
 /* Hide on screens too narrow to show them without overlap */
 @media (max-width: 1024px) {
