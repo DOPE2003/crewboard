@@ -69,24 +69,22 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
           onMouseLeave={hide}
           style={{
             position: "absolute",
-            top: "calc(100% + 14px)",
-            left: "50%",
-            transform: "translateX(-50%)",
+            top: "calc(100% + 8px)",
+            left: 0,
             background: "#fff",
             border: "1px solid rgba(0,0,0,0.09)",
             borderRadius: "14px",
             boxShadow: "0 16px 48px rgba(0,0,0,0.12)",
             padding: "0.6rem",
             zIndex: 9999,
-            minWidth: "200px",
+            minWidth: "160px",
           }}
         >
           {/* arrow */}
           <div style={{
             position: "absolute",
             top: -6,
-            left: "50%",
-            transform: "translateX(-50%)",
+            left: "20px",
             width: 12,
             height: 12,
             background: "#fff",

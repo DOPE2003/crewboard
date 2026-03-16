@@ -117,15 +117,13 @@ nav {
 .nav-links a:hover { color: #000; }
 @media (max-width: 700px) {
   .nav-links-row {
-    overflow-x: auto;
-    scrollbar-width: none;
-    padding: 0.35rem 1rem;
+    padding: 0 0.5rem;
+    overflow: visible;
   }
-  .nav-links-row::-webkit-scrollbar { display: none; }
   .nav-links {
-    justify-content: flex-start !important;
-    gap: 0.25rem !important;
-    flex-wrap: nowrap;
+    justify-content: space-between !important;
+    gap: 0 !important;
+    width: 100%;
   }
 }
 
@@ -1490,7 +1488,7 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 
 /* Nav mobile overrides */
 @media (max-width: 700px) {
-  nav { padding: 0; }
+  nav { padding: 0; overflow: visible; }
   nav > div:first-child { padding: 0.75rem 1rem !important; gap: 0.4rem !important; }
   .nav-search-wrap { display: none !important; }
   .nav-wallet-wrap { display: none !important; }
