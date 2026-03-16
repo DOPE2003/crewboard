@@ -39,7 +39,6 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
           background: "none",
           border: "none",
           cursor: "pointer",
-          padding: 0,
           color: "inherit",
           fontSize: "clamp(0.65rem, 2.2vw, 0.82rem)",
           fontFamily: "Rajdhani, sans-serif",
