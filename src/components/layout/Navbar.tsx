@@ -178,7 +178,7 @@ export default async function Navbar() {
         </Link>
 
         {/* Right: search + icons + auth */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.6rem", flexShrink: 0, marginLeft: "auto" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0, marginLeft: "auto", minWidth: 0 }}>
 
           {/* Search — hidden on mobile */}
           <div className="nav-search-wrap">

@@ -41,16 +41,17 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
           cursor: "pointer",
           padding: 0,
           color: "inherit",
-          fontSize: "0.82rem",
+          fontSize: "clamp(0.65rem, 2.2vw, 0.82rem)",
           fontFamily: "Rajdhani, sans-serif",
           fontWeight: 600,
-          letterSpacing: "0.1em",
+          letterSpacing: "0.08em",
           textTransform: "uppercase",
           display: "flex",
           alignItems: "center",
-          gap: "0.3rem",
+          gap: "0.25rem",
           whiteSpace: "nowrap",
           transition: "color 0.2s",
+          padding: "0.5rem 0.6rem",
         }}
       >
         {label}

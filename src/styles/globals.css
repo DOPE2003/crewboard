@@ -115,7 +115,19 @@ nav {
   white-space: nowrap;
 }
 .nav-links a:hover { color: #000; }
-@media (max-width: 700px) { .nav-links-row { display: none; } }
+@media (max-width: 700px) {
+  .nav-links-row {
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding: 0.35rem 1rem;
+  }
+  .nav-links-row::-webkit-scrollbar { display: none; }
+  .nav-links {
+    justify-content: flex-start !important;
+    gap: 0.25rem !important;
+    flex-wrap: nowrap;
+  }
+}
 
 .nav-pill {
   font-family: 'Rajdhani', sans-serif;

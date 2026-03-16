@@ -88,7 +88,7 @@ export default async function HomePage() {
         textAlign: "center",
         padding: "clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 4rem)",
         position: "relative",
-        overflow: "visible",
+        overflow: "hidden",
       }} className="landing-hero">
 
         {/* Glow — centered behind headline */}
