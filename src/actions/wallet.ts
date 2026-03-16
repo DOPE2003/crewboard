@@ -17,13 +17,17 @@ export async function linkWallet(data: {
   const { publicKey } = data;
   if (!publicKey?.trim()) throw new Error("Invalid wallet address.");
 
-  // Prevent duplicate wallets across accounts
+  // If this wallet belongs to a different account, unlink it first so the
+  // current user can claim it (handles test accounts / re-registration).
   const existing = await db.user.findUnique({
     where: { walletAddress: publicKey },
     select: { id: true },
   });
   if (existing && existing.id !== userId) {
-    throw new Error("This wallet is already linked to another account.");
+    await db.user.update({
+      where: { id: existing.id },
+      data: { walletAddress: null },
+    });
   }
 
   await db.user.update({

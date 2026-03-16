@@ -98,17 +98,13 @@ nav {
 .nav-links-row {
   display: flex;
   align-items: center;
-  justify-content: center;
   padding: 0.45rem 2rem;
   border-bottom: 1px solid rgba(0,0,0,0.06);
-  overflow-x: auto;
-  scrollbar-width: none;
 }
-.nav-links-row::-webkit-scrollbar { display: none; }
 
-.nav-links { display: flex; gap: 1.5rem; list-style: none; margin: 0; }
+.nav-links { display: flex; gap: 0; list-style: none; margin: 0; width: 100%; justify-content: space-evenly; }
 .nav-links a {
-  color: rgba(0,0,0,0.55);
+  color: rgba(0,0,0,0.78);
   text-decoration: none;
   font-size: 0.68rem;
   font-family: 'Rajdhani', sans-serif;
@@ -138,6 +134,7 @@ nav {
 .nav-pill:hover { opacity: 0.78; transform: translateY(-1px); }
 
 .nav-icon-btn:hover { color: #000 !important; background: rgba(0,0,0,0.06) !important; border-radius: 8px; }
+.nav-orders-link:hover { background: rgba(0,0,0,0.06) !important; }
 
 /* Nav search input placeholder */
 .nav-search-input::placeholder { color: rgba(0,0,0,0.38); }
@@ -350,6 +347,11 @@ body.dark .hero-float-card .hero-float-chip {
   color: rgba(255,255,255,0.45) !important;
 }
 body.dark .hero-float-divider { border-top-color: rgba(255,255,255,0.07) !important; }
+
+/* Hero section — full-width teal/green gradient background */
+.landing-hero {
+  background: radial-gradient(ellipse 120% 70% at 50% 0%, rgba(45,212,191,0.18) 0%, rgba(20,184,166,0.08) 45%, transparent 75%) !important;
+}
 
 /* Ensure main content never hides under the fixed navbar */
 .page {
@@ -691,10 +693,11 @@ body.dark .hero-float-divider { border-top-color: rgba(255,255,255,0.07) !import
   margin: 20px 0;
 }
 
-.dash-section-label {
+.dash-section-label,
+.billing-section-label {
   font-family: 'Space Mono', monospace;
   font-size: 0.58rem;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(0,0,0,0.4);
   margin-bottom: 10px;
@@ -1480,7 +1483,14 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
   .nav-search-wrap { display: none !important; }
   .nav-wallet-wrap { display: none !important; }
   .nav-hamburger { display: flex; }
-  .nav-icon-btn { color: rgba(0,0,0,0.6) !important; }
+  .nav-icon-btn {
+    color: rgba(0,0,0,0.6) !important;
+    min-width: 40px;
+    min-height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 /* Shrink logo SVG on mobile */
@@ -2968,6 +2978,11 @@ body.dark .profile-msg-btn {
   }
 }
 
+.order-row-link:hover {
+  border-color: rgba(0,0,0,0.18) !important;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08) !important;
+}
+
 /* =========================
    MOBILE: ORDER DETAIL PAGE
    ========================= */
@@ -3054,5 +3069,324 @@ body:not(.dark) .verify-page-wrap p { color: #475569 !important; }
 @media (max-width: 768px) {
   .profile-page-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ── X/Twitter handle link on profile ── */
+.x-handle-link {
+  display: flex;
+  align-items: center;
+  color: #64748b;
+  text-decoration: none;
+  opacity: 0.6;
+  transition: opacity 0.15s;
+}
+.x-handle-link:hover { opacity: 1; }
+
+/* ── Skeleton loader ── */
+.skeleton {
+  background: linear-gradient(90deg, rgba(0,0,0,0.06) 25%, rgba(0,0,0,0.1) 50%, rgba(0,0,0,0.06) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s infinite;
+}
+@keyframes skeleton-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── Navbar row1: reduce padding on small screens ── */
+.nav-row1 {
+  padding: 0.65rem 2.5rem;
+}
+@media (max-width: 700px) {
+  .nav-row1 { padding: 0.65rem 1rem; }
+}
+@media (max-width: 375px) {
+  .nav-row1 { padding: 0.5rem 0.75rem; }
+}
+
+/* =========================
+   MOBILE RESPONSIVE — FULL AUDIT
+   Breakpoints: 480px (phones), 375px (small phones)
+   ========================= */
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ── Base: ensure no horizontal overflow on any screen ── */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* ── Images: always constrained ── */
+img { max-width: 100%; }
+
+/* ── Page padding — correct for single-row nav on mobile ── */
+@media (max-width: 700px) {
+  .page { padding-top: 100px; }
+}
+@media (max-width: 480px) {
+  .page { padding-top: 90px; }
+}
+
+/* ── Hero section ── */
+@media (max-width: 700px) {
+  .landing-hero {
+    padding: 2.5rem 1.25rem 3rem !important;
+    min-height: auto !important;
+  }
+  .hero-h1 {
+    font-size: clamp(2rem, 8vw, 2.8rem) !important;
+    line-height: 1.05 !important;
+  }
+}
+@media (max-width: 480px) {
+  .hero-h1 {
+    font-size: clamp(1.8rem, 9vw, 2.4rem) !important;
+    line-height: 1.08 !important;
+  }
+  /* Trust strip: tighter gaps, single column below 480 */
+  .trust-strip-inner {
+    flex-direction: column;
+    gap: 1.25rem !important;
+    align-items: flex-start;
+  }
+  /* Landing sections: reduce vertical padding */
+  .landing-section {
+    padding: 3rem 1.25rem !important;
+  }
+  /* Steps grid: 1 column */
+  .landing-steps-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* Features grid: 1 column */
+  .landing-features-grid {
+    grid-template-columns: 1fr !important;
+  }
+  /* CTA card: tighter padding */
+  .landing-cta-card {
+    padding: 2rem 1.25rem !important;
+  }
+  /* CTA buttons: full width stacked */
+  .landing-cta-btns {
+    flex-direction: column;
+    width: 100%;
+  }
+  .landing-cta-btns .btn-primary,
+  .landing-cta-btns .btn-outline {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ── Trust strip responsive ── */
+@media (max-width: 700px) {
+  .trust-strip-inner {
+    gap: 1.5rem !important;
+    justify-content: flex-start !important;
+  }
+}
+
+/* ── Dashboard stats: 2-col on all phones ── */
+@media (max-width: 700px) {
+  .dash-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .dash-two-col { grid-template-columns: 1fr !important; }
+  .dash-main-wrap {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+}
+@media (max-width: 480px) {
+  .dash-stats-grid { grid-template-columns: 1fr 1fr !important; }
+  /* Dashboard header: stack vertically */
+  .dash-header-row {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+}
+
+/* ── Profile page: single column on phones ── */
+@media (max-width: 700px) {
+  .profile-page-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .profile-page-inner {
+    padding: 1rem !important;
+  }
+}
+
+/* ── Talent page ── */
+@media (max-width: 700px) {
+  .talent-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .talent-filter-bar {
+    flex-direction: column !important;
+    gap: 0.6rem !important;
+  }
+  .talent-filter-bar input,
+  .talent-filter-bar select {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+}
+@media (max-width: 480px) {
+  .talent-grid { grid-template-columns: 1fr; }
+}
+
+/* ── Messages ── */
+@media (max-width: 700px) {
+  .msgs-shell { height: calc(100vh - 100px); }
+}
+
+/* ── Onboarding: inputs need 16px to prevent iOS zoom ── */
+@media (max-width: 700px) {
+  .ob-input,
+  .ob-textarea {
+    font-size: 16px !important;
+  }
+  .ob-role-btn {
+    padding: 7px 14px;
+    font-size: 0.78rem;
+  }
+  .auth-input,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px !important;
+  }
+}
+
+/* ── Buttons: full-width on small phones ── */
+@media (max-width: 375px) {
+  .btn-hero-primary,
+  .btn-hero-secondary {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* ── Touch targets: ensure min 44px height for tappable elements ── */
+@media (max-width: 700px) {
+  .nav-icon-btn,
+  .nav-pill,
+  .msgs-send-btn {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .ob-avail-option,
+  .ob-role-btn {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
+  /* Order/billing cards: ensure comfortable tap area on links */
+  .order-row,
+  .order-card {
+    padding: 1rem !important;
+  }
+}
+
+/* ── Notifications: prevent text overflow ── */
+@media (max-width: 700px) {
+  .notif-item-body,
+  .msgs-conv-preview {
+    white-space: normal;
+    word-break: break-word;
+  }
+  .notif-item {
+    padding: 0.85rem 1rem !important;
+  }
+}
+
+/* ── Orders: responsive table/grid ── */
+@media (max-width: 640px) {
+  .order-parties-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .order-detail-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Projects grid ── */
+@media (max-width: 480px) {
+  .projects-grid {
+    grid-template-columns: 1fr !important;
+    padding: 0 0.5rem;
+  }
+}
+
+/* ── Gig grid ── */
+@media (max-width: 480px) {
+  .gig-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* ── Global: section paddings on mobile ── */
+@media (max-width: 700px) {
+  .page-section {
+    padding: 2rem 1rem;
+  }
+  /* Reduce large section paddings */
+  [style*="padding: 6rem"],
+  [style*="padding: 5rem"] {
+    padding: 3rem 1.25rem !important;
+  }
+}
+
+/* ── Portfolio/Reviews cards on profile page ── */
+@media (max-width: 700px) {
+  .portfolio-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .reviews-list {
+    gap: 0.75rem !important;
+  }
+}
+
+/* ── Nav hamburger: ensure visible on mobile ── */
+@media (max-width: 700px) {
+  .nav-hamburger-btn {
+    display: flex !important;
+    min-width: 44px;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+/* ── Logo: scale down on small phones ── */
+@media (max-width: 480px) {
+  .nav-logo-svg {
+    width: 200px !important;
+    height: 50px !important;
+  }
+}
+@media (max-width: 375px) {
+  .nav-logo-svg {
+    width: 170px !important;
+    height: 43px !important;
+  }
+}
+
+/* ── Billing page: responsive sections ── */
+@media (max-width: 700px) {
+  .billing-section {
+    padding: 1rem !important;
   }
 }

@@ -29,6 +29,7 @@ export default async function TalentPage({
 
   let users: any[] = [];
   let total = 0;
+  let dbError = false;
 
   try {
     const where: Record<string, unknown> = { profileComplete: true };
@@ -71,6 +72,7 @@ export default async function TalentPage({
     ]);
   } catch (error) {
     console.error("Talent Page DB Error:", error);
+    dbError = true;
   }
 
   const totalPages = Math.ceil(total / PAGE_SIZE);
@@ -163,7 +165,14 @@ export default async function TalentPage({
           )}
         </form>
 
-        {users.length === 0 ? (
+        {dbError ? (
+          <div className="talent-empty">
+            <p style={{ color: "#ef4444" }}>Unable to load talent directory. Please try again.</p>
+            <Link href="/talent" className="btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
+              Retry
+            </Link>
+          </div>
+        ) : users.length === 0 ? (
           <div className="talent-empty">
             <p>No {role ? `${role} builders` : "builders"} found{q ? ` for "${q}"` : ""}.</p>
             <Link href="/dashboard" className="btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>

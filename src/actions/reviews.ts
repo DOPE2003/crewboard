@@ -1,13 +1,11 @@
 "use server";
 
-import { auth } from "@/auth";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { requireUserId } from "@/lib/auth-utils";
 
 export async function submitReview(orderId: string, revieweeId: string, rating: number, body: string) {
-  const session = await auth();
-  const reviewerId = (session?.user as any)?.userId as string | undefined;
-  if (!reviewerId) throw new Error("Unauthorized");
+  const reviewerId = await requireUserId();
 
   if (rating < 1 || rating > 5) throw new Error("Rating must be 1-5");
 

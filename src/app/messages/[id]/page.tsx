@@ -4,6 +4,15 @@ import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import MessageThread from "./MessageThread";
 
+function lastSeenLabel(d: Date | null): string {
+  if (!d) return "Offline";
+  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (diff < 3 * 60) return "Active now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
 export default async function ConversationPage({
   params,
 }: {
@@ -26,7 +35,7 @@ export default async function ConversationPage({
   const other = otherId
     ? await db.user.findUnique({
         where: { id: otherId },
-        select: { name: true, twitterHandle: true, image: true, role: true },
+        select: { name: true, twitterHandle: true, image: true, role: true, lastSeenAt: true },
       })
     : null;
 
@@ -44,7 +53,7 @@ export default async function ConversationPage({
   );
   const sidebarUsers = await db.user.findMany({
     where: { id: { in: otherIds } },
-    select: { id: true, name: true, twitterHandle: true, image: true },
+    select: { id: true, name: true, twitterHandle: true, image: true, lastSeenAt: true },
   });
   const userMap = Object.fromEntries(sidebarUsers.map((u) => [u.id, u]));
 
@@ -55,6 +64,13 @@ export default async function ConversationPage({
       })
     )
   );
+
+  // Load initial messages server-side to avoid auth issues in client-side server action calls
+  const initialMessages = await db.message.findMany({
+    where: { conversationId: id },
+    orderBy: { createdAt: "asc" },
+    select: { id: true, senderId: true, body: true, createdAt: true, read: true },
+  });
 
   return (
     <main className="page">
@@ -72,19 +88,28 @@ export default async function ConversationPage({
             const unread = unreadCounts[i];
             const active = c.id === id;
 
+            const online = u?.lastSeenAt && (Date.now() - u.lastSeenAt.getTime()) < 3 * 60 * 1000;
+            const seenLabel = lastSeenLabel(u?.lastSeenAt ?? null);
+
             return (
               <Link
                 key={c.id}
                 href={`/messages/${c.id}`}
                 className={`msgs-conv-row ${active ? "active" : ""}`}
               >
-                <div className="msgs-conv-avatar">
+                <div className="msgs-conv-avatar" style={{ position: "relative" }}>
                   {u?.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={u.image} alt="" />
                   ) : (
                     <div className="msgs-conv-avatar-fallback" />
                   )}
+                  <span style={{
+                    position: "absolute", bottom: 1, right: 1,
+                    width: 10, height: 10, borderRadius: "50%",
+                    background: online ? "#22c55e" : "#94a3b8",
+                    border: "2px solid #fff",
+                  }} />
                 </div>
                 <div className="msgs-conv-info">
                   <div className="msgs-conv-name">
@@ -107,6 +132,14 @@ export default async function ConversationPage({
                         })()
                       : "No messages yet"}
                   </div>
+                  <div style={{
+                    fontFamily: "Space Mono, monospace",
+                    fontSize: "0.55rem",
+                    color: online ? "#22c55e" : "rgba(0,0,0,0.35)",
+                    marginTop: 2,
+                  }}>
+                    {seenLabel}
+                  </div>
                 </div>
               </Link>
             );
@@ -122,25 +155,43 @@ export default async function ConversationPage({
                 <path d="M19 12H5M12 5l-7 7 7 7"/>
               </svg>
             </Link>
-            <div className="msgs-thread-avatar">
+            <div className="msgs-thread-avatar" style={{ position: "relative" }}>
               {other?.image ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={other.image} alt="" />
               ) : (
                 <div className="msgs-thread-avatar-fallback" />
               )}
+              {(() => {
+                const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+                return (
+                  <span style={{
+                    position: "absolute", bottom: 1, right: 1,
+                    width: 11, height: 11, borderRadius: "50%",
+                    background: online ? "#22c55e" : "#94a3b8",
+                    border: "2px solid #fff",
+                  }} />
+                );
+              })()}
             </div>
             <div>
               <div className="msgs-thread-name">
                 {other?.name ?? other?.twitterHandle ?? "Unknown"}
               </div>
-              {other?.role && (
-                <div className="msgs-thread-role">{other.role}</div>
-              )}
+              <div className="msgs-thread-role" style={{ color: (() => {
+                const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+                return online ? "#22c55e" : "rgba(0,0,0,0.4)";
+              })() }}>
+                {lastSeenLabel(other?.lastSeenAt ?? null)}
+              </div>
             </div>
           </div>
 
-          <MessageThread conversationId={id} currentUserId={userId} />
+          <MessageThread
+            conversationId={id}
+            currentUserId={userId}
+            initialMessages={JSON.parse(JSON.stringify(initialMessages))}
+          />
         </div>
       </div>
     </main>

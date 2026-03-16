@@ -1,10 +1,13 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
   const { t } = useLanguage();
+  const pathname = usePathname();
+  if (pathname !== "/") return null;
   return (
     <footer style={{
       borderTop: "1px solid var(--border)",
@@ -45,6 +48,20 @@ export default function Footer() {
             <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", color: "var(--muted)", marginTop: "0.15rem", lineHeight: 1.6 }}>
               {t("footer.tagline")}
             </span>
+
+            {/* Email */}
+            <a
+              href="mailto:info@crewboard.com"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: "0.45rem",
+                fontFamily: "Space Mono, monospace", fontWeight: 600, fontSize: "0.62rem",
+                letterSpacing: "0.04em", color: "var(--muted)", textDecoration: "none",
+                marginTop: "0.25rem",
+              }}
+            >
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              info@crewboard.com
+            </a>
 
             {/* X handle */}
             <a

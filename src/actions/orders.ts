@@ -3,12 +3,10 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { requireUserId } from "@/lib/auth-utils";
 
 export async function createOrder(gigId: string, sellerId: string) {
-  const session = await auth();
-  const buyerId = (session?.user as any)?.userId as string | undefined;
-  if (!buyerId) throw new Error("Unauthorized");
+  const buyerId = await requireUserId();
   if (buyerId === sellerId) throw new Error("Cannot hire yourself");
 
   const gig = await db.gig.findUnique({ where: { id: gigId }, select: { price: true, title: true } });
@@ -37,9 +35,7 @@ export async function createOrder(gigId: string, sellerId: string) {
 }
 
 export async function updateOrderStatus(orderId: string, status: string) {
-  const session = await auth();
-  const userId = (session?.user as any)?.userId as string | undefined;
-  if (!userId) throw new Error("Unauthorized");
+  const userId = await requireUserId();
 
   const order = await db.order.findUnique({
     where: { id: orderId },
@@ -96,10 +92,10 @@ export async function updateOrderStatus(orderId: string, status: string) {
 }
 
 // Re-request: create a new order from the same cancelled order
-export async function reRequestOrder(orderId: string) {
+export async function reRequestOrder(orderId: string): Promise<{ redirectTo: string }> {
   const session = await auth();
-  const buyerId = (session?.user as any)?.userId as string | undefined;
-  if (!buyerId) throw new Error("Unauthorized");
+  const buyerId = session?.user?.userId;
+  if (!buyerId) return { redirectTo: "/login" };
 
   const original = await db.order.findUnique({
     where: { id: orderId },
@@ -126,14 +122,12 @@ export async function reRequestOrder(orderId: string) {
     },
   });
 
-  redirect(`/orders/${newOrder.id}`);
+  return { redirectTo: `/orders/${newOrder.id}` };
 }
 
 // Called from client after on-chain escrow funding tx confirms
 export async function syncEscrowFunded(orderId: string, txHash: string, escrowAddress: string) {
-  const session = await auth();
-  const userId = (session?.user as any)?.userId as string | undefined;
-  if (!userId) throw new Error("Unauthorized");
+  const userId = await requireUserId();
 
   const order = await db.order.findUnique({
     where: { id: orderId },
@@ -164,9 +158,7 @@ export async function syncEscrowFunded(orderId: string, txHash: string, escrowAd
 
 // Called from client after on-chain release tx confirms
 export async function syncEscrowReleased(orderId: string, txHash: string) {
-  const session = await auth();
-  const userId = (session?.user as any)?.userId as string | undefined;
-  if (!userId) throw new Error("Unauthorized");
+  const userId = await requireUserId();
 
   const order = await db.order.findUnique({
     where: { id: orderId },

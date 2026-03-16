@@ -3,6 +3,15 @@ import db from "@/lib/db";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
+function lastSeenLabel(d: Date | null): string {
+  if (!d) return "Offline";
+  const diff = Math.floor((Date.now() - d.getTime()) / 1000);
+  if (diff < 3 * 60) return "Active now";
+  if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+  if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+  return `${Math.floor(diff / 86400)}d ago`;
+}
+
 export default async function MessagesPage() {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
@@ -26,7 +35,7 @@ export default async function MessagesPage() {
 
   const otherUsers = await db.user.findMany({
     where: { id: { in: otherIds } },
-    select: { id: true, name: true, twitterHandle: true, image: true, role: true },
+    select: { id: true, name: true, twitterHandle: true, image: true, role: true, lastSeenAt: true },
   });
 
   const userMap = Object.fromEntries(otherUsers.map((u) => [u.id, u]));
@@ -64,15 +73,24 @@ export default async function MessagesPage() {
             const lastMsg = c.messages[0];
             const unread = unreadCounts[i];
 
+            const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+            const seenLabel = lastSeenLabel(other?.lastSeenAt ?? null);
+
             return (
               <Link key={c.id} href={`/messages/${c.id}`} className="msgs-conv-row">
-                <div className="msgs-conv-avatar">
+                <div className="msgs-conv-avatar" style={{ position: "relative" }}>
                   {other?.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={other.image} alt="" />
                   ) : (
                     <div className="msgs-conv-avatar-fallback" />
                   )}
+                  <span style={{
+                    position: "absolute", bottom: 1, right: 1,
+                    width: 10, height: 10, borderRadius: "50%",
+                    background: online ? "#22c55e" : "#94a3b8",
+                    border: "2px solid #fff",
+                  }} />
                 </div>
                 <div className="msgs-conv-info">
                   <div className="msgs-conv-name">
@@ -94,6 +112,14 @@ export default async function MessagesPage() {
                           return prefix + lastMsg.body.slice(0, 48) + (lastMsg.body.length > 48 ? "…" : "");
                         })()
                       : "No messages yet"}
+                  </div>
+                  <div style={{
+                    fontFamily: "Space Mono, monospace",
+                    fontSize: "0.55rem",
+                    color: online ? "#22c55e" : "rgba(0,0,0,0.35)",
+                    marginTop: 2,
+                  }}>
+                    {seenLabel}
                   </div>
                 </div>
               </Link>

@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { startConversation, hireFromGig } from "@/actions/messages";
 import GigOwnerActions from "./GigOwnerActions";
+import ActionButton from "@/components/ui/ActionButton";
 
 export default async function GigPage({
   params,
@@ -105,16 +106,20 @@ export default async function GigPage({
           {/* CTA */}
           {canHire && (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              <form action={hireFromGig.bind(null, gig.id, gig.userId)}>
-                <button type="submit" className="btn-primary" style={{ width: "100%", cursor: "pointer" }}>
-                  Hire — Send Offer
-                </button>
-              </form>
-              <form action={startConversation.bind(null, gig.userId)}>
-                <button type="submit" className="btn-secondary" style={{ width: "100%", cursor: "pointer" }}>
-                  Send Message
-                </button>
-              </form>
+              <ActionButton
+                action={hireFromGig.bind(null, gig.id, gig.userId)}
+                className="btn-primary"
+                style={{ width: "100%", cursor: "pointer" }}
+              >
+                Hire — Send Offer
+              </ActionButton>
+              <ActionButton
+                action={startConversation.bind(null, gig.userId)}
+                className="btn-secondary"
+                style={{ width: "100%", cursor: "pointer" }}
+              >
+                Send Message
+              </ActionButton>
             </div>
           )}
 

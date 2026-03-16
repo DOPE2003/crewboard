@@ -1,11 +1,12 @@
 import NextAuth from "next-auth";
 import { authConfig } from "@/auth.config";
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 // Use lightweight config — no Prisma, safe for Edge Runtime.
 const { auth } = NextAuth(authConfig);
 
-export default auth((req) => {
+// Auth-wrapped handler for normal page/navigation requests.
+const authMiddleware = auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
   const profileComplete = req.auth?.user?.profileComplete ?? false;
@@ -63,6 +64,15 @@ export default auth((req) => {
 
   return NextResponse.next();
 });
+
+// Main middleware export — server action POST requests (Next-Action header) bypass
+// the NextAuth wrapper entirely so it cannot intercept/corrupt the request body.
+export default function middleware(req: NextRequest) {
+  if (req.headers.get("Next-Action")) {
+    return NextResponse.next();
+  }
+  return (authMiddleware as any)(req);
+}
 
 export const config = {
   // Broad matcher to catch all pages for password protection

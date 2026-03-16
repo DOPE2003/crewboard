@@ -4,6 +4,12 @@ import db from "@/lib/db";
 import NavSearch from "./NavSearch";
 import NavMobileMenu from "./NavMobileMenu";
 import NavProfileMenu from "./NavProfileMenu";
+import NavMessagesDropdown from "./NavMessagesDropdown";
+import NavNotificationsDropdown from "./NavNotificationsDropdown";
+import NavOrdersDropdown from "./NavOrdersDropdown";
+import NavCategoryGroup from "./NavCategoryGroup";
+import type { NavNotif } from "./NavNotificationsDropdown";
+import type { NavOrder } from "./NavOrdersDropdown";
 import T from "@/components/ui/T";
 
 
@@ -15,27 +21,138 @@ export default async function Navbar() {
   let dbUser: { role: string | null; availability: string | null } | null = null;
   let unreadCount = 0;
   let gigsCount = 0;
+  let navNotifications: NavNotif[] = [];
+  let navConversations: Array<{
+    id: string;
+    lastMessage: string | null;
+    lastMessageTime: string | null;
+    unread: number;
+    otherUser: { id: string; name: string | null; twitterHandle: string; image: string | null; lastSeenAt: string | null } | null;
+  }> = [];
+  let totalMsgUnread = 0;
+  let navOrders: NavOrder[] = [];
+  let activeOrderCount = 0;
+
   const userId = (user as any)?.userId as string | undefined;
   if (userId) {
-    [dbUser, unreadCount, gigsCount] = await Promise.all([
-      db.user.findUnique({
-        where: { id: userId },
-        select: { role: true, availability: true },
-      }),
-      db.notification.count({ where: { userId, read: false } }),
-      db.gig.count({ where: { userId, status: "active" } }),
-    ]);
+    try {
+      const [dbUserRes, notifCount, gigCount, convs, recentNotifs] = await Promise.all([
+        db.user.findUnique({
+          where: { id: userId },
+          select: { role: true, availability: true },
+        }),
+        db.notification.count({ where: { userId, read: false } }).catch(() => 0),
+        db.gig.count({ where: { userId, status: "active" } }),
+        db.conversation.findMany({
+          where: { participants: { has: userId } },
+          orderBy: { updatedAt: "desc" },
+          take: 8,
+          include: {
+            messages: { orderBy: { createdAt: "desc" }, take: 1 },
+          },
+        }),
+        db.notification.findMany({
+          where: { userId },
+          orderBy: { createdAt: "desc" },
+          take: 10,
+          select: { id: true, type: true, title: true, body: true, link: true, read: true, createdAt: true },
+        }).catch(() => []),
+      ]);
+      dbUser = dbUserRes;
+      navNotifications = recentNotifs.map((n) => ({ ...n, createdAt: n.createdAt.toISOString() }));
+      unreadCount = notifCount;
+      gigsCount = gigCount;
+
+      // Fetch other participants' profiles
+      const otherIds = convs.map((c) => c.participants.find((p) => p !== userId) ?? "").filter(Boolean);
+      const otherUsers = await db.user.findMany({
+        where: { id: { in: otherIds } },
+        select: { id: true, name: true, twitterHandle: true, image: true, lastSeenAt: true },
+      }).catch(() => []);
+      const userMap = Object.fromEntries(otherUsers.map((u) => [u.id, u]));
+
+      // Unread counts per conversation
+      const unreadPerConv = await Promise.all(
+        convs.map((c) => db.message.count({ where: { conversationId: c.id, read: false, senderId: { not: userId } } }).catch(() => 0))
+      );
+
+      totalMsgUnread = unreadPerConv.reduce((a, b) => a + b, 0);
+
+      navConversations = convs.map((c, i) => {
+        const otherId = c.participants.find((p) => p !== userId) ?? "";
+        const other = userMap[otherId] ?? null;
+        const lastMsg = c.messages[0];
+        let lastMessageText: string | null = null;
+        if (lastMsg) {
+          if (lastMsg.body.startsWith("__GIGREQUEST__:")) {
+            lastMessageText = (lastMsg.senderId === userId ? "You: " : "") + "Gig Request";
+          } else {
+            const prefix = lastMsg.senderId === userId ? "You: " : "";
+            lastMessageText = prefix + lastMsg.body.slice(0, 50) + (lastMsg.body.length > 50 ? "…" : "");
+          }
+        }
+        return {
+          id: c.id,
+          lastMessage: lastMessageText,
+          lastMessageTime: lastMsg?.createdAt?.toISOString() ?? null,
+          unread: unreadPerConv[i],
+          otherUser: other
+            ? {
+                id: other.id,
+                name: other.name,
+                twitterHandle: other.twitterHandle,
+                image: other.image,
+                lastSeenAt: (other as any).lastSeenAt?.toISOString?.() ?? null,
+              }
+            : null,
+        };
+      });
+      // Fetch recent orders for dropdown
+      const recentOrders = await db.order.findMany({
+        where: { OR: [{ buyerId: userId }, { sellerId: userId }] },
+        orderBy: { updatedAt: "desc" },
+        take: 8,
+        include: {
+          gig: { select: { id: true, title: true, category: true } },
+          buyer: { select: { id: true, name: true, twitterHandle: true, image: true } },
+          seller: { select: { id: true, name: true, twitterHandle: true, image: true } },
+        },
+      }).catch(() => []);
+
+      navOrders = recentOrders.map((o) => {
+        const role: "buyer" | "seller" = o.buyerId === userId ? "buyer" : "seller";
+        const other = role === "buyer" ? o.seller : o.buyer;
+        return {
+          id: o.id,
+          status: o.status,
+          amount: o.amount,
+          createdAt: o.createdAt.toISOString(),
+          gigTitle: o.gig.title,
+          gigCategory: o.gig.category ?? "",
+          role,
+          other: other
+            ? { id: other.id, name: other.name, twitterHandle: other.twitterHandle, image: other.image }
+            : null,
+        };
+      });
+
+      activeOrderCount = recentOrders.filter((o) =>
+        ["pending", "accepted", "funded", "delivered"].includes(o.status)
+      ).length;
+
+    } catch (e) {
+      console.error("[Navbar] DB error:", e);
+    }
   }
 
   return (
     <nav style={{ flexDirection: "column", padding: 0, height: "auto" }}>
 
       {/* ── ROW 1: Logo + Search/Icons ── */}
-      <div style={{
+      <div className="nav-row1" style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        padding: "0.65rem 2.5rem",
         width: "100%",
         gap: "1rem",
         borderBottom: "1px solid rgba(0,0,0,0.06)",
@@ -71,44 +188,12 @@ export default async function Navbar() {
           {/* Icons — logged in only */}
           {user && (
             <>
-              <Link href="/messages" aria-label="Messages" className="nav-icon-btn" style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: 34, height: 34, borderRadius: 8,
-                color: "rgba(0,0,0,0.5)",
-                transition: "color 0.2s, background 0.2s",
-                textDecoration: "none",
-              }}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-                </svg>
-              </Link>
+              <NavMessagesDropdown conversations={navConversations} totalUnread={totalMsgUnread} />
 
-              <Link href="/notifications" aria-label="Notifications" className="nav-icon-btn" style={{
-                display: "flex", alignItems: "center", justifyContent: "center",
-                width: 34, height: 34, borderRadius: 8, position: "relative",
-                color: "rgba(0,0,0,0.5)",
-                transition: "color 0.2s, background 0.2s",
-                textDecoration: "none",
-              }}>
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-                  <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-                </svg>
-                {unreadCount > 0 && (
-                  <span style={{
-                    position: "absolute", top: 4, right: 4,
-                    minWidth: 15, height: 15, borderRadius: "999px",
-                    background: "#14b8a6",
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    fontFamily: "Space Mono, monospace",
-                    fontSize: "0.48rem", fontWeight: 700,
-                    color: "#fff", lineHeight: 1,
-                    padding: "0 3px",
-                  }}>
-                    {unreadCount > 99 ? "99+" : unreadCount}
-                  </span>
-                )}
-              </Link>
+              <NavNotificationsDropdown notifications={navNotifications} unreadCount={unreadCount} />
+
+              {/* Orders dropdown */}
+              <NavOrdersDropdown orders={navOrders} activeCount={activeOrderCount} />
 
               {/* Profile avatar with dropdown */}
               <NavProfileMenu
@@ -132,19 +217,43 @@ export default async function Navbar() {
         </div>
       </div>
 
-      {/* ── ROW 2: Category links (desktop only) ── */}
+      {/* ── ROW 2: Category groups (desktop only) ── */}
       <div className="nav-links-row">
         <ul className="nav-links" style={{ margin: 0 }}>
-          <li><Link href="/talent?role=KOL+Manager"><T k="cat.kol" /></Link></li>
-          <li><Link href="/talent?role=Exchange+Listings+Manager"><T k="cat.exchange" /></Link></li>
-          <li><Link href="/talent?role=Web3+Web+Designer"><T k="cat.web3design" /></Link></li>
-          <li><Link href="/talent?role=Social+Marketing"><T k="cat.social" /></Link></li>
-          <li><Link href="/talent?role=Artist"><T k="cat.artist" /></Link></li>
-          <li><Link href="/talent?role=Video+%26+Animation"><T k="cat.video" /></Link></li>
-          <li><Link href="/talent?role=Coding+%26+Tech"><T k="cat.coding" /></Link></li>
-          <li><Link href="/talent?role=AI+Engineer"><T k="cat.ai" /></Link></li>
-          <li><Link href="/talent?role=Content+Creator"><T k="cat.content" /></Link></li>
-          <li><Link href="/talent?role=Graphic+%26+Design"><T k="cat.graphic" /></Link></li>
+          <NavCategoryGroup
+            label="Creative"
+            color="#f59e0b"
+            items={[
+              { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
+              { label: "Artist",            href: "/talent?role=Artist" },
+            ]}
+          />
+          <NavCategoryGroup
+            label="Design"
+            color="#8b5cf6"
+            items={[
+              { label: "Web3 Designer",   href: "/talent?role=Web3+Web+Designer" },
+              { label: "Graphic & Design", href: "/talent?role=Graphic+%26+Design" },
+              { label: "Content Creator",  href: "/talent?role=Content+Creator" },
+            ]}
+          />
+          <NavCategoryGroup
+            label="Marketing"
+            color="#14b8a6"
+            items={[
+              { label: "Social Marketing",    href: "/talent?role=Social+Marketing" },
+              { label: "KOL Manager",         href: "/talent?role=KOL+Manager" },
+              { label: "Exchange Listings",   href: "/talent?role=Exchange+Listings+Manager" },
+            ]}
+          />
+          <NavCategoryGroup
+            label="Tech"
+            color="#3b82f6"
+            items={[
+              { label: "Coding & Tech", href: "/talent?role=Coding+%26+Tech" },
+              { label: "AI Engineer",   href: "/talent?role=AI+Engineer" },
+            ]}
+          />
         </ul>
       </div>
 

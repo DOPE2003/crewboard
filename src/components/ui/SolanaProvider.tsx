@@ -18,8 +18,12 @@ export function SolanaProvider({ children }: { children: React.ReactNode }) {
   // handles adapters automatically without duplicates
   const wallets = useMemo(() => [], []);
   const onError = useCallback((error: WalletError) => {
-    // Silently ignore user-rejected connections
-    if (error.message === "Connection rejected") return;
+    // Silently ignore user-rejected or failed auto-connect attempts
+    if (
+      error.message === "Connection rejected" ||
+      error.message?.includes("MetaMask") ||
+      error.message?.includes("connect")
+    ) return;
     console.error("Wallet error:", error);
   }, []);
 
@@ -27,7 +31,7 @@ export function SolanaProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <ConnectionProvider endpoint={endpoint}>
-      <WalletProvider wallets={wallets} onError={onError} autoConnect={true}>
+      <WalletProvider wallets={wallets} onError={onError} autoConnect={false}>
         <WalletModalProvider>
           {children}
         </WalletModalProvider>

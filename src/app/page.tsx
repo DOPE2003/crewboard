@@ -22,7 +22,7 @@ const FEATURES = [
       </svg>
     ),
     title: "Instant Crypto Payouts",
-    desc: "Get paid in ETH, USDC, or any token. No banks, no delays, no fees eating your earnings.",
+    desc: "Get paid in SOL, USDC, or any token. No banks, no delays, no fees eating your earnings.",
   },
   {
     icon: (
@@ -68,18 +68,10 @@ export default async function HomePage() {
 
   const [floatingProfiles] = await Promise.all([
     db.user.findMany({
-      where: {
-        OR: [
-          { name: { in: ["Shane Simpson", "MIZU", "Leon", "mmio369"] } },
-          { twitterHandle: { in: ["Shane Simpson", "MIZU", "Leon", "mmio369"] } },
-        ],
-      },
+      where: { profileComplete: true, image: { not: null } },
+      orderBy: { createdAt: "desc" },
+      take: 6,
       select: { twitterHandle: true, name: true, image: true, role: true, availability: true, skills: true, bio: true },
-    }).then((users) => {
-      const order = ["Shane Simpson", "MIZU", "Leon", "mmio369"];
-      return order
-        .map((n) => users.find((u) => u.name === n || u.twitterHandle === n))
-        .filter(Boolean) as typeof users;
     }).catch(() => []),
   ]);
 
@@ -94,7 +86,7 @@ export default async function HomePage() {
         alignItems: "center",
         justifyContent: "flex-start",
         textAlign: "center",
-        padding: "5rem 2rem 4rem",
+        padding: "clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 4rem)",
         position: "relative",
         overflow: "visible",
       }} className="landing-hero">
@@ -105,7 +97,7 @@ export default async function HomePage() {
           top: "12%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "clamp(360px, 65vw, 760px)",
+          width: "clamp(260px, 90vw, 760px)",
           height: "clamp(180px, 32vw, 380px)",
           background: "radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.28) 0%, rgba(20,184,166,0.12) 50%, transparent 75%)",
           filter: "blur(28px)",
@@ -184,9 +176,10 @@ export default async function HomePage() {
         )}
         {isLoggedIn && (
           <div style={{
-            display: "inline-flex",
+            display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: "0.5rem",
+            gap: "0.3rem",
             marginBottom: "2.5rem",
             opacity: 0,
             animation: "fadeUp 0.6s 0.38s forwards",
@@ -196,18 +189,18 @@ export default async function HomePage() {
             <span style={{
               fontFamily: "Space Mono, monospace",
               fontSize: "0.62rem",
-              letterSpacing: "0.18em",
+              letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color: "rgba(0,0,0,0.4)",
+              color: "rgba(0,0,0,0.45)",
             }}>
-              Welcome back,
+              Welcome back
             </span>
             <span style={{
               fontFamily: "Rajdhani, sans-serif",
               fontWeight: 700,
-              fontSize: "0.82rem",
-              letterSpacing: "0.1em",
-              textTransform: "uppercase",
+              fontSize: "clamp(2rem, 5vw, 3rem)",
+              letterSpacing: "-0.01em",
+              lineHeight: 1,
               color: "#000",
             }}>
               {session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder"}
@@ -223,7 +216,7 @@ export default async function HomePage() {
           lineHeight: 1.85,
           maxWidth: "22rem",
           letterSpacing: "0.01em",
-          marginBottom: "3rem",
+          marginBottom: "2rem",
           opacity: 0,
           animation: "fadeUp 0.6s 0.58s forwards",
           position: "relative",
@@ -233,8 +226,28 @@ export default async function HomePage() {
           The professional network Web3 deserves.
         </p>
 
+        {/* CTA buttons */}
+        <div style={{
+          display: "flex",
+          gap: "0.85rem",
+          justifyContent: "center",
+          flexWrap: "wrap",
+          marginBottom: "3rem",
+          opacity: 0,
+          animation: "fadeUp 0.6s 0.66s forwards",
+          position: "relative",
+          zIndex: 1,
+        }}>
+          <Link href="/talent" className="btn-hero-primary">
+            Browse Talent
+          </Link>
+          <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
+            {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
+          </Link>
+        </div>
+
         {/* Mobile search bar — hidden on desktop */}
-        <div style={{ opacity: 0, animation: "fadeUp 0.6s 0.62s forwards", width: "100%", maxWidth: 320 }}>
+        <div style={{ opacity: 0, animation: "fadeUp 0.6s 0.62s forwards", width: "100%", maxWidth: "min(100%, 400px)" }}>
           <HeroMobileSearch />
         </div>
 
@@ -263,8 +276,51 @@ export default async function HomePage() {
       </div>
 
 
+      {/* ── TRUST STRIP ── */}
+      <div style={{ borderTop: "1px solid rgba(0,0,0,0.07)", borderBottom: "1px solid rgba(0,0,0,0.07)", padding: "1.5rem 1.25rem", background: "#fff", position: "relative", zIndex: 1 }}>
+        <div className="trust-strip-inner" style={{ maxWidth: "72rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", gap: "2rem" }}>
+          {[
+            {
+              icon: (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>
+                </svg>
+              ),
+              label: "Vetted Talent",
+              desc: "All freelancers are real Web3 builders",
+            },
+            {
+              icon: (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+              ),
+              label: "Protected Payments",
+              desc: "Escrow smart contracts, funds released on delivery",
+            },
+            {
+              icon: (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#6366f1" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                </svg>
+              ),
+              label: "Hire Who You Need",
+              desc: "Filter by role, skill, chain, and availability",
+            },
+          ].map((item) => (
+            <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+              <div style={{ flexShrink: 0 }}>{item.icon}</div>
+              <div>
+                <div style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "#000", letterSpacing: "0.02em" }}>{item.label}</div>
+                <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", marginTop: 1 }}>{item.desc}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {/* ── HOW IT WORKS ── */}
-      <div className="landing-section" style={{ padding: "5rem 2rem", position: "relative", zIndex: 1 }}>
+      <div className="landing-section" style={{ padding: "clamp(2.5rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
           <div className="section-label">Simple Process</div>
           <h2 style={{
@@ -384,7 +440,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── FEATURES ── */}
-      <div className="landing-section" style={{ padding: "6rem 2rem", position: "relative", zIndex: 1 }}>
+      <div className="landing-section" style={{ padding: "clamp(2.5rem, 7vw, 6rem) clamp(1rem, 4vw, 2rem)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           <div className="section-label">Platform Features</div>
@@ -402,7 +458,7 @@ export default async function HomePage() {
             </span>
           </h2>
 
-          <div style={{
+          <div className="landing-features-grid" style={{
             display: "grid",
             gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
             gap: "1.25rem",
@@ -436,7 +492,7 @@ export default async function HomePage() {
       </div>
 
       {/* ── CTA ── */}
-      <div className="landing-section landing-cta-section" style={{ padding: "4rem 2rem 8rem", position: "relative", zIndex: 1 }}>
+      <div className="landing-section landing-cta-section" style={{ padding: "clamp(2rem, 5vw, 4rem) clamp(1rem, 4vw, 2rem) clamp(4rem, 8vw, 8rem)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "56rem", margin: "0 auto" }}>
           <div className="landing-cta-card" style={{
             borderRadius: 20,
@@ -479,7 +535,7 @@ export default async function HomePage() {
               Early builders are already here. Be part of the founding crew — find your next collaborator or your next project.
             </p>
 
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
+            <div className="landing-cta-btns" style={{ display: "flex", gap: "1rem", justifyContent: "center", flexWrap: "wrap" }}>
               {!isLoggedIn && (
                 <Link className="btn-primary" href="/login">
                   Join as Freelancer

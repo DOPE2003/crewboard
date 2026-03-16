@@ -5,7 +5,7 @@ import { markAllNotificationsAsRead } from "@/actions/notifications";
 
 export default function AutoMarkRead({ userId }: { userId: string }) {
   useEffect(() => {
-    markAllNotificationsAsRead();
+    markAllNotificationsAsRead().catch(() => {});
   }, [userId]);
 
   return null;

@@ -57,14 +57,7 @@ export default async function BillingPage() {
 
         {/* Wallet section */}
         <section style={{ marginBottom: "2rem" }}>
-          <div className="billing-section-label" style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.56rem",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#94a3b8",
-            marginBottom: "0.85rem",
-          }}>
+          <div className="billing-section-label">
             Wallet
           </div>
           <LinkWallet currentWallet={dbUser.walletAddress} />
@@ -72,14 +65,7 @@ export default async function BillingPage() {
 
         {/* Earnings */}
         <section style={{ marginBottom: "2rem" }}>
-          <div className="billing-section-label" style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.56rem",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#94a3b8",
-            marginBottom: "0.85rem",
-          }}>
+          <div className="billing-section-label">
             Earnings
           </div>
           <div style={{
@@ -122,14 +108,7 @@ export default async function BillingPage() {
 
         {/* Payment history */}
         <section style={{ marginBottom: "2rem" }}>
-          <div className="billing-section-label" style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.56rem",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#94a3b8",
-            marginBottom: "0.85rem",
-          }}>
+          <div className="billing-section-label">
             Payment History
           </div>
           <div style={{

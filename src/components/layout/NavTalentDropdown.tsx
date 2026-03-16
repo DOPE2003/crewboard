@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
 const TALENT_CATEGORIES = [
@@ -28,6 +28,10 @@ export default function NavTalentDropdown() {
   const hide = () => {
     closeTimer.current = setTimeout(() => setOpen(false), 120);
   };
+
+  useEffect(() => {
+    return () => { if (closeTimer.current) clearTimeout(closeTimer.current); };
+  }, []);
 
   return (
     <li style={{ position: "relative", listStyle: "none" }}

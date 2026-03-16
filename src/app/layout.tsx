@@ -6,6 +6,7 @@ import Footer from "@/components/layout/Footer";
 import ThemeRouteClass from "@/components/ui/ThemeRouteClass";
 import ThemeProvider from "@/components/ui/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
+import HeartbeatPing from "@/components/ui/HeartbeatPing";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
@@ -24,7 +25,6 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
   viewportFit: "cover",
 };
 
@@ -36,6 +36,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <LanguageProvider>
             <ThemeProvider />
             <ThemeRouteClass />
+            <HeartbeatPing />
             <Navbar />
             {children}
             <Footer />

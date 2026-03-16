@@ -2,14 +2,17 @@ import db from "@/lib/db";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { startConversation, hireFromProfile } from "@/actions/messages";
-import EditProfileForm from "@/components/forms/EditProfileForm";
-import LinkWallet from "@/components/forms/LinkWallet";
+import ContactButtons from "@/components/ui/ContactButtons";
 import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
 import { WalletVerifiedBadge } from "@/components/ui/VerificationBadges";
 import SaveTalentButton from "@/components/ui/SaveTalentButton";
 import AvatarUpload from "@/components/ui/AvatarUpload";
+import EditProfilePanel from "@/components/ui/EditProfilePanel";
+import PortfolioEditor from "@/components/forms/PortfolioEditor";
+import type { PortfolioItem } from "@/actions/portfolio";
+import CvUpload from "@/components/ui/CvUpload";
+import AddEmailForm from "@/components/forms/AddEmailForm";
 
 const AVAIL_COLOR: Record<string, string> = {
   available: "#22c55e", open: "#f59e0b", busy: "#ef4444",
@@ -75,19 +78,26 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   const viewerId = (session?.user as any)?.userId as string | undefined;
 
-  // Profile view tracking
+  // Profile view tracking — deduplicated per viewer per 24h
   if (viewerId && viewerId !== user.id) {
+    const viewerName = session?.user?.name ?? (session?.user as any)?.twitterHandle ?? "Someone";
     const recentView = await db.notification.findFirst({
-      where: { userId: user.id, type: "profile_view", createdAt: { gte: new Date(Date.now() - 3600000) } },
+      where: {
+        userId: user.id,
+        type: "profile_view",
+        body: { contains: viewerName },
+        createdAt: { gte: new Date(Date.now() - 86400000) },
+      },
       select: { id: true },
     });
     if (!recentView) {
-      const viewerName = session?.user?.name ?? (session?.user as any)?.twitterHandle ?? "Someone";
       await db.notification.create({
         data: { userId: user.id, type: "profile_view", title: "Someone viewed your profile", body: `${viewerName} visited your profile.` },
       });
     }
   }
+
+  const portfolioItems: PortfolioItem[] = Array.isArray(user.portfolioItems) ? user.portfolioItems as PortfolioItem[] : [];
 
   const isOwnProfile = viewerId === user.id;
   const canMessage = !!viewerId && !isOwnProfile;
@@ -108,11 +118,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   // Profile completion score (own profile only)
   const completionItems = [
-    { label: "Name", done: !!user.name },
+    { label: "Profile photo", done: !!user.image },
     { label: "Role", done: !!user.role },
-    { label: "Bio", done: !!user.bio },
-    { label: "Skills", done: user.skills?.length > 0 },
-    { label: "Wallet", done: !!user.walletAddress },
+    { label: "Bio", done: !!user.bio && user.bio.length > 3 },
+    { label: "Skills", done: (user.skills?.length ?? 0) > 0 },
+    { label: "Availability", done: !!user.availability },
+    { label: "Portfolio item", done: (user.portfolioItems?.length ?? 0) > 0 },
+    { label: "CV / Resume", done: !!user.cvUrl },
     { label: "Gig posted", done: user.gigs?.length > 0 },
   ];
   const completionPct = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100);
@@ -130,8 +142,15 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           <span>/</span>
           <Link href="/freelancers" style={{ color: "#64748b", textDecoration: "none" }}>Freelancers</Link>
           <span>/</span>
-          <span style={{ color: "#0f172a" }}>@{user.twitterHandle}</span>
+          <span style={{ color: "#0f172a" }}>{user.twitterId ? (user.name ?? "Profile") : `@${user.twitterHandle}`}</span>
         </div>
+
+        {/* Email notification banner — own profile, no email (X-only users) */}
+        {isOwnProfile && !user.email && (
+          <div style={{ marginBottom: "1.25rem" }}>
+            <AddEmailForm />
+          </div>
+        )}
 
         {/* Two-column layout */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "1.5rem", alignItems: "start" }} className="profile-page-grid">
@@ -145,7 +164,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: "1.25rem" }}>
                   {/* Avatar — clickable to change if own profile */}
                   {isOwnProfile ? (
-                    <AvatarUpload currentImage={user.image} name={user.name} />
+                    <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId} />
                   ) : (
                     <div style={{
                       width: 90, height: 90, borderRadius: "50%", flexShrink: 0,
@@ -160,13 +179,17 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                       <h1 style={{ fontSize: "1.35rem", fontWeight: 800, margin: 0, color: "#0f172a" }}>
-                        {user.name ?? user.twitterHandle}
+                        {user.name ?? (user.twitterId ? "Anonymous" : user.twitterHandle)}
                       </h1>
-                      {user.isOG && <OGBadge size="md" />}
+                      {user.isOG && <OGBadge size="lg" />}
                       {user.walletAddress && <WalletVerifiedBadge />}
                     </div>
 
-                    <div style={{ fontSize: "0.82rem", color: "#64748b", marginTop: 3 }}>@{user.twitterHandle}</div>
+                    {!user.twitterId && (
+                      <div style={{ fontSize: "0.82rem", color: "#64748b", marginTop: 3 }}>
+                        @{user.twitterHandle}
+                      </div>
+                    )}
 
                     <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: "0.6rem", flexWrap: "wrap" }}>
                       {user.role && (
@@ -191,24 +214,15 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   </div>
                 </div>
 
-                {/* Public view / Edit buttons */}
-                <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>
-                  {isOwnProfile ? (
-                    <Link href="#edit-profile" style={{
-                      fontSize: "0.78rem", fontWeight: 600, padding: "7px 16px", borderRadius: 8,
-                      border: "1px solid #e2e8f0", background: "#fff", color: "#0f172a", textDecoration: "none",
-                      display: "flex", alignItems: "center", gap: 6,
-                    }}>
-                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/></svg>
-                      Edit Profile
-                    </Link>
-                  ) : (
-                    <Link href={`/u/${user.twitterHandle}`} style={{
-                      fontSize: "0.78rem", fontWeight: 600, padding: "7px 16px", borderRadius: 8,
-                      border: "1px solid #e2e8f0", background: "#fff", color: "#0f172a", textDecoration: "none",
-                    }}>
-                      Public view
-                    </Link>
+                {/* Action buttons in header */}
+                <div style={{ display: "flex", gap: 8, flexShrink: 0, flexWrap: "wrap" }}>
+                  {isOwnProfile && (
+                    <EditProfilePanel
+                      initialRole={user.role ?? ""}
+                      initialSkills={user.skills}
+                      initialBio={user.bio ?? ""}
+                      initialAvailability={user.availability ?? "available"}
+                    />
                   )}
                 </div>
               </div>
@@ -242,6 +256,33 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     </span>
                   ))}
                 </div>
+              </SectionCard>
+            )}
+
+            {/* Portfolio */}
+            {(isOwnProfile || portfolioItems.length > 0) && (
+              <SectionCard>
+                <SectionTitle>Projects</SectionTitle>
+                {isOwnProfile ? (
+                  <PortfolioEditor initialItems={portfolioItems} handle={user.twitterHandle} />
+                ) : portfolioItems.length > 0 ? (
+                  <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
+                    {portfolioItems.map((item) => (
+                      <div key={item.id} style={{ padding: "0.85rem 1rem", borderRadius: 10, border: "1px solid #e2e8f0", background: "#f8fafc" }}>
+                        <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
+                          <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0f172a" }}>{item.title}</span>
+                          {item.year && <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>{item.year}</span>}
+                        </div>
+                        {item.description && <p style={{ fontSize: "0.8rem", color: "#64748b", margin: "0.35rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
+                        {item.url && (
+                          <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.72rem", color: "#2DD4BF", textDecoration: "none", display: "inline-block", marginTop: 6 }}>
+                            View project →
+                          </a>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                ) : null}
               </SectionCard>
             )}
 
@@ -345,10 +386,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <SectionCard style={{ padding: "1rem" }}>
                   <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>Quick links</div>
                   {[
-                    { icon: "📋", label: "My Orders", href: "/orders" },
-                    { icon: "💼", label: "My Gigs", href: "/gigs/mine" },
-                    { icon: "💬", label: "Messages", href: "/messages" },
-                    { icon: "⚙️", label: "Settings", href: "/settings" },
+                    { label: "My Orders", href: "/orders", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> },
+                    { label: "My Gigs", href: "/gigs/mine", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
+                    { label: "Messages", href: "/messages", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
+                    { label: "Favorites", href: "/saved-talents", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
                   ].map(link => (
                     <Link key={link.href} href={link.href} style={{
                       display: "flex", alignItems: "center", gap: 10,
@@ -356,7 +397,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       color: "#334155", fontSize: "0.85rem", fontWeight: 500,
                       transition: "background 0.12s",
                     }}>
-                      <span>{link.icon}</span>
+                      <span style={{ color: "#64748b", display: "flex", alignItems: "center" }}>{link.icon}</span>
                       {link.label}
                     </Link>
                   ))}
@@ -376,25 +417,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             {/* Visitor: contact card */}
             {canMessage && (
               <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  <form action={startConversation.bind(null, user.id)}>
-                    <button type="submit" style={{
-                      width: "100%", padding: "0.75rem", borderRadius: 8,
-                      background: "#0f172a", color: "#fff", fontWeight: 700,
-                      fontSize: "0.82rem", border: "none", cursor: "pointer",
-                    }}>
-                      Message
-                    </button>
-                  </form>
-                  <form action={hireFromProfile.bind(null, user.id)}>
-                    <button type="submit" style={{
-                      width: "100%", padding: "0.75rem", borderRadius: 8,
-                      background: "rgba(45,212,191,0.08)", color: "#0d9488", fontWeight: 700,
-                      fontSize: "0.82rem", border: "1px solid rgba(45,212,191,0.3)", cursor: "pointer",
-                    }}>
-                      Hire
-                    </button>
-                  </form>
+                <ContactButtons recipientId={user.id} />
+                <div style={{ marginTop: "0.6rem" }}>
                   <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />
                 </div>
               </SectionCard>
@@ -425,6 +449,39 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               </div>
             </SectionCard>
 
+            {/* CV */}
+            {isOwnProfile ? (
+              <SectionCard style={{ padding: "1.25rem" }}>
+                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>CV / Resume</div>
+                <CvUpload currentCvUrl={user.cvUrl ?? null} />
+              </SectionCard>
+            ) : user.cvUrl ? (
+              <SectionCard style={{ padding: "1.25rem" }}>
+                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>CV / Resume</div>
+                <a
+                  href={user.cvUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "flex", alignItems: "center", gap: "0.6rem",
+                    padding: "0.65rem 0.9rem", borderRadius: 10,
+                    border: "1px solid #e2e8f0", background: "#f8fafc", textDecoration: "none",
+                  }}
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+                  </svg>
+                  <div>
+                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#0f172a" }}>Download CV</div>
+                    <div style={{ fontSize: "0.62rem", color: "#94a3b8" }}>PDF</div>
+                  </div>
+                  <svg style={{ marginLeft: "auto" }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                  </svg>
+                </a>
+              </SectionCard>
+            ) : null}
+
             {/* Wallet */}
             {wallet && (
               <SectionCard style={{ padding: "1.25rem" }}>
@@ -440,29 +497,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </div>
         </div>
 
-        {/* ── Edit section (own profile only) ── */}
+        {/* Logout */}
         {isOwnProfile && (
-          <div id="edit-profile" style={{ marginTop: "2rem", display: "flex", flexDirection: "column", gap: "1rem", maxWidth: 720 }}>
-            <h2 style={{ fontSize: "1.1rem", fontWeight: 700, color: "#0f172a", margin: "0 0 0.25rem" }}>Edit Profile</h2>
-
-            <SectionCard>
-              <SectionTitle>Profile Information</SectionTitle>
-              <EditProfileForm
-                initialRole={user.role ?? ""}
-                initialSkills={user.skills}
-                initialBio={user.bio ?? ""}
-                initialAvailability={user.availability ?? "available"}
-              />
-            </SectionCard>
-
-            <SectionCard>
-              <SectionTitle>Wallet</SectionTitle>
-              <LinkWallet currentWallet={user.walletAddress} />
-            </SectionCard>
-
-            <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem" }}>
-              <LogoutButton />
-            </div>
+          <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem", maxWidth: 720 }}>
+            <LogoutButton />
           </div>
         )}
 

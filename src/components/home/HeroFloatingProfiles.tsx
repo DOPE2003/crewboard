@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 interface FloatProfile {
   name: string | null;
@@ -37,15 +38,16 @@ function FloatCard({
   style: React.CSSProperties;
   animClass: string;
 }) {
+  const router = useRouter();
   const color = AVAIL_COLOR[profile.availability ?? "available"] ?? "#22c55e";
   const label = AVAIL_LABEL[profile.availability ?? "available"] ?? "Available";
   const visibleSkills = profile.skills.slice(0, 3);
 
   return (
-    <Link
-      href={`/u/${profile.twitterHandle}`}
+    <div
+      onClick={() => router.push(`/u/${profile.twitterHandle}`)}
       className={`hero-float-card ${animClass}`}
-      style={style}
+      style={{ ...style, cursor: "pointer" }}
     >
       {/* Header row */}
       <div style={{ display: "flex", alignItems: "center", gap: "0.6rem" }}>
@@ -122,21 +124,41 @@ function FloatCard({
         </div>
       )}
 
-      {/* Availability */}
+      {/* Availability + DM row */}
       <div className="hero-float-divider" style={{
         display: "flex",
         alignItems: "center",
+        justifyContent: "space-between",
         gap: "0.35rem",
         marginTop: "0.55rem",
         paddingTop: "0.5rem",
         borderTop: "1px solid rgba(0,0,0,0.06)",
       }}>
-        <span style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
-        <span className="hero-float-avail" style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", color: "rgba(0,0,0,0.5)", fontWeight: 500 }}>
-          {label}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+          <span style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
+          <span className="hero-float-avail" style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", color: "rgba(0,0,0,0.5)", fontWeight: 500 }}>
+            {label}
+          </span>
+        </div>
+        <Link
+          href={`/u/${profile.twitterHandle}`}
+          onClick={(e) => e.stopPropagation()}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 4,
+            fontSize: "0.6rem", fontWeight: 700, fontFamily: "Rajdhani, sans-serif",
+            letterSpacing: "0.06em", textTransform: "uppercase",
+            padding: "3px 9px", borderRadius: 6,
+            background: "#0f172a", color: "#fff", textDecoration: "none",
+            flexShrink: 0,
+          }}
+        >
+          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          DM
+        </Link>
       </div>
-    </Link>
+    </div>
   );
 }
 

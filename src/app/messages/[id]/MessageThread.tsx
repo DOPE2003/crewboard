@@ -1,9 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import PusherClient from "pusher-js";
-import { sendMessage, getMessages, markMessagesAsRead } from "@/actions/messages";
+import { sendMessage, markMessagesAsRead } from "@/actions/messages";
+import { containsSocial } from "@/lib/filterSocials";
 
 interface Msg {
   id: string;
@@ -16,6 +18,7 @@ interface Msg {
 interface Props {
   conversationId: string;
   currentUserId: string;
+  initialMessages?: Msg[];
 }
 
 function formatTime(iso: string) {
@@ -33,7 +36,6 @@ function formatDate(iso: string) {
   return d.toLocaleDateString([], { month: "short", day: "numeric" });
 }
 
-const SOCIAL_RE = /(@[a-zA-Z0-9_]{2,}|https?:\/\/|www\.|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|t\.me\/|discord\.gg\/|telegram\.me\/|x\.com\/|twitter\.com\/)/i;
 const GIG_PREFIX = "__GIGREQUEST__:";
 
 interface GigCard {
@@ -115,43 +117,38 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
   );
 }
 
-export default function MessageThread({ conversationId, currentUserId }: Props) {
-  const [messages, setMessages] = useState<Msg[]>([]);
+export default function MessageThread({ conversationId, currentUserId, initialMessages = [] }: Props) {
+  const router = useRouter();
+  const [messages, setMessages] = useState<Msg[]>(initialMessages);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
   const [socialWarning, setSocialWarning] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
   const threadBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const pusherRef = useRef<InstanceType<typeof PusherClient> | null>(null);
 
-  const scrollToBottom = useCallback((smooth = false) => {
+  const scrollToBottom = () => {
     const el = threadBodyRef.current;
     if (!el) return;
     el.scrollTop = el.scrollHeight;
-  }, []);
+  };
 
-  // Load initial messages
-  const loadMessages = useCallback(async () => {
-    try {
-      const data = await getMessages(conversationId);
-      setMessages(data);
-      await markMessagesAsRead(conversationId);
-    } catch { /* ignore */ }
-  }, [conversationId]);
-
+  // Mark messages as read on mount
   useEffect(() => {
-    loadMessages();
-  }, [loadMessages]);
+    markMessagesAsRead(conversationId).catch(() => {});
+  }, [conversationId]);
 
   // Pusher real-time subscription
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
     if (!key || !cluster) return;
+    if (pusherRef.current) return; // guard against double-mount in Strict Mode
 
-    let pusher: InstanceType<typeof PusherClient> | null = null;
     try {
-      pusher = new PusherClient(key, { cluster });
-      const channel = pusher.subscribe(`conversation-${conversationId}`);
+      pusherRef.current = new PusherClient(key, { cluster });
+      const channel = pusherRef.current.subscribe(`conversation-${conversationId}`);
       channel.bind("new-message", (msg: Msg) => {
         if (msg.senderId !== currentUserId) {
           setMessages((prev) => {
@@ -164,8 +161,9 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
 
     return () => {
       try {
-        pusher?.unsubscribe(`conversation-${conversationId}`);
-        pusher?.disconnect();
+        pusherRef.current?.unsubscribe(`conversation-${conversationId}`);
+        pusherRef.current?.disconnect();
+        pusherRef.current = null;
       } catch {}
     };
   }, [conversationId, currentUserId]);
@@ -173,12 +171,13 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
   // Scroll to bottom when messages change — scroll CONTAINER not the page
   useEffect(() => {
     scrollToBottom();
-  }, [messages, scrollToBottom]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [messages]);
 
   const send = async () => {
     if (!body.trim() || sending) return;
     const text = body.trim();
-    if (SOCIAL_RE.test(text)) {
+    if (containsSocial(text)) {
       setSocialWarning(true);
       return;
     }
@@ -200,8 +199,12 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
       setMessages((prev) =>
         prev.map((m) => (m.id === optimisticMsg.id ? confirmed : m))
       );
-    } catch {
+      setSendError(null);
+      router.refresh();
+    } catch (err: any) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));
+      setBody(text); // restore text so user doesn't lose their message
+      setSendError(err?.message ?? "Failed to send. Try again.");
     } finally {
       setSending(false);
       inputRef.current?.focus();
@@ -259,6 +262,12 @@ export default function MessageThread({ conversationId, currentUserId }: Props) 
       {socialWarning && (
         <div style={{ padding: "6px 14px", fontSize: "0.72rem", color: "#ef4444", background: "rgba(239,68,68,0.06)", borderTop: "1px solid rgba(239,68,68,0.15)" }}>
           Social handles, emails, and links are not allowed. Keep all contact on Crewboard.
+        </div>
+      )}
+      {sendError && (
+        <div style={{ padding: "6px 14px", fontSize: "0.72rem", color: "#ef4444", background: "rgba(239,68,68,0.06)", borderTop: "1px solid rgba(239,68,68,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <span>{sendError}</span>
+          <button onClick={() => setSendError(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", fontSize: "1rem", padding: 0, lineHeight: 1 }}>×</button>
         </div>
       )}
       <div className="msgs-input-row">

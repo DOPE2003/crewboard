@@ -122,6 +122,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           }
         }
       }
+
+      // Credentials sign-in — create welcome/signin notification too
+      if (account?.provider === "credentials" && user?.id) {
+        try {
+          const dbUser = await db.user.findUnique({
+            where: { id: user.id as string },
+            select: { id: true, name: true },
+          });
+          if (dbUser) {
+            const todayStart = new Date();
+            todayStart.setHours(0, 0, 0, 0);
+            const alreadyToday = await db.notification.findFirst({
+              where: { userId: dbUser.id, type: "signin", createdAt: { gte: todayStart } },
+              select: { id: true },
+            });
+            if (!alreadyToday) {
+              const firstName = (dbUser.name ?? "Builder").split(" ")[0];
+              await db.notification.create({
+                data: {
+                  userId: dbUser.id,
+                  type: "signin",
+                  title: `Welcome back, ${firstName}!`,
+                  body: "Good to see you again. Check out new builders, browse open projects, and update your availability.",
+                },
+              });
+            }
+          }
+        } catch { /* ignore notification errors */ }
+      }
+
       return true;
     },
 
@@ -130,10 +160,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (account) {
         // Fresh sign-in — stamp it
         token.issuedAt = Date.now();
-      } else if (!token.issuedAt || (token.issuedAt as number) < SESSION_VALID_FROM) {
-        // Old token — wipe it so NextAuth treats user as logged out
+      } else if (token.issuedAt && (token.issuedAt as number) < SESSION_VALID_FROM) {
+        // Token explicitly issued before the cutoff — wipe it
         return {} as typeof token;
       }
+      // Tokens with no issuedAt (issued before stamp was added) are allowed through —
+      // they'll be stamped next time the user refreshes/signs in.
 
       if (account?.provider === "credentials") {
         // Credentials sign-in — look up by email (user.id = DB id from authorize())
@@ -171,6 +203,27 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.profileComplete = fresh.profileComplete;
           }
         }
+      } else if (!token.userId && token.sub) {
+        // Recovery: userId missing from existing token (e.g. old JWT before userId field was added).
+        // For Credentials users token.sub = DB cuid; for Twitter users token.sub = Twitter providerAccountId.
+        try {
+          let recovered = await db.user.findUnique({
+            where: { id: token.sub },
+            select: { id: true, twitterHandle: true, profileComplete: true },
+          });
+          if (!recovered) {
+            // Twitter user — token.sub is the Twitter providerAccountId, not DB id
+            recovered = await db.user.findUnique({
+              where: { twitterId: token.sub },
+              select: { id: true, twitterHandle: true, profileComplete: true },
+            });
+          }
+          if (recovered) {
+            token.userId = recovered.id;
+            token.twitterHandle = recovered.twitterHandle;
+            token.profileComplete = recovered.profileComplete;
+          }
+        } catch { /* ignore recovery failure */ }
       } else if (token.twitterAccessToken && token.userId) {
         // Refresh avatar from Twitter API once per hour
         const lastRefresh = (token.imageRefreshedAt as number) ?? 0;

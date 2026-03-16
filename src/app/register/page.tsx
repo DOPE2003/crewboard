@@ -114,7 +114,7 @@ export default function RegisterPage() {
             style={{ width: "100%", display: "flex", alignItems: "center", justifyContent: "center", gap: 10, padding: "11px 14px", borderRadius: 10, border: "1px solid rgba(255,255,255,0.12)", background: "transparent", color: "inherit", cursor: "pointer", fontSize: "0.85rem", fontWeight: 600 }}
           >
             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
-            CONTINUE WITH X (uses your X photo)
+            CONTINUE WITH X
           </button>
 
           <div className="auth-foot" style={{ marginTop: "1.25rem", textAlign: "center" }}>

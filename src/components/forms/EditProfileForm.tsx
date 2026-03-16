@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { containsSocial } from "@/lib/filterSocials";
 
 const ROLES = [
   "KOL Manager",
@@ -44,11 +45,13 @@ interface Props {
   initialSkills: string[];
   initialBio: string;
   initialAvailability: string;
+  onClose?: () => void;
 }
 
-export default function EditProfileForm({ initialRole, initialSkills, initialBio, initialAvailability }: Props) {
+export default function EditProfileForm({ initialRole, initialSkills, initialBio, initialAvailability, onClose }: Props) {
   const router = useRouter();
-  const [isEditing, setIsEditing] = useState(false);
+  const panelMode = typeof onClose === "function";
+  const [isEditing, setIsEditing] = useState(panelMode);
 
   const [role, setRole] = useState(initialRole);
   const [skills, setSkills] = useState<string[]>(initialSkills);
@@ -89,11 +92,11 @@ export default function EditProfileForm({ initialRole, initialSkills, initialBio
     setBio(initialBio);
     setAvailability(initialAvailability || "available");
     setError("");
-    setIsEditing(false);
+    if (panelMode) onClose!();
+    else setIsEditing(false);
   }
 
-  const SOCIAL_RE = /(@[a-zA-Z0-9_]{2,}|https?:\/\/|www\.|[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}|t\.me\/|discord\.gg\/|telegram\.me\/|x\.com\/|twitter\.com\/)/i;
-  const bioHasSocial = SOCIAL_RE.test(bio);
+  const bioHasSocial = containsSocial(bio);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -110,7 +113,8 @@ export default function EditProfileForm({ initialRole, initialSkills, initialBio
       });
 
       if (res.ok) {
-        setIsEditing(false);
+        if (panelMode) onClose!();
+        else setIsEditing(false);
         router.refresh();
       } else {
         const data = await res.json().catch(() => ({}));
@@ -139,8 +143,6 @@ export default function EditProfileForm({ initialRole, initialSkills, initialBio
 
   return (
     <form onSubmit={handleSubmit} className="ob-form" style={{ marginTop: 0 }}>
-      <div className="dash-section-label" style={{ marginBottom: 12 }}>Edit Profile</div>
-
       {/* Role */}
       <div className="ob-field">
         <div className="dash-section-label">Role</div>
