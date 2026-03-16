@@ -80,7 +80,7 @@ export default async function HomePage() {
 
       {/* ── HERO ── */}
       <div style={{
-        minHeight: "88vh",
+        minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
