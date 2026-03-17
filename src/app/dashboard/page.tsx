@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 import db from "@/lib/db";
 import T from "@/components/ui/T";
+import OnboardingChecklist from "@/components/ui/OnboardingChecklist";
 
 export default async function DashboardPage() {
   const session = await auth();
@@ -10,7 +11,7 @@ export default async function DashboardPage() {
 
   const userId = session.user.userId;
 
-  const [dbUserRaw, notifications, recentConvos, activeOrderCount, completedOrderCount, profileViewCount] = await Promise.all([
+  const [dbUserRaw, notifications, recentConvos, activeOrderCount, completedOrderCount, profileViewCount, totalGigCount] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
       include: { gigs: { where: { status: "active" } } },
@@ -35,11 +36,20 @@ export default async function DashboardPage() {
     db.order.count({ where: { OR: [{ buyerId: userId }, { sellerId: userId }], status: { in: ["pending", "funded", "delivered"] } } }),
     db.order.count({ where: { OR: [{ buyerId: userId }, { sellerId: userId }], status: "completed" } }),
     db.notification.count({ where: { userId, type: "profile_view" } }),
+    db.gig.count({ where: { userId } }),
   ]);
 
   if (!dbUserRaw) redirect("/login");
 
   const dbUser = JSON.parse(JSON.stringify(dbUserRaw));
+
+  const onboardingStatus = {
+    // Only nudge email-signup users — Twitter users get avatar auto-set from X
+    needsAvatar: !dbUser.twitterId && !dbUser.image,
+    needsCv: !dbUser.cvUrl,
+    needsWallet: !dbUser.walletAddress,
+    needsGig: totalGigCount === 0,
+  };
 
   // Fetch the other participant for each conversation
   const otherParticipantIds = recentConvos.flatMap((c) =>
@@ -64,6 +74,9 @@ export default async function DashboardPage() {
   return (
     <main className="dash-main-wrap" style={{ minHeight: "100vh", paddingLeft: "1.5rem", paddingRight: "1.5rem", paddingBottom: "5rem" }}>
       <div style={{ maxWidth: 860, margin: "0 auto" }}>
+
+          {/* Onboarding checklist — shown until all 4 items complete */}
+        <OnboardingChecklist status={onboardingStatus} />
 
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>

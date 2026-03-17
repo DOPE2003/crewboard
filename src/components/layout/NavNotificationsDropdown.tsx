@@ -18,6 +18,7 @@ export interface NavNotif {
 interface Props {
   notifications: NavNotif[];
   unreadCount: number;
+  hasIncompleteOnboarding?: boolean;
 }
 
 function timeAgo(iso: string): string {
@@ -52,7 +53,7 @@ function notifIcon(type: string) {
   );
 }
 
-export default function NavNotificationsDropdown({ notifications: initialNotifs, unreadCount: initialUnread }: Props) {
+export default function NavNotificationsDropdown({ notifications: initialNotifs, unreadCount: initialUnread, hasIncompleteOnboarding = false }: Props) {
   const [open, setOpen] = useState(false);
   const [notifs, setNotifs] = useState<NavNotif[]>(initialNotifs);
   const [unread, setUnread] = useState(initialUnread);
@@ -187,6 +188,14 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
           }}>
             {unread > 99 ? "99+" : unread}
           </span>
+        )}
+        {unread === 0 && hasIncompleteOnboarding && (
+          <span style={{
+            position: "absolute", top: 3, right: 3,
+            width: 8, height: 8, borderRadius: "50%",
+            background: "#f59e0b",
+            border: "1.5px solid #fff",
+          }} />
         )}
       </button>
 

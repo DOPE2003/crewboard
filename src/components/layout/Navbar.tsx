@@ -18,7 +18,8 @@ export default async function Navbar() {
   const user = session?.user;
 
   // Fetch role + availability for the profile popup + unread notification count + gig count
-  let dbUser: { role: string | null; availability: string | null } | null = null;
+  let dbUser: { role: string | null; availability: string | null; image: string | null; cvUrl: string | null; walletAddress: string | null; twitterId: string | null } | null = null;
+  let hasIncompleteOnboarding = false;
   let unreadCount = 0;
   let gigsCount = 0;
   let navNotifications: NavNotif[] = [];
@@ -36,10 +37,10 @@ export default async function Navbar() {
   const userId = (user as any)?.userId as string | undefined;
   if (userId) {
     try {
-      const [dbUserRes, notifCount, gigCount, convs, recentNotifs] = await Promise.all([
+      const [dbUserRes, notifCount, gigCount, convs, recentNotifs, totalGigCount] = await Promise.all([
         db.user.findUnique({
           where: { id: userId },
-          select: { role: true, availability: true },
+          select: { role: true, availability: true, image: true, cvUrl: true, walletAddress: true, twitterId: true },
         }),
         db.notification.count({ where: { userId, read: false } }).catch(() => 0),
         db.gig.count({ where: { userId, status: "active" } }),
@@ -57,11 +58,21 @@ export default async function Navbar() {
           take: 10,
           select: { id: true, type: true, title: true, body: true, link: true, read: true, createdAt: true },
         }).catch(() => []),
+        db.gig.count({ where: { userId } }).catch(() => 0),
       ]);
       dbUser = dbUserRes;
       navNotifications = recentNotifs.map((n) => ({ ...n, createdAt: n.createdAt.toISOString() }));
       unreadCount = notifCount;
       gigsCount = gigCount;
+
+      if (dbUser) {
+        hasIncompleteOnboarding = (
+          (!dbUser.twitterId && !dbUser.image) ||
+          !dbUser.cvUrl ||
+          !dbUser.walletAddress ||
+          totalGigCount === 0
+        );
+      }
 
       // Fetch other participants' profiles
       const otherIds = convs.map((c) => c.participants.find((p) => p !== userId) ?? "").filter(Boolean);
@@ -190,7 +201,7 @@ export default async function Navbar() {
             <>
               <NavMessagesDropdown conversations={navConversations} totalUnread={totalMsgUnread} />
 
-              <NavNotificationsDropdown notifications={navNotifications} unreadCount={unreadCount} />
+              <NavNotificationsDropdown notifications={navNotifications} unreadCount={unreadCount} hasIncompleteOnboarding={hasIncompleteOnboarding} />
 
               {/* Orders dropdown */}
               <NavOrdersDropdown orders={navOrders} activeCount={activeOrderCount} />

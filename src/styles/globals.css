@@ -3422,3 +3422,122 @@ img { max-width: 100%; }
     padding: 1rem !important;
   }
 }
+
+/* ── Onboarding checklist card ── */
+.onboarding-card {
+  position: relative;
+  background: #fff;
+  border: 1.5px solid rgba(20,184,166,0.3);
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem 1.1rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 16px rgba(20,184,166,0.07);
+}
+.onboarding-dismiss {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.72rem;
+  color: #94a3b8;
+  padding: 4px 7px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: background 0.15s;
+}
+.onboarding-dismiss:hover { background: rgba(0,0,0,0.05); color: #64748b; }
+.onboarding-title {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 0.2rem;
+  padding-right: 2rem;
+}
+.onboarding-subtitle {
+  font-size: 0.72rem;
+  color: #64748b;
+  margin-bottom: 0.9rem;
+}
+.onboarding-progress-track {
+  height: 4px;
+  background: rgba(0,0,0,0.07);
+  border-radius: 99px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.onboarding-progress-fill {
+  height: 100%;
+  background: #14b8a6;
+  border-radius: 99px;
+  transition: width 0.4s ease;
+}
+.onboarding-items {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+.onboarding-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+.onboarding-item-left {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+}
+.onboarding-circle {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 2px solid #cbd5e1;
+  flex-shrink: 0;
+  display: inline-block;
+}
+.onboarding-check {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #22c55e;
+  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.55rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.onboarding-item-label {
+  font-size: 0.78rem;
+  color: #334155;
+  font-weight: 500;
+}
+.onboarding-item-label.onboarding-done {
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+.onboarding-action-btn {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #14b8a6;
+  text-decoration: none;
+  padding: 3px 10px;
+  border-radius: 99px;
+  border: 1.5px solid #14b8a6;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+.onboarding-action-btn:hover {
+  background: #14b8a6;
+  color: #fff;
+}
+@media (max-width: 480px) {
+  .onboarding-card { padding: 1rem; }
+  .onboarding-item { gap: 0.5rem; }
+  .onboarding-item-label { font-size: 0.74rem; }
+}
