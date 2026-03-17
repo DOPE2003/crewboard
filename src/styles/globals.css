@@ -3163,14 +3163,10 @@ img { max-width: 100%; }
 /* ── Page padding — correct for single-row nav on mobile ── */
 @media (max-width: 767px) {
   .page { padding-top: 70px; }
-}
 
-/* ── Hero section ── */
-@media (max-width: 767px) {
-  /* Pull hero up to fill the page padding-top gap so teal bg starts at navbar bottom */
-  .landing-hero {
-    margin-top: -70px;
-    padding-top: calc(70px + 2.5rem) !important;
+  /* Home page: extend teal gradient into the padding-top area so no white gap shows */
+  .landing-page-main {
+    background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(45,212,191,0.18) 0%, rgba(20,184,166,0.08) 40%, transparent 70%);
   }
 }
 @media (max-width: 700px) {

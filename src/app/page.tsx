@@ -76,7 +76,7 @@ export default async function HomePage() {
   ]);
 
   return (
-    <main className="page">
+    <main className="page landing-page-main">
 
       {/* ── HERO ── */}
       <div style={{
