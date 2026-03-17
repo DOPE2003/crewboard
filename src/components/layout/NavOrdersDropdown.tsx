@@ -99,7 +99,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
     position: "fixed", bottom: 0, left: 0, right: 0,
     background: "#fff", borderRadius: "20px 20px 0 0",
     boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
-    zIndex: 9999, maxHeight: "80vh",
+    zIndex: 9999, maxHeight: "75vh",
     display: "flex", flexDirection: "column",
   } : {
     position: "absolute", top: "calc(100% + 10px)", right: 0,
@@ -160,7 +160,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
           {isMobile && (
             <div
               onClick={() => setOpen(false)}
-              style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.35)" }}
+              style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.4)" }}
             />
           )}
 
@@ -169,14 +169,14 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
             {/* Drag handle */}
             {isMobile && (
               <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
-                <div style={{ width: 36, height: 4, borderRadius: 99, background: "rgba(0,0,0,0.15)" }} />
+                <div style={{ width: 40, height: 4, borderRadius: 99, background: "#ccc" }} />
               </div>
             )}
 
             {/* Header */}
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "0.85rem 1rem 0.6rem",
+              padding: "16px",
               borderBottom: "1px solid rgba(0,0,0,0.07)",
               flexShrink: 0,
             }}>
@@ -220,7 +220,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
                   </Link>
                 </div>
               ) : (
-                orders.map((o) => {
+                orders.slice(0, isMobile ? 5 : 8).map((o) => {
                   const color = STATUS_COLORS[o.status] ?? "#94a3b8";
                   const label = STATUS_LABELS[o.status] ?? o.status;
                   return (
@@ -230,7 +230,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
                       onClick={() => setOpen(false)}
                       style={{
                         display: "flex", alignItems: "center", gap: "0.75rem",
-                        padding: "0.75rem 1rem", textDecoration: "none",
+                        padding: isMobile ? "0 16px" : "0.75rem 1rem", minHeight: isMobile ? 64 : "auto", textDecoration: "none",
                         borderBottom: "1px solid rgba(0,0,0,0.05)",
                         background: "transparent",
                         transition: "background 0.12s",
@@ -277,11 +277,22 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
             </div>
 
             {/* Footer */}
-            <div style={{ padding: "0.6rem 1rem", borderTop: "1px solid rgba(0,0,0,0.07)", textAlign: "center", flexShrink: 0 }}>
+            <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
               <Link
                 href="/orders"
                 onClick={() => setOpen(false)}
-                style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "#0f172a", textDecoration: "none" }}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  height: isMobile ? 52 : "auto",
+                  width: "100%",
+                  fontFamily: "Rajdhani, sans-serif", fontWeight: 700,
+                  fontSize: isMobile ? "0.85rem" : "0.72rem",
+                  letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: isMobile ? "#fff" : "#0f172a",
+                  background: isMobile ? "#0f172a" : "none",
+                  borderRadius: isMobile ? 12 : 0,
+                  textDecoration: "none",
+                }}
               >
                 View All Orders
               </Link>
