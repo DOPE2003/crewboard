@@ -130,7 +130,16 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
         onMouseLeave={(e) => { e.currentTarget.style.background = open ? "rgba(0,0,0,0.06)" : "none"; e.currentTarget.style.color = open ? "#000" : "rgba(0,0,0,0.65)"; }}
       >
-        Orders
+        {isMobile ? (
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+            <rect x="9" y="3" width="6" height="4" rx="1"/>
+            <line x1="9" y1="12" x2="15" y2="12"/>
+            <line x1="9" y1="16" x2="12" y2="16"/>
+          </svg>
+        ) : (
+          "Orders"
+        )}
         {activeCount > 0 && (
           <span style={{
             minWidth: 15, height: 15, borderRadius: "999px",
