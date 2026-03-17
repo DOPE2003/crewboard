@@ -145,7 +145,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
     position: "fixed", bottom: 0, left: 0, right: 0,
     background: "#fff", borderRadius: "20px 20px 0 0",
     boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
-    zIndex: 9999, maxHeight: "80vh",
+    zIndex: 9999, maxHeight: "75vh",
     display: "flex", flexDirection: "column",
   } : {
     position: "absolute", top: "calc(100% + 10px)", right: 0,
@@ -205,7 +205,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
           {isMobile && (
             <div
               onClick={() => setOpen(false)}
-              style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.35)" }}
+              style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.4)" }}
             />
           )}
 
@@ -214,14 +214,14 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             {/* Drag handle */}
             {isMobile && (
               <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
-                <div style={{ width: 36, height: 4, borderRadius: 99, background: "rgba(0,0,0,0.15)" }} />
+                <div style={{ width: 40, height: 4, borderRadius: 99, background: "#ccc" }} />
               </div>
             )}
 
             {/* Header */}
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "0.85rem 1rem 0.6rem",
+              padding: "16px",
               borderBottom: "1px solid rgba(0,0,0,0.07)",
               flexShrink: 0,
             }}>
@@ -266,13 +266,13 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
                   No notifications yet
                 </div>
               ) : (
-                notifs.map((n) => (
+                notifs.slice(0, isMobile ? 5 : 10).map((n) => (
                   <button
                     key={n.id}
                     onClick={() => handleClick(n)}
                     style={{
                       width: "100%", display: "flex", alignItems: "flex-start", gap: "0.75rem",
-                      padding: "0.75rem 1rem", textAlign: "left",
+                      padding: isMobile ? "0 16px" : "0.75rem 1rem", minHeight: isMobile ? 60 : "auto", textAlign: "left",
                       borderBottom: "1px solid rgba(0,0,0,0.05)",
                       background: n.read ? "transparent" : "rgba(20,184,166,0.04)",
                       border: "none", cursor: "pointer",
@@ -313,11 +313,22 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             </div>
 
             {/* Footer */}
-            <div style={{ padding: "0.6rem 1rem", borderTop: "1px solid rgba(0,0,0,0.07)", textAlign: "center", flexShrink: 0 }}>
+            <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
               <Link
                 href="/notifications"
                 onClick={() => setOpen(false)}
-                style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.72rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "#0f172a", textDecoration: "none" }}
+                style={{
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  height: isMobile ? 52 : "auto",
+                  width: "100%",
+                  fontFamily: "Rajdhani, sans-serif", fontWeight: 700,
+                  fontSize: isMobile ? "0.85rem" : "0.72rem",
+                  letterSpacing: "0.1em", textTransform: "uppercase",
+                  color: isMobile ? "#fff" : "#0f172a",
+                  background: isMobile ? "#0f172a" : "none",
+                  borderRadius: isMobile ? 12 : 0,
+                  textDecoration: "none",
+                }}
               >
                 View All Notifications
               </Link>
