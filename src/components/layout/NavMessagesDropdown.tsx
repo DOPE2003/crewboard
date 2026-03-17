@@ -88,20 +88,22 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
     if (next) window.dispatchEvent(new CustomEvent("nav-popup-open", { detail: { id: "messages" } }));
   }
 
-  const filtered = conversations.filter((c) => {
-    if (!query.trim()) return true;
-    const q = query.toLowerCase();
-    return (
-      c.otherUser?.name?.toLowerCase().includes(q) ||
-      c.otherUser?.twitterHandle?.toLowerCase().includes(q)
-    );
-  });
+  const filtered = conversations
+    .filter((c) => {
+      if (!query.trim()) return true;
+      const q = query.toLowerCase();
+      return (
+        c.otherUser?.name?.toLowerCase().includes(q) ||
+        c.otherUser?.twitterHandle?.toLowerCase().includes(q)
+      );
+    })
+    .slice(0, isMobile ? 5 : 8);
 
   const panelStyle: React.CSSProperties = isMobile ? {
     position: "fixed", bottom: 0, left: 0, right: 0,
     background: "#fff", borderRadius: "20px 20px 0 0",
     boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
-    zIndex: 9999, maxHeight: "80vh",
+    zIndex: 9999, maxHeight: "75vh",
     display: "flex", flexDirection: "column",
   } : {
     position: "absolute", top: "calc(100% + 10px)", right: 0,
@@ -152,7 +154,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
           {isMobile && (
             <div
               onClick={() => setOpen(false)}
-              style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.35)" }}
+              style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.4)" }}
             />
           )}
 
@@ -161,14 +163,14 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
             {/* Drag handle */}
             {isMobile && (
               <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
-                <div style={{ width: 36, height: 4, borderRadius: 99, background: "rgba(0,0,0,0.15)" }} />
+                <div style={{ width: 40, height: 4, borderRadius: 99, background: "#ccc" }} />
               </div>
             )}
 
             {/* Header */}
             <div style={{
               display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "0.85rem 1rem 0.6rem",
+              padding: "16px",
               borderBottom: "1px solid rgba(0,0,0,0.07)",
               flexShrink: 0,
             }}>
@@ -239,7 +241,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
                     onClick={() => setOpen(false)}
                     style={{
                       display: "flex", alignItems: "center", gap: "0.75rem",
-                      padding: "0.7rem 1rem", textDecoration: "none",
+                      padding: "0 16px", minHeight: 64, textDecoration: "none",
                       borderBottom: "1px solid rgba(0,0,0,0.05)",
                       background: c.unread > 0 ? "rgba(20,184,166,0.04)" : "transparent",
                       transition: "background 0.12s",
@@ -305,14 +307,21 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
             </div>
 
             {/* Footer */}
-            <div style={{ padding: "0.6rem 1rem", borderTop: "1px solid rgba(0,0,0,0.07)", textAlign: "center", flexShrink: 0 }}>
+            <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
               <Link
                 href="/messages"
                 onClick={() => setOpen(false)}
                 style={{
-                  fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.72rem",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  height: isMobile ? 52 : "auto",
+                  width: "100%",
+                  fontFamily: "Rajdhani, sans-serif", fontWeight: 700,
+                  fontSize: isMobile ? "0.85rem" : "0.72rem",
                   letterSpacing: "0.1em", textTransform: "uppercase",
-                  color: "#0f172a", textDecoration: "none",
+                  color: isMobile ? "#fff" : "#0f172a",
+                  background: isMobile ? "#0f172a" : "none",
+                  borderRadius: isMobile ? 12 : 0,
+                  textDecoration: "none",
                 }}
               >
                 Open Inbox
