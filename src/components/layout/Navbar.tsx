@@ -2,11 +2,8 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import NavSearch from "./NavSearch";
-import NavMobileMenu from "./NavMobileMenu";
 import NavProfileMenu from "./NavProfileMenu";
-import NavMessagesDropdown from "./NavMessagesDropdown";
-import NavNotificationsDropdown from "./NavNotificationsDropdown";
-import NavOrdersDropdown from "./NavOrdersDropdown";
+import NavControlsClient from "./NavControlsClient";
 import NavCategoryGroup from "./NavCategoryGroup";
 import type { NavNotif } from "./NavNotificationsDropdown";
 import type { NavOrder } from "./NavOrdersDropdown";
@@ -196,17 +193,18 @@ export default async function Navbar() {
             <NavSearch />
           </div>
 
-          {/* Icons — logged in only */}
-          {user && (
-            <>
-              <NavMessagesDropdown conversations={navConversations} totalUnread={totalMsgUnread} />
-
-              <NavNotificationsDropdown notifications={navNotifications} unreadCount={unreadCount} hasIncompleteOnboarding={hasIncompleteOnboarding} />
-
-              {/* Orders dropdown */}
-              <NavOrdersDropdown orders={navOrders} activeCount={activeOrderCount} />
-
-              {/* Profile avatar with dropdown */}
+          {/* Icons + hamburger — single client component owns open state */}
+          <NavControlsClient
+            loggedIn={!!user}
+            conversations={navConversations}
+            totalUnread={totalMsgUnread}
+            notifications={navNotifications}
+            unreadCount={unreadCount}
+            orders={navOrders}
+            activeCount={activeOrderCount}
+            hasIncompleteOnboarding={hasIncompleteOnboarding}
+          >
+            {user && (
               <NavProfileMenu
                 image={user.image ?? null}
                 name={user.name ?? null}
@@ -216,15 +214,11 @@ export default async function Navbar() {
                 unreadCount={unreadCount}
                 gigsCount={gigsCount}
               />
-            </>
-          )}
-
-          {!user && (
-            <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
-          )}
-
-          {/* Hamburger — mobile only */}
-          <NavMobileMenu />
+            )}
+            {!user && (
+              <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
+            )}
+          </NavControlsClient>
         </div>
       </div>
 

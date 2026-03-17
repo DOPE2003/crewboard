@@ -1,8 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const CATEGORIES = [
   {
@@ -41,20 +40,17 @@ const CATEGORIES = [
   },
 ];
 
-export default function NavMobileMenu() {
-  const [open, setOpen] = useState(false);
+interface Props {
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
+}
+
+export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
   const [expanded, setExpanded] = useState<string | null>(null);
-  const pathname = usePathname();
-  const drawerRef = useRef<HTMLDivElement>(null);
 
-  // Close on route change
-  useEffect(() => { setOpen(false); setExpanded(null); }, [pathname]);
-
-  // Lock body scroll when drawer open
-  useEffect(() => {
-    document.body.style.overflow = open ? "hidden" : "";
-    return () => { document.body.style.overflow = ""; };
-  }, [open]);
+  // Reset accordion when drawer closes
+  useEffect(() => { if (!isOpen) setExpanded(null); }, [isOpen]);
 
   function toggleAccordion(label: string) {
     setExpanded((prev) => (prev === label ? null : label));
@@ -65,11 +61,11 @@ export default function NavMobileMenu() {
       {/* Hamburger button */}
       <button
         className="nav-hamburger"
-        onClick={() => setOpen((o) => !o)}
-        aria-label={open ? "Close menu" : "Open menu"}
+        onClick={() => isOpen ? onClose() : onOpen()}
+        aria-label={isOpen ? "Close menu" : "Open menu"}
         style={{ minWidth: 44, minHeight: 44, display: "flex", alignItems: "center", justifyContent: "center" }}
       >
-        {open ? (
+        {isOpen ? (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
@@ -80,11 +76,11 @@ export default function NavMobileMenu() {
         )}
       </button>
 
-      {open && (
+      {isOpen && (
         <>
           {/* Backdrop */}
           <div
-            onClick={() => setOpen(false)}
+            onClick={onClose}
             style={{
               position: "fixed",
               inset: 0,
@@ -95,7 +91,6 @@ export default function NavMobileMenu() {
 
           {/* Drawer */}
           <div
-            ref={drawerRef}
             style={{
               position: "fixed",
               top: 0,
@@ -127,7 +122,7 @@ export default function NavMobileMenu() {
                 Browse Categories
               </span>
               <button
-                onClick={() => setOpen(false)}
+                onClick={onClose}
                 aria-label="Close menu"
                 style={{
                   background: "none",
@@ -202,7 +197,7 @@ export default function NavMobileMenu() {
                       <Link
                         key={item.href}
                         href={item.href}
-                        onClick={() => setOpen(false)}
+                        onClick={onClose}
                         style={{
                           display: "flex",
                           alignItems: "center",
@@ -233,7 +228,7 @@ export default function NavMobileMenu() {
             <div style={{ padding: "1rem 1.25rem", borderTop: "1px solid rgba(0,0,0,0.07)" }}>
               <Link
                 href="/talent"
-                onClick={() => setOpen(false)}
+                onClick={onClose}
                 style={{
                   display: "block",
                   textAlign: "center",

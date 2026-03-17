@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const STATUS_COLORS: Record<string, string> = {
   pending:   "#f59e0b",
@@ -45,13 +44,14 @@ export interface NavOrder {
 interface Props {
   orders: NavOrder[];
   activeCount: number;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
-export default function NavOrdersDropdown({ orders, activeCount }: Props) {
-  const [open, setOpen] = useState(false);
+export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen, onClose }: Props) {
   const [isMobile, setIsMobile] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 767);
@@ -60,40 +60,15 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
-
-  // Close when another nav popup opens
-  useEffect(() => {
-    const handler = (e: CustomEvent) => {
-      if (e.detail.id !== "orders") setOpen(false);
-    };
-    window.addEventListener("nav-popup-open", handler as EventListener);
-    return () => window.removeEventListener("nav-popup-open", handler as EventListener);
-  }, []);
-
   // Click-outside (desktop only)
   useEffect(() => {
     if (isMobile) return;
     const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) onClose();
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [isMobile]);
-
-  // Body scroll lock on mobile
-  useEffect(() => {
-    if (open && isMobile) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
-    }
-  }, [open, isMobile]);
-
-  function handleOpen() {
-    const next = !open;
-    setOpen(next);
-    if (next) window.dispatchEvent(new CustomEvent("nav-popup-open", { detail: { id: "orders" } }));
-  }
+  }, [isMobile]); // onClose is stable in behaviour
 
   const panelStyle: React.CSSProperties = isMobile ? {
     position: "fixed", bottom: 0, left: 0, right: 0,
@@ -114,12 +89,12 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
     <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
       {/* Trigger button */}
       <button
-        onClick={handleOpen}
+        onClick={() => isOpen ? onClose() : onOpen()}
         style={{
           fontFamily: "Rajdhani, sans-serif", fontWeight: 700,
           fontSize: "0.78rem", letterSpacing: "0.06em", textTransform: "uppercase",
-          color: open ? "#000" : "rgba(0,0,0,0.65)",
-          background: open ? "rgba(0,0,0,0.06)" : "none",
+          color: isOpen ? "#000" : "rgba(0,0,0,0.65)",
+          background: isOpen ? "rgba(0,0,0,0.06)" : "none",
           border: "none", cursor: "pointer",
           padding: "0.3rem 0.7rem", borderRadius: 6,
           transition: "background 0.15s, color 0.15s",
@@ -128,7 +103,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
         }}
         className="nav-orders-link"
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = open ? "rgba(0,0,0,0.06)" : "none"; e.currentTarget.style.color = open ? "#000" : "rgba(0,0,0,0.65)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = isOpen ? "rgba(0,0,0,0.06)" : "none"; e.currentTarget.style.color = isOpen ? "#000" : "rgba(0,0,0,0.65)"; }}
       >
         {isMobile ? (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
@@ -154,12 +129,12 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
         )}
       </button>
 
-      {open && (
+      {isOpen && (
         <>
           {/* Backdrop — mobile only */}
           {isMobile && (
             <div
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.4)" }}
             />
           )}
@@ -191,14 +166,14 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
               <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
                 <Link
                   href="/orders"
-                  onClick={() => setOpen(false)}
+                  onClick={onClose}
                   style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}
                 >
                   View all
                 </Link>
                 {isMobile && (
                   <button
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
                     aria-label="Close"
                   >
@@ -215,7 +190,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
               {orders.length === 0 ? (
                 <div style={{ padding: "2rem 1rem", textAlign: "center", fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", color: "rgba(0,0,0,0.4)" }}>
                   No orders yet.{" "}
-                  <Link href="/gigs" onClick={() => setOpen(false)} style={{ color: "#14b8a6", textDecoration: "none" }}>
+                  <Link href="/gigs" onClick={onClose} style={{ color: "#14b8a6", textDecoration: "none" }}>
                     Browse gigs →
                   </Link>
                 </div>
@@ -227,7 +202,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
                     <Link
                       key={o.id}
                       href={`/orders/${o.id}`}
-                      onClick={() => setOpen(false)}
+                      onClick={onClose}
                       style={{
                         display: "flex", alignItems: "center", gap: "0.75rem",
                         padding: isMobile ? "0 16px" : "0.75rem 1rem", minHeight: isMobile ? 64 : "auto", textDecoration: "none",
@@ -280,7 +255,7 @@ export default function NavOrdersDropdown({ orders, activeCount }: Props) {
             <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
               <Link
                 href="/orders"
-                onClick={() => setOpen(false)}
+                onClick={onClose}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center",
                   height: isMobile ? 52 : "auto",

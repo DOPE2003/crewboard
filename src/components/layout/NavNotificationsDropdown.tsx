@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { markAllNotificationsAsRead, markNotificationRead } from "@/actions/notifications";
 
 export interface NavNotif {
@@ -19,6 +19,9 @@ interface Props {
   notifications: NavNotif[];
   unreadCount: number;
   hasIncompleteOnboarding?: boolean;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
 function timeAgo(iso: string): string {
@@ -53,14 +56,12 @@ function notifIcon(type: string) {
   );
 }
 
-export default function NavNotificationsDropdown({ notifications: initialNotifs, unreadCount: initialUnread, hasIncompleteOnboarding = false }: Props) {
-  const [open, setOpen] = useState(false);
+export default function NavNotificationsDropdown({ notifications: initialNotifs, unreadCount: initialUnread, hasIncompleteOnboarding = false, isOpen, onOpen, onClose }: Props) {
   const [notifs, setNotifs] = useState<NavNotif[]>(initialNotifs);
   const [unread, setUnread] = useState(initialUnread);
   const [markingAll, setMarkingAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
   const router = useRouter();
 
   useEffect(() => {
@@ -70,45 +71,20 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
-
   useEffect(() => {
     setNotifs(initialNotifs);
     setUnread(initialUnread);
   }, [initialNotifs, initialUnread]);
 
-  // Close when another nav popup opens
-  useEffect(() => {
-    const handler = (e: CustomEvent) => {
-      if (e.detail.id !== "notifications") setOpen(false);
-    };
-    window.addEventListener("nav-popup-open", handler as EventListener);
-    return () => window.removeEventListener("nav-popup-open", handler as EventListener);
-  }, []);
-
   // Click-outside (desktop only)
   useEffect(() => {
     if (isMobile) return;
     const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) onClose();
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [isMobile]);
-
-  // Body scroll lock on mobile
-  useEffect(() => {
-    if (open && isMobile) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
-    }
-  }, [open, isMobile]);
-
-  function handleOpen() {
-    const next = !open;
-    setOpen(next);
-    if (next) window.dispatchEvent(new CustomEvent("nav-popup-open", { detail: { id: "notifications" } }));
-  }
+  }, [isMobile]); // onClose is stable in behaviour
 
   async function handleMarkAll() {
     const prevNotifs = notifs;
@@ -128,7 +104,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
   }
 
   async function handleClick(n: NavNotif) {
-    setOpen(false);
+    onClose();
     if (!n.read) {
       setNotifs((prev) => prev.map((x) => x.id === n.id ? { ...x, read: true } : x));
       setUnread((c) => Math.max(0, c - 1));
@@ -160,17 +136,17 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
     <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
       {/* Bell button */}
       <button
-        onClick={handleOpen}
+        onClick={() => isOpen ? onClose() : onOpen()}
         aria-label="Notifications"
         style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: 34, height: 34, borderRadius: 8, background: "none",
           border: "none", cursor: "pointer", position: "relative",
-          color: open ? "#000" : "rgba(0,0,0,0.5)",
+          color: isOpen ? "#000" : "rgba(0,0,0,0.5)",
           transition: "color 0.2s, background 0.2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = open ? "#000" : "rgba(0,0,0,0.5)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = isOpen ? "#000" : "rgba(0,0,0,0.5)"; }}
       >
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -199,12 +175,12 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
         )}
       </button>
 
-      {open && (
+      {isOpen && (
         <>
           {/* Backdrop — mobile only */}
           {isMobile && (
             <div
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.4)" }}
             />
           )}
@@ -242,12 +218,12 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
                     Mark all read
                   </button>
                 )}
-                <Link href="/notifications" style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }} onClick={() => setOpen(false)}>
+                <Link href="/notifications" style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }} onClick={onClose}>
                   View all
                 </Link>
                 {isMobile && (
                   <button
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
                     aria-label="Close"
                   >
@@ -316,7 +292,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
               <Link
                 href="/notifications"
-                onClick={() => setOpen(false)}
+                onClick={onClose}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center",
                   height: isMobile ? 52 : "auto",

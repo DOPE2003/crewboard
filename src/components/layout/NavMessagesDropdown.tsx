@@ -2,20 +2,19 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 interface ConvUser {
   id: string;
   name: string | null;
   twitterHandle: string;
   image: string | null;
-  lastSeenAt: string | null; // ISO string
+  lastSeenAt: string | null;
 }
 
 interface Conv {
   id: string;
   lastMessage: string | null;
-  lastMessageTime: string | null; // ISO
+  lastMessageTime: string | null;
   unread: number;
   otherUser: ConvUser | null;
 }
@@ -23,6 +22,9 @@ interface Conv {
 interface Props {
   conversations: Conv[];
   totalUnread: number;
+  isOpen: boolean;
+  onOpen: () => void;
+  onClose: () => void;
 }
 
 function timeAgo(iso: string | null): string {
@@ -39,12 +41,10 @@ function isOnline(iso: string | null): boolean {
   return Date.now() - new Date(iso).getTime() < 3 * 60 * 1000;
 }
 
-export default function NavMessagesDropdown({ conversations, totalUnread }: Props) {
-  const [open, setOpen] = useState(false);
+export default function NavMessagesDropdown({ conversations, totalUnread, isOpen, onOpen, onClose }: Props) {
   const [query, setQuery] = useState("");
   const [isMobile, setIsMobile] = useState(false);
   const wrapRef = useRef<HTMLDivElement>(null);
-  const pathname = usePathname();
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 767);
@@ -53,40 +53,15 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  useEffect(() => { setOpen(false); }, [pathname]);
-
-  // Close when another nav popup opens
-  useEffect(() => {
-    const handler = (e: CustomEvent) => {
-      if (e.detail.id !== "messages") setOpen(false);
-    };
-    window.addEventListener("nav-popup-open", handler as EventListener);
-    return () => window.removeEventListener("nav-popup-open", handler as EventListener);
-  }, []);
-
   // Click-outside (desktop only)
   useEffect(() => {
     if (isMobile) return;
     const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) setOpen(false);
+      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) onClose();
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
-  }, [isMobile]);
-
-  // Body scroll lock on mobile
-  useEffect(() => {
-    if (open && isMobile) {
-      document.body.style.overflow = "hidden";
-      return () => { document.body.style.overflow = ""; };
-    }
-  }, [open, isMobile]);
-
-  function handleOpen() {
-    const next = !open;
-    setOpen(next);
-    if (next) window.dispatchEvent(new CustomEvent("nav-popup-open", { detail: { id: "messages" } }));
-  }
+  }, [isMobile]); // onClose always calls setOpenPanel(null) — stable behaviour
 
   const filtered = conversations
     .filter((c) => {
@@ -118,17 +93,17 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
     <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
       {/* Messages button */}
       <button
-        onClick={handleOpen}
+        onClick={() => isOpen ? onClose() : onOpen()}
         aria-label="Messages"
         style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: 34, height: 34, borderRadius: 8, background: "none",
           border: "none", cursor: "pointer", position: "relative",
-          color: open ? "#000" : "rgba(0,0,0,0.5)",
+          color: isOpen ? "#000" : "rgba(0,0,0,0.5)",
           transition: "color 0.2s, background 0.2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = open ? "#000" : "rgba(0,0,0,0.5)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = isOpen ? "#000" : "rgba(0,0,0,0.5)"; }}
       >
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -148,12 +123,12 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
         )}
       </button>
 
-      {open && (
+      {isOpen && (
         <>
           {/* Backdrop — mobile only */}
           {isMobile && (
             <div
-              onClick={() => setOpen(false)}
+              onClick={onClose}
               style={{ position: "fixed", inset: 0, zIndex: 9998, background: "rgba(0,0,0,0.4)" }}
             />
           )}
@@ -181,13 +156,13 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
                 <Link
                   href="/messages"
                   style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}
-                  onClick={() => setOpen(false)}
+                  onClick={onClose}
                 >
                   View all
                 </Link>
                 {isMobile && (
                   <button
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
                     aria-label="Close"
                   >
@@ -238,7 +213,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
                   <Link
                     key={c.id}
                     href={`/messages/${c.id}`}
-                    onClick={() => setOpen(false)}
+                    onClick={onClose}
                     style={{
                       display: "flex", alignItems: "center", gap: "0.75rem",
                       padding: "0 16px", minHeight: 64, textDecoration: "none",
@@ -310,7 +285,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread }: Prop
             <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
               <Link
                 href="/messages"
-                onClick={() => setOpen(false)}
+                onClick={onClose}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center",
                   height: isMobile ? 52 : "auto",
