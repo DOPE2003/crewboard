@@ -22,6 +22,7 @@ export default async function ConversationPage({
 }) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
+
   if (!userId) redirect("/login");
 
   const { id } = await params;
@@ -70,12 +71,14 @@ export default async function ConversationPage({
 
   const otherIds = conversations.map((c) =>
     c.participants.find((p) => p !== userId) ?? ""
-  );
-  const sidebarUsers = await db.user.findMany({
+  ).filter(Boolean);
+
+  const otherUsers = await db.user.findMany({
     where: { id: { in: otherIds } },
     select: { id: true, name: true, twitterHandle: true, image: true, lastSeenAt: true },
   });
-  const userMap = Object.fromEntries(sidebarUsers.map((u) => [u.id, u]));
+
+  const userMap = Object.fromEntries(otherUsers.map((u) => [u.id, u]));
 
   const unreadCounts = await Promise.all(
     conversations.map((c) =>
@@ -91,6 +94,8 @@ export default async function ConversationPage({
     orderBy: { createdAt: "asc" },
     select: { id: true, senderId: true, body: true, createdAt: true, read: true },
   });
+
+  const seen = lastSeenLabel(other?.lastSeenAt ?? null);
 
   return (
     <main className="page">
@@ -175,36 +180,38 @@ export default async function ConversationPage({
                 <path d="M19 12H5M12 5l-7 7 7 7"/>
               </svg>
             </Link>
-            <div className="msgs-thread-avatar" style={{ position: "relative" }}>
-              {other?.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={other.image} alt="" />
-              ) : (
-                <div className="msgs-thread-avatar-fallback" />
-              )}
-              {(() => {
-                const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
-                return (
-                  <span style={{
-                    position: "absolute", bottom: 1, right: 1,
-                    width: 11, height: 11, borderRadius: "50%",
-                    background: online ? "#22c55e" : "#94a3b8",
-                    border: "2px solid #fff",
-                  }} />
-                );
-              })()}
-            </div>
-            <div>
-              <div className="msgs-thread-name">
-                {other?.name ?? other?.twitterHandle ?? "Unknown"}
+            <Link href={`/u/${other?.twitterHandle}`} style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", minWidth: 0 }}>
+              <div className="msgs-thread-avatar" style={{ position: "relative" }}>
+                {other?.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={other.image} alt="" />
+                ) : (
+                  <div className="msgs-thread-avatar-fallback" />
+                )}
+                {(() => {
+                  const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+                  return (
+                    <span style={{
+                      position: "absolute", bottom: 1, right: 1,
+                      width: 11, height: 11, borderRadius: "50%",
+                      background: online ? "#22c55e" : "#94a3b8",
+                      border: "2px solid #fff",
+                    }} />
+                  );
+                })()}
               </div>
-              <div className="msgs-thread-role" style={{ color: (() => {
-                const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
-                return online ? "#22c55e" : "rgba(0,0,0,0.4)";
-              })() }}>
-                {lastSeenLabel(other?.lastSeenAt ?? null)}
+              <div>
+                <div className="msgs-thread-name">
+                  {other?.name ?? other?.twitterHandle ?? "Unknown"}
+                </div>
+                <div className="msgs-thread-role" style={{ color: (() => {
+                  const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+                  return online ? "#22c55e" : "rgba(0,0,0,0.4)";
+                })() }}>
+                  {lastSeenLabel(other?.lastSeenAt ?? null)}
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
 
           <MessageThread
@@ -218,14 +225,14 @@ export default async function ConversationPage({
         <div className="msgs-profile-sidebar">
           <div className="msgs-profile-sidebar-inner">
             <div className="msgs-ps-header">
-              <div className="msgs-ps-avatar">
+              <Link href={`/u/${other?.twitterHandle}`} className="msgs-ps-avatar" style={{ display: "block", cursor: "pointer", transition: "transform 0.2s" }}>
                 {other?.image ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={other.image} alt="" />
                 ) : (
                   <div className="msgs-ps-avatar-fallback" />
                 )}
-              </div>
+              </Link>
               <div className="msgs-ps-name-row">
                 <div className="msgs-ps-name">{other?.name ?? other?.twitterHandle}</div>
                 {other?.isOG && <OGBadge />}
@@ -272,7 +279,7 @@ export default async function ConversationPage({
             )}
 
             <div className="msgs-ps-actions">
-              <Link href={`/u/${other?.twitterHandle}`} className="btn-secondary" style={{ width: "100%", fontSize: "0.75rem", height: "40px" }}>
+              <Link href={`/u/${other?.twitterHandle}`} className="btn-secondary" style={{ width: "100%", fontSize: "0.75rem", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
                 View Full Profile
               </Link>
               <Link 
