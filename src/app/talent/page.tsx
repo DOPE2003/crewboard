@@ -106,7 +106,7 @@ export default async function TalentPage({
                 display: "inline-flex",
                 fontFamily: "Space Mono, monospace",
                 fontSize: "0.7rem",
-                color: "rgba(0,0,0,0.4)",
+                color: "var(--foreground)",
                 textDecoration: "none",
                 letterSpacing: "0.04em",
               }}

@@ -49,13 +49,13 @@ export default function CvUpload({ currentCvUrl }: Props) {
   return (
     <div>
       {cvUrl ? (
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1rem", borderRadius: 10, border: "1px solid #e2e8f0", background: "#f8fafc" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem 1rem", borderRadius: 10, border: "1px solid var(--card-border)", background: "rgba(var(--foreground-rgb), 0.02)" }}>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
             <line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/>
           </svg>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "#0f172a" }}>CV / Resume</div>
+            <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--foreground)" }}>CV / Resume</div>
             <div style={{ fontSize: "0.68rem", color: "#94a3b8", marginTop: 1 }}>PDF uploaded</div>
           </div>
           <a
@@ -81,7 +81,7 @@ export default function CvUpload({ currentCvUrl }: Props) {
         <label style={{
           display: "flex", alignItems: "center", gap: "0.6rem",
           padding: "0.7rem 1rem", borderRadius: 10,
-          border: "2px dashed #cbd5e1", background: "#f8fafc",
+          border: "2px dashed var(--card-border)", background: "rgba(var(--foreground-rgb), 0.02)",
           cursor: uploading ? "wait" : "pointer",
           transition: "border-color 0.15s",
         }}>
@@ -90,7 +90,7 @@ export default function CvUpload({ currentCvUrl }: Props) {
             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
           </svg>
           <div>
-            <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "#0f172a" }}>
+            <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--foreground)" }}>
               {uploading ? "Uploading…" : "Upload CV / Resume"}
             </div>
             <div style={{ fontSize: "0.65rem", color: "#94a3b8", marginTop: 1 }}>PDF only · max 5 MB</div>

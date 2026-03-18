@@ -81,7 +81,7 @@ export default async function DashboardPage() {
         {/* Header */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
-            <h1 style={{ fontSize: "1.4rem", fontWeight: 700, color: "#0f172a" }}>
+            <h1 style={{ fontSize: "1.4rem", fontWeight: 700, color: "var(--foreground)" }}>
               <T k="dash.welcome" />, {dbUser.name?.split(" ")[0] ?? <T k="dash.builder" />}
             </h1>
             <p style={{ fontSize: "0.78rem", color: "#94a3b8", marginTop: 3 }}>
@@ -91,7 +91,7 @@ export default async function DashboardPage() {
           <div style={{ display: "flex", gap: "0.6rem", alignItems: "center" }}>
             <Link href={`/u/${dbUser.twitterHandle}`} style={{
               fontSize: "0.75rem", fontWeight: 600, padding: "7px 16px", borderRadius: 99,
-              border: "1px solid rgba(0,0,0,0.12)", color: "#0f172a", textDecoration: "none",
+              border: "1px solid rgba(0,0,0,0.12)", color: "var(--foreground)", textDecoration: "none",
             }}>
               <T k="dash.viewProfile" />
             </Link>
@@ -112,8 +112,8 @@ export default async function DashboardPage() {
             { label: "Completed",        value: completedOrderCount },
             { label: "Profile Views",    value: profileViewCount },
           ]).map((s) => (
-            <div key={s.label} style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
-              <div style={{ fontFamily: "Space Mono,monospace", fontSize: "1.5rem", fontWeight: 700, color: "#0f172a" }}>{s.value}</div>
+            <div key={s.label} style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
+              <div style={{ fontFamily: "Space Mono,monospace", fontSize: "1.5rem", fontWeight: 700, color: "var(--foreground)" }}>{s.value}</div>
               <div style={{ fontSize: "0.6rem", fontWeight: 600, color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.1em", marginTop: 6 }}>{s.label}</div>
             </div>
           ))}
@@ -121,7 +121,7 @@ export default async function DashboardPage() {
 
         {/* Notifications + Messages */}
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "1.25rem" }} className="dash-two-col">
-          <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
+          <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.9rem" }}>
               <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8" }}><T k="dash.notifications" /></span>
               <Link href="/notifications" style={{ fontSize: "0.65rem", color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}><T k="dash.viewAll" /></Link>
@@ -134,7 +134,7 @@ export default async function DashboardPage() {
                   <div key={n.id} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
                     <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#2DD4BF", flexShrink: 0, marginTop: 5 }} />
                     <div>
-                      <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "#0f172a" }}>{n.title}</div>
+                      <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--foreground)" }}>{n.title}</div>
                       <div style={{ fontSize: "0.65rem", color: "#94a3b8", marginTop: 1 }}>{n.body}</div>
                     </div>
                   </div>
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
             )}
           </div>
 
-          <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)" }}>
+          <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.9rem" }}>
               <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8" }}><T k="dash.messages" /></span>
               <Link href="/messages" style={{ fontSize: "0.65rem", color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}><T k="dash.viewAll" /></Link>
@@ -162,7 +162,7 @@ export default async function DashboardPage() {
                         {other?.image && <img src={other.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                       </div>
                       <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <div style={{ fontSize: "0.73rem", fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {other?.name ?? other?.twitterHandle ?? "Unknown"}
                         </div>
                         <div style={{ fontSize: "0.63rem", color: "#94a3b8", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -180,11 +180,11 @@ export default async function DashboardPage() {
         </div>
 
         {/* Availability */}
-        <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "#fff", border: "1px solid rgba(0,0,0,0.07)", marginBottom: "1.25rem" }}>
+        <div style={{ borderRadius: 14, padding: "1.1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)", marginBottom: "1.25rem" }}>
           <div style={{ fontFamily: "Space Mono,monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.75rem" }}><T k="dash.availability" /></div>
           <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
             <span style={{ width: 8, height: 8, borderRadius: "50%", background: availabilityColor, boxShadow: `0 0 6px ${availabilityColor}` }} />
-            <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "#0f172a", textTransform: "capitalize" }}>{dbUser.availability ?? "available"}</span>
+            <span style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)", textTransform: "capitalize" }}>{dbUser.availability ?? "available"}</span>
           </div>
           <div style={{ fontSize: "0.68rem", color: "#94a3b8", marginTop: 6 }}><T k="dash.updateProfile" /></div>
         </div>

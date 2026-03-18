@@ -170,14 +170,14 @@ export default async function Navbar() {
         <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-start", textDecoration: "none", gap: "0.15rem" }}>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 240, height: 60 }}>
             <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
-              fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
-            <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
-            <line x1="72" y1="54" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
-            <line x1="52" y1="94" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
-            <circle cx="72" cy="54" r="6.4" fill="currentColor"/>
-            <circle cx="52" cy="94" r="6.4" fill="currentColor"/>
-            <circle cx="92" cy="94" r="6.4" fill="currentColor"/>
-            <text x="152" y="92" fill="currentColor"
+              fill="none" stroke="var(--foreground)" strokeWidth="4.4" strokeLinejoin="round"/>
+            <line x1="72" y1="54" x2="52" y2="94" stroke="var(--foreground)" strokeWidth="3.6" strokeLinecap="round"/>
+            <line x1="72" y1="54" x2="92" y2="94" stroke="var(--foreground)" strokeWidth="3.6" strokeLinecap="round"/>
+            <line x1="52" y1="94" x2="92" y2="94" stroke="var(--foreground)" strokeWidth="3.6" strokeLinecap="round"/>
+            <circle cx="72" cy="54" r="6.4" fill="var(--foreground)"/>
+            <circle cx="52" cy="94" r="6.4" fill="var(--foreground)"/>
+            <circle cx="92" cy="94" r="6.4" fill="var(--foreground)"/>
+            <text x="152" y="92" fill="var(--foreground)"
               style={{ fontFamily: "Inter,'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: 68, letterSpacing: -2.4 }}>
               <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
             </text>

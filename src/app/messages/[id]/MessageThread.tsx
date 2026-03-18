@@ -80,7 +80,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         fontFamily: "Rajdhani, sans-serif",
         fontWeight: 700,
         fontSize: "0.95rem",
-        color: mine ? "#fff" : "#0f172a",
+        color: mine ? "#fff" : "var(--foreground)",
         lineHeight: 1.3,
         marginBottom: "0.5rem",
       }}>
@@ -98,7 +98,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         <span style={{
           fontFamily: "Outfit, sans-serif",
           fontSize: "0.7rem",
-          color: mine ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.45)",
+          color: mine ? "rgba(255,255,255,0.55)" : "var(--text-muted)",
         }}>
           {gig.days} day{gig.days !== 1 ? "s" : ""} delivery
         </span>
@@ -109,7 +109,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         borderTop: mine ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(45,212,191,0.15)",
         fontFamily: "Outfit, sans-serif",
         fontSize: "0.68rem",
-        color: mine ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.4)",
+        color: mine ? "rgba(255,255,255,0.5)" : "var(--text-muted)",
       }}>
         Tap to view gig →
       </div>

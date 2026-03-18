@@ -6,6 +6,7 @@ import NavMessagesDropdown from "./NavMessagesDropdown";
 import NavNotificationsDropdown from "./NavNotificationsDropdown";
 import NavOrdersDropdown from "./NavOrdersDropdown";
 import NavMobileMenu from "./NavMobileMenu";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 import type { NavNotif } from "./NavNotificationsDropdown";
 import type { NavOrder } from "./NavOrdersDropdown";
 
@@ -106,6 +107,7 @@ export default function NavControlsClient({
       )}
 
       {/* NavProfileMenu or login pill — server components passed as children */}
+      <ThemeToggle />
       {children}
 
       <NavMobileMenu

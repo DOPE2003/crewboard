@@ -135,7 +135,7 @@ export default async function HomePage() {
           letterSpacing: "-0.01em",
           lineHeight: 0.93,
           marginBottom: "1.5rem",
-          color: "#000",
+          color: "var(--foreground)",
           opacity: 0,
           animation: "fadeUp 0.6s 0.25s forwards",
           position: "relative",
@@ -188,7 +188,7 @@ export default async function HomePage() {
               fontSize: "0.62rem",
               letterSpacing: "0.22em",
               textTransform: "uppercase",
-              color: "rgba(0,0,0,0.45)",
+              color: "var(--text-muted)",
             }}>
               Welcome back
             </span>
@@ -198,7 +198,7 @@ export default async function HomePage() {
               fontSize: "clamp(2rem, 5vw, 3rem)",
               letterSpacing: "-0.01em",
               lineHeight: 1,
-              color: "#000",
+              color: "var(--foreground)",
             }}>
               {session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder"}
             </span>
@@ -208,7 +208,7 @@ export default async function HomePage() {
 
         {/* Subtitle */}
         <p style={{
-          color: "rgba(0,0,0,0.5)",
+          color: "var(--text-muted)",
           fontSize: "0.88rem",
           lineHeight: 1.85,
           maxWidth: "22rem",
@@ -264,7 +264,7 @@ export default async function HomePage() {
             fontFamily: "Space Mono, monospace",
             fontSize: "0.52rem",
             letterSpacing: "0.25em",
-            color: "rgba(0,0,0,0.5)",
+            color: "var(--text-muted)",
             textTransform: "uppercase",
             marginBottom: "0.5rem",
           }}>Scroll</span>
@@ -274,7 +274,7 @@ export default async function HomePage() {
 
 
       {/* ── TRUST STRIP ── */}
-      <div style={{ borderTop: "1px solid rgba(0,0,0,0.07)", borderBottom: "1px solid rgba(0,0,0,0.07)", padding: "1.5rem 1.25rem", background: "#fff", position: "relative", zIndex: 1 }}>
+      <div style={{ borderTop: "1px solid var(--card-border)", borderBottom: "1px solid var(--card-border)", padding: "1.5rem 1.25rem", background: "var(--card-bg)", position: "relative", zIndex: 1 }}>
         <div className="trust-strip-inner" style={{ maxWidth: "72rem", margin: "0 auto", display: "flex", alignItems: "center", justifyContent: "center", flexWrap: "wrap", gap: "2rem" }}>
           {[
             {
@@ -308,8 +308,8 @@ export default async function HomePage() {
             <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
               <div style={{ flexShrink: 0 }}>{item.icon}</div>
               <div>
-                <div style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "#000", letterSpacing: "0.02em" }}>{item.label}</div>
-                <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", marginTop: 1 }}>{item.desc}</div>
+                <div style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)", letterSpacing: "0.02em" }}>{item.label}</div>
+                <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 1 }}>{item.desc}</div>
               </div>
             </div>
           ))}
@@ -324,14 +324,14 @@ export default async function HomePage() {
             fontFamily: "Rajdhani, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
-            color: "#000",
+            color: "var(--foreground)",
             marginBottom: "0.75rem",
             lineHeight: 1.15,
           }}>
             How it works
           </h2>
           <p style={{
-            color: "rgba(0,0,0,0.5)",
+            color: "var(--text-muted)",
             fontSize: "0.9rem",
             lineHeight: 1.7,
             maxWidth: "36rem",
@@ -386,8 +386,8 @@ export default async function HomePage() {
               <div key={item.step} style={{
                 padding: "1.75rem",
                 borderRadius: 16,
-                border: "1px solid rgba(0,0,0,0.08)",
-                background: "rgba(0,0,0,0.015)",
+                border: "1px solid var(--card-border)",
+                background: "rgba(var(--foreground-rgb), 0.015)",
                 position: "relative",
                 display: "flex",
                 flexDirection: "column",
@@ -422,12 +422,12 @@ export default async function HomePage() {
                   fontWeight: 700,
                   fontSize: "1rem",
                   letterSpacing: "0.02em",
-                  color: "#000",
+                  color: "var(--foreground)",
                   lineHeight: 1.2,
                 }}>
                   {item.title}
                 </h3>
-                <p style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.83rem", lineHeight: 1.65, margin: 0 }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", lineHeight: 1.65, margin: 0 }}>
                   {item.desc}
                 </p>
               </div>
@@ -445,12 +445,12 @@ export default async function HomePage() {
             fontFamily: "Rajdhani, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(2rem, 4vw, 2.8rem)",
-            color: "#000",
+            color: "var(--foreground)",
             marginBottom: "3.5rem",
             lineHeight: 1.15,
           }}>
             Built different.<br />
-            <span style={{ color: "rgba(0,0,0,0.45)", fontWeight: 400 }}>
+            <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
               Built for Web3.
             </span>
           </h2>
@@ -464,8 +464,8 @@ export default async function HomePage() {
               <div key={f.title} style={{
                 padding: "1.75rem",
                 borderRadius: 16,
-                border: "1px solid rgba(0,0,0,0.08)",
-                background: "rgba(0,0,0,0.02)",
+                border: "1px solid var(--card-border)",
+                background: "rgba(var(--foreground-rgb), 0.02)",
                 transition: "border-color 0.2s, background 0.2s",
               }}>
                 <div style={{ color: "#2DD4BF", marginBottom: "1rem", lineHeight: 1 }}>{f.icon}</div>
@@ -474,12 +474,12 @@ export default async function HomePage() {
                   fontWeight: 700,
                   fontSize: "1.05rem",
                   letterSpacing: "0.02em",
-                  color: "#000",
+                  color: "var(--foreground)",
                   marginBottom: "0.5rem",
                 }}>
                   {f.title}
                 </h3>
-                <p style={{ color: "rgba(0,0,0,0.55)", fontSize: "0.875rem", lineHeight: 1.65 }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", lineHeight: 1.65 }}>
                   {f.desc}
                 </p>
               </div>
@@ -495,8 +495,8 @@ export default async function HomePage() {
             borderRadius: 20,
             padding: "4rem 2.5rem",
             textAlign: "center",
-            border: "1px solid rgba(0,0,0,0.08)",
-            background: "rgba(0,0,0,0.02)",
+            border: "1px solid var(--card-border)",
+            background: "rgba(var(--foreground-rgb), 0.02)",
             position: "relative",
             overflow: "hidden",
           }}>
@@ -517,13 +517,13 @@ export default async function HomePage() {
               fontFamily: "Rajdhani, sans-serif",
               fontWeight: 700,
               fontSize: "clamp(2rem, 4vw, 3rem)",
-              color: "#000",
+              color: "var(--foreground)",
               margin: "1rem 0",
             }}>
               Ready to build with the best?
             </h2>
             <p style={{
-              color: "rgba(0,0,0,0.55)",
+              color: "var(--text-muted)",
               fontSize: "1rem",
               lineHeight: 1.7,
               maxWidth: "32rem",

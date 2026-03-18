@@ -52,7 +52,7 @@ export default async function NotificationsPage() {
               fontFamily: "Rajdhani, sans-serif",
               fontWeight: 700,
               fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
-              color: "#000",
+              color: "var(--foreground)",
               lineHeight: 1,
             }}>
               <T k="notif.title" />
@@ -63,7 +63,7 @@ export default async function NotificationsPage() {
                   justifyContent: "center",
                   marginLeft: "0.65rem",
                   background: "#2DD4BF",
-                  color: "#000",
+                  color: "var(--foreground)",
                   fontFamily: "Space Mono, monospace",
                   fontSize: "0.6rem",
                   fontWeight: 700,
@@ -129,7 +129,7 @@ export default async function NotificationsPage() {
                       fontFamily: "Rajdhani, sans-serif",
                       fontWeight: 700,
                       fontSize: "1rem",
-                      color: "#000",
+                      color: "var(--foreground)",
                       marginBottom: "0.25rem",
                       letterSpacing: "0.02em",
                     }}>
@@ -137,7 +137,7 @@ export default async function NotificationsPage() {
                     </div>
                     <p style={{
                       fontSize: "0.85rem",
-                      color: "rgba(0,0,0,0.55)",
+                      color: "var(--foreground)",
                       lineHeight: 1.6,
                       margin: 0,
                     }}>
@@ -146,7 +146,7 @@ export default async function NotificationsPage() {
                     <div style={{
                       fontFamily: "Space Mono, monospace",
                       fontSize: "0.58rem",
-                      color: "rgba(0,0,0,0.3)",
+                      color: "var(--foreground)",
                       letterSpacing: "0.06em",
                       marginTop: "0.5rem",
                     }}>
@@ -176,7 +176,7 @@ export default async function NotificationsPage() {
                 gap: "1rem",
                 padding: "1.1rem 1.25rem",
                 borderRadius: 14,
-                border: "1px solid rgba(0,0,0,0.07)",
+                border: "1px solid var(--card-border)",
                 background: n.read ? "transparent" : "rgba(45,212,191,0.05)",
                 position: "relative",
                 transition: "background 0.2s",
@@ -204,7 +204,7 @@ export default async function NotificationsPage() {
             fontSize: "0.82rem",
             letterSpacing: "0.1em",
             textTransform: "uppercase",
-            color: "rgba(0,0,0,0.45)",
+            color: "var(--foreground)",
             textDecoration: "none",
           }}>
             <T k="notif.back" />

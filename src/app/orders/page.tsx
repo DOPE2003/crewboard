@@ -48,18 +48,18 @@ export default async function OrdersPage() {
   ]);
 
   return (
-    <main className="page">
+    <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 760, width: "100%", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
-        <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "#0f172a", marginBottom: "0.3rem", fontFamily: "Rajdhani, sans-serif", letterSpacing: "-0.01em" }}>Orders</h1>
-        <p style={{ fontSize: "0.78rem", color: "rgba(0,0,0,0.45)", marginBottom: "2.5rem" }}>Track all your active and past orders.</p>
+        <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.3rem", fontFamily: "Rajdhani, sans-serif", letterSpacing: "-0.01em" }}>Orders</h1>
+        <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "2.5rem" }}>Track all your active and past orders.</p>
 
         {/* As buyer */}
         <div style={{ marginBottom: "2.5rem" }}>
-          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(0,0,0,0.4)", marginBottom: "0.85rem" }}>
+          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
             Placed by me
           </div>
           {buyerOrders.length === 0 ? (
-            <div style={{ fontSize: "0.8rem", color: "rgba(0,0,0,0.4)", padding: "1.5rem", borderRadius: 14, border: "1px solid rgba(0,0,0,0.08)", textAlign: "center", background: "rgba(0,0,0,0.02)" }}>
+            <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center", background: "rgba(var(--foreground-rgb), 0.02)" }}>
               You haven&apos;t hired anyone yet.{" "}
               <Link href="/gigs" style={{ color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}>Browse gigs →</Link>
             </div>
@@ -74,11 +74,11 @@ export default async function OrdersPage() {
 
         {/* As seller */}
         <div>
-          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "rgba(0,0,0,0.4)", marginBottom: "0.85rem" }}>
+          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
             Received orders
           </div>
           {sellerOrders.length === 0 ? (
-            <div style={{ fontSize: "0.8rem", color: "rgba(0,0,0,0.4)", padding: "1.5rem", borderRadius: 14, border: "1px solid rgba(0,0,0,0.08)", textAlign: "center", background: "rgba(0,0,0,0.02)" }}>
+            <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center", background: "rgba(var(--foreground-rgb), 0.02)" }}>
               No orders received yet.{" "}
               <Link href="/gigs/new" style={{ color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}>Post a gig →</Link>
             </div>
@@ -105,26 +105,26 @@ function OrderRow({ order, other, role }: { order: any; other: any; role: "buyer
       style={{
         display: "flex", alignItems: "center", gap: "1rem",
         padding: "1rem 1.25rem", borderRadius: 14,
-        border: "1px solid rgba(0,0,0,0.08)",
-        background: "#fff",
+        border: "1px solid var(--card-border)",
+        background: "var(--card-bg)",
         textDecoration: "none",
         transition: "border-color 0.15s, box-shadow 0.15s",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.2)",
       }}
     >
-      <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "rgba(0,0,0,0.06)" }}>
+      <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "rgba(var(--foreground-rgb), 0.06)" }}>
         {other?.image && <img src={other.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+        <div style={{ fontSize: "0.88rem", fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {order.gig.title}
         </div>
-        <div style={{ fontSize: "0.7rem", color: "rgba(0,0,0,0.45)", marginTop: 2 }}>
+        <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 2 }}>
           {role === "buyer" ? "Seller" : "Buyer"}: {other?.name ?? other?.twitterHandle ?? "Unknown"} · {order.gig.category}
         </div>
       </div>
       <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <div style={{ fontFamily: "Space Mono, monospace", fontWeight: 700, fontSize: "0.9rem", color: "#0f172a" }}>${order.amount}</div>
+        <div style={{ fontFamily: "Space Mono, monospace", fontWeight: 700, fontSize: "0.9rem", color: "var(--foreground)" }}>${order.amount}</div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 5, padding: "2px 10px", borderRadius: 99, background: `${color}15`, border: `1px solid ${color}50` }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: color, flexShrink: 0 }} />
           <span style={{ fontSize: "0.58rem", fontWeight: 600, color, letterSpacing: "0.04em", fontFamily: "Space Mono, monospace" }}>{label}</span>

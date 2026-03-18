@@ -72,14 +72,14 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
 
   const panelStyle: React.CSSProperties = isMobile ? {
     position: "fixed", bottom: 0, left: 0, right: 0,
-    background: "#fff", borderRadius: "20px 20px 0 0",
+    background: "var(--card-bg)", borderRadius: "20px 20px 0 0",
     boxShadow: "0 -8px 40px rgba(0,0,0,0.15)",
     zIndex: 9999, maxHeight: "75vh",
     display: "flex", flexDirection: "column",
   } : {
     position: "absolute", top: "calc(100% + 10px)", right: 0,
     width: 340, borderRadius: 16, zIndex: 9999,
-    background: "#fff",
+    background: "var(--card-bg)",
     border: "1px solid rgba(0,0,0,0.1)",
     boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
     overflow: "hidden",
@@ -93,7 +93,7 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
         style={{
           fontFamily: "Rajdhani, sans-serif", fontWeight: 700,
           fontSize: "0.78rem", letterSpacing: "0.06em", textTransform: "uppercase",
-          color: isOpen ? "#000" : "rgba(0,0,0,0.65)",
+          color: isOpen ? "var(--foreground)" : "var(--text-muted)",
           background: isOpen ? "rgba(0,0,0,0.06)" : "none",
           border: "none", cursor: "pointer",
           padding: "0.3rem 0.7rem", borderRadius: 6,
@@ -102,11 +102,11 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
           display: "flex", alignItems: "center", gap: 5,
         }}
         className="nav-orders-link"
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = isOpen ? "rgba(0,0,0,0.06)" : "none"; e.currentTarget.style.color = isOpen ? "#000" : "rgba(0,0,0,0.65)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(var(--foreground-rgb), 0.06)"; e.currentTarget.style.color = "var(--foreground)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = isOpen ? "rgba(var(--foreground-rgb), 0.06)" : "none"; e.currentTarget.style.color = "var(--foreground)"; }}
       >
         {isMobile ? (
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
             <rect x="9" y="3" width="6" height="4" rx="1"/>
             <line x1="9" y1="12" x2="15" y2="12"/>
@@ -155,7 +155,7 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
               borderBottom: "1px solid rgba(0,0,0,0.07)",
               flexShrink: 0,
             }}>
-              <span style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.04em", color: "#0f172a" }}>
+              <span style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.04em", color: "var(--foreground)" }}>
                 Orders
                 {activeCount > 0 && (
                   <span style={{ background: "#f59e0b", color: "#fff", borderRadius: "999px", fontSize: "0.55rem", fontWeight: 700, padding: "1px 6px", marginLeft: 6, fontFamily: "Space Mono, monospace" }}>
@@ -177,7 +177,7 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
                     style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
                     aria-label="Close"
                   >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                     </svg>
                   </button>
@@ -206,11 +206,11 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
                       style={{
                         display: "flex", alignItems: "center", gap: "0.75rem",
                         padding: isMobile ? "0 16px" : "0.75rem 1rem", minHeight: isMobile ? 64 : "auto", textDecoration: "none",
-                        borderBottom: "1px solid rgba(0,0,0,0.05)",
+                        borderBottom: "1px solid var(--card-border)",
                         background: "transparent",
                         transition: "background 0.12s",
                       }}
-                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.04)")}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(var(--foreground-rgb), 0.04)")}
                       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
                     >
                       {/* Avatar */}
@@ -227,10 +227,10 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
 
                       {/* Info */}
                       <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {o.gigTitle}
                         </div>
-                        <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", color: "rgba(0,0,0,0.45)", marginTop: 1 }}>
+                        <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", color: "var(--text-muted)", marginTop: 1 }}>
                           {o.role === "buyer" ? "Seller" : "Buyer"}: {o.other?.name ?? o.other?.twitterHandle ?? "Unknown"}
                         </div>
                       </div>

@@ -40,7 +40,7 @@ function MenuLink({ href, icon, children, badge }: { href: string; icon: React.R
         color: "#1a1a1a", textDecoration: "none", transition: "background 0.12s",
         position: "relative",
       }}
-      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.05)")}
+      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(var(--foreground-rgb), 0.05)")}
       onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
     >
       <span style={{ color: "#64748b", display: "flex", alignItems: "center" }}>{icon}</span>
@@ -91,14 +91,14 @@ export default function NavProfileMenu({
         {image ? (
           <img src={image} alt="Profile" width={36} height={36} style={{
             borderRadius: "50%", objectFit: "cover", width: 36, height: 36,
-            border: open ? "2px solid #14b8a6" : "2px solid rgba(0,0,0,0.1)",
+            border: open ? "2px solid #14b8a6" : "2px solid var(--card-border)",
             transition: "border-color 0.2s",
           }} />
         ) : (
           <div style={{
             width: 36, height: 36, borderRadius: "50%",
-            background: "rgba(0,0,0,0.08)",
-            border: open ? "2px solid #14b8a6" : "2px solid rgba(0,0,0,0.1)",
+            background: "rgba(var(--foreground-rgb), 0.08)",
+            border: open ? "2px solid #14b8a6" : "2px solid var(--card-border)",
             display: "flex", alignItems: "center", justifyContent: "center",
             transition: "border-color 0.2s",
           }}>
@@ -114,19 +114,19 @@ export default function NavProfileMenu({
         <div className="profile-menu-dropdown" style={{
           position: "absolute", top: "calc(100% + 10px)", right: 0,
           borderRadius: "16px",
-          minWidth: "240px", zIndex: 9999, overflow: "hidden",
+          minWidth: "240px", zIndex: 9999, overflow: "hidden", background: "var(--card-bg)", border: "1px solid var(--card-border)",
         }}>
 
           {/* Profile header */}
           <div style={{
             display: "flex", alignItems: "center", gap: "0.85rem",
-            padding: "1rem 1rem 0.85rem", borderBottom: "1px solid rgba(0,0,0,0.07)",
+            padding: "1rem 1rem 0.85rem", borderBottom: "1px solid var(--card-border)",
           }}>
             {image ? (
               <img src={image} alt="" style={{ borderRadius: "50%", objectFit: "cover", width: 46, height: 46, flexShrink: 0 }} />
             ) : (
               <div style={{
-                width: 46, height: 46, borderRadius: "50%", background: "rgba(0,0,0,0.08)", flexShrink: 0,
+                width: 46, height: 46, borderRadius: "50%", background: "rgba(var(--foreground-rgb), 0.08)", flexShrink: 0,
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -135,11 +135,11 @@ export default function NavProfileMenu({
               </div>
             )}
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.92rem", fontWeight: 700, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.92rem", fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {name ?? twitterHandle ?? "User"}
               </div>
               {twitterHandle && (
-                <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.65rem", color: "rgba(0,0,0,0.4)", marginTop: 2 }}>
+                <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.65rem", color: "var(--text-muted)", marginTop: 2 }}>
                   @{twitterHandle}
                 </div>
               )}

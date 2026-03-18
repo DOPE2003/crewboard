@@ -32,7 +32,7 @@ function Stars({ rating }: { rating: number }) {
 function SectionCard({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
     <div style={{
-      background: "#fff", borderRadius: 12, border: "1px solid #e2e8f0",
+      background: "var(--card-bg)", borderRadius: 12, border: "1px solid var(--card-border)",
       padding: "1.5rem", ...style,
     }}>
       {children}
@@ -42,7 +42,7 @@ function SectionCard({ children, style }: { children: React.ReactNode; style?: R
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "#0f172a", margin: "0 0 1rem" }}>
+    <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: "0 0 1rem" }}>
       {children}
     </h2>
   );
@@ -133,16 +133,16 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const joinYear = new Date(user.createdAt).getFullYear();
 
   return (
-    <main style={{ minHeight: "100vh", background: "#f8fafc", paddingTop: "9.5rem", paddingBottom: "4rem" }}>
+    <main style={{ minHeight: "100vh", background: "var(--background)", paddingTop: "9.5rem", paddingBottom: "4rem" }}>
       <div style={{ maxWidth: 1020, margin: "0 auto", padding: "0 1.25rem" }}>
 
         {/* Breadcrumb */}
         <div style={{ fontSize: "0.75rem", color: "#94a3b8", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: 6 }}>
-          <Link href="/" style={{ color: "#64748b", textDecoration: "none" }}>Home</Link>
+          <Link href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Home</Link>
           <span>/</span>
-          <Link href="/freelancers" style={{ color: "#64748b", textDecoration: "none" }}>Freelancers</Link>
+          <Link href="/freelancers" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Freelancers</Link>
           <span>/</span>
-          <span style={{ color: "#0f172a" }}>{user.twitterId ? (user.name ?? "Profile") : `@${user.twitterHandle}`}</span>
+          <span style={{ color: "var(--foreground)" }}>{user.twitterId ? (user.name ?? "Profile") : `@${user.twitterHandle}`}</span>
         </div>
 
         {/* Email notification banner — own profile, no email (X-only users) */}
@@ -178,7 +178,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   {/* Info */}
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <h1 style={{ fontSize: "1.35rem", fontWeight: 800, margin: 0, color: "#0f172a" }}>
+                      <h1 style={{ fontSize: "1.35rem", fontWeight: 800, margin: 0, color: "var(--foreground)" }}>
                         {user.name ?? (user.twitterId ? "Anonymous" : user.twitterHandle)}
                       </h1>
                       {user.isOG && <OGBadge size="lg" />}
@@ -186,7 +186,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     </div>
 
                     {!user.twitterId && (
-                      <div style={{ fontSize: "0.82rem", color: "#64748b", marginTop: 3 }}>
+                      <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: 3 }}>
                         @{user.twitterHandle}
                       </div>
                     )}
@@ -197,7 +197,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                           {user.role}
                         </span>
                       )}
-                      <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", color: "#64748b" }}>
+                      <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", color: "var(--text-muted)" }}>
                         <span style={{ width: 7, height: 7, borderRadius: "50%", background: AVAIL_COLOR[avail], display: "inline-block" }} />
                         {AVAIL_LABEL[avail]}
                       </span>
@@ -205,7 +205,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                         Member since {joinYear}
                       </span>
                       {avgRating && (
-                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", color: "#64748b" }}>
+                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", color: "var(--text-muted)" }}>
                           <span style={{ color: "#f59e0b" }}>★</span>
                           {avgRating} ({reviews.length})
                         </span>
@@ -234,7 +234,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <SectionTitle>Overview</SectionTitle>
               </div>
               {user.bio ? (
-                <p style={{ fontSize: "0.88rem", lineHeight: 1.8, color: "#475569", margin: 0 }}>{user.bio}</p>
+                <p style={{ fontSize: "0.88rem", lineHeight: 1.8, color: "var(--text-muted)", margin: 0 }}>{user.bio}</p>
               ) : (
                 <div style={{ fontSize: "0.85rem", color: "#94a3b8", fontStyle: "italic" }}>
                   {isOwnProfile ? "Add a bio to tell clients about yourself." : "No overview yet."}
@@ -250,7 +250,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   {user.skills.map((s: string) => (
                     <span key={s} style={{
                       fontSize: "0.78rem", fontWeight: 500, padding: "5px 14px", borderRadius: 99,
-                      background: "#f1f5f9", color: "#334155", border: "1px solid #e2e8f0",
+                      background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--foreground)", border: "1px solid var(--card-border)",
                     }}>
                       {s}
                     </span>
@@ -268,12 +268,12 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 ) : portfolioItems.length > 0 ? (
                   <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
                     {portfolioItems.map((item) => (
-                      <div key={item.id} style={{ padding: "0.85rem 1rem", borderRadius: 10, border: "1px solid #e2e8f0", background: "#f8fafc" }}>
+                      <div key={item.id} style={{ padding: "0.85rem 1rem", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--background)" }}>
                         <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
-                          <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0f172a" }}>{item.title}</span>
+                          <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)" }}>{item.title}</span>
                           {item.year && <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>{item.year}</span>}
                         </div>
-                        {item.description && <p style={{ fontSize: "0.8rem", color: "#64748b", margin: "0.35rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
+                        {item.description && <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0.35rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
                         {item.url && (
                           <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.72rem", color: "#2DD4BF", textDecoration: "none", display: "inline-block", marginTop: 6 }}>
                             View project →
@@ -295,10 +295,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     <Link key={gig.id} href={`/gigs/${gig.id}`} style={{
                       display: "flex", alignItems: "center", justifyContent: "space-between",
                       padding: "0.9rem 1rem", borderRadius: 10, textDecoration: "none",
-                      border: "1px solid #e2e8f0", transition: "border-color 0.15s",
+                      border: "1px solid var(--card-border)", transition: "border-color 0.15s",
                     }}>
                       <div>
-                        <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "#0f172a" }}>{gig.title}</div>
+                        <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--foreground)" }}>{gig.title}</div>
                         <div style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: 3 }}>{gig.category} · {gig.deliveryDays}d delivery</div>
                       </div>
                       <span style={{ fontFamily: "Space Mono,monospace", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF", flexShrink: 0, marginLeft: 12 }}>
@@ -315,7 +315,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
                 <SectionTitle>
                   Reviews {reviews.length > 0 && (
-                    <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "#64748b", marginLeft: 6 }}>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "var(--text-muted)", marginLeft: 6 }}>
                       ({reviews.length})
                     </span>
                   )}
@@ -323,7 +323,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 {avgRating && (
                   <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
                     <Stars rating={Math.round(Number(avgRating))} />
-                    <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "#0f172a" }}>{avgRating}</span>
+                    <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--foreground)" }}>{avgRating}</span>
                   </div>
                 )}
               </div>
@@ -338,19 +338,19 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               ) : (
                 <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
                   {reviews.map((r: any) => (
-                    <div key={r.id} style={{ borderBottom: "1px solid #f1f5f9", paddingBottom: "1rem" }}>
+                    <div key={r.id} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: "1rem" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#e2e8f0", overflow: "hidden", flexShrink: 0 }}>
                             {r.reviewer.image && <img src={r.reviewer.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                           </div>
-                          <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#0f172a" }}>
+                          <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)" }}>
                             {r.reviewer.name ?? r.reviewer.twitterHandle}
                           </span>
                         </div>
                         <Stars rating={r.rating} />
                       </div>
-                      {r.body && <p style={{ margin: 0, fontSize: "0.82rem", color: "#475569", lineHeight: 1.6 }}>{r.body}</p>}
+                      {r.body && <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{r.body}</p>}
                     </div>
                   ))}
                 </div>
@@ -367,15 +367,15 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               <>
                 <SectionCard>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                    <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "#0f172a" }}>Profile completion</span>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)" }}>Profile completion</span>
                     <span style={{ fontSize: "0.75rem", fontWeight: 700, color: completionPct === 100 ? "#22c55e" : "#f59e0b" }}>{completionPct}%</span>
                   </div>
-                  <div style={{ height: 6, background: "#f1f5f9", borderRadius: 99, overflow: "hidden", marginBottom: "0.9rem" }}>
+                  <div style={{ height: 6, background: "rgba(var(--foreground-rgb), 0.05)", borderRadius: 99, overflow: "hidden", marginBottom: "0.9rem" }}>
                     <div style={{ height: "100%", width: `${completionPct}%`, background: completionPct === 100 ? "#22c55e" : "#2DD4BF", borderRadius: 99, transition: "width 0.4s" }} />
                   </div>
                   {nextItem && (
-                    <div style={{ fontSize: "0.78rem", color: "#64748b", background: "#f8fafc", padding: "0.65rem 0.85rem", borderRadius: 8, border: "1px solid #e2e8f0" }}>
-                      Next: <strong style={{ color: "#0f172a" }}>Add {nextItem.label}</strong>
+                    <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", background: "var(--background)", padding: "0.65rem 0.85rem", borderRadius: 8, border: "1px solid var(--card-border)" }}>
+                      Next: <strong style={{ color: "var(--foreground)" }}>Add {nextItem.label}</strong>
                     </div>
                   )}
                   {completionPct === 100 && (
@@ -394,10 +394,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     <Link key={link.href} href={link.href} style={{
                       display: "flex", alignItems: "center", gap: 10,
                       padding: "0.6rem 0.5rem", borderRadius: 8, textDecoration: "none",
-                      color: "#334155", fontSize: "0.85rem", fontWeight: 500,
+                      color: "var(--foreground)", fontSize: "0.85rem", fontWeight: 500,
                       transition: "background 0.12s",
                     }}>
-                      <span style={{ color: "#64748b", display: "flex", alignItems: "center" }}>{link.icon}</span>
+                      <span style={{ color: "var(--text-muted)", display: "flex", alignItems: "center" }}>{link.icon}</span>
                       {link.label}
                     </Link>
                   ))}
@@ -429,22 +429,22 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.9rem" }}>Stats</div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "#64748b" }}>Rating</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#0f172a", display: "flex", alignItems: "center", gap: 4 }}>
+                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Rating</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)", display: "flex", alignItems: "center", gap: 4 }}>
                     {avgRating ? <><span style={{ color: "#f59e0b" }}>★</span>{avgRating}</> : "—"}
                   </span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "#64748b" }}>Reviews</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#0f172a" }}>{reviews.length}</span>
+                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Reviews</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)" }}>{reviews.length}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "#64748b" }}>Services</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#0f172a" }}>{user.gigs?.length ?? 0}</span>
+                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Services</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)" }}>{user.gigs?.length ?? 0}</span>
                 </div>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "#64748b" }}>Member since</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "#0f172a" }}>{joinYear}</span>
+                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Member since</span>
+                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)" }}>{joinYear}</span>
                 </div>
               </div>
             </SectionCard>
@@ -465,14 +465,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   style={{
                     display: "flex", alignItems: "center", gap: "0.6rem",
                     padding: "0.65rem 0.9rem", borderRadius: 10,
-                    border: "1px solid #e2e8f0", background: "#f8fafc", textDecoration: "none",
+                    border: "1px solid var(--card-border)", background: "var(--background)", textDecoration: "none",
                   }}
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
                   </svg>
                   <div>
-                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "#0f172a" }}>Download CV</div>
+                    <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)" }}>Download CV</div>
                     <div style={{ fontSize: "0.62rem", color: "#94a3b8" }}>PDF</div>
                   </div>
                   <svg style={{ marginLeft: "auto" }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -488,7 +488,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>Wallet</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                   <WalletVerifiedBadge />
-                  <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.72rem", color: "#334155" }}>{wallet}</span>
+                  <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.72rem", color: "var(--foreground)" }}>{wallet}</span>
                 </div>
                 <div style={{ fontSize: "0.68rem", color: "#94a3b8" }}>Solana</div>
               </SectionCard>

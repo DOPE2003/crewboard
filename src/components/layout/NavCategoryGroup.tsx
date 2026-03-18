@@ -71,8 +71,8 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
             position: "absolute",
             top: "calc(100% + 8px)",
             left: 0,
-            background: "#fff",
-            border: "1px solid rgba(0,0,0,0.09)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
             borderRadius: "14px",
             boxShadow: "0 16px 48px rgba(0,0,0,0.12)",
             padding: "0.6rem",
@@ -87,8 +87,8 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
             left: "20px",
             width: 12,
             height: 12,
-            background: "#fff",
-            border: "1px solid rgba(0,0,0,0.09)",
+            background: "var(--card-bg)",
+            border: "1px solid var(--card-border)",
             borderBottom: "none",
             borderRight: "none",
             rotate: "45deg",
@@ -108,12 +108,12 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
                   fontFamily: "Outfit, sans-serif",
                   fontSize: "0.82rem",
                   fontWeight: 600,
-                  color: "#111",
+                  color: "var(--foreground)",
                   textDecoration: "none",
                   transition: "background 0.12s",
                   whiteSpace: "nowrap",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.05)")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(var(--foreground-rgb), 0.05)")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 <span style={{

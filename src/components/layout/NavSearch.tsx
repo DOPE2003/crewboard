@@ -86,10 +86,10 @@ export default function NavSearch() {
           width: "38px",
           height: "38px",
           borderRadius: "50%",
-          background: "rgba(0,0,0,0.04)",
+          background: "rgba(var(--foreground-rgb), 0.04)",
           border: "1px solid rgba(0,0,0,0.08)",
           cursor: "pointer",
-          color: "rgba(0,0,0,0.5)",
+          color: "var(--text-muted)",
           transition: "all 0.2s",
         }}
         title="All Categories"
@@ -104,13 +104,13 @@ export default function NavSearch() {
         display: "flex",
         alignItems: "center",
         gap: "0.5rem",
-        background: "rgba(0,0,0,0.04)",
+        background: "rgba(var(--foreground-rgb), 0.04)",
         border: "1px solid rgba(0,0,0,0.12)",
         borderRadius: "999px",
         padding: "0.45rem 1rem",
       }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-          stroke="rgba(0,0,0,0.4)" strokeWidth="2"
+          stroke="var(--text-muted)" strokeWidth="2"
           strokeLinecap="round" strokeLinejoin="round">
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
@@ -143,7 +143,7 @@ export default function NavSearch() {
           borderRadius: "10px",
           overflow: "hidden",
           zIndex: 9999,
-          minWidth: "260px",
+          minWidth: "260px", background: "var(--card-bg)", border: "1px solid var(--card-border)",
         }}>
           {results.map((r, i) => (
             <button
@@ -156,7 +156,7 @@ export default function NavSearch() {
                 alignItems: "center",
                 gap: "0.75rem",
                 padding: "0.65rem 0.9rem",
-                background: focused === i ? "rgba(0,0,0,0.04)" : "transparent",
+                background: focused === i ? "rgba(var(--foreground-rgb), 0.04)" : "transparent",
                 border: "none",
                 cursor: "pointer",
                 textAlign: "left",
@@ -174,7 +174,7 @@ export default function NavSearch() {
               ) : (
                 <div style={{
                   width: 30, height: 30, borderRadius: "50%",
-                  background: "rgba(0,0,0,0.08)", flexShrink: 0,
+                  background: "rgba(var(--foreground-rgb), 0.08)", flexShrink: 0,
                 }} />
               )}
               <div>
@@ -182,7 +182,7 @@ export default function NavSearch() {
                   fontFamily: "Outfit, sans-serif",
                   fontSize: "0.85rem",
                   fontWeight: 600,
-                  color: "#000",
+                  color: "var(--foreground)",
                   lineHeight: 1.2,
                 }}>
                   {r.name ?? r.twitterHandle}
@@ -190,7 +190,7 @@ export default function NavSearch() {
                 <div style={{
                   fontFamily: "Space Mono, monospace",
                   fontSize: "0.65rem",
-                  color: "rgba(0,0,0,0.45)",
+                  color: "var(--text-muted)",
                   letterSpacing: "0.04em",
                 }}>
                   @{r.twitterHandle}{r.role ? ` · ${r.role}` : ""}
