@@ -38,6 +38,7 @@ export type UserMinAggregateOutputType = {
   availability: string | null
   profileComplete: boolean | null
   isOG: boolean | null
+  humanVerified: boolean | null
   lastSeenAt: Date | null
   cvUrl: string | null
   worldIdNullifier: string | null
@@ -61,6 +62,7 @@ export type UserMaxAggregateOutputType = {
   availability: string | null
   profileComplete: boolean | null
   isOG: boolean | null
+  humanVerified: boolean | null
   lastSeenAt: Date | null
   cvUrl: string | null
   worldIdNullifier: string | null
@@ -85,6 +87,7 @@ export type UserCountAggregateOutputType = {
   availability: number
   profileComplete: number
   isOG: number
+  humanVerified: number
   lastSeenAt: number
   portfolioItems: number
   cvUrl: number
@@ -111,6 +114,7 @@ export type UserMinAggregateInputType = {
   availability?: true
   profileComplete?: true
   isOG?: true
+  humanVerified?: true
   lastSeenAt?: true
   cvUrl?: true
   worldIdNullifier?: true
@@ -134,6 +138,7 @@ export type UserMaxAggregateInputType = {
   availability?: true
   profileComplete?: true
   isOG?: true
+  humanVerified?: true
   lastSeenAt?: true
   cvUrl?: true
   worldIdNullifier?: true
@@ -158,6 +163,7 @@ export type UserCountAggregateInputType = {
   availability?: true
   profileComplete?: true
   isOG?: true
+  humanVerified?: true
   lastSeenAt?: true
   portfolioItems?: true
   cvUrl?: true
@@ -256,6 +262,7 @@ export type UserGroupByOutputType = {
   availability: string | null
   profileComplete: boolean
   isOG: boolean
+  humanVerified: boolean
   lastSeenAt: Date | null
   portfolioItems: runtime.JsonValue
   cvUrl: string | null
@@ -302,6 +309,7 @@ export type UserWhereInput = {
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
   isOG?: Prisma.BoolFilter<"User"> | boolean
+  humanVerified?: Prisma.BoolFilter<"User"> | boolean
   lastSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   portfolioItems?: Prisma.JsonFilter<"User">
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
@@ -336,6 +344,7 @@ export type UserOrderByWithRelationInput = {
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   portfolioItems?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -375,6 +384,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
   isOG?: Prisma.BoolFilter<"User"> | boolean
+  humanVerified?: Prisma.BoolFilter<"User"> | boolean
   lastSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   portfolioItems?: Prisma.JsonFilter<"User">
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
@@ -407,6 +417,7 @@ export type UserOrderByWithAggregationInput = {
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   portfolioItems?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -438,6 +449,7 @@ export type UserScalarWhereWithAggregatesInput = {
   availability?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   isOG?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  humanVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   lastSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   portfolioItems?: Prisma.JsonWithAggregatesFilter<"User">
   cvUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -463,6 +475,7 @@ export type UserCreateInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -497,6 +510,7 @@ export type UserUncheckedCreateInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -531,6 +545,7 @@ export type UserUpdateInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -565,6 +580,7 @@ export type UserUncheckedUpdateInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -599,6 +615,7 @@ export type UserCreateManyInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -624,6 +641,7 @@ export type UserUpdateManyMutationInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -649,6 +667,7 @@ export type UserUncheckedUpdateManyInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -682,6 +701,7 @@ export type UserCountOrderByAggregateInput = {
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   portfolioItems?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrder
@@ -706,6 +726,7 @@ export type UserMaxOrderByAggregateInput = {
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrder
@@ -729,6 +750,7 @@ export type UserMinOrderByAggregateInput = {
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
+  humanVerified?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrder
@@ -913,6 +935,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -946,6 +969,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -984,6 +1008,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1017,6 +1042,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1066,6 +1092,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1099,6 +1126,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1143,6 +1171,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1176,6 +1205,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1209,6 +1239,7 @@ export type UserCreateWithoutNotificationsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1242,6 +1273,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1291,6 +1323,7 @@ export type UserUpdateWithoutNotificationsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1324,6 +1357,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1357,6 +1391,7 @@ export type UserCreateWithoutSentMessagesInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1390,6 +1425,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1439,6 +1475,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1472,6 +1509,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1505,6 +1543,7 @@ export type UserCreateWithoutGigsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1538,6 +1577,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1587,6 +1627,7 @@ export type UserUpdateWithoutGigsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1620,6 +1661,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1653,6 +1695,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1686,6 +1729,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1724,6 +1768,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1757,6 +1802,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1806,6 +1852,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1839,6 +1886,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1883,6 +1931,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1916,6 +1965,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1949,6 +1999,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -1982,6 +2033,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -2020,6 +2072,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -2053,6 +2106,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   availability?: string | null
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
@@ -2102,6 +2156,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2135,6 +2190,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2179,6 +2235,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2212,6 +2269,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2348,6 +2406,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
@@ -2383,6 +2442,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
@@ -2408,6 +2468,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
@@ -2433,6 +2494,7 @@ export type UserSelectScalar = {
   availability?: boolean
   profileComplete?: boolean
   isOG?: boolean
+  humanVerified?: boolean
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
@@ -2443,7 +2505,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "twitterId" | "twitterHandle" | "walletAddress" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isOG" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "worldIdNullifier" | "worldIdLevel" | "stripeVerificationId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "passwordHash" | "twitterId" | "twitterHandle" | "walletAddress" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isOG" | "humanVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "worldIdNullifier" | "worldIdLevel" | "stripeVerificationId" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
@@ -2487,6 +2549,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     availability: string | null
     profileComplete: boolean
     isOG: boolean
+    humanVerified: boolean
     lastSeenAt: Date | null
     portfolioItems: runtime.JsonValue
     cvUrl: string | null
@@ -2941,6 +3004,7 @@ export interface UserFieldRefs {
   readonly availability: Prisma.FieldRef<"User", 'String'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
   readonly isOG: Prisma.FieldRef<"User", 'Boolean'>
+  readonly humanVerified: Prisma.FieldRef<"User", 'Boolean'>
   readonly lastSeenAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly portfolioItems: Prisma.FieldRef<"User", 'Json'>
   readonly cvUrl: Prisma.FieldRef<"User", 'String'>

@@ -3,6 +3,8 @@ import db from "@/lib/db";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import MessageThread from "./MessageThread";
+import OGBadge from "@/components/ui/OGBadge";
+import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
 
 function lastSeenLabel(d: Date | null): string {
   if (!d) return "Offline";
@@ -35,7 +37,25 @@ export default async function ConversationPage({
   const other = otherId
     ? await db.user.findUnique({
         where: { id: otherId },
-        select: { name: true, twitterHandle: true, image: true, role: true, lastSeenAt: true },
+        select: { 
+          id: true,
+          name: true, 
+          twitterHandle: true, 
+          image: true, 
+          role: true, 
+          lastSeenAt: true,
+          bio: true,
+          skills: true,
+          availability: true,
+          walletAddress: true,
+          isOG: true,
+          humanVerified: true,
+          worldIdLevel: true,
+          gigs: {
+            where: { status: "active" },
+            take: 3
+          }
+        },
       })
     : null;
 
@@ -192,6 +212,78 @@ export default async function ConversationPage({
             currentUserId={userId}
             initialMessages={JSON.parse(JSON.stringify(initialMessages))}
           />
+        </div>
+
+        {/* Profile Sidebar */}
+        <div className="msgs-profile-sidebar">
+          <div className="msgs-profile-sidebar-inner">
+            <div className="msgs-ps-header">
+              <div className="msgs-ps-avatar">
+                {other?.image ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={other.image} alt="" />
+                ) : (
+                  <div className="msgs-ps-avatar-fallback" />
+                )}
+              </div>
+              <div className="msgs-ps-name-row">
+                <div className="msgs-ps-name">{other?.name ?? other?.twitterHandle}</div>
+                {other?.isOG && <OGBadge />}
+              </div>
+              <div className="msgs-ps-handle">@{other?.twitterHandle}</div>
+              {other?.role && <div className="msgs-ps-role">{other.role}</div>}
+            </div>
+
+            <div className="msgs-ps-badges">
+              {other?.walletAddress && <WalletVerifiedBadge />}
+              {other?.humanVerified && <HumanVerifiedBadge level={other.worldIdLevel} />}
+            </div>
+
+            {other?.bio && (
+              <div className="msgs-ps-section">
+                <div className="msgs-ps-label">About</div>
+                <div className="msgs-ps-bio">{other.bio}</div>
+              </div>
+            )}
+
+            {other?.skills && other.skills.length > 0 && (
+              <div className="msgs-ps-section">
+                <div className="msgs-ps-label">Skills</div>
+                <div className="msgs-ps-skills">
+                  {other.skills.slice(0, 8).map((s: string) => (
+                    <span key={s} className="msgs-ps-skill">{s}</span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {other?.gigs && other.gigs.length > 0 && (
+              <div className="msgs-ps-section">
+                <div className="msgs-ps-label">Active Gigs</div>
+                <div className="msgs-ps-gigs">
+                  {other.gigs.map((gig: any) => (
+                    <Link key={gig.id} href={`/gigs/${gig.id}`} className="msgs-ps-gig-card">
+                      <div className="msgs-ps-gig-title">{gig.title}</div>
+                      <div className="msgs-ps-gig-price">${gig.price}</div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="msgs-ps-actions">
+              <Link href={`/u/${other?.twitterHandle}`} className="btn-secondary" style={{ width: "100%", fontSize: "0.75rem", height: "40px" }}>
+                View Full Profile
+              </Link>
+              <Link 
+                href={other?.gigs?.[0] ? `/gigs/${other.gigs[0].id}` : `/u/${other?.twitterHandle}`} 
+                className="btn-primary" 
+                style={{ width: "100%", fontSize: "0.75rem", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
+              >
+                Hire Now
+              </Link>
+            </div>
+          </div>
         </div>
       </div>
     </main>

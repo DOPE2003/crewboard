@@ -3541,3 +3541,195 @@ img { max-width: 100%; }
   .onboarding-item { gap: 0.5rem; }
   .onboarding-item-label { font-size: 0.74rem; }
 }
+
+/* =========================
+   MESSAGES PROFILE SIDEBAR
+   ========================= */
+
+.msgs-profile-sidebar {
+  width: 280px;
+  flex-shrink: 0;
+  border-left: 1px solid rgba(0,0,0,0.07);
+  background: #fff;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.msgs-profile-sidebar-inner {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.msgs-ps-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.msgs-ps-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 1rem;
+  background: rgba(0,0,0,0.05);
+  border: 1px solid rgba(0,0,0,0.08);
+}
+.msgs-ps-avatar img { width: 100%; height: 100%; object-fit: cover; }
+.msgs-ps-avatar-fallback { width: 100%; height: 100%; background: rgba(0,0,0,0.08); }
+
+.msgs-ps-name-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-bottom: 0.2rem;
+}
+
+.msgs-ps-name {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: 1.15rem;
+  color: #000;
+}
+
+.msgs-ps-handle {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.65rem;
+  color: rgba(0,0,0,0.4);
+  margin-bottom: 0.5rem;
+}
+
+.msgs-ps-role {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.12);
+  background: rgba(0,0,0,0.04);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.5);
+}
+
+.msgs-ps-badges {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.msgs-ps-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.msgs-ps-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.35);
+}
+
+.msgs-ps-bio {
+  font-size: 0.78rem;
+  color: rgba(0,0,0,0.6);
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.msgs-ps-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.msgs-ps-skill {
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.1);
+  background: rgba(0,0,0,0.03);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.55rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.45);
+}
+
+.msgs-ps-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+@media (max-width: 1024px) {
+  .msgs-profile-sidebar { display: none; }
+}
+
+body.dark .msgs-profile-sidebar {
+  background: #141414 !important;
+  border-left-color: rgba(255,255,255,0.07) !important;
+}
+body.dark .msgs-ps-name { color: #fff !important; }
+body.dark .msgs-ps-avatar { border-color: rgba(255,255,255,0.1) !important; }
+body.dark .msgs-ps-bio { color: rgba(255,255,255,0.5) !important; }
+
+.msgs-ps-gigs {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.msgs-ps-gig-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 0.9rem;
+  background: rgba(0,0,0,0.03);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 10px;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.msgs-ps-gig-card:hover {
+  background: rgba(45,212,191,0.05);
+  border-color: rgba(45,212,191,0.2);
+  transform: translateY(-1px);
+}
+
+.msgs-ps-gig-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #0f172a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.msgs-ps-gig-price {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #2DD4BF;
+  margin-left: 0.75rem;
+}
+
+/* Dark mode support for gigs section */
+body.dark .msgs-ps-gig-card {
+  background: rgba(255,255,255,0.04);
+  border-color: rgba(255,255,255,0.06);
+}
+body.dark .msgs-ps-gig-title { color: #f1f5f9; }

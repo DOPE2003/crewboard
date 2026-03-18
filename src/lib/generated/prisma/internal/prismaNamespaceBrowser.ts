@@ -93,6 +93,7 @@ export const UserScalarFieldEnum = {
   availability: 'availability',
   profileComplete: 'profileComplete',
   isOG: 'isOG',
+  humanVerified: 'humanVerified',
   lastSeenAt: 'lastSeenAt',
   portfolioItems: 'portfolioItems',
   cvUrl: 'cvUrl',
