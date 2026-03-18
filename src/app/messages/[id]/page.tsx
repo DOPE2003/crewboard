@@ -95,7 +95,9 @@ export default async function ConversationPage({
     select: { id: true, senderId: true, body: true, createdAt: true, read: true },
   });
 
-  const seen = lastSeenLabel(other?.lastSeenAt ?? null);
+  // Pre-calculate online status to avoid Date.now() in JSX
+  const isOtherOnline = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+  const otherSeenLabel = lastSeenLabel(other?.lastSeenAt ?? null);
 
   return (
     <main className="page">
@@ -180,38 +182,33 @@ export default async function ConversationPage({
                 <path d="M19 12H5M12 5l-7 7 7 7"/>
               </svg>
             </Link>
-            <Link href={`/u/${other?.twitterHandle}`} style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", minWidth: 0 }}>
-              <div className="msgs-thread-avatar" style={{ position: "relative" }}>
-                {other?.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={other.image} alt="" />
-                ) : (
-                  <div className="msgs-thread-avatar-fallback" />
-                )}
-                {(() => {
-                  const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
-                  return (
-                    <span style={{
-                      position: "absolute", bottom: 1, right: 1,
-                      width: 11, height: 11, borderRadius: "50%",
-                      background: online ? "#22c55e" : "#94a3b8",
-                      border: "2px solid #fff",
-                    }} />
-                  );
-                })()}
-              </div>
-              <div>
-                <div className="msgs-thread-name">
-                  {other?.name ?? other?.twitterHandle ?? "Unknown"}
+            
+            {other && (
+              <Link href={`/u/${other.twitterHandle}`} style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", minWidth: 0 }}>
+                <div className="msgs-thread-avatar" style={{ position: "relative" }}>
+                  {other.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={other.image} alt="" />
+                  ) : (
+                    <div className="msgs-thread-avatar-fallback" />
+                  )}
+                  <span style={{
+                    position: "absolute", bottom: 1, right: 1,
+                    width: 11, height: 11, borderRadius: "50%",
+                    background: isOtherOnline ? "#22c55e" : "#94a3b8",
+                    border: "2px solid #fff",
+                  }} />
                 </div>
-                <div className="msgs-thread-role" style={{ color: (() => {
-                  const online = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
-                  return online ? "#22c55e" : "rgba(0,0,0,0.4)";
-                })() }}>
-                  {lastSeenLabel(other?.lastSeenAt ?? null)}
+                <div>
+                  <div className="msgs-thread-name">
+                    {other.name ?? other.twitterHandle ?? "Unknown"}
+                  </div>
+                  <div className="msgs-thread-role" style={{ color: isOtherOnline ? "#22c55e" : "rgba(0,0,0,0.4)" }}>
+                    {otherSeenLabel}
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+            )}
           </div>
 
           <MessageThread
