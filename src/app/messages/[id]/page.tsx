@@ -92,7 +92,10 @@ export default async function ConversationPage({
   const initialMessages = await db.message.findMany({
     where: { conversationId: id },
     orderBy: { createdAt: "asc" },
-    select: { id: true, senderId: true, body: true, createdAt: true, read: true },
+    select: {
+      id: true, senderId: true, body: true, createdAt: true, read: true,
+      replyTo: { select: { id: true, senderId: true, body: true } },
+    },
   });
 
   // Pre-calculate online status to avoid Date.now() in JSX
@@ -182,7 +185,7 @@ export default async function ConversationPage({
                 <path d="M19 12H5M12 5l-7 7 7 7"/>
               </svg>
             </Link>
-            
+
             {other && (
               <Link href={`/u/${other.twitterHandle}`} style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", minWidth: 0 }}>
                 <div className="msgs-thread-avatar" style={{ position: "relative" }}>
@@ -214,6 +217,8 @@ export default async function ConversationPage({
           <MessageThread
             conversationId={id}
             currentUserId={userId}
+            otherUserHandle={other?.twitterHandle ?? ""}
+            otherUserName={other?.name ?? null}
             initialMessages={JSON.parse(JSON.stringify(initialMessages))}
           />
         </div>

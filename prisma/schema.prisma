@@ -99,6 +99,9 @@ model Message {
   body           String
   read           Boolean      @default(false)
   createdAt      DateTime     @default(now())
+  replyToId      String?
+  replyTo        Message?     @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies        Message[]    @relation("MessageReplies")
 }
 
 model Gig {

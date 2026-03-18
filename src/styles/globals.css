@@ -60,6 +60,28 @@ body {
 
 
 
+/* ── MOBILE BOTTOM SHEET (portal — rendered in document.body, outside nav stacking context) ── */
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 9990;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.sheet-panel {
+  width: 100%;
+  border-radius: 20px 20px 0 0;
+  background: #fff;
+  max-height: 75vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 -8px 40px rgba(0,0,0,0.15);
+  /* panel is a flex child of backdrop — no z-index needed */
+}
+
 /* NAV */
 nav {
   position: fixed;
@@ -1297,6 +1319,50 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
   border-color: transparent;
 }
 
+.pow-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 0.65rem;
+  padding-top: 0.55rem;
+  border-top: 1px solid rgba(0,0,0,0.06);
+  flex-wrap: wrap;
+}
+
+.pow-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+
+.pow-stat-label {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.44rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,0.28);
+}
+
+.pow-stat-val {
+  font-family: 'Space Mono', monospace;
+  font-size: 0.64rem;
+  font-weight: 700;
+  color: #2DD4BF;
+}
+
+.pow-stat-val--empty {
+  color: rgba(0,0,0,0.25);
+}
+
+.pow-sep {
+  color: rgba(0,0,0,0.15);
+  font-family: 'Space Mono', monospace;
+  font-size: 0.6rem;
+  margin-top: 10px;
+  align-self: flex-start;
+}
+
 /* =========================
    PUBLIC PROFILE
    ========================= */
@@ -1876,6 +1942,14 @@ body.dark .msgs-title {
   font-size: 1.2rem;
   letter-spacing: 0.03em;
   color: var(--foreground);
+}
+
+.msgs-thread-name-link {
+  color: inherit;
+  text-decoration: none;
+}
+.msgs-thread-name-link:hover {
+  text-decoration: underline;
 }
 
 .msgs-thread-role {
@@ -3203,16 +3277,24 @@ img { max-width: 100%; }
 @media (max-width: 767px) {
   .page { padding-top: 70px; }
 
-  /* Home page: extend teal gradient into the padding-top area so no white gap shows */
+  /* Fill only the nav gap (70px padding-top) with the hero teal color so no white
+     sliver shows between navbar and hero. Transparent by 80px — well before trust strip. */
   .landing-page-main {
-    background: radial-gradient(ellipse 120% 60% at 50% 0%, rgba(45,212,191,0.18) 0%, rgba(20,184,166,0.08) 40%, transparent 70%);
+    background: linear-gradient(to bottom, rgba(20,184,166,0.13) 0px, transparent 80px);
+  }
+
+  /* Hero: auto height on mobile — only as tall as its content */
+  .landing-hero {
+    min-height: auto !important;
+    padding-bottom: 2.5rem !important;
+  }
+
+  /* Sections after hero must be white so no teal bleeds through */
+  .landing-section {
+    background: #fff;
   }
 }
 @media (max-width: 700px) {
-  .landing-hero {
-    padding-bottom: 3rem !important;
-    min-height: auto !important;
-  }
   .hero-h1 {
     font-size: clamp(2rem, 8vw, 2.8rem) !important;
     line-height: 1.05 !important;

@@ -11,6 +11,9 @@ interface FloatProfile {
   availability: string | null;
   skills: string[];
   bio: string | null;
+  ordersCompleted: number;
+  totalEarned: number;
+  memberSince: string;
 }
 
 interface Props {
@@ -123,6 +126,30 @@ function FloatCard({
           ))}
         </div>
       )}
+
+      {/* Proof-of-work stats */}
+      {(() => {
+        const earnedStr = profile.totalEarned === 0 ? "—" : profile.totalEarned >= 1000
+          ? `$${(profile.totalEarned / 1000).toFixed(profile.totalEarned % 1000 === 0 ? 0 : 1)}k`
+          : `$${profile.totalEarned}`;
+        return (
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
+            {([
+              { label: "Orders", val: profile.ordersCompleted === 0 ? "—" : String(profile.ordersCompleted), empty: profile.ordersCompleted === 0 },
+              { label: "Earned", val: earnedStr, empty: profile.totalEarned === 0 },
+              { label: "Since",  val: profile.memberSince, empty: false },
+            ] as Array<{ label: string; val: string; empty: boolean }>).map((stat, i) => (
+              <div key={stat.label} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
+                {i > 0 && <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.5rem", color: "rgba(0,0,0,0.15)", marginTop: 8 }}>·</span>}
+                <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
+                  <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.42rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,0,0,0.28)" }}>{stat.label}</span>
+                  <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", fontWeight: 700, color: stat.empty ? "rgba(0,0,0,0.25)" : "#2DD4BF" }}>{stat.val}</span>
+                </div>
+              </div>
+            ))}
+          </div>
+        );
+      })()}
 
       {/* Availability + DM row */}
       <div className="hero-float-divider" style={{

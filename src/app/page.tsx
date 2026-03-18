@@ -66,14 +66,29 @@ export default async function HomePage() {
   const session = await auth();
   const isLoggedIn = !!session?.user;
 
-  const [floatingProfiles] = await Promise.all([
-    db.user.findMany({
-      where: { profileComplete: true, image: { not: null } },
-      orderBy: { createdAt: "desc" },
-      take: 6,
-      select: { twitterHandle: true, name: true, image: true, role: true, availability: true, skills: true, bio: true },
-    }).catch(() => []),
-  ]);
+  const rawProfiles = await db.user.findMany({
+    where: { profileComplete: true, image: { not: null } },
+    orderBy: { createdAt: "desc" },
+    take: 6,
+    select: {
+      twitterHandle: true, name: true, image: true, role: true,
+      availability: true, skills: true, bio: true, createdAt: true,
+      sellerOrders: { where: { status: "completed" }, select: { amount: true } },
+    },
+  }).catch(() => []);
+
+  const floatingProfiles = rawProfiles.map((u: any) => ({
+    twitterHandle: u.twitterHandle,
+    name: u.name,
+    image: u.image,
+    role: u.role,
+    availability: u.availability,
+    skills: u.skills,
+    bio: u.bio,
+    ordersCompleted: (u.sellerOrders as Array<{ amount: number }> ?? []).length,
+    totalEarned: (u.sellerOrders as Array<{ amount: number }>).reduce((s: number, o: { amount: number }) => s + o.amount, 0),
+    memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+  }));
 
   return (
     <main className="page landing-page-main">

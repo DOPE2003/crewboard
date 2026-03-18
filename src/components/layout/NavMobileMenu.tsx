@@ -63,7 +63,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
         className="nav-hamburger"
         onClick={() => isOpen ? onClose() : onOpen()}
         aria-label={isOpen ? "Close menu" : "Open menu"}
-        style={{ minWidth: 44, minHeight: 44, display: "flex", alignItems: "center", justifyContent: "center" }}
+        style={{ minWidth: 44, minHeight: 44, alignItems: "center", justifyContent: "center" }}
       >
         {isOpen ? (
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

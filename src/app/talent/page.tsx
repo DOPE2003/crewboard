@@ -66,6 +66,11 @@ export default async function TalentPage({
           isOG: true,
           walletAddress: true,
           worldIdLevel: true,
+          createdAt: true,
+          sellerOrders: {
+            where: { status: "completed" },
+            select: { amount: true },
+          },
         },
       }),
       db.user.count({ where }),
@@ -184,6 +189,11 @@ export default async function TalentPage({
             <div className="talent-grid">
               {users.map((user: any) => {
                 const avail = user.availability ?? "available";
+                const orders = (user.sellerOrders as Array<{ amount: number }> ?? []);
+                const ordersCompleted = orders.length;
+                const totalEarned = orders.reduce((s, o) => s + o.amount, 0);
+                const earnedStr = totalEarned === 0 ? "—" : totalEarned >= 1000 ? `$${(totalEarned / 1000).toFixed(totalEarned % 1000 === 0 ? 0 : 1)}k` : `$${totalEarned}`;
+                const since = new Date(user.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
                 return (
                   <Link
                     key={user.twitterHandle}
@@ -230,6 +240,23 @@ export default async function TalentPage({
                         )}
                       </div>
                     )}
+
+                    <div className="pow-stats">
+                      <div className="pow-stat">
+                        <span className="pow-stat-label">Orders</span>
+                        <span className={`pow-stat-val${ordersCompleted === 0 ? " pow-stat-val--empty" : ""}`}>{ordersCompleted === 0 ? "—" : ordersCompleted}</span>
+                      </div>
+                      <span className="pow-sep">·</span>
+                      <div className="pow-stat">
+                        <span className="pow-stat-label">Earned</span>
+                        <span className={`pow-stat-val${totalEarned === 0 ? " pow-stat-val--empty" : ""}`}>{earnedStr}</span>
+                      </div>
+                      <span className="pow-sep">·</span>
+                      <div className="pow-stat">
+                        <span className="pow-stat-label">Since</span>
+                        <span className="pow-stat-val">{since}</span>
+                      </div>
+                    </div>
                   </Link>
                 );
               })}

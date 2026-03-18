@@ -7,11 +7,11 @@ import { containsSocial } from "@/lib/filterSocials";
 import { revalidatePath } from "next/cache";
 import { sendMessageNotification, sendHireNotification, sendServiceRequestNotification } from "@/lib/email";
 
-export async function sendMessage(conversationId: string, body: string) {
+export async function sendMessage(conversationId: string, body: string, replyToId?: string) {
   // Top-level catch ensures Next.js always gets a serialisable Error back
   // instead of the generic "An unexpected response was received from the server."
   try {
-    return await _sendMessage(conversationId, body);
+    return await _sendMessage(conversationId, body, replyToId);
   } catch (err: any) {
     // Re-throw special Next.js errors (redirect, notFound) as-is
     if (err?.digest) throw err;
@@ -20,7 +20,7 @@ export async function sendMessage(conversationId: string, body: string) {
   }
 }
 
-async function _sendMessage(conversationId: string, body: string) {
+async function _sendMessage(conversationId: string, body: string, replyToId?: string) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) {
@@ -45,8 +45,11 @@ async function _sendMessage(conversationId: string, body: string) {
   let message;
   try {
     message = await db.message.create({
-      data: { conversationId, senderId: userId, body: body.trim() },
-      select: { id: true, senderId: true, body: true, createdAt: true, read: true },
+      data: { conversationId, senderId: userId, body: body.trim(), ...(replyToId ? { replyToId } : {}) },
+      select: {
+        id: true, senderId: true, body: true, createdAt: true, read: true,
+        replyTo: { select: { id: true, senderId: true, body: true } },
+      },
     });
     await db.conversation.update({
       where: { id: conversationId },
@@ -122,7 +125,10 @@ export async function getMessages(conversationId: string) {
   const messages = await db.message.findMany({
     where: { conversationId },
     orderBy: { createdAt: "asc" },
-    select: { id: true, senderId: true, body: true, createdAt: true, read: true },
+    select: {
+      id: true, senderId: true, body: true, createdAt: true, read: true,
+      replyTo: { select: { id: true, senderId: true, body: true } },
+    },
   });
 
   return JSON.parse(JSON.stringify(messages)); // Ensure plain object for client components
