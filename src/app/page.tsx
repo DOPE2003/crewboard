@@ -112,25 +112,22 @@ export default async function HomePage() {
 
         {/* Status chip */}
         <div style={{
-          display: "inline-flex",
-          alignItems: "center",
-          gap: "0.5rem",
           fontFamily: "Space Mono, monospace",
-          fontSize: "0.58rem",
+          fontSize: "0.6rem",
+          fontWeight: 700,
           letterSpacing: "0.28em",
-          color: "rgba(0,0,0,0.45)",
+          color: "#22c55e",
           textTransform: "uppercase",
           marginBottom: "2rem",
           padding: "0.45rem 1rem",
-          border: "1px solid rgba(0,0,0,0.1)",
+          border: "1px solid rgba(34,197,94,0.2)",
           borderRadius: "999px",
-          background: "rgba(0,0,0,0.04)",
+          background: "rgba(34,197,94,0.05)",
           opacity: 0,
           animation: "fadeUp 0.6s 0.1s forwards",
         }}>
           ✦ Now in Beta
         </div>
-
         {/* Headline */}
         <h1 className="hero-h1" style={{
           fontFamily: "Rajdhani, sans-serif",

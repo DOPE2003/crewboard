@@ -98,11 +98,23 @@ nav {
 .nav-links-row {
   display: flex;
   align-items: center;
-  padding: 0.45rem 2rem;
+  padding: 0.25rem 2rem;
   border-bottom: 1px solid rgba(0,0,0,0.06);
 }
 
-.nav-links { display: flex; gap: 0; list-style: none; margin: 0; width: 100%; justify-content: space-evenly; }
+.nav-links { display: flex; gap: 1rem; list-style: none; margin: 0; width: 100%; justify-content: center; }
+
+/* Row 1 — Logo + Search + Icons */
+.nav-row1 {
+  padding: 0.25rem 2rem;
+}
+
+.nav-hamburger {
+  display: none !important;
+}
+@media (max-width: 767px) {
+  .nav-hamburger { display: flex !important; }
+}
 .nav-links a {
   color: rgba(0,0,0,0.78);
   text-decoration: none;

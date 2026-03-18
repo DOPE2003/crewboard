@@ -92,18 +92,18 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
   return (
     <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
       {/* Messages button */}
-      <button
-        onClick={() => isOpen ? onClose() : onOpen()}
+      <Link
+        href="/messages"
         aria-label="Messages"
         style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: 34, height: 34, borderRadius: 8, background: "none",
           border: "none", cursor: "pointer", position: "relative",
-          color: isOpen ? "#000" : "rgba(0,0,0,0.5)",
+          color: "rgba(0,0,0,0.5)",
           transition: "color 0.2s, background 0.2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = isOpen ? "#000" : "rgba(0,0,0,0.5)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "rgba(0,0,0,0.5)"; }}
       >
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -121,7 +121,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
             {totalUnread > 99 ? "99+" : totalUnread}
           </span>
         )}
-      </button>
+      </Link>
 
       {isOpen && (
         <>

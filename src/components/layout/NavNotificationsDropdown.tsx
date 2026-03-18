@@ -135,18 +135,18 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
   return (
     <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
       {/* Bell button */}
-      <button
-        onClick={() => isOpen ? onClose() : onOpen()}
+      <Link
+        href="/notifications"
         aria-label="Notifications"
         style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: 34, height: 34, borderRadius: 8, background: "none",
           border: "none", cursor: "pointer", position: "relative",
-          color: isOpen ? "#000" : "rgba(0,0,0,0.5)",
+          color: "rgba(0,0,0,0.5)",
           transition: "color 0.2s, background 0.2s",
         }}
         onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = isOpen ? "#000" : "rgba(0,0,0,0.5)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "rgba(0,0,0,0.5)"; }}
       >
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
@@ -173,7 +173,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             border: "1.5px solid #fff",
           }} />
         )}
-      </button>
+      </Link>
 
       {isOpen && (
         <>

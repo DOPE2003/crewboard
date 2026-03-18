@@ -168,7 +168,7 @@ export default async function Navbar() {
 
         {/* Logo + brand name */}
         <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-start", textDecoration: "none", gap: "0.15rem" }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 280, height: 70 }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 240, height: 60 }}>
             <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
               fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
             <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
@@ -177,7 +177,7 @@ export default async function Navbar() {
             <circle cx="72" cy="54" r="6.4" fill="currentColor"/>
             <circle cx="52" cy="94" r="6.4" fill="currentColor"/>
             <circle cx="92" cy="94" r="6.4" fill="currentColor"/>
-            <text x="152" y="102" fill="currentColor"
+            <text x="152" y="92" fill="currentColor"
               style={{ fontFamily: "Inter,'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: 68, letterSpacing: -2.4 }}>
               <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
             </text>
@@ -186,39 +186,41 @@ export default async function Navbar() {
         </Link>
 
         {/* Right: search + icons + auth */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0, marginLeft: "auto", minWidth: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flex: 1, justifyContent: "center", minWidth: 0 }}>
 
           {/* Search — hidden on mobile */}
-          <div className="nav-search-wrap">
+          <div className="nav-search-wrap" style={{ display: "flex", justifyContent: "center", flex: 1 }}>
             <NavSearch />
           </div>
 
           {/* Icons + hamburger — single client component owns open state */}
-          <NavControlsClient
-            loggedIn={!!user}
-            conversations={navConversations}
-            totalUnread={totalMsgUnread}
-            notifications={navNotifications}
-            unreadCount={unreadCount}
-            orders={navOrders}
-            activeCount={activeOrderCount}
-            hasIncompleteOnboarding={hasIncompleteOnboarding}
-          >
-            {user && (
-              <NavProfileMenu
-                image={user.image ?? null}
-                name={user.name ?? null}
-                twitterHandle={(user as any).twitterHandle ?? null}
-                role={dbUser?.role ?? null}
-                availability={dbUser?.availability ?? null}
-                unreadCount={unreadCount}
-                gigsCount={gigsCount}
-              />
-            )}
-            {!user && (
-              <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
-            )}
-          </NavControlsClient>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginLeft: "auto" }}>
+            <NavControlsClient
+              loggedIn={!!user}
+              conversations={navConversations}
+              totalUnread={totalMsgUnread}
+              notifications={navNotifications}
+              unreadCount={unreadCount}
+              orders={navOrders}
+              activeCount={activeOrderCount}
+              hasIncompleteOnboarding={hasIncompleteOnboarding}
+            >
+              {user && (
+                <NavProfileMenu
+                  image={user.image ?? null}
+                  name={user.name ?? null}
+                  twitterHandle={(user as any).twitterHandle ?? null}
+                  role={dbUser?.role ?? null}
+                  availability={dbUser?.availability ?? null}
+                  unreadCount={unreadCount}
+                  gigsCount={gigsCount}
+                />
+              )}
+              {!user && (
+                <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
+              )}
+            </NavControlsClient>
+          </div>
         </div>
       </div>
 

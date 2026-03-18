@@ -75,7 +75,30 @@ export default function NavSearch() {
   };
 
   return (
-    <div ref={wrapRef} style={{ position: "relative" }}>
+    <div ref={wrapRef} style={{ position: "relative", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+      {/* Categories button */}
+      <button 
+        className="nav-all-cats-btn"
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          width: "38px",
+          height: "38px",
+          borderRadius: "50%",
+          background: "rgba(0,0,0,0.04)",
+          border: "1px solid rgba(0,0,0,0.08)",
+          cursor: "pointer",
+          color: "rgba(0,0,0,0.5)",
+          transition: "all 0.2s",
+        }}
+        title="All Categories"
+      >
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
+        </svg>
+      </button>
+
       {/* Search box */}
       <div className="nav-search-box" style={{
         display: "flex",
@@ -105,7 +128,7 @@ export default function NavSearch() {
             outline: "none",
             fontFamily: "Outfit, sans-serif",
             fontSize: "0.82rem",
-            width: "440px",
+            width: "560px",
           }}
         />
       </div>

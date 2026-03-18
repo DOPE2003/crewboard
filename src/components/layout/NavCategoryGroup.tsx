@@ -50,7 +50,7 @@ export default function NavCategoryGroup({ label, color, items }: Props) {
           gap: "0.25rem",
           whiteSpace: "nowrap",
           transition: "color 0.2s",
-          padding: "0.5rem 0.6rem",
+          padding: "0.5rem 0.4rem",
         }}
       >
         {label}
