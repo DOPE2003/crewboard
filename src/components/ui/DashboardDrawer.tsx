@@ -132,7 +132,7 @@ export default function DashboardDrawer() {
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 1 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: availColor }} />
-                  <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.6rem", color: "#94a3b8" }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", color: "#94a3b8" }}>
                     @{user.twitterHandle}
                   </span>
                 </div>
@@ -189,7 +189,7 @@ export default function DashboardDrawer() {
                 { label: "Crew", value: 0, color: "#f59e0b" },
               ].map((s) => (
                 <div key={s.label} style={{ textAlign: "center", padding: "0.6rem 0.25rem", borderRadius: 10, background: "#f8fafc" }}>
-                  <div style={{ fontFamily: "Space Mono,monospace", fontWeight: 700, fontSize: "1rem", color: s.color }}>{s.value}</div>
+                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", color: s.color }}>{s.value}</div>
                   <div style={{ fontSize: "0.55rem", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>{s.label}</div>
                 </div>
               ))}

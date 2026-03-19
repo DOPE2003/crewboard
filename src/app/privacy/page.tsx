@@ -10,7 +10,7 @@ export default function PrivacyPage() {
         {/* Header */}
         <div style={{ marginBottom: "3rem" }}>
           <div style={{
-            fontFamily: "Space Mono, monospace",
+            fontFamily: "Inter, sans-serif",
             fontSize: "0.58rem",
             letterSpacing: "0.28em",
             textTransform: "uppercase",
@@ -20,7 +20,7 @@ export default function PrivacyPage() {
             — Legal
           </div>
           <h1 style={{
-            fontFamily: "Rajdhani, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(2rem, 5vw, 3rem)",
             letterSpacing: "0.02em",
@@ -87,7 +87,7 @@ export default function PrivacyPage() {
         {/* Back */}
         <div style={{ marginTop: "4rem", paddingTop: "2rem", borderTop: "1px solid rgba(0,0,0,0.08)" }}>
           <Link href="/" style={{
-            fontFamily: "Rajdhani, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 700,
             fontSize: "0.85rem",
             letterSpacing: "0.1em",
@@ -108,7 +108,7 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   return (
     <div>
       <h2 style={{
-        fontFamily: "Rajdhani, sans-serif",
+        fontFamily: "Inter, sans-serif",
         fontWeight: 700,
         fontSize: "1.05rem",
         letterSpacing: "0.04em",

@@ -55,7 +55,7 @@ function WalletButtonInner() {
         style={{
           display: "flex", alignItems: "center", gap: "0.4rem",
           padding: "0.35rem 0.75rem", borderRadius: "999px",
-          fontFamily: "Space Mono, monospace", fontSize: "0.68rem", fontWeight: 700,
+          fontFamily: "Inter, sans-serif", fontSize: "0.68rem", fontWeight: 700,
           border: connected ? "1.5px solid #14b8a6" : "1.5px solid rgba(0,0,0,0.15)",
           background: connected ? "rgba(20,184,166,0.07)" : "transparent",
           color: connected ? "#14b8a6" : "rgba(0,0,0,0.55)",
@@ -80,7 +80,7 @@ function WalletButtonInner() {
             <>
               <div style={{
                 padding: "0.4rem 0.75rem 0.5rem",
-                fontFamily: "Space Mono, monospace", fontSize: "0.6rem",
+                fontFamily: "Inter, sans-serif", fontSize: "0.6rem",
                 color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase",
               }}>
                 {publicKey && shortAddr(publicKey.toBase58())}
@@ -90,7 +90,7 @@ function WalletButtonInner() {
                 style={{
                   width: "100%", display: "flex", alignItems: "center", gap: "0.5rem",
                   padding: "0.5rem 0.75rem", borderRadius: "8px",
-                  fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600,
+                  fontFamily: "Inter, sans-serif", fontSize: "0.82rem", fontWeight: 600,
                   color: "#dc2626", background: "transparent", border: "none",
                   cursor: "pointer", textAlign: "left",
                 }}
@@ -109,7 +109,7 @@ function WalletButtonInner() {
             <>
               <div style={{
                 padding: "0.4rem 0.75rem 0.5rem",
-                fontFamily: "Space Mono, monospace", fontSize: "0.6rem",
+                fontFamily: "Inter, sans-serif", fontSize: "0.6rem",
                 color: "#94a3b8", letterSpacing: "0.08em", textTransform: "uppercase",
               }}>
                 {t("wallet.choose")}
@@ -123,7 +123,7 @@ function WalletButtonInner() {
                     style={{
                       width: "100%", display: "flex", alignItems: "center", gap: "0.6rem",
                       padding: "0.5rem 0.75rem", borderRadius: "8px",
-                      fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600,
+                      fontFamily: "Inter, sans-serif", fontSize: "0.82rem", fontWeight: 600,
                       color: "#0f172a", background: "transparent", border: "none",
                       cursor: "pointer", textAlign: "left",
                     }}

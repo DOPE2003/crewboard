@@ -55,7 +55,7 @@ export default async function MyGigsPage() {
     <main className="page" style={{ paddingBottom: 0 }}>
       {/* Top bar */}
       <div style={{ maxWidth: "100%", padding: "0 1.5rem 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
-        <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8" }}>
+        <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8" }}>
           — Services
         </div>
         <Link href="/gigs/new" className="btn-primary" style={{ display: "inline-flex", fontSize: "0.78rem", padding: "0.6rem 1.4rem" }}>
@@ -141,7 +141,7 @@ export default async function MyGigsPage() {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.9rem" }}>
+    <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.9rem" }}>
       {children}
     </div>
   );
@@ -180,7 +180,7 @@ function OrderCard({ order, other, role }: { order: any; other: any; role: "buye
         </div>
       </div>
       <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <div style={{ fontFamily: "Space Mono, monospace", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF" }}>${order.amount}</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF" }}>${order.amount}</div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 4, padding: "2px 10px", borderRadius: 99, background: `${color}18`, border: `1px solid ${color}40` }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: color }} />
           <span style={{ fontSize: "0.6rem", fontWeight: 600, color, letterSpacing: "0.04em" }}>{label}</span>

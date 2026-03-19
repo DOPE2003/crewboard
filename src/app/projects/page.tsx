@@ -1,63 +1,83 @@
-import db from "@/lib/db";
+export const metadata = { title: "Projects — Crewboard" };
 
-export default async function ProjectsPage() {
-  const projects = await db.project.findMany({
-    where: { status: "open" },
-    orderBy: { createdAt: "desc" },
-  });
-
+export default function ProjectsPage() {
   return (
-    <main className="page">
-      <section className="talent-wrap">
-        <div className="talent-header">
-          <div className="auth-kicker">— CREWBOARD</div>
-          <h1 className="auth-title">Projects</h1>
-          <p className="auth-sub">Open Web3 projects looking for crew.</p>
+    <main className="page" style={{ minHeight: "100vh" }}>
+      <div style={{ maxWidth: 720, margin: "0 auto", padding: "4rem 1.5rem 6rem", textAlign: "center" }}>
+
+        {/* Coming Soon Banner */}
+        <div style={{
+          display: "inline-flex",
+          alignItems: "center",
+          gap: "0.5rem",
+          background: "rgba(45,212,191,0.08)",
+          border: "1px solid rgba(45,212,191,0.25)",
+          borderRadius: 999,
+          padding: "0.35rem 1rem",
+          marginBottom: "2rem",
+        }}>
+          <span style={{
+            width: 6, height: 6, borderRadius: "50%",
+            background: "#2DD4BF", flexShrink: 0,
+            animation: "pulse 2s infinite",
+          }} />
+          <span style={{
+            fontFamily: "Inter, sans-serif",
+            fontSize: "0.55rem",
+            letterSpacing: "0.2em",
+            textTransform: "uppercase",
+            color: "#2DD4BF",
+            fontWeight: 600,
+          }}>
+            Coming Soon
+          </span>
         </div>
 
-        {projects.length === 0 ? (
-          <div className="talent-empty">
-            <p>No open projects yet — check back soon.</p>
-          </div>
-        ) : (
-          <div className="projects-grid">
-            {projects.map((project: typeof projects[number]) => (
-              <div key={project.id} className="project-card">
-                <div className="project-card-top">
-                  <h2 className="project-title">{project.title}</h2>
-                  <span className="project-status-badge">{project.status}</span>
-                </div>
+        <h1 style={{
+          fontFamily: "Inter, sans-serif",
+          fontWeight: 700,
+          fontSize: "clamp(2rem, 6vw, 3.5rem)",
+          color: "#0f172a",
+          lineHeight: 1,
+          marginBottom: "1rem",
+        }}>
+          Projects
+        </h1>
 
-                {project.description && (
-                  <p className="project-desc">{project.description}</p>
-                )}
+        <p style={{
+          fontFamily: "Inter, sans-serif",
+          fontSize: "1rem",
+          color: "rgba(0,0,0,0.45)",
+          lineHeight: 1.65,
+          maxWidth: 480,
+          margin: "0 auto 2.5rem",
+        }}>
+          Post open Web3 projects and find the right crew to build with. Launching soon.
+        </p>
 
-                {project.stack.length > 0 && (
-                  <div className="project-chips-row">
-                    <div className="dash-section-label" style={{ marginBottom: 6 }}>Stack</div>
-                    <div className="project-chips">
-                      {project.stack.map((s: string) => (
-                        <span key={s} className="dash-skill-chip">{s}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
+        <a
+          href="mailto:info@crewboard.fun"
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "0.5rem",
+            fontFamily: "Inter, sans-serif",
+            fontWeight: 700,
+            fontSize: "0.875rem",
+            letterSpacing: "0.1em",
+            textTransform: "uppercase",
+            padding: "0.75rem 1.75rem",
+            borderRadius: 8,
+            background: "#0f172a",
+            color: "#fff",
+            textDecoration: "none",
+            transition: "opacity 0.2s",
+          }}
+        >
+          Get Early Access
+        </a>
 
-                {project.rolesNeeded.length > 0 && (
-                  <div className="project-chips-row">
-                    <div className="dash-section-label" style={{ marginBottom: 6 }}>Roles Needed</div>
-                    <div className="project-chips">
-                      {project.rolesNeeded.map((r: string) => (
-                        <span key={r} className="talent-role">{r}</span>
-                      ))}
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </section>
+      </div>
     </main>
   );
 }

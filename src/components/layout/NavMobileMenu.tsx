@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import ThemeToggle from "@/components/ui/ThemeToggle";
 
 const CATEGORIES = [
   {
@@ -112,7 +113,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
               borderBottom: "1px solid rgba(0,0,0,0.08)",
             }}>
               <span style={{
-                fontFamily: "Rajdhani, sans-serif",
+                fontFamily: "Inter, sans-serif",
                 fontWeight: 700,
                 fontSize: "1rem",
                 letterSpacing: "0.12em",
@@ -171,7 +172,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
                       flexShrink: 0,
                     }} />
                     <span style={{
-                      fontFamily: "Rajdhani, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       fontWeight: 700,
                       fontSize: "0.95rem",
                       letterSpacing: "0.1em",
@@ -204,7 +205,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
                           gap: "0.6rem",
                           padding: "14px 20px 14px 36px",
                           minHeight: 48,
-                          fontFamily: "Outfit, sans-serif",
+                          fontFamily: "Inter, sans-serif",
                           fontSize: "0.88rem",
                           fontWeight: 600,
                           color: "#334155",
@@ -224,6 +225,25 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
               </div>
             ))}
 
+            {/* Theme toggle row */}
+            <div style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-between",
+              padding: "0.85rem 1.25rem",
+              borderTop: "1px solid rgba(0,0,0,0.07)",
+            }}>
+              <span style={{
+                fontFamily: "Inter, sans-serif",
+                fontSize: "0.85rem",
+                fontWeight: 600,
+                color: "rgba(0,0,0,0.6)",
+              }}>
+                Theme
+              </span>
+              <ThemeToggle />
+            </div>
+
             {/* Browse all link */}
             <div style={{ padding: "1rem 1.25rem", borderTop: "1px solid rgba(0,0,0,0.07)" }}>
               <Link
@@ -236,7 +256,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose }: Props) {
                   borderRadius: 10,
                   background: "#0f172a",
                   color: "#fff",
-                  fontFamily: "Rajdhani, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontWeight: 700,
                   fontSize: "0.85rem",
                   letterSpacing: "0.1em",

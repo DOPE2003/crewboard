@@ -52,7 +52,8 @@ interface Props {
 
 export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen, onClose }: Props) {
   const [isMobile, setIsMobile] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const [panelPos, setPanelPos] = useState({ top: 60, right: 0 });
+  const triggerRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth <= 767);
@@ -61,30 +62,30 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
     return () => window.removeEventListener("resize", check);
   }, []);
 
-  // Click-outside (desktop only)
   useEffect(() => {
-    if (isMobile) return;
-    const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) onClose();
+    if (!isOpen || isMobile) return;
+    const update = () => {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) setPanelPos({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [isMobile]);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [isOpen, isMobile]);
 
-  // Shared panel content
   const panelInner = (
     <>
       {/* Header */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "16px",
-        borderBottom: "1px solid rgba(0,0,0,0.07)",
+        borderBottom: "1px solid var(--card-border)",
         flexShrink: 0,
       }}>
-        <span style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.04em", color: "#0f172a" }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", letterSpacing: "0.04em", color: "var(--foreground)" }}>
           Orders
           {activeCount > 0 && (
-            <span style={{ background: "#f59e0b", color: "#fff", borderRadius: "999px", fontSize: "0.55rem", fontWeight: 700, padding: "1px 6px", marginLeft: 6, fontFamily: "Space Mono, monospace" }}>
+            <span style={{ background: "#f59e0b", color: "#fff", borderRadius: "999px", fontSize: "0.55rem", fontWeight: 700, padding: "1px 6px", marginLeft: 6, fontFamily: "Inter, sans-serif" }}>
               {activeCount} active
             </span>
           )}
@@ -93,14 +94,14 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
           <Link
             href="/orders"
             onClick={onClose}
-            style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}
+            style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}
           >
             View all
           </Link>
           {isMobile && (
             <button
               onClick={onClose}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "var(--text-muted)", display: "flex" }}
               aria-label="Close"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -114,7 +115,7 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
       {/* Order list */}
       <div style={{ overflowY: "auto", flex: 1 }}>
         {orders.length === 0 ? (
-          <div style={{ padding: "2rem 1rem", textAlign: "center", fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", color: "rgba(0,0,0,0.4)" }}>
+          <div style={{ padding: "2rem 1rem", textAlign: "center", fontFamily: "Inter, sans-serif", fontSize: "0.82rem", color: "var(--text-muted)" }}>
             No orders yet.{" "}
             <Link href="/gigs" onClick={onClose} style={{ color: "#14b8a6", textDecoration: "none" }}>
               Browse gigs →
@@ -132,21 +133,21 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
                 style={{
                   display: "flex", alignItems: "center", gap: "0.75rem",
                   padding: isMobile ? "0 16px" : "0.75rem 1rem", minHeight: isMobile ? 64 : "auto",
-                  borderBottom: "1px solid rgba(0,0,0,0.05)",
+                  borderBottom: "1px solid var(--card-border)",
                   background: "transparent",
                   transition: "background 0.12s",
                   width: "100%", cursor: "pointer", textDecoration: "none",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.04)")}
+                onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-hover)")}
                 onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
               >
                 {/* Avatar */}
-                <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, overflow: "hidden", background: "rgba(0,0,0,0.07)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                <div style={{ width: 38, height: 38, borderRadius: "50%", flexShrink: 0, overflow: "hidden", background: "var(--avatar-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   {o.other?.image ? (
                     // eslint-disable-next-line @next/next/no-img-element
                     <img src={o.other.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   ) : (
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.35)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
                   )}
@@ -154,22 +155,22 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
 
                 {/* Info */}
                 <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", fontWeight: 600, color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                  <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.82rem", fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                     {o.gigTitle}
                   </div>
-                  <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", color: "rgba(0,0,0,0.45)", marginTop: 1 }}>
+                  <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.68rem", color: "var(--text-muted)", marginTop: 1 }}>
                     {o.role === "buyer" ? "Seller" : "Buyer"}: {o.other?.name ?? o.other?.twitterHandle ?? "Unknown"}
                   </div>
                 </div>
 
                 {/* Right: price + status */}
                 <div style={{ textAlign: "right", flexShrink: 0 }}>
-                  <div style={{ fontFamily: "Space Mono, monospace", fontWeight: 700, fontSize: "0.82rem", color: "#2DD4BF" }}>
+                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.82rem", color: "#2DD4BF" }}>
                     ${o.amount}
                   </div>
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 4, marginTop: 3, padding: "1px 7px", borderRadius: 99, background: `${color}18`, border: `1px solid ${color}40` }}>
                     <span style={{ width: 5, height: 5, borderRadius: "50%", background: color }} />
-                    <span style={{ fontSize: "0.56rem", fontWeight: 600, color, letterSpacing: "0.04em", fontFamily: "Space Mono, monospace" }}>{label}</span>
+                    <span style={{ fontSize: "0.56rem", fontWeight: 600, color, letterSpacing: "0.04em", fontFamily: "Inter, sans-serif" }}>{label}</span>
                   </div>
                 </div>
               </Link>
@@ -179,7 +180,7 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "0.75rem 16px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
+      <div style={{ padding: "0.75rem 16px", borderTop: "1px solid var(--card-border)", flexShrink: 0 }}>
         <Link
           href="/orders"
           onClick={onClose}
@@ -187,11 +188,11 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
             display: "flex", alignItems: "center", justifyContent: "center",
             height: isMobile ? 52 : "auto",
             width: "100%",
-            fontFamily: "Rajdhani, sans-serif", fontWeight: 700,
+            fontFamily: "Inter, sans-serif", fontWeight: 700,
             fontSize: isMobile ? "0.85rem" : "0.72rem",
             letterSpacing: "0.1em", textTransform: "uppercase",
-            color: isMobile ? "#fff" : "#0f172a",
-            background: isMobile ? "#0f172a" : "none",
+            color: isMobile ? "var(--dropdown-bg)" : "var(--foreground)",
+            background: isMobile ? "var(--foreground)" : "none",
             borderRadius: isMobile ? 12 : 0,
             textDecoration: "none",
           }}
@@ -202,27 +203,56 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
     </>
   );
 
+  const desktopStyle: React.CSSProperties = {
+    position: "fixed",
+    top: panelPos.top,
+    right: panelPos.right,
+    width: 340,
+    borderRadius: 16,
+    zIndex: 9999,
+    background: "var(--dropdown-bg)",
+    border: "1px solid var(--card-border)",
+    boxShadow: "var(--shadow-dropdown)",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+  };
+
+  const mobileStyle: React.CSSProperties = {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderRadius: "20px 20px 0 0",
+    zIndex: 9999,
+    background: "var(--dropdown-bg)",
+    maxHeight: "75vh",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    boxShadow: "0 -8px 40px rgba(0,0,0,0.25)",
+  };
+
   return (
-    <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
+    <div style={{ position: "relative", flexShrink: 0 }}>
       {/* Trigger button */}
       <button
+        ref={triggerRef}
         onClick={() => isOpen ? onClose() : onOpen()}
         style={{
           display: "flex", alignItems: "center", justifyContent: "center",
           width: 34, height: 34, borderRadius: 8, background: "none",
           border: "none", cursor: "pointer", position: "relative",
-          color: "rgba(0,0,0,0.5)",
+          color: "var(--text-muted)",
           transition: "color 0.2s, background 0.2s",
         }}
         className="nav-orders-link"
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "rgba(0,0,0,0.5)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-hover)"; e.currentTarget.style.color = "var(--foreground)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "var(--text-muted)"; }}
       >
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-          <rect x="9" y="3" width="6" height="4" rx="1"/>
-          <line x1="9" y1="12" x2="15" y2="12"/>
-          <line x1="9" y1="16" x2="12" y2="16"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+          <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
         </svg>
         {activeCount > 0 && (
           <span style={{
@@ -230,7 +260,7 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
             minWidth: 15, height: 15, borderRadius: "999px",
             background: "#f59e0b",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: "Space Mono, monospace",
+            fontFamily: "Inter, sans-serif",
             fontSize: "0.46rem", fontWeight: 700,
             color: "#fff", lineHeight: 1, padding: "0 3px",
           }}>
@@ -239,32 +269,27 @@ export default function NavOrdersDropdown({ orders, activeCount, isOpen, onOpen,
         )}
       </button>
 
-      {/* Desktop dropdown — position: absolute inside wrapRef */}
-      {isOpen && !isMobile && (
-        <div style={{
-          position: "absolute", top: "calc(100% + 10px)", right: 0,
-          width: 340, borderRadius: 16, zIndex: 9999,
-          background: "#fff",
-          border: "1px solid rgba(0,0,0,0.1)",
-          boxShadow: "0 12px 40px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06)",
-          overflow: "hidden",
-          display: "flex", flexDirection: "column",
-        }}>
-          {panelInner}
-        </div>
-      )}
-
-      {/* Mobile bottom sheet — portaled to document.body, outside nav stacking context */}
-      {isOpen && isMobile && createPortal(
-        <div className="sheet-backdrop" onClick={onClose}>
-          <div className="sheet-panel" onClick={(e) => e.stopPropagation()}>
-            {/* Drag handle */}
-            <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
-              <div style={{ width: 40, height: 4, borderRadius: 99, background: "#ccc" }} />
-            </div>
+      {/* Portal — desktop dropdown + mobile bottom sheet */}
+      {isOpen && createPortal(
+        <>
+          <div
+            onClick={onClose}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9998,
+              background: isMobile ? "rgba(0,0,0,0.4)" : "transparent",
+            }}
+          />
+          <div style={isMobile ? mobileStyle : desktopStyle}>
+            {isMobile && (
+              <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
+                <div style={{ width: 40, height: 4, borderRadius: 99, background: "var(--card-border)" }} />
+              </div>
+            )}
             {panelInner}
           </div>
-        </div>,
+        </>,
         document.body
       )}
     </div>

@@ -11,7 +11,7 @@ body.whitepaper-page {
   --star-rgb: 255,255,255;
   background: #000;
   color: #fff;
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Inter', sans-serif;
   overflow-x: hidden;
 }
 
@@ -81,7 +81,7 @@ body.whitepaper-page nav img[alt="Crewboard"] { filter: brightness(0) invert(1);
   position: relative;
 }
 .hero-tag {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.62rem;
   letter-spacing: 0.35em;
   color: var(--muted);
@@ -91,7 +91,7 @@ body.whitepaper-page nav img[alt="Crewboard"] { filter: brightness(0) invert(1);
   animation: fadeUp 0.8s 0.2s forwards;
 }
 .hero-logo {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: clamp(4rem, 12vw, 8rem);
   letter-spacing: 0.08em;
@@ -122,7 +122,7 @@ body.whitepaper-page .btn-primary {
   padding: 0.85rem 2.2rem;
   background: #fff;
   color: #000;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.12em;
@@ -138,7 +138,7 @@ body.whitepaper-page .btn-outline {
   padding: 0.85rem 2.2rem;
   background: transparent;
   color: #fff;
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 0.9rem;
   letter-spacing: 0.12em;
@@ -164,7 +164,7 @@ body.whitepaper-page .scroll-hint {
   animation: fadeUp 1s 1.5s forwards;
 }
 body.whitepaper-page .scroll-hint span {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.52rem;
   letter-spacing: 0.25em;
   color: var(--subtle);
@@ -192,7 +192,7 @@ section {
   margin: 0 auto;
 }
 body.whitepaper-page .section-label {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.3em;
   color: var(--muted);
@@ -209,7 +209,7 @@ body.whitepaper-page .section-label::before {
   background: var(--muted);
 }
 .section-title {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: clamp(2rem, 4.5vw, 2.8rem);
   line-height: 1.15;
@@ -240,7 +240,7 @@ body.whitepaper-page .section-label::before {
   overflow-x: auto;
 }
 .diagram-title {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.58rem;
   letter-spacing: 0.2em;
   color: var(--subtle);
@@ -288,7 +288,7 @@ body.whitepaper-page .section-label::before {
   line-height: 1;
 }
 .node-title {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   font-size: 0.8rem;
   letter-spacing: 0.03em;
@@ -328,7 +328,7 @@ body.whitepaper-page .section-label::before {
   border-left: 6px solid rgba(255,255,255,0.25);
 }
 .a-label {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.48rem;
   color: var(--subtle);
   letter-spacing: 0.08em;
@@ -350,7 +350,7 @@ body.whitepaper-page .section-label::before {
   border-radius: 6px;
 }
 .challenge-card h3 {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.04em;
@@ -374,7 +374,7 @@ body.whitepaper-page .section-label::before {
   padding: 1.8rem;
 }
 .feature-card h3 {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.05rem;
   font-weight: 700;
   margin-bottom: 0.5rem;
@@ -401,7 +401,7 @@ body.whitepaper-page .section-label::before {
   background: #000;
 }
 .roadmap-period {
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 0.65rem;
   color: rgba(255,255,255,0.4);
   letter-spacing: 0.08em;
@@ -410,7 +410,7 @@ body.whitepaper-page .section-label::before {
   white-space: nowrap;
 }
 .roadmap-desc h4 {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1rem;
   font-weight: 700;
   margin-bottom: 0.3rem;
@@ -433,7 +433,7 @@ body.whitepaper-page .section-label::before {
   border: 1px solid var(--border);
 }
 .model-card .stat {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 2.2rem;
   font-weight: 700;
   color: #fff;
@@ -448,7 +448,7 @@ body.whitepaper-page .section-label::before {
   padding: 7rem 2rem;
 }
 .cta-section h2 {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: clamp(2.2rem, 5vw, 3.5rem);
   font-weight: 700;
   margin-bottom: 1rem;
@@ -483,7 +483,7 @@ footer {
   text-align: center;
 }
 .footer-logo {
-  font-family: 'Rajdhani', sans-serif;
+  font-family: 'Inter', sans-serif;
   font-size: 1.1rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -493,6 +493,6 @@ footer {
 footer p {
   color: var(--subtle);
   font-size: 0.75rem;
-  font-family: 'Space Mono', monospace;
+  font-family: 'Inter', sans-serif;
   letter-spacing: 0.04em;
 }

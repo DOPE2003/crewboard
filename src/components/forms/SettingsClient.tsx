@@ -113,7 +113,7 @@ export default function SettingsClient() {
   };
 
   const sectionLabel: React.CSSProperties = {
-    fontFamily: "Space Mono, monospace",
+    fontFamily: "Inter, sans-serif",
     fontSize: "0.58rem",
     letterSpacing: "0.14em",
     textTransform: "uppercase",
@@ -233,13 +233,13 @@ export default function SettingsClient() {
           </div>
           <div>
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-              <span style={{ fontFamily: "Outfit, sans-serif", fontWeight: 800, fontSize: "1rem", color: "#f1f5f9" }}>
+              <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: "1rem", color: "#f1f5f9" }}>
                 {t.proTitle}
               </span>
               <span style={{
                 fontSize: "0.58rem", fontWeight: 700, padding: "2px 8px", borderRadius: 999,
                 background: "rgba(20,184,166,0.18)", color: "#2DD4BF",
-                fontFamily: "Space Mono, monospace", letterSpacing: "0.08em",
+                fontFamily: "Inter, sans-serif", letterSpacing: "0.08em",
                 textTransform: "uppercase", border: "1px solid rgba(20,184,166,0.3)",
               }}>
                 Coming Soon

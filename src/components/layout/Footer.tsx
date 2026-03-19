@@ -45,7 +45,7 @@ export default function Footer() {
             <span style={{ fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#2DD4BF", fontWeight: 500 }}>
               {t("nav.tagline")}
             </span>
-            <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", color: "var(--muted)", marginTop: "0.15rem", lineHeight: 1.6 }}>
+            <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", color: "var(--muted)", marginTop: "0.15rem", lineHeight: 1.6 }}>
               {t("footer.tagline")}
             </span>
 
@@ -54,7 +54,7 @@ export default function Footer() {
               href="mailto:info@crewboard.com"
               style={{
                 display: "inline-flex", alignItems: "center", gap: "0.45rem",
-                fontFamily: "Space Mono, monospace", fontWeight: 600, fontSize: "0.62rem",
+                fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "0.62rem",
                 letterSpacing: "0.04em", color: "var(--muted)", textDecoration: "none",
                 marginTop: "0.25rem",
               }}
@@ -70,7 +70,7 @@ export default function Footer() {
               rel="noopener noreferrer"
               style={{
                 display: "inline-flex", alignItems: "center", gap: "0.45rem",
-                fontFamily: "Space Mono, monospace", fontWeight: 700, fontSize: "0.65rem",
+                fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.65rem",
                 letterSpacing: "0.08em", textTransform: "uppercase",
                 color: "var(--text)", textDecoration: "none",
                 padding: "0.4rem 0.85rem", border: "1.5px solid var(--border)",
@@ -89,16 +89,15 @@ export default function Footer() {
           <div style={{ display: "flex", flexWrap: "wrap", gap: "3rem" }}>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
                 {t("footer.platform")}
               </div>
               <Link href="/talent" className="footer-link">{t("footer.browseTalent")}</Link>
               <Link href="/gigs" className="footer-link">{t("footer.gigs")}</Link>
-              <Link href="/projects" className="footer-link">{t("footer.projects")}</Link>
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
                 {t("footer.resources")}
               </div>
               <Link href="/whitepaper" className="footer-link">{t("footer.whitepaper")}</Link>
@@ -106,7 +105,7 @@ export default function Footer() {
             </div>
 
             <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
                 {t("footer.legal")}
               </div>
               <Link href="/privacy" className="footer-link">{t("footer.privacy")}</Link>
@@ -126,13 +125,13 @@ export default function Footer() {
           flexWrap: "wrap",
           gap: "1rem",
         }}>
-          <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.1em", color: "var(--muted)" }}>
+          <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.1em", color: "var(--muted)" }}>
             © {new Date().getFullYear()} Crewboard ·{" "}
             <Link href="/terms" style={{ color: "var(--muted)", textDecoration: "none" }}>Terms</Link>
             {" "}·{" "}
             <Link href="/privacy" style={{ color: "var(--muted)", textDecoration: "none" }}>Privacy</Link>
           </span>
-          <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.08em", color: "var(--muted)" }}>
+          <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.08em", color: "var(--muted)" }}>
             BUILT BY{" "}
             <a href="https://x.com/SAAD190914" target="_blank" rel="noopener noreferrer"
               style={{ color: "#2DD4BF", fontWeight: 700, textDecoration: "none" }}>

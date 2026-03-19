@@ -88,8 +88,8 @@ export default async function MessagesPage() {
                   <span style={{
                     position: "absolute", bottom: 1, right: 1,
                     width: 10, height: 10, borderRadius: "50%",
-                    background: online ? "#22c55e" : "#94a3b8",
-                    border: "2px solid #fff",
+                    background: online ? "#22c55e" : "var(--card-border)",
+                    border: "2px solid var(--dropdown-bg)",
                   }} />
                 </div>
                 <div className="msgs-conv-info">
@@ -114,7 +114,7 @@ export default async function MessagesPage() {
                       : "No messages yet"}
                   </div>
                   <div style={{
-                    fontFamily: "Space Mono, monospace",
+                    fontFamily: "Inter, sans-serif",
                     fontSize: "0.55rem",
                     color: online ? "#22c55e" : "rgba(0,0,0,0.35)",
                     marginTop: 2,

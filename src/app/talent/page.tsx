@@ -109,7 +109,7 @@ export default async function TalentPage({
               style={{
                 marginTop: "0.75rem",
                 display: "inline-flex",
-                fontFamily: "Space Mono, monospace",
+                fontFamily: "Inter, sans-serif",
                 fontSize: "0.7rem",
                 color: "var(--foreground)",
                 textDecoration: "none",

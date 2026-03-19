@@ -137,8 +137,8 @@ export default async function ConversationPage({
                   <span style={{
                     position: "absolute", bottom: 1, right: 1,
                     width: 10, height: 10, borderRadius: "50%",
-                    background: online ? "#22c55e" : "#94a3b8",
-                    border: "2px solid #fff",
+                    background: online ? "#22c55e" : "var(--card-border)",
+                    border: "2px solid var(--dropdown-bg)",
                   }} />
                 </div>
                 <div className="msgs-conv-info">
@@ -163,9 +163,9 @@ export default async function ConversationPage({
                       : "No messages yet"}
                   </div>
                   <div style={{
-                    fontFamily: "Space Mono, monospace",
+                    fontFamily: "Inter, sans-serif",
                     fontSize: "0.55rem",
-                    color: online ? "#22c55e" : "rgba(0,0,0,0.35)",
+                    color: online ? "#22c55e" : "var(--text-muted)",
                     marginTop: 2,
                   }}>
                     {seenLabel}
@@ -198,15 +198,15 @@ export default async function ConversationPage({
                   <span style={{
                     position: "absolute", bottom: 1, right: 1,
                     width: 11, height: 11, borderRadius: "50%",
-                    background: isOtherOnline ? "#22c55e" : "#94a3b8",
-                    border: "2px solid #fff",
+                    background: isOtherOnline ? "#22c55e" : "var(--card-border)",
+                    border: "2px solid var(--dropdown-bg)",
                   }} />
                 </div>
                 <div>
                   <div className="msgs-thread-name">
                     {other.name ?? other.twitterHandle ?? "Unknown"}
                   </div>
-                  <div className="msgs-thread-role" style={{ color: isOtherOnline ? "#22c55e" : "rgba(0,0,0,0.4)" }}>
+                  <div className="msgs-thread-role" style={{ color: isOtherOnline ? "#22c55e" : "var(--text-muted)" }}>
                     {otherSeenLabel}
                   </div>
                 </div>

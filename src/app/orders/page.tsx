@@ -50,12 +50,12 @@ export default async function OrdersPage() {
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 760, width: "100%", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
-        <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.3rem", fontFamily: "Rajdhani, sans-serif", letterSpacing: "-0.01em" }}>Orders</h1>
+        <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.3rem", fontFamily: "Inter, sans-serif", letterSpacing: "-0.01em" }}>Orders</h1>
         <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "2.5rem" }}>Track all your active and past orders.</p>
 
         {/* As buyer */}
         <div style={{ marginBottom: "2.5rem" }}>
-          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
+          <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
             Placed by me
           </div>
           {buyerOrders.length === 0 ? (
@@ -74,7 +74,7 @@ export default async function OrdersPage() {
 
         {/* As seller */}
         <div>
-          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
+          <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
             Received orders
           </div>
           {sellerOrders.length === 0 ? (
@@ -124,10 +124,10 @@ function OrderRow({ order, other, role }: { order: any; other: any; role: "buyer
         </div>
       </div>
       <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <div style={{ fontFamily: "Space Mono, monospace", fontWeight: 700, fontSize: "0.9rem", color: "var(--foreground)" }}>${order.amount}</div>
+        <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "var(--foreground)" }}>${order.amount}</div>
         <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 5, padding: "2px 10px", borderRadius: 99, background: `${color}15`, border: `1px solid ${color}50` }}>
           <span style={{ width: 5, height: 5, borderRadius: "50%", background: color, flexShrink: 0 }} />
-          <span style={{ fontSize: "0.58rem", fontWeight: 600, color, letterSpacing: "0.04em", fontFamily: "Space Mono, monospace" }}>{label}</span>
+          <span style={{ fontSize: "0.58rem", fontWeight: 600, color, letterSpacing: "0.04em", fontFamily: "Inter, sans-serif" }}>{label}</span>
         </div>
       </div>
     </Link>

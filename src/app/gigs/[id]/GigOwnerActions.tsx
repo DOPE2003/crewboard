@@ -57,7 +57,7 @@ export default function GigOwnerActions({ gigId, currentStatus }: Props) {
           border: "1px solid rgba(239,68,68,0.4)",
           background: "rgba(239,68,68,0.06)",
           color: "#ef4444",
-          fontFamily: "Space Mono, monospace",
+          fontFamily: "Inter, sans-serif",
           fontSize: "0.75rem",
           letterSpacing: "0.08em",
           cursor: "pointer",

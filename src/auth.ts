@@ -4,6 +4,7 @@ import Twitter from "next-auth/providers/twitter";
 import bcrypt from "bcryptjs";
 import { authConfig } from "./auth.config";
 import db from "@/lib/db";
+import { sendWelcomeEmail } from "@/lib/email";
 
 // All sessions issued before this timestamp are invalid.
 // Update this value to force sign-out of all users.
@@ -97,6 +98,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               body: "Your account is set up. Complete your profile to appear in the talent directory and start connecting with Web3 builders.",
             },
           });
+
+          // Send welcome email if Twitter provided one
+          if (user.email) {
+            const name = user.name ?? handle ?? "Builder";
+            await sendWelcomeEmail({ to: user.email, name, handle }).catch(() => {});
+          }
         } else {
           // Returning sign-in — welcome back (once per day max)
           const todayStart = new Date();

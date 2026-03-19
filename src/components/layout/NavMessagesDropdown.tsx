@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { markAllConversationsRead } from "@/actions/messages";
 
 interface ConvUser {
   id: string;
@@ -45,8 +47,11 @@ function isOnline(iso: string | null): boolean {
 
 export default function NavMessagesDropdown({ conversations, totalUnread, isOpen, onOpen, onClose }: Props) {
   const [convs, setConvs] = useState(conversations);
+  const [markingAll, setMarkingAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const [panelPos, setPanelPos] = useState({ top: 60, right: 0 });
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
 
   useEffect(() => { setConvs(conversations); }, [conversations]);
 
@@ -58,16 +63,28 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
-    const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) onClose();
+    if (!isOpen || isMobile) return;
+    const update = () => {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) setPanelPos({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [isMobile, onClose]);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [isOpen, isMobile]);
 
-  function handleMarkAllRead() {
-    setConvs((prev) => prev.map((c) => ({ ...c, unread: 0 })));
+  async function handleMarkAllRead() {
+    const prev = convs;
+    setMarkingAll(true);
+    setConvs((c) => c.map((x) => ({ ...x, unread: 0 })));
+    try {
+      await markAllConversationsRead();
+      router.refresh();
+    } catch {
+      setConvs(prev);
+    } finally {
+      setMarkingAll(false);
+    }
   }
 
   const hasUnread = convs.some((c) => c.unread > 0);
@@ -79,16 +96,16 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "14px 16px 12px",
-        borderBottom: "1px solid rgba(0,0,0,0.07)",
+        borderBottom: "1px solid var(--card-border)",
         flexShrink: 0,
       }}>
-        <span style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "#0f172a" }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--foreground)" }}>
           Messages
           {totalUnread > 0 && (
             <span style={{
               background: "#14b8a6", color: "#fff", borderRadius: "999px",
               fontSize: "0.6rem", fontWeight: 700, padding: "1px 7px", marginLeft: 8,
-              fontFamily: "Space Mono, monospace", verticalAlign: "middle",
+              fontFamily: "Inter, sans-serif", verticalAlign: "middle",
             }}>
               {totalUnread}
             </span>
@@ -98,9 +115,11 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
           {hasUnread && (
             <button
               onClick={handleMarkAllRead}
+              disabled={markingAll}
               style={{
-                fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6",
-                background: "none", border: "none", cursor: "pointer", fontWeight: 600, padding: 0,
+                fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "#14b8a6",
+                background: "none", border: "none", cursor: markingAll ? "default" : "pointer",
+                fontWeight: 600, padding: 0, opacity: markingAll ? 0.5 : 1,
               }}
             >
               Mark all read
@@ -109,7 +128,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
           {isMobile && (
             <button
               onClick={onClose}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "var(--text-muted)", display: "flex" }}
               aria-label="Close"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -123,7 +142,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
       {/* Conversations list */}
       <div style={{ overflowY: "auto", flex: 1 }}>
         {listed.length === 0 ? (
-          <div style={{ padding: "2.5rem 1rem", textAlign: "center", fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", color: "rgba(0,0,0,0.4)" }}>
+          <div style={{ padding: "2.5rem 1rem", textAlign: "center", fontFamily: "Inter, sans-serif", fontSize: "0.82rem", color: "var(--text-muted)" }}>
             No conversations yet
           </div>
         ) : listed.map((c) => {
@@ -137,14 +156,14 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
               style={{
                 display: "flex", alignItems: "center", gap: "0.65rem",
                 padding: "10px 14px",
-                borderBottom: "1px solid rgba(0,0,0,0.05)",
-                background: unread > 0 ? "rgba(20,184,166,0.04)" : "transparent",
+                borderBottom: "1px solid var(--card-border)",
+                background: unread > 0 ? "rgba(20,184,166,0.06)" : "transparent",
                 transition: "background 0.12s",
                 textDecoration: "none",
                 position: "relative",
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.04)")}
-              onMouseLeave={(e) => (e.currentTarget.style.background = unread > 0 ? "rgba(20,184,166,0.04)" : "transparent")}
+              onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-hover)")}
+              onMouseLeave={(e) => (e.currentTarget.style.background = unread > 0 ? "rgba(20,184,166,0.06)" : "transparent")}
             >
               {/* Unread dot */}
               <div style={{ width: 8, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -159,8 +178,8 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={c.otherUser.image} alt="" style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", display: "block" }} />
                 ) : (
-                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(0,0,0,0.08)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.4)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: "var(--avatar-bg)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                       <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                     </svg>
                   </div>
@@ -168,8 +187,8 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
                 <span style={{
                   position: "absolute", bottom: 1, right: 1,
                   width: 9, height: 9, borderRadius: "50%",
-                  background: online ? "#22c55e" : "#cbd5e1",
-                  border: "2px solid #fff",
+                  background: online ? "#22c55e" : "var(--card-border)",
+                  border: "2px solid var(--dropdown-bg)",
                 }} />
               </div>
 
@@ -177,22 +196,22 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
               <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 4 }}>
                   <span style={{
-                    fontFamily: "Outfit, sans-serif", fontSize: "0.875rem",
-                    fontWeight: unread > 0 ? 700 : 500, color: "#0f172a",
+                    fontFamily: "Inter, sans-serif", fontSize: "0.875rem",
+                    fontWeight: unread > 0 ? 700 : 500, color: "var(--foreground)",
                     overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                   }}>
                     {c.otherUser?.name ?? c.otherUser?.twitterHandle ?? "Unknown"}
                   </span>
                   <span style={{
-                    fontFamily: "Outfit, sans-serif", fontSize: "0.68rem",
-                    color: "rgba(0,0,0,0.35)", flexShrink: 0,
+                    fontFamily: "Inter, sans-serif", fontSize: "0.68rem",
+                    color: "var(--text-muted)", flexShrink: 0,
                   }}>
                     {fmtTime(c.lastMessageTime)}
                   </span>
                 </div>
                 <div style={{
-                  fontFamily: "Outfit, sans-serif", fontSize: "0.75rem",
-                  color: unread > 0 ? "rgba(0,0,0,0.6)" : "rgba(0,0,0,0.38)",
+                  fontFamily: "Inter, sans-serif", fontSize: "0.75rem",
+                  color: "var(--text-muted)",
                   fontWeight: unread > 0 ? 500 : 400,
                   overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                   marginTop: 2,
@@ -206,7 +225,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "10px 14px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
+      <div style={{ padding: "10px 14px", borderTop: "1px solid var(--card-border)", flexShrink: 0 }}>
         <Link
           href="/messages"
           onClick={onClose}
@@ -214,17 +233,17 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
             display: "flex", alignItems: "center", justifyContent: "center",
             height: isMobile ? 50 : 36,
             width: "100%",
-            fontFamily: "Outfit, sans-serif", fontWeight: 600,
+            fontFamily: "Inter, sans-serif", fontWeight: 600,
             fontSize: "0.8rem",
             color: "#14b8a6",
             border: "1px solid #14b8a6",
             borderRadius: 8,
             textDecoration: "none",
-            background: "#fff",
+            background: "transparent",
             transition: "background 0.12s",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(20,184,166,0.06)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(20,184,166,0.08)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
         >
           View all messages
         </Link>
@@ -232,10 +251,42 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
     </>
   );
 
+  const desktopStyle: React.CSSProperties = {
+    position: "fixed",
+    top: panelPos.top,
+    right: panelPos.right,
+    width: 380,
+    borderRadius: 12,
+    zIndex: 9999,
+    background: "var(--dropdown-bg)",
+    border: "1px solid var(--card-border)",
+    boxShadow: "var(--shadow-dropdown)",
+    maxHeight: 480,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  };
+
+  const mobileStyle: React.CSSProperties = {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderRadius: "20px 20px 0 0",
+    zIndex: 9999,
+    background: "var(--dropdown-bg)",
+    maxHeight: "75vh",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    boxShadow: "0 -8px 40px rgba(0,0,0,0.25)",
+  };
+
   return (
-    <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
+    <div style={{ position: "relative", flexShrink: 0 }}>
       {/* Trigger */}
       <button
+        ref={triggerRef}
         onClick={() => isOpen ? onClose() : onOpen()}
         aria-label="Messages"
         style={{
@@ -245,10 +296,10 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
           color: "var(--text-muted)",
           transition: "color 0.2s, background 0.2s",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "rgba(0,0,0,0.5)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-hover)"; e.currentTarget.style.color = "var(--foreground)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "var(--text-muted)"; }}
       >
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
         {totalUnread > 0 && (
@@ -257,7 +308,7 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
             minWidth: 15, height: 15, borderRadius: "999px",
             background: "#14b8a6",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: "Space Mono, monospace",
+            fontFamily: "Inter, sans-serif",
             fontSize: "0.48rem", fontWeight: 700,
             color: "#fff", lineHeight: 1, padding: "0 3px",
           }}>
@@ -266,32 +317,27 @@ export default function NavMessagesDropdown({ conversations, totalUnread, isOpen
         )}
       </button>
 
-      {/* Desktop dropdown */}
-      {isOpen && !isMobile && (
-        <div style={{
-          position: "absolute", top: "calc(100% + 8px)", right: 0,
-          width: 380, borderRadius: 12, zIndex: 9999,
-          background: "#fff",
-          border: "1px solid rgba(0,0,0,0.09)",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
-          maxHeight: 480,
-          display: "flex", flexDirection: "column",
-          overflow: "hidden",
-        }}>
-          {panelInner}
-        </div>
-      )}
-
-      {/* Mobile bottom sheet */}
-      {isOpen && isMobile && createPortal(
-        <div className="sheet-backdrop" onClick={onClose}>
-          <div className="sheet-panel" onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
-              <div style={{ width: 40, height: 4, borderRadius: 99, background: "#ccc" }} />
-            </div>
+      {/* Portal — desktop dropdown + mobile bottom sheet */}
+      {isOpen && createPortal(
+        <>
+          <div
+            onClick={onClose}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9998,
+              background: isMobile ? "rgba(0,0,0,0.4)" : "transparent",
+            }}
+          />
+          <div style={isMobile ? mobileStyle : desktopStyle}>
+            {isMobile && (
+              <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
+                <div style={{ width: 40, height: 4, borderRadius: 99, background: "var(--card-border)" }} />
+              </div>
+            )}
             {panelInner}
           </div>
-        </div>,
+        </>,
         document.body
       )}
     </div>

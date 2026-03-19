@@ -22,7 +22,7 @@ export default function MarkAllRead({ userId }: { userId: string }) {
       onClick={handleClick}
       disabled={pending}
       style={{
-        fontFamily: "Rajdhani, sans-serif",
+        fontFamily: "Inter, sans-serif",
         fontWeight: 700,
         fontSize: "0.78rem",
         letterSpacing: "0.1em",

@@ -76,7 +76,7 @@ export default function ReviewForm({ orderId, revieweeId, revieweeName }: Props)
         style={{
           width: "100%", padding: "0.65rem 0.85rem", borderRadius: 10,
           border: "1px solid rgba(0,0,0,0.12)", fontSize: "0.78rem",
-          fontFamily: "Outfit, sans-serif", resize: "vertical",
+          fontFamily: "Inter, sans-serif", resize: "vertical",
           outline: "none", boxSizing: "border-box",
         }}
       />

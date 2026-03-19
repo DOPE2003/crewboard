@@ -61,7 +61,7 @@ export default function AddEmailForm() {
             flex: 1, minWidth: 200,
             padding: "0.6rem 0.85rem", borderRadius: 8,
             border: "1px solid var(--card-border)", background: "var(--card-bg)",
-            fontFamily: "Outfit, sans-serif", fontSize: "0.85rem", color: "var(--foreground)",
+            fontFamily: "Inter, sans-serif", fontSize: "0.85rem", color: "var(--foreground)",
             outline: "none",
           }}
         />

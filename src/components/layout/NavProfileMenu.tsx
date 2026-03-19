@@ -36,7 +36,7 @@ function MenuLink({ href, icon, children, badge }: { href: string; icon: React.R
       style={{
         display: "flex", alignItems: "center", gap: "0.65rem", width: "100%",
         padding: "0.55rem 0.85rem", borderRadius: "9px",
-        fontFamily: "Outfit, sans-serif", fontSize: "0.84rem", fontWeight: 500,
+        fontFamily: "Inter, sans-serif", fontSize: "0.84rem", fontWeight: 500,
         color: "#1a1a1a", textDecoration: "none", transition: "background 0.12s",
         position: "relative",
       }}
@@ -49,7 +49,7 @@ function MenuLink({ href, icon, children, badge }: { href: string; icon: React.R
         <span style={{
           marginLeft: "auto", background: "#14b8a6", color: "#fff",
           borderRadius: "999px", fontSize: "0.62rem", fontWeight: 700,
-          padding: "1px 6px", fontFamily: "Space Mono, monospace",
+          padding: "1px 6px", fontFamily: "Inter, sans-serif",
         }}>{badge}</span>
       )}
     </Link>
@@ -135,22 +135,22 @@ export default function NavProfileMenu({
               </div>
             )}
             <div style={{ minWidth: 0 }}>
-              <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.92rem", fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.92rem", fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                 {name ?? twitterHandle ?? "User"}
               </div>
               {twitterHandle && (
-                <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.65rem", color: "var(--text-muted)", marginTop: 2 }}>
+                <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.65rem", color: "var(--text-muted)", marginTop: 2 }}>
                   @{twitterHandle}
                 </div>
               )}
               <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginTop: 5, flexWrap: "wrap" }}>
                 {role && (
-                  <span style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.66rem", fontWeight: 700, color: "#fff", background: "#14b8a6", borderRadius: "999px", padding: "2px 9px", letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.66rem", fontWeight: 700, color: "#fff", background: "#14b8a6", borderRadius: "999px", padding: "2px 9px", letterSpacing: "0.04em", textTransform: "uppercase" }}>
                     {role}
                   </span>
                 )}
                 {availColor && availLabel && (
-                  <span style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", fontWeight: 600, color: availColor }}>
+                  <span style={{ display: "flex", alignItems: "center", gap: 4, fontFamily: "Inter, sans-serif", fontSize: "0.68rem", fontWeight: 600, color: availColor }}>
                     <span style={{ width: 6, height: 6, borderRadius: "50%", background: availColor, flexShrink: 0 }} />
                     {availLabel}
                   </span>
@@ -180,7 +180,7 @@ export default function NavProfileMenu({
 
           {/* Account section */}
           <div style={{ borderTop: "1px solid rgba(0,0,0,0.07)", padding: "0.5rem" }}>
-            <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.56rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#94a3b8", padding: "0.3rem 0.85rem 0.4rem" }}>
+            <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#94a3b8", padding: "0.3rem 0.85rem 0.4rem" }}>
               {t("menu.account")}
             </div>
 
@@ -204,7 +204,7 @@ export default function NavProfileMenu({
               style={{
                 display: "flex", alignItems: "center", gap: "0.65rem", width: "100%",
                 padding: "0.55rem 0.85rem", borderRadius: "9px",
-                fontFamily: "Outfit, sans-serif", fontSize: "0.84rem", fontWeight: 500,
+                fontFamily: "Inter, sans-serif", fontSize: "0.84rem", fontWeight: 500,
                 color: "#dc2626", background: "transparent", border: "none", cursor: "pointer",
                 textAlign: "left", transition: "background 0.12s", marginTop: "0.4rem",
               }}

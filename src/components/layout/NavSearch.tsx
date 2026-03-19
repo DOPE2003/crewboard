@@ -75,30 +75,7 @@ export default function NavSearch() {
   };
 
   return (
-    <div ref={wrapRef} style={{ position: "relative", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-      {/* Categories button */}
-      <button 
-        className="nav-all-cats-btn"
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "38px",
-          height: "38px",
-          borderRadius: "50%",
-          background: "rgba(var(--foreground-rgb), 0.04)",
-          border: "1px solid rgba(0,0,0,0.08)",
-          cursor: "pointer",
-          color: "var(--text-muted)",
-          transition: "all 0.2s",
-        }}
-        title="All Categories"
-      >
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-          <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>
-        </svg>
-      </button>
-
+    <div ref={wrapRef} style={{ position: "relative", display: "flex", alignItems: "center", width: "100%" }}>
       {/* Search box */}
       <div className="nav-search-box" style={{
         display: "flex",
@@ -108,6 +85,7 @@ export default function NavSearch() {
         border: "1px solid rgba(0,0,0,0.12)",
         borderRadius: "999px",
         padding: "0.45rem 1rem",
+        width: "100%",
       }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
           stroke="var(--text-muted)" strokeWidth="2"
@@ -119,16 +97,17 @@ export default function NavSearch() {
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={handleKey}
           onFocus={() => results.length > 0 && setOpen(true)}
-          placeholder={t("nav.search")}
+          placeholder="Search talent..."
           autoComplete="off"
           className="nav-search-input"
           style={{
             background: "none",
             border: "none",
             outline: "none",
-            fontFamily: "Outfit, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontSize: "0.82rem",
-            width: "560px",
+            width: "100%",
+            minWidth: 120,
           }}
         />
       </div>
@@ -179,7 +158,7 @@ export default function NavSearch() {
               )}
               <div>
                 <div style={{
-                  fontFamily: "Outfit, sans-serif",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "0.85rem",
                   fontWeight: 600,
                   color: "var(--foreground)",
@@ -188,7 +167,7 @@ export default function NavSearch() {
                   {r.name ?? r.twitterHandle}
                 </div>
                 <div style={{
-                  fontFamily: "Space Mono, monospace",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "0.65rem",
                   color: "var(--text-muted)",
                   letterSpacing: "0.04em",

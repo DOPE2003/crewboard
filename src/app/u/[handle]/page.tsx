@@ -137,7 +137,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       <div style={{ maxWidth: 1020, margin: "0 auto", padding: "0 1.25rem" }}>
 
         {/* Breadcrumb */}
-        <div style={{ fontSize: "0.75rem", color: "#94a3b8", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: 6 }}>
+        <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: 6 }}>
           <Link href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Home</Link>
           <span>/</span>
           <Link href="/freelancers" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Freelancers</Link>
@@ -169,7 +169,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     <div style={{
                       width: 90, height: 90, borderRadius: "50%", flexShrink: 0,
                       background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden",
-                      border: "3px solid #f1f5f9",
+                      border: "3px solid var(--card-border)",
                     }}>
                       {user.image && <img src={user.image} alt={user.name ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                     </div>
@@ -201,7 +201,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                         <span style={{ width: 7, height: 7, borderRadius: "50%", background: AVAIL_COLOR[avail], display: "inline-block" }} />
                         {AVAIL_LABEL[avail]}
                       </span>
-                      <span style={{ fontSize: "0.75rem", color: "#94a3b8" }}>
+                      <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                         Member since {joinYear}
                       </span>
                       {avgRating && (
@@ -236,7 +236,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               {user.bio ? (
                 <p style={{ fontSize: "0.88rem", lineHeight: 1.8, color: "var(--text-muted)", margin: 0 }}>{user.bio}</p>
               ) : (
-                <div style={{ fontSize: "0.85rem", color: "#94a3b8", fontStyle: "italic" }}>
+                <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontStyle: "italic" }}>
                   {isOwnProfile ? "Add a bio to tell clients about yourself." : "No overview yet."}
                 </div>
               )}
@@ -271,7 +271,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       <div key={item.id} style={{ padding: "0.85rem 1rem", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--background)" }}>
                         <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
                           <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)" }}>{item.title}</span>
-                          {item.year && <span style={{ fontSize: "0.68rem", color: "#94a3b8" }}>{item.year}</span>}
+                          {item.year && <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{item.year}</span>}
                         </div>
                         {item.description && <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0.35rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
                         {item.url && (
@@ -299,9 +299,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     }}>
                       <div>
                         <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--foreground)" }}>{gig.title}</div>
-                        <div style={{ fontSize: "0.7rem", color: "#94a3b8", marginTop: 3 }}>{gig.category} · {gig.deliveryDays}d delivery</div>
+                        <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 3 }}>{gig.category} · {gig.deliveryDays}d delivery</div>
                       </div>
-                      <span style={{ fontFamily: "Space Mono,monospace", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF", flexShrink: 0, marginLeft: 12 }}>
+                      <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF", flexShrink: 0, marginLeft: 12 }}>
                         from ${gig.price}
                       </span>
                     </Link>
@@ -331,7 +331,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               {reviews.length === 0 ? (
                 <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
                   <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>⭐</div>
-                  <div style={{ fontSize: "0.85rem", color: "#94a3b8" }}>
+                  <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
                     {isOwnProfile ? "Reviews from clients will appear here." : "No reviews yet."}
                   </div>
                 </div>
@@ -341,7 +341,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     <div key={r.id} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: "1rem" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ width: 30, height: 30, borderRadius: "50%", background: "#e2e8f0", overflow: "hidden", flexShrink: 0 }}>
+                          <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--avatar-bg)", overflow: "hidden", flexShrink: 0 }}>
                             {r.reviewer.image && <img src={r.reviewer.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
                           </div>
                           <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)" }}>
@@ -384,7 +384,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 </SectionCard>
 
                 <SectionCard style={{ padding: "1rem" }}>
-                  <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>Quick links</div>
+                  <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Quick links</div>
                   {[
                     { label: "My Orders", href: "/orders", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> },
                     { label: "My Gigs", href: "/gigs/mine", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
@@ -405,7 +405,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
                 <Link href="/gigs/new" style={{
                   display: "block", textAlign: "center", padding: "0.75rem",
-                  background: "#0f172a", color: "#fff", borderRadius: 10,
+                  background: "var(--foreground)", color: "var(--dropdown-bg)", borderRadius: 10,
                   fontWeight: 700, fontSize: "0.82rem", textDecoration: "none",
                   letterSpacing: "0.04em",
                 }}>
@@ -426,7 +426,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
             {/* Stats */}
             <SectionCard style={{ padding: "1.25rem" }}>
-              <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.9rem" }}>Stats</div>
+              <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.9rem" }}>Stats</div>
               <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Rating</span>
@@ -452,12 +452,12 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             {/* CV */}
             {isOwnProfile ? (
               <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>CV / Resume</div>
+                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>CV / Resume</div>
                 <CvUpload currentCvUrl={user.cvUrl ?? null} />
               </SectionCard>
             ) : user.cvUrl ? (
               <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>CV / Resume</div>
+                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>CV / Resume</div>
                 <a
                   href={user.cvUrl}
                   target="_blank"
@@ -473,7 +473,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   </svg>
                   <div>
                     <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)" }}>Download CV</div>
-                    <div style={{ fontSize: "0.62rem", color: "#94a3b8" }}>PDF</div>
+                    <div style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>PDF</div>
                   </div>
                   <svg style={{ marginLeft: "auto" }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
@@ -485,12 +485,12 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             {/* Wallet */}
             {wallet && (
               <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#94a3b8", marginBottom: "0.75rem" }}>Wallet</div>
+                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Wallet</div>
                 <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                   <WalletVerifiedBadge />
-                  <span style={{ fontFamily: "Space Mono,monospace", fontSize: "0.72rem", color: "var(--foreground)" }}>{wallet}</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "var(--foreground)" }}>{wallet}</span>
                 </div>
-                <div style={{ fontSize: "0.68rem", color: "#94a3b8" }}>Solana</div>
+                <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>Solana</div>
               </SectionCard>
             )}
 

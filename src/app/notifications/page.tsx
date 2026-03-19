@@ -39,17 +39,17 @@ export default async function NotificationsPage() {
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "2rem", flexWrap: "wrap", gap: "1rem" }}>
           <div>
             <div style={{
-              fontFamily: "Space Mono, monospace",
+              fontFamily: "Inter, sans-serif",
               fontSize: "0.55rem",
               letterSpacing: "0.28em",
               textTransform: "uppercase",
-              color: "rgba(0,0,0,0.38)",
+              color: "var(--text-muted)",
               marginBottom: "0.4rem",
             }}>
               <T k="notif.inbox" />
             </div>
             <h1 style={{
-              fontFamily: "Rajdhani, sans-serif",
+              fontFamily: "Inter, sans-serif",
               fontWeight: 700,
               fontSize: "clamp(1.6rem, 4vw, 2.4rem)",
               color: "var(--foreground)",
@@ -64,7 +64,7 @@ export default async function NotificationsPage() {
                   marginLeft: "0.65rem",
                   background: "#2DD4BF",
                   color: "var(--foreground)",
-                  fontFamily: "Space Mono, monospace",
+                  fontFamily: "Inter, sans-serif",
                   fontSize: "0.6rem",
                   fontWeight: 700,
                   width: 22,
@@ -88,8 +88,8 @@ export default async function NotificationsPage() {
           <div style={{
             textAlign: "center",
             padding: "4rem 2rem",
-            color: "rgba(0,0,0,0.35)",
-            fontFamily: "Space Mono, monospace",
+            color: "var(--text-muted)",
+            fontFamily: "Inter, sans-serif",
             fontSize: "0.75rem",
             letterSpacing: "0.08em",
           }}>
@@ -126,7 +126,7 @@ export default async function NotificationsPage() {
                   {/* Content */}
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{
-                      fontFamily: "Rajdhani, sans-serif",
+                      fontFamily: "Inter, sans-serif",
                       fontWeight: 700,
                       fontSize: "1rem",
                       color: "var(--foreground)",
@@ -144,7 +144,7 @@ export default async function NotificationsPage() {
                       {n.body}
                     </p>
                     <div style={{
-                      fontFamily: "Space Mono, monospace",
+                      fontFamily: "Inter, sans-serif",
                       fontSize: "0.58rem",
                       color: "var(--foreground)",
                       letterSpacing: "0.06em",
@@ -157,7 +157,7 @@ export default async function NotificationsPage() {
                     {n.link && (
                       <div style={{
                         marginTop: "0.4rem",
-                        fontFamily: "Rajdhani, sans-serif",
+                        fontFamily: "Inter, sans-serif",
                         fontWeight: 700,
                         fontSize: "0.75rem",
                         letterSpacing: "0.08em",
@@ -197,9 +197,9 @@ export default async function NotificationsPage() {
           </div>
         )}
 
-        <div style={{ marginTop: "3rem", paddingTop: "2rem", borderTop: "1px solid rgba(0,0,0,0.07)" }}>
+        <div style={{ marginTop: "3rem", paddingTop: "2rem", borderTop: "1px solid var(--card-border)" }}>
           <Link href="/dashboard" style={{
-            fontFamily: "Rajdhani, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 700,
             fontSize: "0.82rem",
             letterSpacing: "0.1em",

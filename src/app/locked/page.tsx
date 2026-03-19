@@ -28,7 +28,7 @@ export default function LockedPage() {
       justifyContent: 'center',
       background: '#000',
       color: '#fff',
-      fontFamily: ' Rajdhani, sans-serif'
+      fontFamily: 'Inter, sans-serif'
     }}>
       <div style={{ textAlign: 'center', maxWidth: '400px', padding: '2rem' }}>
         <h1 style={{ fontSize: '2rem', fontWeight: 800, marginBottom: '1rem', letterSpacing: '0.1em' }}>CREWBOARD</h1>

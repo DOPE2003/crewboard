@@ -109,6 +109,25 @@ export async function markMessagesAsRead(conversationId: string) {
   revalidatePath("/messages", "layout");
 }
 
+export async function markAllConversationsRead() {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) return;
+
+  const convs = await db.conversation.findMany({
+    where: { participants: { has: userId } },
+    select: { id: true },
+  });
+  const convIds = convs.map((c) => c.id);
+  if (convIds.length === 0) return;
+
+  await db.message.updateMany({
+    where: { conversationId: { in: convIds }, read: false, senderId: { not: userId } },
+    data: { read: true },
+  });
+  revalidatePath("/messages", "layout");
+}
+
 export async function getMessages(conversationId: string) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;

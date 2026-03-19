@@ -52,7 +52,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
   const inp: React.CSSProperties = {
     width: "100%", padding: "0.55rem 0.75rem", borderRadius: 8,
     border: "1px solid #e2e8f0", background: "#f8fafc",
-    fontFamily: "Outfit, sans-serif", fontSize: "0.85rem", color: "#0f172a",
+    fontFamily: "Inter, sans-serif", fontSize: "0.85rem", color: "#0f172a",
     outline: "none", boxSizing: "border-box",
   };
 

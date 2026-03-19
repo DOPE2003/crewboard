@@ -81,7 +81,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
       cursor: "pointer",
     }}>
       <div style={{
-        fontFamily: "Space Mono, monospace",
+        fontFamily: "Inter, sans-serif",
         fontSize: "0.5rem",
         letterSpacing: "0.14em",
         textTransform: "uppercase",
@@ -91,7 +91,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         Gig Request
       </div>
       <div style={{
-        fontFamily: "Rajdhani, sans-serif",
+        fontFamily: "Inter, sans-serif",
         fontWeight: 700,
         fontSize: "0.95rem",
         color: mine ? "#fff" : "var(--foreground)",
@@ -102,7 +102,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
       </div>
       <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
         <span style={{
-          fontFamily: "Space Mono, monospace",
+          fontFamily: "Inter, sans-serif",
           fontWeight: 700,
           fontSize: "0.88rem",
           color: "#2DD4BF",
@@ -110,7 +110,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
           ${gig.price}
         </span>
         <span style={{
-          fontFamily: "Outfit, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontSize: "0.7rem",
           color: mine ? "rgba(255,255,255,0.55)" : "var(--text-muted)",
         }}>
@@ -121,7 +121,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         marginTop: "0.6rem",
         paddingTop: "0.5rem",
         borderTop: mine ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(45,212,191,0.15)",
-        fontFamily: "Outfit, sans-serif",
+        fontFamily: "Inter, sans-serif",
         fontSize: "0.68rem",
         color: mine ? "rgba(255,255,255,0.5)" : "var(--text-muted)",
       }}>
@@ -308,7 +308,7 @@ export default function MessageThread({
                       padding: "6px 14px", borderRadius: 20,
                       background: "#0f172a", color: "#fff",
                       border: "none", cursor: "pointer",
-                      fontFamily: "Outfit, sans-serif", fontSize: "0.75rem", fontWeight: 600,
+                      fontFamily: "Inter, sans-serif", fontSize: "0.75rem", fontWeight: 600,
                       boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
                     }}
                   >
@@ -407,10 +407,10 @@ export default function MessageThread({
           background: "rgba(20,184,166,0.04)",
         }}>
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.7rem", fontWeight: 600, color: "#14b8a6", marginBottom: 2 }}>
+            <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", fontWeight: 600, color: "#14b8a6", marginBottom: 2 }}>
               {replyTo.senderId === currentUserId ? "You" : otherDisplayName}
             </div>
-            <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {replyBodyPreview(replyTo.body)}
             </div>
           </div>
@@ -478,7 +478,7 @@ function QuotedMessage({
       maxWidth: "100%",
     }}>
       <div style={{
-        fontFamily: "Outfit, sans-serif",
+        fontFamily: "Inter, sans-serif",
         fontSize: "0.65rem",
         fontWeight: 600,
         color: "#14b8a6",
@@ -487,7 +487,7 @@ function QuotedMessage({
         {senderLabel}
       </div>
       <div style={{
-        fontFamily: "Outfit, sans-serif",
+        fontFamily: "Inter, sans-serif",
         fontSize: "0.7rem",
         color: mine ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.45)",
         overflow: "hidden",

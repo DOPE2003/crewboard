@@ -72,7 +72,8 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
   const [unread, setUnread] = useState(initialUnread);
   const [markingAll, setMarkingAll] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
-  const wrapRef = useRef<HTMLDivElement>(null);
+  const [panelPos, setPanelPos] = useState({ top: 60, right: 0 });
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -88,13 +89,15 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
-    const handler = (e: MouseEvent) => {
-      if (wrapRef.current && !wrapRef.current.contains(e.target as Node)) onClose();
+    if (!isOpen || isMobile) return;
+    const update = () => {
+      const rect = triggerRef.current?.getBoundingClientRect();
+      if (rect) setPanelPos({ top: rect.bottom + 8, right: window.innerWidth - rect.right });
     };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [isMobile, onClose]);
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, [isOpen, isMobile]);
 
   async function handleMarkAll() {
     const prevNotifs = notifs;
@@ -133,16 +136,16 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "14px 16px 12px",
-        borderBottom: "1px solid rgba(0,0,0,0.07)",
+        borderBottom: "1px solid var(--card-border)",
         flexShrink: 0,
       }}>
-        <span style={{ fontFamily: "Outfit, sans-serif", fontWeight: 700, fontSize: "1rem", color: "#0f172a" }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--foreground)" }}>
           Notifications
           {unread > 0 && (
             <span style={{
               background: "#14b8a6", color: "#fff", borderRadius: "999px",
               fontSize: "0.6rem", fontWeight: 700, padding: "1px 7px", marginLeft: 8,
-              fontFamily: "Space Mono, monospace", verticalAlign: "middle",
+              fontFamily: "Inter, sans-serif", verticalAlign: "middle",
             }}>
               {unread}
             </span>
@@ -154,7 +157,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
               onClick={handleMarkAll}
               disabled={markingAll}
               style={{
-                fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "#14b8a6",
+                fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "#14b8a6",
                 background: "none", border: "none", cursor: "pointer", fontWeight: 600, padding: 0,
               }}
             >
@@ -164,7 +167,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
           {isMobile && (
             <button
               onClick={onClose}
-              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "rgba(0,0,0,0.4)", display: "flex" }}
+              style={{ background: "none", border: "none", cursor: "pointer", padding: 4, color: "var(--text-muted)", display: "flex" }}
               aria-label="Close"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -178,7 +181,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
       {/* List */}
       <div style={{ overflowY: "auto", flex: 1 }}>
         {listed.length === 0 ? (
-          <div style={{ padding: "2.5rem 1rem", textAlign: "center", fontFamily: "Outfit, sans-serif", fontSize: "0.82rem", color: "rgba(0,0,0,0.4)" }}>
+          <div style={{ padding: "2.5rem 1rem", textAlign: "center", fontFamily: "Inter, sans-serif", fontSize: "0.82rem", color: "var(--text-muted)" }}>
             No notifications yet
           </div>
         ) : listed.map((n) => (
@@ -189,13 +192,13 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             style={{
               display: "flex", alignItems: "flex-start", gap: "0.75rem",
               padding: "10px 14px",
-              borderBottom: "1px solid rgba(0,0,0,0.05)",
-              background: n.read ? "transparent" : "rgba(20,184,166,0.04)",
+              borderBottom: "1px solid var(--card-border)",
+              background: n.read ? "transparent" : "rgba(20,184,166,0.06)",
               textDecoration: "none",
               transition: "background 0.12s",
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(0,0,0,0.04)")}
-            onMouseLeave={(e) => (e.currentTarget.style.background = n.read ? "transparent" : "rgba(20,184,166,0.04)")}
+            onMouseEnter={(e) => (e.currentTarget.style.background = "var(--color-hover)")}
+            onMouseLeave={(e) => (e.currentTarget.style.background = n.read ? "transparent" : "rgba(20,184,166,0.06)")}
           >
             {/* Icon */}
             <div style={{
@@ -210,8 +213,8 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             <div style={{ flex: 1, minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 6 }}>
                 <span style={{
-                  fontFamily: "Outfit, sans-serif", fontSize: "0.875rem",
-                  fontWeight: n.read ? 500 : 700, color: "#0f172a", lineHeight: 1.35,
+                  fontFamily: "Inter, sans-serif", fontSize: "0.875rem",
+                  fontWeight: n.read ? 500 : 700, color: "var(--foreground)", lineHeight: 1.35,
                 }}>
                   {n.title}
                 </span>
@@ -220,16 +223,16 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
                 )}
               </div>
               <div style={{
-                fontFamily: "Outfit, sans-serif", fontSize: "0.75rem",
-                color: "rgba(0,0,0,0.45)", marginTop: 2, lineHeight: 1.45,
+                fontFamily: "Inter, sans-serif", fontSize: "0.75rem",
+                color: "var(--text-muted)", marginTop: 2, lineHeight: 1.45,
                 overflow: "hidden", display: "-webkit-box",
                 WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
               }}>
                 {n.body}
               </div>
               <div style={{
-                fontFamily: "Outfit, sans-serif", fontSize: "0.68rem",
-                color: "rgba(0,0,0,0.32)", marginTop: 4,
+                fontFamily: "Inter, sans-serif", fontSize: "0.68rem",
+                color: "var(--text-muted)", marginTop: 4,
                 textAlign: "right",
               }}>
                 {fmtTime(n.createdAt)}
@@ -240,7 +243,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
       </div>
 
       {/* Footer */}
-      <div style={{ padding: "10px 14px", borderTop: "1px solid rgba(0,0,0,0.07)", flexShrink: 0 }}>
+      <div style={{ padding: "10px 14px", borderTop: "1px solid var(--card-border)", flexShrink: 0 }}>
         <Link
           href="/notifications"
           onClick={onClose}
@@ -248,17 +251,17 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             display: "flex", alignItems: "center", justifyContent: "center",
             height: isMobile ? 50 : 36,
             width: "100%",
-            fontFamily: "Outfit, sans-serif", fontWeight: 600,
+            fontFamily: "Inter, sans-serif", fontWeight: 600,
             fontSize: "0.8rem",
             color: "#14b8a6",
             border: "1px solid #14b8a6",
             borderRadius: 8,
             textDecoration: "none",
-            background: "#fff",
+            background: "transparent",
             transition: "background 0.12s",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(20,184,166,0.06)")}
-          onMouseLeave={(e) => (e.currentTarget.style.background = "#fff")}
+          onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(20,184,166,0.08)")}
+          onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
         >
           View all notifications
         </Link>
@@ -266,10 +269,42 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
     </>
   );
 
+  const desktopStyle: React.CSSProperties = {
+    position: "fixed",
+    top: panelPos.top,
+    right: panelPos.right,
+    width: 380,
+    borderRadius: 12,
+    zIndex: 9999,
+    background: "var(--dropdown-bg)",
+    border: "1px solid var(--card-border)",
+    boxShadow: "var(--shadow-dropdown)",
+    maxHeight: 480,
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+  };
+
+  const mobileStyle: React.CSSProperties = {
+    position: "fixed",
+    bottom: 0,
+    left: 0,
+    right: 0,
+    borderRadius: "20px 20px 0 0",
+    zIndex: 9999,
+    background: "var(--dropdown-bg)",
+    maxHeight: "75vh",
+    display: "flex",
+    flexDirection: "column",
+    overflow: "hidden",
+    boxShadow: "0 -8px 40px rgba(0,0,0,0.25)",
+  };
+
   return (
-    <div ref={wrapRef} style={{ position: "relative", flexShrink: 0 }}>
+    <div style={{ position: "relative", flexShrink: 0 }}>
       {/* Trigger */}
       <button
+        ref={triggerRef}
         onClick={() => isOpen ? onClose() : onOpen()}
         aria-label="Notifications"
         style={{
@@ -279,10 +314,10 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
           color: "var(--text-muted)",
           transition: "color 0.2s, background 0.2s",
         }}
-        onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.06)"; e.currentTarget.style.color = "#000"; }}
-        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "rgba(0,0,0,0.5)"; }}
+        onMouseEnter={(e) => { e.currentTarget.style.background = "var(--color-hover)"; e.currentTarget.style.color = "var(--foreground)"; }}
+        onMouseLeave={(e) => { e.currentTarget.style.background = "none"; e.currentTarget.style.color = "var(--text-muted)"; }}
       >
-        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
           <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
         </svg>
@@ -292,7 +327,7 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             minWidth: 15, height: 15, borderRadius: "999px",
             background: "#14b8a6",
             display: "flex", alignItems: "center", justifyContent: "center",
-            fontFamily: "Space Mono, monospace",
+            fontFamily: "Inter, sans-serif",
             fontSize: "0.48rem", fontWeight: 700,
             color: "#fff", lineHeight: 1, padding: "0 3px",
           }}>
@@ -304,37 +339,32 @@ export default function NavNotificationsDropdown({ notifications: initialNotifs,
             position: "absolute", top: 3, right: 3,
             width: 8, height: 8, borderRadius: "50%",
             background: "#f59e0b",
-            border: "1.5px solid #fff",
+            border: "1.5px solid var(--nav-bg)",
           }} />
         )}
       </button>
 
-      {/* Desktop dropdown */}
-      {isOpen && !isMobile && (
-        <div style={{
-          position: "absolute", top: "calc(100% + 8px)", right: 0,
-          width: 380, borderRadius: 12, zIndex: 9999,
-          background: "#fff",
-          border: "1px solid rgba(0,0,0,0.09)",
-          boxShadow: "0 8px 32px rgba(0,0,0,0.10), 0 2px 8px rgba(0,0,0,0.06)",
-          maxHeight: 480,
-          display: "flex", flexDirection: "column",
-          overflow: "hidden",
-        }}>
-          {panelInner}
-        </div>
-      )}
-
-      {/* Mobile bottom sheet */}
-      {isOpen && isMobile && createPortal(
-        <div className="sheet-backdrop" onClick={onClose}>
-          <div className="sheet-panel" onClick={(e) => e.stopPropagation()}>
-            <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
-              <div style={{ width: 40, height: 4, borderRadius: 99, background: "#ccc" }} />
-            </div>
+      {/* Portal — desktop dropdown + mobile bottom sheet */}
+      {isOpen && createPortal(
+        <>
+          <div
+            onClick={onClose}
+            style={{
+              position: "fixed",
+              inset: 0,
+              zIndex: 9998,
+              background: isMobile ? "rgba(0,0,0,0.4)" : "transparent",
+            }}
+          />
+          <div style={isMobile ? mobileStyle : desktopStyle}>
+            {isMobile && (
+              <div style={{ display: "flex", justifyContent: "center", padding: "0.75rem 0 0.25rem", flexShrink: 0 }}>
+                <div style={{ width: 40, height: 4, borderRadius: 99, background: "var(--card-border)" }} />
+              </div>
+            )}
             {panelInner}
           </div>
-        </div>,
+        </>,
         document.body
       )}
     </div>

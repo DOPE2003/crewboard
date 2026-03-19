@@ -154,21 +154,20 @@ export default async function Navbar() {
   }
 
   return (
-    <nav style={{ flexDirection: "column", padding: 0, height: "auto" }}>
+    <nav>
 
-      {/* ── ROW 1: Logo + Search/Icons ── */}
+      {/* ── Single bar: Logo | Categories (center) | Search + Icons ── */}
       <div className="nav-row1" style={{
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
         width: "100%",
         gap: "1rem",
-        borderBottom: "1px solid rgba(0,0,0,0.06)",
       }}>
 
-        {/* Logo + brand name */}
-        <Link href="/" style={{ flexShrink: 0, display: "flex", flexDirection: "column", alignItems: "flex-start", textDecoration: "none", gap: "0.15rem" }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 240, height: 60 }}>
+        {/* Logo */}
+        <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center", textDecoration: "none" }}>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" className="nav-logo-svg" style={{ width: 220, height: 52 }}>
             <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
               fill="none" stroke="var(--foreground)" strokeWidth="4.4" strokeLinejoin="round"/>
             <line x1="72" y1="54" x2="52" y2="94" stroke="var(--foreground)" strokeWidth="3.6" strokeLinecap="round"/>
@@ -182,86 +181,79 @@ export default async function Navbar() {
               <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
             </text>
           </svg>
-          <span className="nav-tagline" style={{ paddingLeft: "0.3rem" }}><T k="nav.tagline" /></span>
         </Link>
 
-        {/* Right: search + icons + auth */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flex: 1, justifyContent: "center", minWidth: 0 }}>
+        {/* Center: category nav (desktop only) */}
+        <div className="nav-cats-center">
+          <ul className="nav-links" style={{ margin: 0 }}>
+            <NavCategoryGroup
+              label="Creative"
+              color="#f59e0b"
+              items={[
+                { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
+                { label: "Artist",            href: "/talent?role=Artist" },
+              ]}
+            />
+            <NavCategoryGroup
+              label="Design"
+              color="#8b5cf6"
+              items={[
+                { label: "Web3 Designer",    href: "/talent?role=Web3+Web+Designer" },
+                { label: "Graphic & Design", href: "/talent?role=Graphic+%26+Design" },
+                { label: "Content Creator",  href: "/talent?role=Content+Creator" },
+              ]}
+            />
+            <NavCategoryGroup
+              label="Marketing"
+              color="#14b8a6"
+              items={[
+                { label: "Social Marketing",  href: "/talent?role=Social+Marketing" },
+                { label: "KOL Manager",       href: "/talent?role=KOL+Manager" },
+                { label: "Exchange Listings", href: "/talent?role=Exchange+Listings+Manager" },
+              ]}
+            />
+            <NavCategoryGroup
+              label="Tech"
+              color="#3b82f6"
+              items={[
+                { label: "Coding & Tech", href: "/talent?role=Coding+%26+Tech" },
+                { label: "AI Engineer",   href: "/talent?role=AI+Engineer" },
+              ]}
+            />
+          </ul>
+        </div>
 
-          {/* Search — hidden on mobile */}
-          <div className="nav-search-wrap" style={{ display: "flex", justifyContent: "center", flex: 1 }}>
+        {/* Right: search + icons + auth */}
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
+          <div className="nav-search-wrap" style={{ display: "flex", justifyContent: "center" }}>
             <NavSearch />
           </div>
-
-          {/* Icons + hamburger — single client component owns open state */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", marginLeft: "auto" }}>
-            <NavControlsClient
-              loggedIn={!!user}
-              conversations={navConversations}
-              totalUnread={totalMsgUnread}
-              notifications={navNotifications}
-              unreadCount={unreadCount}
-              orders={navOrders}
-              activeCount={activeOrderCount}
-              hasIncompleteOnboarding={hasIncompleteOnboarding}
-            >
-              {user && (
-                <NavProfileMenu
-                  image={user.image ?? null}
-                  name={user.name ?? null}
-                  twitterHandle={(user as any).twitterHandle ?? null}
-                  role={dbUser?.role ?? null}
-                  availability={dbUser?.availability ?? null}
-                  unreadCount={unreadCount}
-                  gigsCount={gigsCount}
-                />
-              )}
-              {!user && (
-                <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
-              )}
-            </NavControlsClient>
-          </div>
+          <NavControlsClient
+            loggedIn={!!user}
+            conversations={navConversations}
+            totalUnread={totalMsgUnread}
+            notifications={navNotifications}
+            unreadCount={unreadCount}
+            orders={navOrders}
+            activeCount={activeOrderCount}
+            hasIncompleteOnboarding={hasIncompleteOnboarding}
+          >
+            {user && (
+              <NavProfileMenu
+                image={user.image ?? null}
+                name={user.name ?? null}
+                twitterHandle={(user as any).twitterHandle ?? null}
+                role={dbUser?.role ?? null}
+                availability={dbUser?.availability ?? null}
+                unreadCount={unreadCount}
+                gigsCount={gigsCount}
+              />
+            )}
+            {!user && (
+              <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
+            )}
+          </NavControlsClient>
         </div>
-      </div>
-
-      {/* ── ROW 2: Category groups (desktop only) ── */}
-      <div className="nav-links-row">
-        <ul className="nav-links" style={{ margin: 0 }}>
-          <NavCategoryGroup
-            label="Creative"
-            color="#f59e0b"
-            items={[
-              { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
-              { label: "Artist",            href: "/talent?role=Artist" },
-            ]}
-          />
-          <NavCategoryGroup
-            label="Design"
-            color="#8b5cf6"
-            items={[
-              { label: "Web3 Designer",   href: "/talent?role=Web3+Web+Designer" },
-              { label: "Graphic & Design", href: "/talent?role=Graphic+%26+Design" },
-              { label: "Content Creator",  href: "/talent?role=Content+Creator" },
-            ]}
-          />
-          <NavCategoryGroup
-            label="Marketing"
-            color="#14b8a6"
-            items={[
-              { label: "Social Marketing",    href: "/talent?role=Social+Marketing" },
-              { label: "KOL Manager",         href: "/talent?role=KOL+Manager" },
-              { label: "Exchange Listings",   href: "/talent?role=Exchange+Listings+Manager" },
-            ]}
-          />
-          <NavCategoryGroup
-            label="Tech"
-            color="#3b82f6"
-            items={[
-              { label: "Coding & Tech", href: "/talent?role=Coding+%26+Tech" },
-              { label: "AI Engineer",   href: "/talent?role=AI+Engineer" },
-            ]}
-          />
-        </ul>
       </div>
 
     </nav>

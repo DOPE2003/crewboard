@@ -11,7 +11,7 @@ export default async function SettingsPage() {
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 580, margin: "0 auto", padding: "2rem 1.25rem 5rem" }}>
         <div style={{ marginBottom: "1.75rem" }}>
-          <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.4rem" }}>
+          <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.4rem" }}>
             — Settings
           </div>
           <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", letterSpacing: "-0.02em" }}>

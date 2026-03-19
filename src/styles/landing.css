@@ -14,9 +14,9 @@
 .landing-page nav {
   position: sticky !important;
   top: 0 !important;
-  background: white !important;
+  background: var(--nav-bg) !important;
   backdrop-filter: none !important;
-  border-bottom: 1px solid #f3f4f6 !important;
+  border-bottom: 1px solid var(--nav-border) !important;
   padding: 1rem 1.5rem !important;
   display: block !important;
 }
@@ -44,6 +44,11 @@
   -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(0, 0, 0, 0.07);
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+}
+body.dark .glass-card {
+  background: rgba(30, 41, 59, 0.85);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 /* Glow border for feature cards */

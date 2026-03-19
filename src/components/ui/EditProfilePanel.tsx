@@ -64,7 +64,7 @@ export default function EditProfilePanel({ initialRole, initialSkills, initialBi
           borderBottom: "1px solid rgba(0,0,0,0.08)",
           position: "sticky", top: 0, background: "#fff", zIndex: 1,
         }}>
-          <span style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "1.05rem", letterSpacing: "0.03em", color: "#0f172a" }}>
+          <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.05rem", letterSpacing: "0.03em", color: "#0f172a" }}>
             Edit Profile
           </span>
           <button

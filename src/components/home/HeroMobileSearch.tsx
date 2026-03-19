@@ -126,10 +126,10 @@ export default function HeroMobileSearch() {
                 <div style={{ width: 30, height: 30, borderRadius: "50%", background: "rgba(0,0,0,0.08)", flexShrink: 0 }} />
               )}
               <div>
-                <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "#000", lineHeight: 1.2 }}>
+                <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "#000", lineHeight: 1.2 }}>
                   {r.name ?? r.twitterHandle}
                 </div>
-                <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.62rem", color: "rgba(0,0,0,0.45)" }}>
+                <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.62rem", color: "rgba(0,0,0,0.45)" }}>
                   @{r.twitterHandle}{r.role ? ` · ${r.role}` : ""}
                 </div>
               </div>

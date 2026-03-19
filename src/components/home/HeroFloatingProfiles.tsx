@@ -66,7 +66,7 @@ function FloatCard({
         )}
         <div style={{ minWidth: 0 }}>
           <div className="hero-float-name" style={{
-            fontFamily: "Rajdhani, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 700,
             fontSize: "0.88rem",
             color: "#000",
@@ -77,7 +77,7 @@ function FloatCard({
           </div>
           {profile.role && (
             <div style={{
-              fontFamily: "Space Mono, monospace",
+              fontFamily: "Inter, sans-serif",
               fontSize: "0.5rem",
               letterSpacing: "0.08em",
               textTransform: "uppercase",
@@ -94,9 +94,9 @@ function FloatCard({
       {/* Bio */}
       {profile.bio && (
         <p className="hero-float-bio" style={{
-          fontFamily: "Outfit, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontSize: "0.68rem",
-          color: "rgba(0,0,0,0.5)",
+          color: "var(--text-muted)",
           lineHeight: 1.5,
           margin: "0.5rem 0 0",
           display: "-webkit-box",
@@ -113,12 +113,12 @@ function FloatCard({
         <div style={{ display: "flex", gap: "0.3rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
           {visibleSkills.map((s) => (
             <span key={s} className="hero-float-chip" style={{
-              fontFamily: "Space Mono, monospace",
+              fontFamily: "Inter, sans-serif",
               fontSize: "0.48rem",
               padding: "0.2rem 0.5rem",
               borderRadius: 999,
               background: "rgba(0,0,0,0.05)",
-              color: "rgba(0,0,0,0.5)",
+              color: "var(--text-muted)",
               letterSpacing: "0.04em",
             }}>
               {s}
@@ -129,21 +129,25 @@ function FloatCard({
 
       {/* Proof-of-work stats */}
       {(() => {
-        const earnedStr = profile.totalEarned === 0 ? "—" : profile.totalEarned >= 1000
+        const hasStats = profile.ordersCompleted > 0 || profile.totalEarned > 0;
+        const earnedStr = profile.totalEarned >= 1000
           ? `$${(profile.totalEarned / 1000).toFixed(profile.totalEarned % 1000 === 0 ? 0 : 1)}k`
           : `$${profile.totalEarned}`;
+        const stats = [
+          ...(hasStats ? [
+            { label: "Orders", val: String(profile.ordersCompleted), empty: false },
+            { label: "Earned", val: earnedStr, empty: false },
+          ] : []),
+          { label: "Since", val: profile.memberSince, empty: false },
+        ] as Array<{ label: string; val: string; empty: boolean }>;
         return (
           <div style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem", flexWrap: "wrap", marginTop: "0.5rem" }}>
-            {([
-              { label: "Orders", val: profile.ordersCompleted === 0 ? "—" : String(profile.ordersCompleted), empty: profile.ordersCompleted === 0 },
-              { label: "Earned", val: earnedStr, empty: profile.totalEarned === 0 },
-              { label: "Since",  val: profile.memberSince, empty: false },
-            ] as Array<{ label: string; val: string; empty: boolean }>).map((stat, i) => (
+            {stats.map((stat, i) => (
               <div key={stat.label} style={{ display: "flex", alignItems: "flex-start", gap: "0.5rem" }}>
-                {i > 0 && <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.5rem", color: "rgba(0,0,0,0.15)", marginTop: 8 }}>·</span>}
+                {i > 0 && <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.5rem", color: "rgba(0,0,0,0.15)", marginTop: 8 }}>·</span>}
                 <div style={{ display: "flex", flexDirection: "column", gap: 1 }}>
-                  <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.42rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,0,0,0.28)" }}>{stat.label}</span>
-                  <span style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", fontWeight: 700, color: stat.empty ? "rgba(0,0,0,0.25)" : "#2DD4BF" }}>{stat.val}</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.42rem", letterSpacing: "0.1em", textTransform: "uppercase", color: "rgba(0,0,0,0.28)" }}>{stat.label}</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", fontWeight: 700, color: "#2DD4BF" }}>{stat.val}</span>
                 </div>
               </div>
             ))}
@@ -151,7 +155,7 @@ function FloatCard({
         );
       })()}
 
-      {/* Availability + DM row */}
+      {/* Availability + actions row */}
       <div className="hero-float-divider" style={{
         display: "flex",
         alignItems: "center",
@@ -160,30 +164,45 @@ function FloatCard({
         marginTop: "0.55rem",
         paddingTop: "0.5rem",
         borderTop: "1px solid rgba(0,0,0,0.06)",
+        flexWrap: "nowrap",
       }}>
-        <div style={{ display: "flex", alignItems: "center", gap: "0.35rem" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.35rem", minWidth: 0, overflow: "hidden" }}>
           <span style={{ width: 6, height: 6, borderRadius: "50%", background: color, flexShrink: 0 }} />
-          <span className="hero-float-avail" style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.68rem", color: "rgba(0,0,0,0.5)", fontWeight: 500 }}>
+          <span className="hero-float-avail" style={{ fontFamily: "Inter, sans-serif", fontSize: "0.68rem", color: "var(--text-muted)", fontWeight: 500, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
             {label}
           </span>
         </div>
-        <Link
-          href={`/u/${profile.twitterHandle}`}
-          onClick={(e) => e.stopPropagation()}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 4,
-            fontSize: "0.6rem", fontWeight: 700, fontFamily: "Rajdhani, sans-serif",
-            letterSpacing: "0.06em", textTransform: "uppercase",
-            padding: "3px 9px", borderRadius: 6,
-            background: "#0f172a", color: "#fff", textDecoration: "none",
-            flexShrink: 0,
-          }}
-        >
-          <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-          </svg>
-          DM
-        </Link>
+        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
+          <Link
+            href={`/u/${profile.twitterHandle}`}
+            onClick={(e) => e.stopPropagation()}
+            className="hero-float-view"
+            style={{
+              fontSize: "0.6rem",
+              fontFamily: "Inter, sans-serif",
+              color: "var(--text-muted)",
+              textDecoration: "none",
+            }}
+          >
+            View profile
+          </Link>
+          <Link
+            href={`/u/${profile.twitterHandle}`}
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              display: "inline-flex", alignItems: "center", gap: 4,
+              fontSize: "0.6rem", fontWeight: 700, fontFamily: "Inter, sans-serif",
+              letterSpacing: "0.06em", textTransform: "uppercase",
+              padding: "3px 9px", borderRadius: 6,
+              background: "#0f172a", color: "#fff", textDecoration: "none",
+            }}
+          >
+            <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+            </svg>
+            DM
+          </Link>
+        </div>
       </div>
     </div>
   );

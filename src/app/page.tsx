@@ -1,66 +1,10 @@
+import React from "react";
 import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
-import HeroMobileSearch from "@/components/home/HeroMobileSearch";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
 import "@/styles/landing.css";
 
-const FEATURES = [
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
-    ),
-    title: "Escrow Smart Contracts",
-    desc: "Payments are held in automated smart contracts and released only on delivery. Zero counterparty risk.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/>
-      </svg>
-    ),
-    title: "Instant Crypto Payouts",
-    desc: "Get paid in SOL, USDC, or any token. No banks, no delays, no fees eating your earnings.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87L18.18 21 12 17.77 5.82 21 7 14.14 2 9.27l6.91-1.01z"/>
-      </svg>
-    ),
-    title: "On-Chain Reputation",
-    desc: "Your track record lives on the blockchain — immutable, portable, and owned by you, not the platform.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
-      </svg>
-    ),
-    title: "Multi-Chain Support",
-    desc: "Deploy and collaborate across Ethereum, Polygon, Arbitrum, Solana. One profile, every chain.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M2 20h20M6 20V10l6-8 6 8v10"/>
-      </svg>
-    ),
-    title: "DAO Governance",
-    desc: "Token holders decide fees, features, and upgrades. The platform is built and owned by the community.",
-  },
-  {
-    icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/>
-      </svg>
-    ),
-    title: "Verified Credentials",
-    desc: "NFT-based skill certificates verify your expertise on-chain. Prove what you know, not just what you claim.",
-  },
-];
 
 export default async function HomePage() {
   const session = await auth();
@@ -101,7 +45,7 @@ export default async function HomePage() {
         alignItems: "center",
         justifyContent: "flex-start",
         textAlign: "center",
-        padding: "clamp(2rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 5vw, 4rem)",
+        padding: "clamp(1rem, 3vw, 2.5rem) clamp(1rem, 4vw, 2rem) clamp(1.5rem, 3vw, 3rem)",
         position: "relative",
         overflow: "hidden",
       }} className="landing-hero">
@@ -127,13 +71,14 @@ export default async function HomePage() {
 
         {/* Status chip */}
         <div style={{
-          fontFamily: "Space Mono, monospace",
+          fontFamily: "Inter, sans-serif",
           fontSize: "0.6rem",
           fontWeight: 700,
           letterSpacing: "0.28em",
           color: "#22c55e",
           textTransform: "uppercase",
-          marginBottom: "2rem",
+          marginTop: "0.5rem",
+          marginBottom: "1.5rem",
           padding: "0.45rem 1rem",
           border: "1px solid rgba(34,197,94,0.2)",
           borderRadius: "999px",
@@ -145,7 +90,7 @@ export default async function HomePage() {
         </div>
         {/* Headline */}
         <h1 className="hero-h1" style={{
-          fontFamily: "Rajdhani, sans-serif",
+          fontFamily: "Inter, sans-serif",
           fontWeight: 300,
           letterSpacing: "-0.01em",
           lineHeight: 0.93,
@@ -160,60 +105,34 @@ export default async function HomePage() {
           Web3 <span style={{ color: "#2DD4BF" }}>freelancer.</span>
         </h1>
 
-        {/* Small sign-in button */}
-        {!isLoggedIn && (
-          <Link href="/register" style={{
-            display: "inline-flex",
-            alignItems: "center",
-            fontFamily: "Rajdhani, sans-serif",
-            fontWeight: 700,
-            fontSize: "0.82rem",
-            letterSpacing: "0.14em",
-            textTransform: "uppercase",
-            color: "#fff",
-            textDecoration: "none",
-            padding: "0.7rem 1.75rem",
-            borderRadius: "999px",
-            border: "1.5px solid #000",
-            background: "#000",
-            marginBottom: "2.5rem",
-            opacity: 0,
-            animation: "fadeUp 0.6s 0.38s forwards",
-            position: "relative",
-            zIndex: 1,
-            transition: "background 0.18s, border-color 0.18s, color 0.18s",
-          }}>
-            Join Crewboard
-          </Link>
-        )}
         {isLoggedIn && (
           <div style={{
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             gap: "0.3rem",
-            marginBottom: "2.5rem",
+            marginBottom: "1rem",
             opacity: 0,
             animation: "fadeUp 0.6s 0.38s forwards",
             position: "relative",
             zIndex: 1,
           }}>
             <span style={{
-              fontFamily: "Space Mono, monospace",
-              fontSize: "0.62rem",
-              letterSpacing: "0.22em",
+              fontFamily: "Inter, sans-serif",
+              fontSize: "0.6875rem",
+              letterSpacing: "0.15em",
               textTransform: "uppercase",
               color: "var(--text-muted)",
             }}>
               Welcome back
             </span>
-            <span style={{
-              fontFamily: "Rajdhani, sans-serif",
+            <span className="hero-welcome-name" style={{
+              fontFamily: "Inter, sans-serif",
               fontWeight: 700,
-              fontSize: "clamp(2rem, 5vw, 3rem)",
+              fontSize: "2rem",
               letterSpacing: "-0.01em",
               lineHeight: 1,
-              color: "var(--foreground)",
+              color: "#111",
             }}>
               {session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder"}
             </span>
@@ -228,7 +147,7 @@ export default async function HomePage() {
           lineHeight: 1.85,
           maxWidth: "22rem",
           letterSpacing: "0.01em",
-          marginBottom: "2rem",
+          marginBottom: "1.25rem",
           opacity: 0,
           animation: "fadeUp 0.6s 0.58s forwards",
           position: "relative",
@@ -244,9 +163,9 @@ export default async function HomePage() {
           gap: "0.85rem",
           justifyContent: "center",
           flexWrap: "wrap",
-          marginBottom: "3rem",
+          marginBottom: "1.5rem",
           opacity: 0,
-          animation: "fadeUp 0.6s 0.66s forwards",
+          animation: "fadeUp 0.6s 0.7s forwards",
           position: "relative",
           zIndex: 1,
         }}>
@@ -256,11 +175,6 @@ export default async function HomePage() {
           <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
             {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
           </Link>
-        </div>
-
-        {/* Mobile search bar — hidden on desktop */}
-        <div style={{ opacity: 0, animation: "fadeUp 0.6s 0.62s forwards", width: "100%", maxWidth: "min(100%, 400px)" }}>
-          <HeroMobileSearch />
         </div>
 
         {/* Stats + scroll */}
@@ -276,12 +190,13 @@ export default async function HomePage() {
         }}>
 
           <span style={{
-            fontFamily: "Space Mono, monospace",
-            fontSize: "0.52rem",
+            fontFamily: "Inter, sans-serif",
+            fontSize: "0.42rem",
             letterSpacing: "0.25em",
             color: "var(--text-muted)",
             textTransform: "uppercase",
             marginBottom: "0.5rem",
+            opacity: 0.4,
           }}>Scroll</span>
           <div className="scroll-line" />
         </div>
@@ -323,8 +238,8 @@ export default async function HomePage() {
             <div key={item.label} style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
               <div style={{ flexShrink: 0 }}>{item.icon}</div>
               <div>
-                <div style={{ fontFamily: "Rajdhani, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)", letterSpacing: "0.02em" }}>{item.label}</div>
-                <div style={{ fontFamily: "Outfit, sans-serif", fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 1 }}>{item.desc}</div>
+                <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)", letterSpacing: "0.02em" }}>{item.label}</div>
+                <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 1 }}>{item.desc}</div>
               </div>
             </div>
           ))}
@@ -336,7 +251,7 @@ export default async function HomePage() {
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
           <div className="section-label">Simple Process</div>
           <h2 style={{
-            fontFamily: "Rajdhani, sans-serif",
+            fontFamily: "Inter, sans-serif",
             fontWeight: 700,
             fontSize: "clamp(1.8rem, 3.5vw, 2.6rem)",
             color: "var(--foreground)",
@@ -355,150 +270,168 @@ export default async function HomePage() {
             From signing up to shipping your first project — here's the full journey on Crewboard.
           </p>
 
-          <div className="landing-steps-grid" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
-            gap: "1.25rem",
-          }}>
-            {[
-              {
-                step: "01",
-                title: "Connect your X account",
-                desc: "Sign in with Twitter/X in one click. No forms, no passwords — your Web3 identity starts here.",
-                tag: "Sign up",
-              },
-              {
-                step: "02",
-                title: "Build your profile",
-                desc: "Choose your role, add your skills, and write a short bio. Your profile is your on-chain resume.",
-                tag: "Identity",
-              },
-              {
-                step: "03",
-                title: "Browse the talent pool",
-                desc: "Search and filter builders by role, skill, chain, and availability. Find exactly who you need.",
-                tag: "Discover",
-              },
-              {
-                step: "04",
-                title: "Post or join a project",
-                desc: "Founders post projects with roles needed. Builders apply directly — no middlemen, no agencies.",
-                tag: "Collaborate",
-              },
-              {
-                step: "05",
-                title: "Communicate in-platform",
-                desc: "All coordination happens inside Crewboard. No DMs scattered across Discord, Telegram, or X.",
-                tag: "Communicate",
-              },
-              {
-                step: "06",
-                title: "Ship & build reputation",
-                desc: "Completed work builds your track record. Every project adds to your verifiable on-chain history.",
-                tag: "Grow",
-              },
-            ].map((item) => (
-              <div key={item.step} style={{
-                padding: "1.75rem",
-                borderRadius: 16,
-                border: "1px solid var(--card-border)",
-                background: "rgba(var(--foreground-rgb), 0.015)",
-                position: "relative",
-                display: "flex",
-                flexDirection: "column",
-                gap: "0.5rem",
-              }}>
-                {/* Step number + tag row */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }}>
-                  <div style={{
-                    fontFamily: "Space Mono, monospace",
-                    fontSize: "0.6rem",
-                    letterSpacing: "0.22em",
-                    color: "#2DD4BF",
-                    fontWeight: 700,
-                  }}>
-                    {item.step}
-                  </div>
-                  <span style={{
-                    fontFamily: "Space Mono, monospace",
-                    fontSize: "0.5rem",
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    color: "rgba(0,0,0,0.35)",
-                    background: "rgba(0,0,0,0.05)",
-                    padding: "0.2rem 0.55rem",
-                    borderRadius: 999,
-                  }}>
-                    {item.tag}
-                  </span>
-                </div>
-                <h3 style={{
-                  fontFamily: "Rajdhani, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "1rem",
-                  letterSpacing: "0.02em",
-                  color: "var(--foreground)",
-                  lineHeight: 1.2,
-                }}>
-                  {item.title}
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", lineHeight: 1.65, margin: 0 }}>
-                  {item.desc}
-                </p>
+          <div className="how-it-works-grid">
+            {([
+              [
+                { step: "01", title: "Create your account", desc: "Sign in with Twitter/X in one click or create a Crewboard ID. No forms, no passwords — your Web3 identity starts here.", tag: "Sign up" },
+                { step: "02", title: "Build your profile", desc: "Choose your role, add your skills, and write a short bio. Your profile is your on-chain resume.", tag: "Identity" },
+                { step: "03", title: "Browse the talent pool", desc: "Search and filter builders by role, skill, chain, and availability. Find exactly who you need.", tag: "Discover" },
+              ],
+              [
+                { step: "04", title: "Hire or get hired", desc: "Founders send offers directly to builders. Builders apply to open gigs. No middlemen, no agencies.", tag: "Collaborate" },
+                { step: "05", title: "Communicate in-platform", desc: "All coordination happens inside Crewboard. No DMs scattered across Discord, Telegram, or X.", tag: "Communicate" },
+                { step: "06", title: "Ship & get paid", desc: "Deliver your work, get paid in SOL or USDC. Every completed gig builds your verifiable on-chain reputation.", tag: "Grow" },
+              ],
+            ] as const).map((row, rowIdx) => (
+              <div key={rowIdx} className="how-it-works-row">
+                {row.map((item, i) => (
+                  <React.Fragment key={item.step}>
+                    <div className="how-it-works-card">
+                      {/* Ghost step number — decorative */}
+                      <div className="how-it-works-step-num">{item.step}</div>
+                      {/* Header: small label + tag pill */}
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem", position: "relative", zIndex: 1 }}>
+                        <div style={{
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "0.58rem",
+                          letterSpacing: "0.22em",
+                          color: "#2DD4BF",
+                          fontWeight: 700,
+                        }}>
+                          {item.step}
+                        </div>
+                        <span style={{
+                          fontFamily: "Inter, sans-serif",
+                          fontSize: "0.5rem",
+                          letterSpacing: "0.15em",
+                          textTransform: "uppercase" as const,
+                          color: "rgba(0,0,0,0.35)",
+                          background: "rgba(0,0,0,0.05)",
+                          padding: "0.2rem 0.55rem",
+                          borderRadius: 999,
+                        }}>
+                          {item.tag}
+                        </span>
+                      </div>
+                      <h3 style={{
+                        fontFamily: "Inter, sans-serif",
+                        fontWeight: 700,
+                        fontSize: "1.05rem",
+                        letterSpacing: "0.02em",
+                        color: "var(--foreground)",
+                        lineHeight: 1.2,
+                        position: "relative",
+                        zIndex: 1,
+                      }}>
+                        {item.title}
+                      </h3>
+                      <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", lineHeight: 1.65, margin: 0, position: "relative", zIndex: 1 }}>
+                        {item.desc}
+                      </p>
+                    </div>
+                    {i < 2 && (
+                      <div className="how-it-works-arrow">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                          <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+                        </svg>
+                      </div>
+                    )}
+                  </React.Fragment>
+                ))}
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* ── FEATURES ── */}
-      <div className="landing-section" style={{ padding: "clamp(2.5rem, 7vw, 6rem) clamp(1rem, 4vw, 2rem)", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+      {/* ── ROADMAP ── */}
+      <div className="roadmap-section">
+        <div className="roadmap-inner">
 
           <div className="section-label">Platform Features</div>
-          <h2 style={{
-            fontFamily: "Rajdhani, sans-serif",
-            fontWeight: 700,
-            fontSize: "clamp(2rem, 4vw, 2.8rem)",
-            color: "var(--foreground)",
-            marginBottom: "3.5rem",
-            lineHeight: 1.15,
-          }}>
-            Built different.<br />
-            <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>
-              Built for Web3.
-            </span>
+          <h2 className="roadmap-title">
+            How we&rsquo;re building Crewboard
           </h2>
+          <p className="roadmap-subtitle">
+            Transparent by default. Here&rsquo;s exactly where we are.
+          </p>
+          <p className="roadmap-intro">
+            We&rsquo;re building this in public. Here&rsquo;s what&rsquo;s shipped, what&rsquo;s being built right now, and what&rsquo;s on the horizon.
+          </p>
 
-          <div className="landing-features-grid" style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-            gap: "1.25rem",
-          }}>
-            {FEATURES.map((f) => (
-              <div key={f.title} style={{
-                padding: "1.75rem",
-                borderRadius: 16,
-                border: "1px solid var(--card-border)",
-                background: "rgba(var(--foreground-rgb), 0.02)",
-                transition: "border-color 0.2s, background 0.2s",
-              }}>
-                <div style={{ color: "#2DD4BF", marginBottom: "1rem", lineHeight: 1 }}>{f.icon}</div>
-                <h3 style={{
-                  fontFamily: "Rajdhani, sans-serif",
-                  fontWeight: 700,
-                  fontSize: "1.05rem",
-                  letterSpacing: "0.02em",
-                  color: "var(--foreground)",
-                  marginBottom: "0.5rem",
-                }}>
-                  {f.title}
-                </h3>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.875rem", lineHeight: 1.65 }}>
-                  {f.desc}
-                </p>
+          {/* Progress bar */}
+          <div className="roadmap-progress-wrap">
+            <span className="roadmap-progress-label">5 of 11 features live &middot; updated Mar 2026</span>
+            <div className="roadmap-progress-track">
+              <div className="roadmap-progress-fill" />
+            </div>
+          </div>
+
+          {/* 3 columns */}
+          <div className="roadmap-grid">
+
+            {/* COLUMN 1 — Already Live */}
+            <div>
+              <div className="roadmap-badge roadmap-badge-live">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+                Already Live
               </div>
-            ))}
+              {[
+                { title: "Web3-Native Profiles", desc: "Your on-chain identity. Connect with X or create a Crewboard ID — showcase your skills, bio, and work history to the builders who matter." },
+                { title: "Crewboard ID", desc: "No Twitter? No problem. Create your account with email and own your professional identity independently of any social platform." },
+                { title: "Talent Marketplace", desc: "The deepest pool of vetted Web3 talent on the internet. Filter by role, skill, chain, and availability — find exactly who you need in seconds." },
+                { title: "Real-Time Messaging", desc: "Stop juggling 5 different apps. Every conversation, negotiation, and update happens in one place — fast, clean, and on-record." },
+                { title: "Direct Orders", desc: "See someone you want to work with? Hire them directly. Agree on scope, set the price, and get moving — no back and forth, no middlemen." },
+              ].map((item) => (
+                <div key={item.title} className="roadmap-card roadmap-card-live">
+                  <div className="roadmap-card-title">{item.title}</div>
+                  <div className="roadmap-card-desc">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* COLUMN 2 — In Progress */}
+            <div>
+              <div className="roadmap-badge roadmap-badge-progress">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-.08-5.66"/>
+                </svg>
+                In Progress
+              </div>
+              {[
+                { title: "Escrow Smart Contracts", desc: "Money moves only when work is done. Funds are locked on-chain and released automatically on delivery — zero counterparty risk, zero trust required." },
+                { title: "Instant Crypto Payouts", desc: "Get paid in SOL or USDC the moment your work is approved. No banks, no 3-5 business days, no fees eating your earnings." },
+                { title: "On-Chain Reputation", desc: "Every order you complete writes to the blockchain. Your track record becomes a permanent, verifiable asset — owned by you, portable everywhere." },
+              ].map((item) => (
+                <div key={item.title} className="roadmap-card roadmap-card-progress">
+                  <div className="roadmap-card-title">{item.title}</div>
+                  <div className="roadmap-card-desc">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* COLUMN 3 — Coming Soon */}
+            <div>
+              <div className="roadmap-badge roadmap-badge-soon">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                </svg>
+                Coming Soon
+              </div>
+              {[
+                { title: "Multi-Chain Expansion", desc: "Crewboard launches on Solana. Ethereum, Arbitrum, and Polygon are next — one profile, every chain, one unified reputation across Web3." },
+                { title: "NFT Skill Certificates", desc: "Your expertise, certified on-chain. Earn verifiable NFT credentials for every skill you master — proof that no one can fake, take away, or dispute." },
+                { title: "DAO Governance", desc: "The platform belongs to its builders. Token holders vote on fees, features, and the future direction — Crewboard is owned by the community that built it." },
+              ].map((item) => (
+                <div key={item.title} className="roadmap-card roadmap-card-soon">
+                  <div className="roadmap-card-title">{item.title}</div>
+                  <div className="roadmap-card-desc">{item.desc}</div>
+                </div>
+              ))}
+            </div>
+
           </div>
         </div>
       </div>
@@ -529,7 +462,7 @@ export default async function HomePage() {
 
             <div className="section-label" style={{ width: "fit-content", margin: "0 auto" }}>Join the Crew</div>
             <h2 style={{
-              fontFamily: "Rajdhani, sans-serif",
+              fontFamily: "Inter, sans-serif",
               fontWeight: 700,
               fontSize: "clamp(2rem, 4vw, 3rem)",
               color: "var(--foreground)",
