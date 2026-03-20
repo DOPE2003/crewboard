@@ -30,6 +30,12 @@ interface Props {
   initialMessages?: Msg[];
 }
 
+const QUICK_REPLIES = [
+  "👋 What are your rates?",
+  "📅 Are you available?",
+  "📎 Send portfolio",
+];
+
 function formatTime(iso: string) {
   const d = new Date(iso);
   return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
@@ -38,11 +44,11 @@ function formatTime(iso: string) {
 function formatDate(iso: string) {
   const d = new Date(iso);
   const today = new Date();
-  if (d.toDateString() === today.toDateString()) return "Today";
+  if (d.toDateString() === today.toDateString()) return "TODAY";
   const yesterday = new Date(today);
   yesterday.setDate(today.getDate() - 1);
-  if (d.toDateString() === yesterday.toDateString()) return "Yesterday";
-  return d.toLocaleDateString([], { month: "short", day: "numeric" });
+  if (d.toDateString() === yesterday.toDateString()) return "YESTERDAY";
+  return d.toLocaleDateString([], { month: "short", day: "numeric" }).toUpperCase();
 }
 
 const GIG_PREFIX = "__GIGREQUEST__:";
@@ -101,19 +107,10 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         {gig.title}
       </div>
       <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-        <span style={{
-          fontFamily: "Inter, sans-serif",
-          fontWeight: 700,
-          fontSize: "0.88rem",
-          color: "#2DD4BF",
-        }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "#2DD4BF" }}>
           ${gig.price}
         </span>
-        <span style={{
-          fontFamily: "Inter, sans-serif",
-          fontSize: "0.7rem",
-          color: mine ? "rgba(255,255,255,0.55)" : "var(--text-muted)",
-        }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: mine ? "rgba(255,255,255,0.55)" : "var(--text-muted)" }}>
           {gig.days} day{gig.days !== 1 ? "s" : ""} delivery
         </span>
       </div>
@@ -128,6 +125,31 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         Tap to view gig →
       </div>
     </Link>
+  );
+}
+
+function QuotedMessage({
+  replyTo,
+  mine,
+  currentUserId,
+  otherDisplayName,
+}: {
+  replyTo: ReplyPreview;
+  mine: boolean;
+  currentUserId: string;
+  otherDisplayName: string;
+}) {
+  const isMyReply = replyTo.senderId === currentUserId;
+  const senderLabel = isMyReply ? "You" : otherDisplayName;
+  const bodyText = replyTo.body === "__DELETED__"
+    ? "Original message unavailable"
+    : replyBodyPreview(replyTo.body);
+
+  return (
+    <div className="msgs-quoted">
+      <div className="msgs-quoted-sender">{senderLabel}</div>
+      <div className={`msgs-quoted-body${mine ? " mine" : ""}`}>{bodyText}</div>
+    </div>
   );
 }
 
@@ -160,12 +182,10 @@ export default function MessageThread({
     el.scrollTop = el.scrollHeight;
   };
 
-  // Mark messages as read on mount
   useEffect(() => {
     markMessagesAsRead(conversationId).catch(() => {});
   }, [conversationId]);
 
-  // Pusher real-time subscription
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_PUSHER_KEY;
     const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
@@ -199,7 +219,6 @@ export default function MessageThread({
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [messages]);
 
-  // Dismiss action bar on outside tap
   useEffect(() => {
     if (!showActionId) return;
     const handler = () => setShowActionId(null);
@@ -279,38 +298,35 @@ export default function MessageThread({
         {messages.length === 0 && (
           <div className="msgs-thread-empty">Send the first message to start the conversation.</div>
         )}
-        {messages.map((m) => {
+
+        {messages.map((m, idx) => {
           const mine = m.senderId === currentUserId;
           const dateLabel = formatDate(m.createdAt);
           const showDate = dateLabel !== lastDate;
           lastDate = dateLabel;
           const gigCard = parseGigCard(m.body);
           const isShowingAction = showActionId === m.id;
+          const isOptimistic = m.id.startsWith("optimistic-");
+
+          // Show sender name only on first in a sequence for received messages
+          const prevMsg = idx > 0 ? messages[idx - 1] : null;
+          const showSenderName = !mine && (!prevMsg || prevMsg.senderId !== m.senderId);
 
           return (
             <div key={m.id}>
               {showDate && (
-                <div className="msgs-date-sep">{dateLabel}</div>
+                <div className="msgs-date-sep">
+                  <span className="msgs-date-sep-pill">{dateLabel}</span>
+                </div>
               )}
 
-              {/* Mobile action bar — appears on long press */}
+              {/* Mobile action bar */}
               {isShowingAction && (
-                <div style={{
-                  display: "flex",
-                  justifyContent: mine ? "flex-end" : "flex-start",
-                  padding: "0 0.75rem 0.25rem",
-                }}>
+                <div style={{ display: "flex", justifyContent: mine ? "flex-end" : "flex-start", padding: "0 0.75rem 0.25rem" }}>
                   <button
                     onTouchStart={(e) => e.stopPropagation()}
                     onClick={() => { setReplyTo(m); setShowActionId(null); inputRef.current?.focus(); }}
-                    style={{
-                      display: "flex", alignItems: "center", gap: 5,
-                      padding: "6px 14px", borderRadius: 20,
-                      background: "#0f172a", color: "#fff",
-                      border: "none", cursor: "pointer",
-                      fontFamily: "Inter, sans-serif", fontSize: "0.75rem", fontWeight: 600,
-                      boxShadow: "0 4px 16px rgba(0,0,0,0.18)",
-                    }}
+                    className="msgs-action-reply-btn"
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                       <polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/>
@@ -318,6 +334,10 @@ export default function MessageThread({
                     Reply
                   </button>
                 </div>
+              )}
+
+              {showSenderName && (
+                <div className="msgs-sender-name">{otherDisplayName}</div>
               )}
 
               <div
@@ -333,24 +353,8 @@ export default function MessageThread({
                 {hoveredId === m.id && (
                   <button
                     onClick={() => { setReplyTo(m); inputRef.current?.focus(); }}
-                    style={{
-                      position: "absolute",
-                      [mine ? "left" : "right"]: 4,
-                      top: "50%",
-                      transform: "translateY(-50%)",
-                      background: "#fff",
-                      border: "1px solid rgba(0,0,0,0.1)",
-                      borderRadius: 6,
-                      width: 28,
-                      height: 28,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      cursor: "pointer",
-                      boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                      zIndex: 1,
-                      flexShrink: 0,
-                    }}
+                    className="msgs-hover-reply-btn"
+                    style={{ [mine ? "left" : "right"]: 4 }}
                     title="Reply"
                   >
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(0,0,0,0.55)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -370,7 +374,7 @@ export default function MessageThread({
                     </span>
                   </div>
                 ) : (
-                  <div className={`msgs-bubble ${mine ? "msgs-bubble-mine" : "msgs-bubble-theirs"}`} style={{ display: "flex", flexDirection: "column", gap: "0.25rem" }}>
+                  <div className={`msgs-bubble ${mine ? "msgs-bubble-mine" : "msgs-bubble-theirs"}`}>
                     {m.replyTo && (
                       <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />
                     )}
@@ -379,19 +383,27 @@ export default function MessageThread({
                   </div>
                 )}
               </div>
+
+              {/* Message status — only for sent messages */}
+              {mine && (
+                <div className={`msgs-bubble-status${isOptimistic ? " msgs-bubble-status--sending" : ""}`}>
+                  {isOptimistic ? "Sending..." : m.read ? `Seen · ${formatTime(m.createdAt)}` : "Delivered"}
+                </div>
+              )}
             </div>
           );
         })}
-        <div style={{ height: 1 }} />
+        <div style={{ height: 4 }} />
       </div>
 
+      {/* Warnings */}
       {socialWarning && (
-        <div style={{ padding: "6px 14px", fontSize: "0.72rem", color: "#ef4444", background: "rgba(239,68,68,0.06)", borderTop: "1px solid rgba(239,68,68,0.15)" }}>
+        <div className="msgs-warn-bar">
           Social handles, emails, and links are not allowed. Keep all contact on Crewboard.
         </div>
       )}
       {sendError && (
-        <div style={{ padding: "6px 14px", fontSize: "0.72rem", color: "#ef4444", background: "rgba(239,68,68,0.06)", borderTop: "1px solid rgba(239,68,68,0.15)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <div className="msgs-warn-bar msgs-warn-bar--error" style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <span>{sendError}</span>
           <button onClick={() => setSendError(null)} style={{ background: "none", border: "none", cursor: "pointer", color: "#ef4444", fontSize: "1rem", padding: 0, lineHeight: 1 }}>×</button>
         </div>
@@ -399,26 +411,16 @@ export default function MessageThread({
 
       {/* Reply preview bar */}
       {replyTo && (
-        <div style={{
-          display: "flex", alignItems: "flex-start", gap: "0.6rem",
-          padding: "0.55rem 0.75rem",
-          borderTop: "1px solid rgba(0,0,0,0.07)",
-          borderLeft: "3px solid #14b8a6",
-          background: "rgba(20,184,166,0.04)",
-        }}>
+        <div className="msgs-reply-preview">
           <div style={{ flex: 1, minWidth: 0 }}>
-            <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", fontWeight: 600, color: "#14b8a6", marginBottom: 2 }}>
-              {replyTo.senderId === currentUserId ? "You" : otherDisplayName}
+            <div className="msgs-reply-preview-name">
+              Replying to {replyTo.senderId === currentUserId ? "You" : otherDisplayName}
             </div>
-            <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "rgba(0,0,0,0.5)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+            <div className="msgs-reply-preview-text">
               {replyBodyPreview(replyTo.body)}
             </div>
           </div>
-          <button
-            onClick={() => setReplyTo(null)}
-            style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(0,0,0,0.35)", padding: "2px 4px", flexShrink: 0, display: "flex" }}
-            aria-label="Cancel reply"
-          >
+          <button onClick={() => setReplyTo(null)} className="msgs-reply-cancel" aria-label="Cancel reply">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
               <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
             </svg>
@@ -426,11 +428,41 @@ export default function MessageThread({
         </div>
       )}
 
+      {/* Quick reply suggestions — show when < 3 messages */}
+      {messages.length < 3 && (
+        <div className="msgs-quick-replies">
+          {QUICK_REPLIES.map((q) => (
+            <button
+              key={q}
+              type="button"
+              className="msgs-quick-pill"
+              onClick={() => { setBody(q); inputRef.current?.focus(); }}
+            >
+              {q}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {/* Input bar */}
       <div className="msgs-input-row">
+        <button className="msgs-input-icon-btn" type="button" aria-label="Emoji">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+            <line x1="9" y1="9" x2="9.01" y2="9"/>
+            <line x1="15" y1="9" x2="15.01" y2="9"/>
+          </svg>
+        </button>
+        <button className="msgs-input-icon-btn" type="button" aria-label="Attachment">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+            <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+          </svg>
+        </button>
         <textarea
           ref={inputRef}
           className="msgs-input"
-          placeholder="Write a message… (Enter to send)"
+          placeholder="Write a message... (Enter to send)"
           value={body}
           onChange={(e) => { setBody(e.target.value); if (socialWarning) setSocialWarning(false); }}
           onKeyDown={handleKey}
@@ -443,58 +475,10 @@ export default function MessageThread({
           disabled={!body.trim() || sending}
           aria-label="Send"
         >
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
             <line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/>
           </svg>
         </button>
-      </div>
-    </div>
-  );
-}
-
-function QuotedMessage({
-  replyTo,
-  mine,
-  currentUserId,
-  otherDisplayName,
-}: {
-  replyTo: ReplyPreview;
-  mine: boolean;
-  currentUserId: string;
-  otherDisplayName: string;
-}) {
-  const isMyReply = replyTo.senderId === currentUserId;
-  const senderLabel = isMyReply ? "You" : otherDisplayName;
-  const bodyText = replyTo.body === "__DELETED__"
-    ? "Original message unavailable"
-    : replyBodyPreview(replyTo.body);
-
-  return (
-    <div style={{
-      padding: "0.35rem 0.6rem",
-      borderRadius: 8,
-      borderLeft: "3px solid rgba(20,184,166,0.7)",
-      background: mine ? "rgba(0,0,0,0.15)" : "rgba(0,0,0,0.05)",
-      maxWidth: "100%",
-    }}>
-      <div style={{
-        fontFamily: "Inter, sans-serif",
-        fontSize: "0.65rem",
-        fontWeight: 600,
-        color: "#14b8a6",
-        marginBottom: 2,
-      }}>
-        {senderLabel}
-      </div>
-      <div style={{
-        fontFamily: "Inter, sans-serif",
-        fontSize: "0.7rem",
-        color: mine ? "rgba(255,255,255,0.55)" : "rgba(0,0,0,0.45)",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        whiteSpace: "nowrap",
-      }}>
-        {bodyText}
       </div>
     </div>
   );

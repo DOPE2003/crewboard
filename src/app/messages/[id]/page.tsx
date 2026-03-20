@@ -3,8 +3,9 @@ import db from "@/lib/db";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import MessageThread from "./MessageThread";
-import OGBadge from "@/components/ui/OGBadge";
 import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
+import ConversationListUI, { ConvItem } from "../ConversationListUI";
+import ProfileBottomSheet, { ProfileSidebarDesktop, ProfileData } from "./ProfileBottomSheet";
 
 function lastSeenLabel(d: Date | null): string {
   if (!d) return "Offline";
@@ -22,7 +23,6 @@ export default async function ConversationPage({
 }) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
-
   if (!userId) redirect("/login");
 
   const { id } = await params;
@@ -35,15 +35,17 @@ export default async function ConversationPage({
   if (!conv || !conv.participants.includes(userId)) notFound();
 
   const otherId = conv.participants.find((p) => p !== userId) ?? "";
+
+  // Fetch other user + their gigs
   const other = otherId
     ? await db.user.findUnique({
         where: { id: otherId },
-        select: { 
+        select: {
           id: true,
-          name: true, 
-          twitterHandle: true, 
-          image: true, 
-          role: true, 
+          name: true,
+          twitterHandle: true,
+          image: true,
+          role: true,
           lastSeenAt: true,
           bio: true,
           skills: true,
@@ -54,13 +56,29 @@ export default async function ConversationPage({
           worldIdLevel: true,
           gigs: {
             where: { status: "active" },
-            take: 3
-          }
+            take: 3,
+            select: { id: true, title: true, price: true, deliveryDays: true },
+          },
         },
       })
     : null;
 
-  // Sidebar conversations for split view
+  // Stats queries
+  const [completedGigsCount, reviewAgg] = await Promise.all([
+    db.order.count({ where: { sellerId: otherId, status: "completed" } }),
+    db.review.aggregate({
+      where: { revieweeId: otherId },
+      _avg: { rating: true },
+      _count: { rating: true },
+    }),
+  ]);
+
+  const avgDelivery =
+    other?.gigs && other.gigs.length > 0
+      ? Math.round(other.gigs.reduce((a, g) => a + g.deliveryDays, 0) / other.gigs.length)
+      : null;
+
+  // Sidebar conversations
   const conversations = await db.conversation.findMany({
     where: { participants: { has: userId } },
     orderBy: { updatedAt: "desc" },
@@ -69,9 +87,9 @@ export default async function ConversationPage({
     },
   });
 
-  const otherIds = conversations.map((c) =>
-    c.participants.find((p) => p !== userId) ?? ""
-  ).filter(Boolean);
+  const otherIds = conversations
+    .map((c) => c.participants.find((p) => p !== userId) ?? "")
+    .filter(Boolean);
 
   const otherUsers = await db.user.findMany({
     where: { id: { in: otherIds } },
@@ -88,7 +106,29 @@ export default async function ConversationPage({
     )
   );
 
-  // Load initial messages server-side to avoid auth issues in client-side server action calls
+  const convItems: ConvItem[] = conversations.map((c, i) => {
+    const oid = c.participants.find((p) => p !== userId) ?? "";
+    const u = userMap[oid] ?? null;
+    const lastMsg = c.messages[0];
+    return {
+      id: c.id,
+      updatedAt: c.updatedAt.toISOString(),
+      lastMessage: lastMsg?.body ?? null,
+      lastSenderId: lastMsg?.senderId ?? null,
+      unread: unreadCounts[i],
+      user: u
+        ? {
+            id: u.id,
+            name: u.name,
+            twitterHandle: u.twitterHandle,
+            image: u.image,
+            lastSeenAt: u.lastSeenAt?.toISOString() ?? null,
+          }
+        : null,
+    };
+  });
+
+  // Initial messages
   const initialMessages = await db.message.findMany({
     where: { conversationId: id },
     orderBy: { createdAt: "asc" },
@@ -98,99 +138,58 @@ export default async function ConversationPage({
     },
   });
 
-  // Pre-calculate online status to avoid Date.now() in JSX
-  const isOtherOnline = other?.lastSeenAt && (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000;
+  const isOtherOnline = other?.lastSeenAt
+    ? (Date.now() - other.lastSeenAt.getTime()) < 3 * 60 * 1000
+    : false;
   const otherSeenLabel = lastSeenLabel(other?.lastSeenAt ?? null);
+
+  // Serialize profile data for client components
+  const profileData: ProfileData = {
+    name: other?.name ?? null,
+    twitterHandle: other?.twitterHandle ?? "",
+    image: other?.image ?? null,
+    role: other?.role ?? null,
+    bio: other?.bio ?? null,
+    skills: other?.skills ?? [],
+    isOG: other?.isOG ?? false,
+    completedGigs: completedGigsCount,
+    avgRating: reviewAgg._avg.rating ?? null,
+    reviewCount: reviewAgg._count.rating,
+    avgDelivery,
+    gigs: (other?.gigs ?? []).map((g) => ({ id: g.id, title: g.title, price: g.price })),
+  };
 
   return (
     <main className="page">
       <div className="msgs-shell">
-        {/* Sidebar */}
+
+        {/* LEFT: Conversations sidebar */}
         <div className="msgs-sidebar">
-          <div className="msgs-sidebar-header">
-            <span className="msgs-title">Messages</span>
-          </div>
-
-          {conversations.map((c, i) => {
-            const oid = c.participants.find((p) => p !== userId) ?? "";
-            const u = userMap[oid];
-            const lastMsg = c.messages[0];
-            const unread = unreadCounts[i];
-            const active = c.id === id;
-
-            const online = u?.lastSeenAt && (Date.now() - u.lastSeenAt.getTime()) < 3 * 60 * 1000;
-            const seenLabel = lastSeenLabel(u?.lastSeenAt ?? null);
-
-            return (
-              <Link
-                key={c.id}
-                href={`/messages/${c.id}`}
-                className={`msgs-conv-row ${active ? "active" : ""}`}
-              >
-                <div className="msgs-conv-avatar" style={{ position: "relative" }}>
-                  {u?.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={u.image} alt="" />
-                  ) : (
-                    <div className="msgs-conv-avatar-fallback" />
-                  )}
-                  <span style={{
-                    position: "absolute", bottom: 1, right: 1,
-                    width: 10, height: 10, borderRadius: "50%",
-                    background: online ? "#22c55e" : "var(--card-border)",
-                    border: "2px solid var(--dropdown-bg)",
-                  }} />
-                </div>
-                <div className="msgs-conv-info">
-                  <div className="msgs-conv-name">
-                    {u?.name ?? u?.twitterHandle ?? "Unknown"}
-                    {unread > 0 && (
-                      <span className="msgs-unread-dot">{unread}</span>
-                    )}
-                  </div>
-                  <div className="msgs-conv-preview">
-                    {lastMsg
-                      ? (() => {
-                          const prefix = lastMsg.senderId === userId ? "You: " : "";
-                          if (lastMsg.body.startsWith("__GIGREQUEST__:")) {
-                            try {
-                              const gig = JSON.parse(lastMsg.body.slice("__GIGREQUEST__:".length));
-                              return prefix + `Gig Request: ${gig.title}`;
-                            } catch { return prefix + "Gig Request"; }
-                          }
-                          return prefix + lastMsg.body.slice(0, 48) + (lastMsg.body.length > 48 ? "…" : "");
-                        })()
-                      : "No messages yet"}
-                  </div>
-                  <div style={{
-                    fontFamily: "Inter, sans-serif",
-                    fontSize: "0.55rem",
-                    color: online ? "#22c55e" : "var(--text-muted)",
-                    marginTop: 2,
-                  }}>
-                    {seenLabel}
-                  </div>
-                </div>
-              </Link>
-            );
-          })}
+          <ConversationListUI
+            items={convItems}
+            activeId={id}
+            currentUserId={userId}
+          />
         </div>
 
-        {/* Thread panel */}
+        {/* MIDDLE: Thread panel */}
         <div className="msgs-thread-panel">
           {/* Thread header */}
           <div className="msgs-thread-header">
             <Link href="/messages" className="msgs-back-btn" aria-label="Back">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M19 12H5M12 5l-7 7 7 7"/>
               </svg>
             </Link>
 
             {other && (
-              <Link href={`/u/${other.twitterHandle}`} style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", minWidth: 0 }}>
+              <Link
+                href={`/u/${other.twitterHandle}`}
+                style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", flex: 1, minWidth: 0 }}
+              >
                 <div className="msgs-thread-avatar" style={{ position: "relative" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   {other.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
                     <img src={other.image} alt="" />
                   ) : (
                     <div className="msgs-thread-avatar-fallback" />
@@ -202,7 +201,7 @@ export default async function ConversationPage({
                     border: "2px solid var(--dropdown-bg)",
                   }} />
                 </div>
-                <div>
+                <div style={{ minWidth: 0 }}>
                   <div className="msgs-thread-name">
                     {other.name ?? other.twitterHandle ?? "Unknown"}
                   </div>
@@ -212,6 +211,15 @@ export default async function ConversationPage({
                 </div>
               </Link>
             )}
+
+            {/* Verification badges */}
+            <div style={{ display: "flex", gap: "0.4rem", marginLeft: "auto", flexShrink: 0, alignItems: "center" }}>
+              {other?.walletAddress && <WalletVerifiedBadge />}
+              {other?.humanVerified && <HumanVerifiedBadge level={other.worldIdLevel} />}
+            </div>
+
+            {/* Mobile: View Profile button (opens bottom sheet) */}
+            <ProfileBottomSheet profile={profileData} />
           </div>
 
           <MessageThread
@@ -223,77 +231,8 @@ export default async function ConversationPage({
           />
         </div>
 
-        {/* Profile Sidebar */}
-        <div className="msgs-profile-sidebar">
-          <div className="msgs-profile-sidebar-inner">
-            <div className="msgs-ps-header">
-              <Link href={`/u/${other?.twitterHandle}`} className="msgs-ps-avatar" style={{ display: "block", cursor: "pointer", transition: "transform 0.2s" }}>
-                {other?.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img src={other.image} alt="" />
-                ) : (
-                  <div className="msgs-ps-avatar-fallback" />
-                )}
-              </Link>
-              <div className="msgs-ps-name-row">
-                <div className="msgs-ps-name">{other?.name ?? other?.twitterHandle}</div>
-                {other?.isOG && <OGBadge />}
-              </div>
-              <div className="msgs-ps-handle">@{other?.twitterHandle}</div>
-              {other?.role && <div className="msgs-ps-role">{other.role}</div>}
-            </div>
-
-            <div className="msgs-ps-badges">
-              {other?.walletAddress && <WalletVerifiedBadge />}
-              {other?.humanVerified && <HumanVerifiedBadge level={other.worldIdLevel} />}
-            </div>
-
-            {other?.bio && (
-              <div className="msgs-ps-section">
-                <div className="msgs-ps-label">About</div>
-                <div className="msgs-ps-bio">{other.bio}</div>
-              </div>
-            )}
-
-            {other?.skills && other.skills.length > 0 && (
-              <div className="msgs-ps-section">
-                <div className="msgs-ps-label">Skills</div>
-                <div className="msgs-ps-skills">
-                  {other.skills.slice(0, 8).map((s: string) => (
-                    <span key={s} className="msgs-ps-skill">{s}</span>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {other?.gigs && other.gigs.length > 0 && (
-              <div className="msgs-ps-section">
-                <div className="msgs-ps-label">Active Gigs</div>
-                <div className="msgs-ps-gigs">
-                  {other.gigs.map((gig: any) => (
-                    <Link key={gig.id} href={`/gigs/${gig.id}`} className="msgs-ps-gig-card">
-                      <div className="msgs-ps-gig-title">{gig.title}</div>
-                      <div className="msgs-ps-gig-price">${gig.price}</div>
-                    </Link>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            <div className="msgs-ps-actions">
-              <Link href={`/u/${other?.twitterHandle}`} className="btn-secondary" style={{ width: "100%", fontSize: "0.75rem", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
-                View Full Profile
-              </Link>
-              <Link 
-                href={other?.gigs?.[0] ? `/gigs/${other.gigs[0].id}` : `/u/${other?.twitterHandle}`} 
-                className="btn-primary" 
-                style={{ width: "100%", fontSize: "0.75rem", height: "40px", display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none" }}
-              >
-                Hire Now
-              </Link>
-            </div>
-          </div>
-        </div>
+        {/* RIGHT: Profile sidebar (desktop only) */}
+        <ProfileSidebarDesktop profile={profileData} />
       </div>
     </main>
   );

@@ -4,6 +4,12 @@ import { auth } from "@/auth";
 import GigsFilters from "./GigsFilters";
 import T from "@/components/ui/T";
 
+function formatPrice(price: number): string {
+  if (price >= 1000000) return "$" + (price / 1000000).toFixed(1) + "m";
+  if (price >= 1000) return "$" + price.toLocaleString();
+  return "$" + price;
+}
+
 export const GIG_CATEGORIES = [
   "KOL Manager",
   "Exchange Listings Manager",
@@ -42,7 +48,7 @@ export default async function GigsPage({
     where,
     orderBy: { createdAt: "desc" },
     include: {
-      user: { select: { name: true, twitterHandle: true, image: true } },
+      user: { select: { name: true, twitterHandle: true, image: true, role: true } },
     },
   });
 
@@ -73,38 +79,53 @@ export default async function GigsPage({
           </div>
         ) : (
           <div className="gig-grid">
-            {gigs.map((gig) => (
-              <Link key={gig.id} href={`/gigs/${gig.id}`} className="gig-card">
-                <div className="gig-card-top">
-                  <span className="gig-category-badge">{gig.category}</span>
-                  <span className="gig-price">${gig.price}</span>
-                </div>
-                <h2 className="gig-title">{gig.title}</h2>
-                <p className="gig-desc">{gig.description}</p>
-                {gig.tags.length > 0 && (
-                  <div className="gig-tags">
-                    {gig.tags.slice(0, 4).map((t) => (
-                      <span key={t} className="dash-skill-chip">{t}</span>
-                    ))}
-                    {gig.tags.length > 4 && (
-                      <span className="dash-skill-chip">+{gig.tags.length - 4}</span>
-                    )}
+            {gigs.map((gig) => {
+              const userName = gig.user.name ?? gig.user.twitterHandle;
+              const userInitials = userName.slice(0, 2).toUpperCase();
+              return (
+                <Link key={gig.id} href={`/gigs/${gig.id}`} className="gig-card">
+                  <div className="gig-card-top">
+                    <span className="gig-category-badge">{gig.category}</span>
+                    <div className="gig-price-wrap">
+                      <span className="gig-price-label">from</span>
+                      <span className="gig-price">{formatPrice(gig.price)}</span>
+                    </div>
                   </div>
-                )}
-                <div className="gig-footer">
-                  <div className="gig-user">
-                    {gig.user.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={gig.user.image} alt="" className="gig-user-avatar" />
-                    ) : (
-                      <div className="gig-user-avatar-fallback" />
-                    )}
-                    <span className="gig-user-name">{gig.user.name ?? gig.user.twitterHandle}</span>
+                  <h2 className="gig-title">{gig.title}</h2>
+                  <p className="gig-desc">{gig.description}</p>
+                  {gig.tags.length > 0 && (
+                    <div className="gig-tags">
+                      {gig.tags.slice(0, 3).map((t) => (
+                        <span key={t} className="dash-skill-chip">{t}</span>
+                      ))}
+                      {gig.tags.length > 3 && (
+                        <span className="dash-skill-chip">+{gig.tags.length - 3}</span>
+                      )}
+                    </div>
+                  )}
+                  <div className="gig-footer">
+                    <div className="gig-user">
+                      {gig.user.image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={gig.user.image} alt="" className="gig-user-avatar" />
+                      ) : (
+                        <div className="gig-user-avatar-initials">{userInitials}</div>
+                      )}
+                      <div className="gig-user-info">
+                        <span className="gig-user-name">{userName}</span>
+                        {gig.user.role && <span className="gig-user-role">{gig.user.role}</span>}
+                      </div>
+                    </div>
+                    <div className="gig-delivery-wrap">
+                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                      </svg>
+                      <span className="gig-delivery">{gig.deliveryDays}d</span>
+                    </div>
                   </div>
-                  <span className="gig-delivery">{gig.deliveryDays}d delivery</span>
-                </div>
-              </Link>
-            ))}
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>

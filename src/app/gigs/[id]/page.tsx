@@ -6,6 +6,12 @@ import { startConversation, hireFromGig } from "@/actions/messages";
 import GigOwnerActions from "./GigOwnerActions";
 import ActionButton from "@/components/ui/ActionButton";
 
+function formatPrice(price: number): string {
+  if (price >= 1000000) return "$" + (price / 1000000).toFixed(1) + "m";
+  if (price >= 1000) return "$" + price.toLocaleString();
+  return "$" + price;
+}
+
 export default async function GigPage({
   params,
 }: {
@@ -17,7 +23,18 @@ export default async function GigPage({
     db.gig.findUnique({
       where: { id },
       include: {
-        user: { select: { id: true, name: true, twitterHandle: true, image: true, role: true, bio: true, skills: true } },
+        user: {
+          select: {
+            id: true,
+            name: true,
+            twitterHandle: true,
+            image: true,
+            role: true,
+            bio: true,
+            skills: true,
+            createdAt: true,
+          },
+        },
       },
     }),
     auth(),
@@ -29,111 +46,285 @@ export default async function GigPage({
   const isOwner = viewerId === gig.userId;
   const canHire = !!viewerId && !isOwner;
 
+  const [reviewAgg, completedCount, reviews] = await Promise.all([
+    db.review.aggregate({
+      where: { revieweeId: gig.userId },
+      _avg: { rating: true },
+      _count: { rating: true },
+    }),
+    db.order.count({ where: { sellerId: gig.userId, status: "completed" } }),
+    db.review.findMany({
+      where: { revieweeId: gig.userId },
+      orderBy: { createdAt: "desc" },
+      take: 5,
+      select: {
+        id: true,
+        rating: true,
+        body: true,
+        createdAt: true,
+        reviewer: { select: { name: true, twitterHandle: true, image: true } },
+      },
+    }),
+  ]);
+
+  const avgRating = reviewAgg._avg.rating;
+  const reviewCount = reviewAgg._count.rating;
+
+  const sellerName = gig.user.name ?? gig.user.twitterHandle;
+  const sellerInitials = sellerName.slice(0, 2).toUpperCase();
+  const memberSince = new Date(gig.user.createdAt).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  });
+
   return (
     <main className="page">
-      <section className="auth-wrap">
-        <div className="auth-card profile-card" style={{ maxWidth: 760, width: "100%" }}>
+      <div className="gd-wrap">
 
-          {/* Back */}
-          <Link href="/gigs" className="gig-back-link">
-            ← All Gigs
+        {/* Breadcrumb */}
+        <nav className="gd-breadcrumb">
+          <Link href="/gigs" className="gd-breadcrumb-link">← All Gigs</Link>
+          <span className="gd-breadcrumb-sep">/</span>
+          <Link href={`/gigs?category=${encodeURIComponent(gig.category)}`} className="gd-breadcrumb-link">
+            {gig.category}
           </Link>
+        </nav>
 
-          {/* Category + price header */}
-          <div className="gig-detail-header">
-            <span className="gig-category-badge">{gig.category}</span>
-            <div className="gig-detail-price">
-              <span className="gig-detail-price-label">Starting at</span>
-              <span className="gig-detail-price-value">${gig.price}</span>
-            </div>
-          </div>
+        <div className="gd-layout">
 
-          <h1 className="gig-detail-title">{gig.title}</h1>
+          {/* LEFT: Gig details */}
+          <div className="gd-main">
+            <span className="gig-category-badge" style={{ marginBottom: "0.75rem", display: "inline-block" }}>{gig.category}</span>
+            <h1 className="gd-title">{gig.title}</h1>
 
-          {/* Meta row */}
-          <div className="gig-detail-meta">
-            <div className="gig-meta-item">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-              </svg>
-              {gig.deliveryDays} day{gig.deliveryDays !== 1 ? "s" : ""} delivery
-            </div>
-          </div>
-
-          {/* Description */}
-          <div className="dash-section-label" style={{ marginTop: "1.5rem" }}>About this gig</div>
-          <p className="gig-detail-description">{gig.description}</p>
-
-          {/* Tags */}
-          {gig.tags.length > 0 && (
-            <div className="dash-skills" style={{ marginTop: "1rem" }}>
-              {gig.tags.map((t) => (
-                <span key={t} className="dash-skill-chip">{t}</span>
-              ))}
-            </div>
-          )}
-
-          <div className="dash-divider" />
-
-          {/* Seller info */}
-          <div className="dash-section-label">About the seller</div>
-          <div className="gig-seller-card">
-            <Link href={`/u/${gig.user.twitterHandle}`} className="gig-seller-info">
-              {gig.user.image ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={gig.user.image} alt="" className="gig-seller-avatar" />
-              ) : (
-                <div className="gig-seller-avatar-fallback" />
+            {/* Stats row */}
+            <div className="gd-stats-row">
+              {avgRating !== null && (
+                <div className="gd-stat-item">
+                  <span style={{ color: "#f59e0b" }}>★</span>
+                  <span className="gd-stat-val">{avgRating.toFixed(1)}</span>
+                  <span className="gd-stat-count">({reviewCount})</span>
+                </div>
               )}
-              <div>
-                <div className="gig-seller-name">{gig.user.name ?? gig.user.twitterHandle}</div>
-                <div className="gig-seller-handle">@{gig.user.twitterHandle}</div>
-                {gig.user.role && <div className="talent-role" style={{ marginTop: 4 }}>{gig.user.role}</div>}
+              <div className="gd-stat-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                </svg>
+                {completedCount} completed
               </div>
-            </Link>
-            {gig.user.bio && <p className="gig-seller-bio">{gig.user.bio}</p>}
-            {gig.user.skills.length > 0 && (
-              <div className="dash-skills" style={{ marginTop: 8 }}>
-                {gig.user.skills.slice(0, 6).map((s) => (
-                  <span key={s} className="dash-skill-chip">{s}</span>
+              <div className="gd-stat-item">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                {gig.deliveryDays}d delivery
+              </div>
+            </div>
+
+            {/* Description */}
+            <div className="gd-section">
+              <div className="gd-section-label">ABOUT THIS GIG</div>
+              <p className="gd-description">{gig.description}</p>
+            </div>
+
+            {/* Tags */}
+            {gig.tags.length > 0 && (
+              <div className="gd-tags">
+                {gig.tags.map((t) => (
+                  <span key={t} className="dash-skill-chip">{t}</span>
                 ))}
+              </div>
+            )}
+
+            {/* Seller */}
+            <div className="gd-section">
+              <div className="gd-section-label">ABOUT THE SELLER</div>
+              <div className="gd-seller-card">
+                <Link href={`/u/${gig.user.twitterHandle}`} className="gd-seller-top">
+                  <div className="gd-seller-avatar-wrap">
+                    {gig.user.image ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={gig.user.image} alt="" className="gd-seller-avatar" />
+                    ) : (
+                      <div className="gd-seller-avatar-fallback">{sellerInitials}</div>
+                    )}
+                  </div>
+                  <div className="gd-seller-meta">
+                    <div className="gd-seller-name">{sellerName}</div>
+                    <div className="gd-seller-handle">@{gig.user.twitterHandle}</div>
+                    {gig.user.role && <div className="gd-seller-role">{gig.user.role}</div>}
+                  </div>
+                </Link>
+                {gig.user.bio && <p className="gd-seller-bio">{gig.user.bio}</p>}
+                {gig.user.skills.length > 0 && (
+                  <div className="gd-seller-skills">
+                    {gig.user.skills.slice(0, 6).map((s) => (
+                      <span key={s} className="dash-skill-chip">{s}</span>
+                    ))}
+                  </div>
+                )}
+                {/* FIX 6 — Seller stats */}
+                <div className="gd-seller-stats">
+                  {completedCount} order{completedCount !== 1 ? "s" : ""} completed · Member since {memberSince}
+                </div>
+              </div>
+            </div>
+
+            {/* Reviews */}
+            {reviews.length > 0 && (
+              <div className="gd-section">
+                <div className="gd-section-label">REVIEWS ({reviewCount})</div>
+                <div className="gd-reviews">
+                  {reviews.map((r) => {
+                    const rName = r.reviewer.name ?? r.reviewer.twitterHandle;
+                    const rInitials = rName.slice(0, 2).toUpperCase();
+                    const rDate = new Date(r.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" });
+                    return (
+                      <div key={r.id} className="gd-review">
+                        <div className="gd-review-header">
+                          {/* FIX 3 — reviewer avatar with real photo */}
+                          <div className="gd-review-avatar-wrap">
+                            {r.reviewer.image ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={r.reviewer.image} alt="" className="gd-review-avatar" />
+                            ) : (
+                              <div className="gd-review-avatar-fallback">{rInitials}</div>
+                            )}
+                          </div>
+                          <div className="gd-review-info">
+                            <div className="gd-review-author">{rName}</div>
+                            <div className="gd-review-date">{rDate}</div>
+                          </div>
+                          <div className="gd-review-stars">
+                            {[1, 2, 3, 4, 5].map((i) => (
+                              <span key={i} style={{ color: i <= r.rating ? "#f59e0b" : "var(--card-border)" }}>★</span>
+                            ))}
+                          </div>
+                        </div>
+                        {r.body && <p className="gd-review-body">{r.body}</p>}
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             )}
           </div>
 
-          <div className="dash-divider" />
+          {/* RIGHT: Sticky hire card */}
+          <aside className="gd-aside">
+            <div className="gd-hire-card">
+              <div className="gd-hire-price-row">
+                <div>
+                  <div className="gd-hire-price-label">Starting at</div>
+                  {/* FIX 2 — formatted price */}
+                  <div className="gd-hire-price">{formatPrice(gig.price)}</div>
+                </div>
+                {avgRating !== null && (
+                  <div className="gd-hire-rating">
+                    <span style={{ color: "#f59e0b" }}>★</span>
+                    <span>{avgRating.toFixed(1)}</span>
+                  </div>
+                )}
+              </div>
 
-          {/* CTA */}
-          {canHire && (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
+              <div className="gd-hire-meta">
+                <div className="gd-hire-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  {gig.deliveryDays} day{gig.deliveryDays !== 1 ? "s" : ""} delivery
+                </div>
+                <div className="gd-hire-meta-item">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/>
+                  </svg>
+                  {completedCount} order{completedCount !== 1 ? "s" : ""} completed
+                </div>
+              </div>
+
+              {canHire && (
+                <div className="gd-hire-actions">
+                  {/* FIX 1 — teal Hire Now button */}
+                  <ActionButton
+                    action={hireFromGig.bind(null, gig.id, gig.userId)}
+                    className="gd-hire-btn gd-hire-btn--primary"
+                  >
+                    Hire Now
+                  </ActionButton>
+                  {/* FIX 5 — Send Message with icon, secondary style */}
+                  <ActionButton
+                    action={startConversation.bind(null, gig.userId)}
+                    className="gd-msg-btn"
+                  >
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Send Message
+                  </ActionButton>
+                </div>
+              )}
+
+              {isOwner && (
+                <div className="gd-hire-actions">
+                  <GigOwnerActions gigId={gig.id} currentStatus={gig.status} />
+                </div>
+              )}
+
+              {!viewerId && (
+                <div className="gd-hire-actions">
+                  <Link href="/login" className="gd-hire-btn gd-hire-btn--primary" style={{ textAlign: "center" }}>
+                    Sign in to hire
+                  </Link>
+                </div>
+              )}
+
+              {/* FIX 4 — Honest trust badges */}
+              <div className="gd-trust">
+                <div className="gd-trust-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                  </svg>
+                  Escrow payments — coming soon
+                </div>
+                <div className="gd-trust-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>
+                  </svg>
+                  Vetted Web3 professional
+                </div>
+                <div className="gd-trust-item">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  </svg>
+                  Direct communication via Crewboard
+                </div>
+              </div>
+            </div>
+          </aside>
+        </div>
+
+        {/* Mobile bottom bar */}
+        {(canHire || !viewerId) && (
+          <div className="gd-mobile-bar">
+            <div className="gd-mobile-bar-price">
+              <span className="gd-mobile-bar-label">Starting at</span>
+              {/* FIX 2 — formatted price */}
+              <span className="gd-mobile-bar-amount">{formatPrice(gig.price)}</span>
+            </div>
+            {canHire ? (
               <ActionButton
                 action={hireFromGig.bind(null, gig.id, gig.userId)}
-                className="btn-primary"
-                style={{ width: "100%", cursor: "pointer" }}
+                className="gd-hire-btn gd-hire-btn--primary gd-mobile-bar-btn"
               >
-                Hire — Send Offer
+                Hire Now
               </ActionButton>
-              <ActionButton
-                action={startConversation.bind(null, gig.userId)}
-                className="btn-secondary"
-                style={{ width: "100%", cursor: "pointer" }}
-              >
-                Send Message
-              </ActionButton>
-            </div>
-          )}
-
-          {isOwner && (
-            <GigOwnerActions gigId={gig.id} currentStatus={gig.status} />
-          )}
-
-          {!viewerId && (
-            <Link href="/login" className="btn-primary" style={{ width: "100%", textAlign: "center" }}>
-              Sign in to hire or contact seller
-            </Link>
-          )}
-        </div>
-      </section>
+            ) : (
+              <Link href="/login" className="gd-hire-btn gd-hire-btn--primary gd-mobile-bar-btn" style={{ textAlign: "center" }}>
+                Sign in to hire
+              </Link>
+            )}
+          </div>
+        )}
+      </div>
     </main>
   );
 }
