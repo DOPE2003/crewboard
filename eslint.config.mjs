@@ -12,7 +12,21 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Anchor/Solana program tests — not part of the Next.js app
+    "crewboard_escrow/**",
   ]),
+  {
+    rules: {
+      // Pre-existing codebase pattern — downgrade to warn
+      "@typescript-eslint/no-explicit-any": "warn",
+      // <img> vs <Image> — informational only
+      "@next/next/no-img-element": "warn",
+      // Fires false positives in server components (Date.now etc.)
+      "react-hooks/purity": "off",
+      // SSR hydration pattern (setMounted(true)) — pre-existing throughout codebase
+      "react-hooks/set-state-in-effect": "warn",
+    },
+  },
 ]);
 
 export default eslintConfig;

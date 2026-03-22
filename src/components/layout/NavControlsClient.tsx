@@ -1,120 +1,113 @@
-"use client";
+'use client'
 
-import { useState, useEffect, type ReactNode } from "react";
-import { usePathname } from "next/navigation";
-import NavMessagesDropdown from "./NavMessagesDropdown";
-import NavNotificationsDropdown from "./NavNotificationsDropdown";
-import NavOrdersDropdown from "./NavOrdersDropdown";
-import NavMobileMenu from "./NavMobileMenu";
-import ThemeToggle from "@/components/ui/ThemeToggle";
-import type { NavNotif } from "./NavNotificationsDropdown";
-import type { NavOrder } from "./NavOrdersDropdown";
+import { useState, useEffect, type ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+import { Bell } from 'lucide-react'
+import NavMobileMenu from './NavMobileMenu'
+import ThemeToggle from '@/components/ui/ThemeToggle'
+import { cn } from '@/lib/utils'
+import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
-type Panel = "messages" | "notifications" | "orders" | "menu" | null;
-
-interface Conv {
-  id: string;
-  lastMessage: string | null;
-  lastMessageTime: string | null;
-  unread: number;
-  otherUser: { id: string; name: string | null; twitterHandle: string; image: string | null; lastSeenAt: string | null } | null;
-}
+type Panel = 'menu' | null
 
 interface Props {
-  loggedIn: boolean;
-  conversations: Conv[];
-  totalUnread: number;
-  notifications: NavNotif[];
-  unreadCount: number;
-  orders: NavOrder[];
-  activeCount: number;
-  hasIncompleteOnboarding: boolean;
-  children: ReactNode; // NavProfileMenu or login pill — server-rendered, passed through
+  loggedIn: boolean
+  conversations: NavConv[]
+  totalUnread: number
+  notifications: NavNotif[]
+  unreadCount: number
+  orders: NavOrder[]
+  activeCount: number
+  hasIncompleteOnboarding: boolean
+  children: ReactNode
 }
 
 export default function NavControlsClient({
   loggedIn,
-  conversations,
   totalUnread,
-  notifications,
   unreadCount,
-  orders,
   activeCount,
-  hasIncompleteOnboarding,
   children,
 }: Props) {
-  // ── Single source of truth for which panel is open ──
-  const [openPanel, setOpenPanel] = useState<Panel>(null);
-  const [isMobile, setIsMobile] = useState(false);
-  const pathname = usePathname();
+  const [openPanel, setOpenPanel] = useState<Panel>(null)
+  const pathname = usePathname()
+
+  useEffect(() => { setOpenPanel(null) }, [pathname])
 
   useEffect(() => {
-    const check = () => setIsMobile(window.innerWidth <= 767);
-    check();
-    window.addEventListener("resize", check);
-    return () => window.removeEventListener("resize", check);
-  }, []);
+    document.body.style.overflow = openPanel !== null ? 'hidden' : ''
+    return () => { document.body.style.overflow = '' }
+  }, [openPanel])
 
-  // Close all panels on route change
-  useEffect(() => { setOpenPanel(null); }, [pathname]);
-
-  // Body scroll lock — mobile only
   useEffect(() => {
-    if (openPanel !== null && isMobile) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
-  }, [openPanel, isMobile]);
+    const handler = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpenPanel(null) }
+    window.addEventListener('keydown', handler)
+    return () => window.removeEventListener('keydown', handler)
+  }, [])
 
-  // ESC key closes any open panel
-  useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpenPanel(null);
-    };
-    window.addEventListener("keydown", handler);
-    return () => window.removeEventListener("keydown", handler);
-  }, []);
+  const totalBadge = totalUnread + unreadCount + activeCount
+  const isActive = pathname === '/activities'
 
   return (
     <>
       {loggedIn && (
-        <>
-          <NavMessagesDropdown
-            conversations={conversations}
-            totalUnread={totalUnread}
-            isOpen={openPanel === "messages"}
-            onOpen={() => setOpenPanel("messages")}
-            onClose={() => setOpenPanel(null)}
-          />
-          <NavNotificationsDropdown
-            notifications={notifications}
-            unreadCount={unreadCount}
-            hasIncompleteOnboarding={hasIncompleteOnboarding}
-            isOpen={openPanel === "notifications"}
-            onOpen={() => setOpenPanel("notifications")}
-            onClose={() => setOpenPanel(null)}
-          />
-          <NavOrdersDropdown
-            orders={orders}
-            activeCount={activeCount}
-            isOpen={openPanel === "orders"}
-            onOpen={() => setOpenPanel("orders")}
-            onClose={() => setOpenPanel(null)}
-          />
-        </>
+        <Link
+          href="/activities"
+          className={cn(
+            'inline-flex items-center gap-1.5 h-9 px-2 text-[13px] font-medium transition-colors duration-150 no-underline',
+            isActive
+              ? 'text-[#14B8A6] dark:text-teal-400'
+              : 'text-gray-700 dark:text-gray-300 hover:text-[#14B8A6] dark:hover:text-teal-400'
+          )}
+        >
+          <Bell size={16} />
+          <span>Activities</span>
+          {totalBadge > 0 && (
+            <span className="flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-full bg-[#14B8A6] text-white text-[10px] font-bold leading-none">
+              {totalBadge > 99 ? '99+' : totalBadge}
+            </span>
+          )}
+        </Link>
       )}
 
-      {/* NavProfileMenu or login pill — server components passed as children */}
+      {!loggedIn && (
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <Link
+            href="/login"
+            style={{
+              fontSize: 13, fontWeight: 600, padding: "7px 18px",
+              borderRadius: 99, border: "1px solid #14B8A6",
+              color: "#14B8A6", background: "transparent",
+              textDecoration: "none", lineHeight: 1,
+            }}
+          >
+            Log in
+          </Link>
+          <Link
+            href="/register"
+            style={{
+              fontSize: 13, fontWeight: 600, padding: "7px 18px",
+              borderRadius: 99, border: "none",
+              background: "#14B8A6", color: "#fff",
+              textDecoration: "none", lineHeight: 1,
+            }}
+          >
+            Join
+          </Link>
+        </div>
+      )}
+
       <ThemeToggle />
+
       {children}
 
       <NavMobileMenu
-        isOpen={openPanel === "menu"}
-        onOpen={() => setOpenPanel("menu")}
+        isOpen={openPanel === 'menu'}
+        onOpen={() => setOpenPanel('menu')}
         onClose={() => setOpenPanel(null)}
+        loggedIn={loggedIn}
       />
     </>
-  );
+  )
 }

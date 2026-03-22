@@ -18,7 +18,7 @@ export default function AddEmailForm() {
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="20 6 9 17 4 12"/>
       </svg>
-      <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "#22c55e" }}>Email saved — you'll receive notifications at this address.</span>
+      <span style={{ fontSize: "0.82rem", fontWeight: 600, color: "#22c55e" }}>Email saved — you&apos;ll receive notifications at this address.</span>
     </div>
   );
 

@@ -62,3 +62,13 @@ export type Order = Prisma.OrderModel
  * 
  */
 export type Review = Prisma.ReviewModel
+/**
+ * Model ShowcasePost
+ * 
+ */
+export type ShowcasePost = Prisma.ShowcasePostModel
+/**
+ * Model ShowcaseInteraction
+ * 
+ */
+export type ShowcaseInteraction = Prisma.ShowcaseInteractionModel

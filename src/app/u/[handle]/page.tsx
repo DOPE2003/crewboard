@@ -2,6 +2,8 @@ import db from "@/lib/db";
 import { auth } from "@/auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { Check, Shield, Clock, Star } from "lucide-react";
+import BannerUpload from "@/components/ui/BannerUpload";
 import ContactButtons from "@/components/ui/ContactButtons";
 import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
@@ -10,9 +12,11 @@ import SaveTalentButton from "@/components/ui/SaveTalentButton";
 import AvatarUpload from "@/components/ui/AvatarUpload";
 import EditProfilePanel from "@/components/ui/EditProfilePanel";
 import PortfolioEditor from "@/components/forms/PortfolioEditor";
+import SocialLinksEditor from "@/components/ui/SocialLinksEditor";
 import type { PortfolioItem } from "@/actions/portfolio";
 import CvUpload from "@/components/ui/CvUpload";
 import AddEmailForm from "@/components/forms/AddEmailForm";
+import DeleteAccountButton from "@/components/ui/DeleteAccountButton";
 
 const AVAIL_COLOR: Record<string, string> = {
   available: "#22c55e", open: "#f59e0b", busy: "#ef4444",
@@ -29,22 +33,22 @@ function Stars({ rating }: { rating: number }) {
   );
 }
 
-function SectionCard({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
+function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <div style={{
-      background: "var(--card-bg)", borderRadius: 12, border: "1px solid var(--card-border)",
-      padding: "1.5rem", ...style,
-    }}>
+    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>
       {children}
     </div>
   );
 }
 
-function SectionTitle({ children }: { children: React.ReactNode }) {
+function SectionCard({ children, style }: { children: React.ReactNode; style?: React.CSSProperties }) {
   return (
-    <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: "0 0 1rem" }}>
+    <div style={{
+      background: "var(--card-bg)", borderRadius: 12, border: "1px solid var(--card-border)",
+      padding: "1.25rem", ...style,
+    }}>
       {children}
-    </h2>
+    </div>
   );
 }
 
@@ -66,25 +70,30 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   if (!user || !user.profileComplete) notFound();
 
-  const reviews = await db.review.findMany({
-    where: { revieweeId: user.id },
-    include: { reviewer: { select: { name: true, twitterHandle: true, image: true } } },
-    orderBy: { createdAt: "desc" },
-    take: 10,
-  });
+  const [reviews, completedOrdersCount, totalEarnedAgg] = await Promise.all([
+    db.review.findMany({
+      where: { revieweeId: user.id },
+      include: { reviewer: { select: { name: true, twitterHandle: true, image: true } } },
+      orderBy: { createdAt: "desc" },
+      take: 10,
+    }),
+    db.order.count({ where: { sellerId: user.id, status: "completed" } }),
+    db.order.aggregate({ where: { sellerId: user.id, status: "completed" }, _sum: { amount: true } }),
+  ]);
+
+  const totalEarned = totalEarnedAgg._sum.amount ?? 0;
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null;
 
   const viewerId = (session?.user as any)?.userId as string | undefined;
 
-  // Profile view tracking — deduplicated per viewer per 24h
+  // Profile view tracking
   if (viewerId && viewerId !== user.id) {
     const viewerName = session?.user?.name ?? (session?.user as any)?.twitterHandle ?? "Someone";
     const recentView = await db.notification.findFirst({
       where: {
-        userId: user.id,
-        type: "profile_view",
+        userId: user.id, type: "profile_view",
         body: { contains: viewerName },
         createdAt: { gte: new Date(Date.now() - 86400000) },
       },
@@ -98,7 +107,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   }
 
   const portfolioItems: PortfolioItem[] = Array.isArray(user.portfolioItems) ? user.portfolioItems as PortfolioItem[] : [];
-
   const isOwnProfile = viewerId === user.id;
   const canMessage = !!viewerId && !isOwnProfile;
   const avail = user.availability ?? "available";
@@ -116,7 +124,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     ? `${user.walletAddress.slice(0, 6)}...${user.walletAddress.slice(-4)}`
     : null;
 
-  // Profile completion score (own profile only)
+  const joinDate = new Date(user.createdAt);
+  const joinMonthYear = joinDate.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+
+  // Profile completion
   const completionItems = [
     { label: "Profile photo", done: !!user.image },
     { label: "Role", done: !!user.role },
@@ -130,198 +141,230 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const completionPct = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100);
   const nextItem = completionItems.find(i => !i.done);
 
-  const joinYear = new Date(user.createdAt).getFullYear();
+  const displayName = user.name ?? (user.twitterId ? "Anonymous" : user.twitterHandle);
 
   return (
-    <main style={{ minHeight: "100vh", background: "var(--background)", paddingTop: "9.5rem", paddingBottom: "4rem" }}>
+    <main style={{ minHeight: "100vh", background: "var(--background)", paddingTop: "5rem", paddingBottom: "4rem" }}>
       <div style={{ maxWidth: 1020, margin: "0 auto", padding: "0 1.25rem" }}>
 
-        {/* Breadcrumb */}
-        <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "1.25rem", display: "flex", alignItems: "center", gap: 6 }}>
-          <Link href="/" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Home</Link>
-          <span>/</span>
-          <Link href="/freelancers" style={{ color: "var(--text-muted)", textDecoration: "none" }}>Freelancers</Link>
-          <span>/</span>
-          <span style={{ color: "var(--foreground)" }}>{user.twitterId ? (user.name ?? "Profile") : `@${user.twitterHandle}`}</span>
-        </div>
-
-        {/* Email notification banner — own profile, no email (X-only users) */}
+        {/* Email notification banner */}
         {isOwnProfile && !user.email && (
-          <div style={{ marginBottom: "1.25rem" }}>
+          <div style={{ marginBottom: "1rem" }}>
             <AddEmailForm />
           </div>
         )}
 
-        {/* Two-column layout */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 300px", gap: "1.5rem", alignItems: "start" }} className="profile-page-grid">
+        {/* ── Cover Banner + Profile Header ── */}
+        <div style={{ borderRadius: 16, border: "1px solid var(--card-border)", overflow: "visible", marginBottom: "1rem" }}>
+
+          {/* Cover banner */}
+          {isOwnProfile ? (
+            /* Own profile: interactive banner with upload */
+            <div style={{ position: "relative" }}>
+              <BannerUpload currentBanner={user.bannerImage ?? null} />
+              {/* Edit profile button overlay */}
+              <div style={{ position: "absolute", top: "1rem", right: "1.5rem", zIndex: 3 }}>
+                <EditProfilePanel
+                  initialRole={user.role ?? ""}
+                  initialSkills={user.skills}
+                  initialBio={user.bio ?? ""}
+                  initialAvailability={user.availability ?? "available"}
+                />
+              </div>
+            </div>
+          ) : (
+            /* Visitor view: static banner */
+            <div
+              className="profile-cover-banner"
+              style={{
+                height: 140, position: "relative",
+                backgroundImage: user.bannerImage ? `url(${user.bannerImage})` : undefined,
+                backgroundSize: "cover", backgroundPosition: "center",
+                borderRadius: "16px 16px 0 0", overflow: "hidden", borderBottom: "none",
+              }}
+            />
+          )}
+
+          {/* Profile content below banner */}
+          <div style={{ background: "var(--background)", padding: "0 0 1.25rem", borderRadius: "0 0 16px 16px", overflow: "visible" }}>
+            {/* Avatar + save button row */}
+            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", paddingLeft: 24, paddingRight: 24 }}>
+              {/* Avatar — floats up to overlap banner */}
+              <div style={{ position: "relative", marginTop: -44, zIndex: 10, flexShrink: 0 }}>
+                {isOwnProfile ? (
+                  <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId} />
+                ) : (
+                  <div style={{ width: 80, height: 80, borderRadius: "9999px", border: "3px solid var(--background)", background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden" }}>
+                    {user.image && <img src={user.image} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                  </div>
+                )}
+              </div>
+              {canMessage && (
+                <div style={{ paddingTop: "0.5rem" }}>
+                  <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />
+                </div>
+              )}
+            </div>
+
+            {/* Name + badges */}
+            <div style={{ marginTop: "0.65rem", padding: "0 24px" }}>
+              {/* Row 1: Name + OG + Wallet */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <h1 style={{ fontSize: "20px", fontWeight: 500, margin: 0, color: "var(--foreground)" }}>
+                  {displayName}
+                </h1>
+                {user.isOG && <OGBadge size="lg" />}
+                {user.walletAddress && <WalletVerifiedBadge />}
+              </div>
+
+              {/* Row 2: Role + Availability pills */}
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, marginBottom: 6, flexWrap: "wrap" }}>
+                {user.role && (
+                  <span style={{ fontSize: "12px", fontWeight: 500, padding: "3px 12px", borderRadius: 99, background: "#E1F5EE", color: "#0F6E56" }}>
+                    {user.role}
+                  </span>
+                )}
+                <span style={{
+                  display: "flex", alignItems: "center", gap: 5,
+                  fontSize: "12px", fontWeight: 500, padding: "3px 12px", borderRadius: 99,
+                  background: avail === "available" ? "#dcfce7" : "var(--background)",
+                  color: avail === "available" ? "#166534" : "var(--text-muted)",
+                }}>
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", flexShrink: 0, background: AVAIL_COLOR[avail] }} />
+                  {AVAIL_LABEL[avail]}
+                </span>
+              </div>
+
+              {/* Row 3: @handle · rating · member since */}
+              <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                <span>@{user.twitterHandle}</span>
+                {avgRating && (
+                  <>
+                    <span style={{ opacity: 0.3 }}>·</span>
+                    <span style={{ display: "flex", alignItems: "center", gap: 3, color: "#f59e0b" }}>
+                      <Star size={11} fill="#f59e0b" />
+                      {avgRating}
+                    </span>
+                  </>
+                )}
+                <span style={{ opacity: 0.3 }}>·</span>
+                <span>Member since {joinMonthYear}</span>
+              </p>
+
+              {/* Social links — editable on own profile */}
+              <div style={{ marginTop: "0.65rem" }}>
+                <SocialLinksEditor
+                  twitterHandle={user.twitterHandle}
+                  telegramHandle={user.telegramHandle ?? null}
+                  website={user.website ?? null}
+                  isOwnProfile={isOwnProfile}
+                />
+              </div>
+
+              {/* Bio */}
+              {user.bio ? (
+                <p style={{ fontSize: "14px", lineHeight: 1.7, color: "var(--text-muted)", margin: "0.75rem 0 0" }}>
+                  {user.bio}
+                </p>
+              ) : isOwnProfile ? (
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", fontStyle: "italic", margin: "0.75rem 0 0" }}>
+                  Add a bio to tell clients about yourself.
+                </p>
+              ) : null}
+
+              {/* Profile completion bar (own profile only) */}
+              {isOwnProfile && (
+                <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                      Profile {completionPct}% complete
+                    </span>
+                    {nextItem && (
+                      <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                        Next: <strong style={{ color: "var(--foreground)" }}>{nextItem.label}</strong>
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ height: 6, background: "#e5e7eb", borderRadius: 99, overflow: "hidden" }}>
+                    <div style={{ height: "100%", width: `${completionPct}%`, background: completionPct === 100 ? "#22c55e" : "#14B8A6", borderRadius: 99, transition: "width 0.4s" }} />
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Two-column layout ── */}
+        <div className="profile-page-grid" style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "1rem", alignItems: "start" }}>
 
           {/* ── LEFT COLUMN ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
-            {/* Profile Header Card */}
-            <SectionCard>
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap" }}>
-                <div style={{ display: "flex", alignItems: "flex-start", gap: "1.25rem" }}>
-                  {/* Avatar — clickable to change if own profile */}
-                  {isOwnProfile ? (
-                    <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId} />
-                  ) : (
-                    <div style={{
-                      width: 90, height: 90, borderRadius: "50%", flexShrink: 0,
-                      background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden",
-                      border: "3px solid var(--card-border)",
-                    }}>
-                      {user.image && <img src={user.image} alt={user.name ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                    </div>
-                  )}
-
-                  {/* Info */}
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                      <h1 style={{ fontSize: "1.35rem", fontWeight: 800, margin: 0, color: "var(--foreground)" }}>
-                        {user.name ?? (user.twitterId ? "Anonymous" : user.twitterHandle)}
-                      </h1>
-                      {user.isOG && <OGBadge size="lg" />}
-                      {user.walletAddress && <WalletVerifiedBadge />}
-                    </div>
-
-                    {!user.twitterId && (
-                      <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", marginTop: 3 }}>
-                        @{user.twitterHandle}
-                      </div>
-                    )}
-
-                    <div style={{ display: "flex", alignItems: "center", gap: 14, marginTop: "0.6rem", flexWrap: "wrap" }}>
-                      {user.role && (
-                        <span style={{ fontSize: "0.75rem", fontWeight: 600, color: "#0d9488", background: "rgba(45,212,191,0.08)", padding: "3px 10px", borderRadius: 99, border: "1px solid rgba(45,212,191,0.2)" }}>
-                          {user.role}
-                        </span>
-                      )}
-                      <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                        <span style={{ width: 7, height: 7, borderRadius: "50%", background: AVAIL_COLOR[avail], display: "inline-block" }} />
-                        {AVAIL_LABEL[avail]}
-                      </span>
-                      <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                        Member since {joinYear}
-                      </span>
-                      {avgRating && (
-                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                          <span style={{ color: "#f59e0b" }}>★</span>
-                          {avgRating} ({reviews.length})
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                </div>
-
-                {/* Action buttons in header */}
-                <div style={{ display: "flex", gap: 8, flexShrink: 0, flexWrap: "wrap" }}>
-                  {isOwnProfile && (
-                    <EditProfilePanel
-                      initialRole={user.role ?? ""}
-                      initialSkills={user.skills}
-                      initialBio={user.bio ?? ""}
-                      initialAvailability={user.availability ?? "available"}
-                    />
-                  )}
-                </div>
-              </div>
-            </SectionCard>
-
-            {/* Overview / Bio */}
-            <SectionCard>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.9rem" }}>
-                <SectionTitle>Overview</SectionTitle>
-              </div>
-              {user.bio ? (
-                <p style={{ fontSize: "0.88rem", lineHeight: 1.8, color: "var(--text-muted)", margin: 0 }}>{user.bio}</p>
-              ) : (
-                <div style={{ fontSize: "0.85rem", color: "var(--text-muted)", fontStyle: "italic" }}>
-                  {isOwnProfile ? "Add a bio to tell clients about yourself." : "No overview yet."}
-                </div>
-              )}
-            </SectionCard>
-
             {/* Skills */}
-            {user.skills?.length > 0 && (
-              <SectionCard>
-                <SectionTitle>Skills</SectionTitle>
+            <SectionCard>
+              <SectionLabel>Skills</SectionLabel>
+              {user.skills?.length > 0 ? (
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {user.skills.map((s: string) => (
                     <span key={s} style={{
-                      fontSize: "0.78rem", fontWeight: 500, padding: "5px 14px", borderRadius: 99,
-                      background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--foreground)", border: "1px solid var(--card-border)",
+                      fontSize: "12px", fontWeight: 500, padding: "5px 14px", borderRadius: 99,
+                      background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--foreground)",
+                      border: "1px solid var(--card-border)",
                     }}>
                       {s}
                     </span>
                   ))}
                 </div>
-              </SectionCard>
-            )}
+              ) : (
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: 0, fontStyle: "italic" }}>
+                  {isOwnProfile ? "No skills yet — edit your profile to add some." : "No skills listed."}
+                </p>
+              )}
+            </SectionCard>
 
             {/* Portfolio */}
             {(isOwnProfile || portfolioItems.length > 0) && (
               <SectionCard>
-                <SectionTitle>Projects</SectionTitle>
+                <SectionLabel>Portfolio</SectionLabel>
                 {isOwnProfile ? (
                   <PortfolioEditor initialItems={portfolioItems} handle={user.twitterHandle} />
                 ) : portfolioItems.length > 0 ? (
-                  <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
-                    {portfolioItems.map((item) => (
-                      <div key={item.id} style={{ padding: "0.85rem 1rem", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--background)" }}>
-                        <div style={{ display: "flex", alignItems: "baseline", gap: 8, flexWrap: "wrap" }}>
-                          <span style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)" }}>{item.title}</span>
-                          {item.year && <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>{item.year}</span>}
-                        </div>
-                        {item.description && <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0.35rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
-                        {item.url && (
-                          <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.72rem", color: "#2DD4BF", textDecoration: "none", display: "inline-block", marginTop: 6 }}>
-                            View project →
-                          </a>
-                        )}
-                      </div>
-                    ))}
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
+                    {portfolioItems.map((item: PortfolioItem) => {
+                      const colors = ["#E8FAF7", "#EEF2FF", "#FFF7ED", "#F0FDF4", "#FDF4FF"];
+                      const idx = item.id.charCodeAt(0) % colors.length;
+                      return (
+                        <a key={item.id} href={item.url ?? "#"} target={item.url ? "_blank" : undefined} rel="noopener noreferrer"
+                          style={{ display: "block", borderRadius: 10, overflow: "hidden", border: "1px solid var(--card-border)", textDecoration: "none" }}>
+                          <div style={{ height: 80, background: colors[idx], display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <span style={{ fontSize: "24px", opacity: 0.3 }}>◆</span>
+                          </div>
+                          <div style={{ padding: "0.6rem 0.75rem" }}>
+                            <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              {item.title}
+                            </div>
+                            {item.description && (
+                              <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                {item.description}
+                              </div>
+                            )}
+                          </div>
+                        </a>
+                      );
+                    })}
                   </div>
-                ) : null}
-              </SectionCard>
-            )}
-
-            {/* Services */}
-            {user.gigs?.length > 0 && (
-              <SectionCard>
-                <SectionTitle>Services</SectionTitle>
-                <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-                  {user.gigs.map((gig: any) => (
-                    <Link key={gig.id} href={`/gigs/${gig.id}`} style={{
-                      display: "flex", alignItems: "center", justifyContent: "space-between",
-                      padding: "0.9rem 1rem", borderRadius: 10, textDecoration: "none",
-                      border: "1px solid var(--card-border)", transition: "border-color 0.15s",
-                    }}>
-                      <div>
-                        <div style={{ fontWeight: 600, fontSize: "0.85rem", color: "var(--foreground)" }}>{gig.title}</div>
-                        <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 3 }}>{gig.category} · {gig.deliveryDays}d delivery</div>
-                      </div>
-                      <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF", flexShrink: 0, marginLeft: 12 }}>
-                        from ${gig.price}
-                      </span>
-                    </Link>
-                  ))}
-                </div>
+                ) : (
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: 0 }}>No portfolio items yet.</p>
+                )}
               </SectionCard>
             )}
 
             {/* Reviews */}
             <SectionCard>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1rem" }}>
-                <SectionTitle>
-                  Reviews {reviews.length > 0 && (
-                    <span style={{ fontSize: "0.8rem", fontWeight: 500, color: "var(--text-muted)", marginLeft: 6 }}>
-                      ({reviews.length})
-                    </span>
-                  )}
-                </SectionTitle>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+                <SectionLabel>Reviews ({reviews.length})</SectionLabel>
                 {avgRating && (
-                  <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
                     <Stars rating={Math.round(Number(avgRating))} />
                     <span style={{ fontWeight: 700, fontSize: "0.9rem", color: "var(--foreground)" }}>{avgRating}</span>
                   </div>
@@ -329,17 +372,16 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               </div>
 
               {reviews.length === 0 ? (
-                <div style={{ textAlign: "center", padding: "2rem 1rem" }}>
-                  <div style={{ fontSize: "2rem", marginBottom: "0.5rem" }}>⭐</div>
-                  <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>
+                <div style={{ background: "var(--background)", borderRadius: 10, border: "1px solid var(--card-border)", padding: "1.5rem", textAlign: "center" }}>
+                  <div style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>
                     {isOwnProfile ? "Reviews from clients will appear here." : "No reviews yet."}
                   </div>
                 </div>
               ) : (
-                <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+                <div style={{ display: "flex", flexDirection: "column", gap: "1.25rem" }}>
                   {reviews.map((r: any) => (
-                    <div key={r.id} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: "1rem" }}>
-                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.4rem" }}>
+                    <div key={r.id} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: "1.25rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                           <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--avatar-bg)", overflow: "hidden", flexShrink: 0 }}>
                             {r.reviewer.image && <img src={r.reviewer.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
@@ -348,9 +390,14 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                             {r.reviewer.name ?? r.reviewer.twitterHandle}
                           </span>
                         </div>
-                        <Stars rating={r.rating} />
+                        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                          <Stars rating={r.rating} />
+                          <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                            {new Date(r.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                          </span>
+                        </div>
                       </div>
-                      {r.body && <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.6 }}>{r.body}</p>}
+                      {r.body && <p style={{ margin: 0, fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.7 }}>{r.body}</p>}
                     </div>
                   ))}
                 </div>
@@ -359,115 +406,135 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
           </div>
 
-          {/* ── RIGHT COLUMN (Sidebar) ── */}
+          {/* ── RIGHT SIDEBAR ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
-            {/* Own profile: completion + quick links */}
-            {isOwnProfile && (
-              <>
-                <SectionCard>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.5rem" }}>
-                    <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)" }}>Profile completion</span>
-                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: completionPct === 100 ? "#22c55e" : "#f59e0b" }}>{completionPct}%</span>
-                  </div>
-                  <div style={{ height: 6, background: "rgba(var(--foreground-rgb), 0.05)", borderRadius: 99, overflow: "hidden", marginBottom: "0.9rem" }}>
-                    <div style={{ height: "100%", width: `${completionPct}%`, background: completionPct === 100 ? "#22c55e" : "#2DD4BF", borderRadius: 99, transition: "width 0.4s" }} />
-                  </div>
-                  {nextItem && (
-                    <div style={{ fontSize: "0.78rem", color: "var(--text-muted)", background: "var(--background)", padding: "0.65rem 0.85rem", borderRadius: 8, border: "1px solid var(--card-border)" }}>
-                      Next: <strong style={{ color: "var(--foreground)" }}>Add {nextItem.label}</strong>
-                    </div>
-                  )}
-                  {completionPct === 100 && (
-                    <div style={{ fontSize: "0.78rem", color: "#22c55e", fontWeight: 600 }}>Profile complete!</div>
-                  )}
-                </SectionCard>
-
-                <SectionCard style={{ padding: "1rem" }}>
-                  <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Quick links</div>
-                  {[
-                    { label: "My Orders", href: "/orders", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><path d="M9 12h6M9 16h4"/></svg> },
-                    { label: "My Gigs", href: "/gigs/mine", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg> },
-                    { label: "Messages", href: "/messages", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> },
-                    { label: "Favorites", href: "/saved-talents", icon: <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg> },
-                  ].map(link => (
-                    <Link key={link.href} href={link.href} style={{
-                      display: "flex", alignItems: "center", gap: 10,
-                      padding: "0.6rem 0.5rem", borderRadius: 8, textDecoration: "none",
-                      color: "var(--foreground)", fontSize: "0.85rem", fontWeight: 500,
-                      transition: "background 0.12s",
-                    }}>
-                      <span style={{ color: "var(--text-muted)", display: "flex", alignItems: "center" }}>{link.icon}</span>
-                      {link.label}
-                    </Link>
-                  ))}
-                </SectionCard>
-
-                <Link href="/gigs/new" style={{
-                  display: "block", textAlign: "center", padding: "0.75rem",
-                  background: "var(--foreground)", color: "var(--dropdown-bg)", borderRadius: 10,
-                  fontWeight: 700, fontSize: "0.82rem", textDecoration: "none",
-                  letterSpacing: "0.04em",
-                }}>
-                  + Post a Gig
-                </Link>
-              </>
-            )}
-
-            {/* Visitor: contact card */}
+            {/* Hire + Message (visitor only) */}
             {canMessage && (
               <SectionCard style={{ padding: "1.25rem" }}>
                 <ContactButtons recipientId={user.id} />
-                <div style={{ marginTop: "0.6rem" }}>
-                  <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
+                  {[
+                    { icon: <Clock size={12} />, text: "Usually responds within 2h" },
+                    { icon: <Shield size={12} />, text: "Vetted Web3 professional" },
+                    { icon: <Check size={12} />, text: "Solana escrow protected" },
+                  ].map(({ icon, text }) => (
+                    <div key={text} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "11px", color: "var(--text-muted)" }}>
+                      <span style={{ color: "#14B8A6", flexShrink: 0, display: "flex" }}>{icon}</span>
+                      {text}
+                    </div>
+                  ))}
                 </div>
               </SectionCard>
             )}
 
-            {/* Stats */}
-            <SectionCard style={{ padding: "1.25rem" }}>
-              <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.9rem" }}>Stats</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Rating</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)", display: "flex", alignItems: "center", gap: 4 }}>
-                    {avgRating ? <><span style={{ color: "#f59e0b" }}>★</span>{avgRating}</> : "—"}
-                  </span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Reviews</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)" }}>{reviews.length}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Services</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)" }}>{user.gigs?.length ?? 0}</span>
-                </div>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.82rem", color: "var(--text-muted)" }}>Member since</span>
-                  <span style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)" }}>{joinYear}</span>
-                </div>
+            {/* Stats 2×2 */}
+            <SectionCard>
+              <SectionLabel>Stats</SectionLabel>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 1, background: "var(--card-border)", borderRadius: 10, overflow: "hidden", border: "1px solid var(--card-border)" }}>
+                {[
+                  { label: "Orders", value: completedOrdersCount, teal: false },
+                  { label: "Earned", value: totalEarned > 0 ? `$${totalEarned.toLocaleString()}` : "—", teal: totalEarned > 0 },
+                  { label: "Reviews", value: reviews.length, teal: false },
+                  { label: "Since", value: joinMonthYear, teal: false },
+                ].map(stat => (
+                  <div key={stat.label} style={{ background: "var(--card-bg)", padding: "0.75rem" }}>
+                    <div style={{ fontSize: "20px", fontWeight: 700, color: stat.teal ? "#14B8A6" : "var(--foreground)", lineHeight: 1.2 }}>
+                      {stat.value}
+                    </div>
+                    <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 4 }}>
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
               </div>
+
+              {!isOwnProfile && (
+                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
+                  {[
+                    { icon: <Clock size={12} />, text: "Usually responds within 2h" },
+                    { icon: <Shield size={12} />, text: "Vetted Web3 professional" },
+                    { icon: <Check size={12} />, text: "Solana escrow protected" },
+                  ].map(({ icon, text }) => (
+                    <div key={text} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "11px", color: "var(--text-muted)" }}>
+                      <span style={{ color: "#14B8A6", flexShrink: 0, display: "flex" }}>{icon}</span>
+                      {text}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </SectionCard>
+
+            {/* Wallet */}
+            <SectionCard>
+              <SectionLabel>Wallet</SectionLabel>
+              {wallet ? (
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "rgba(20,184,166,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/>
+                    </svg>
+                  </div>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                      <span style={{ fontSize: "13px", fontWeight: 500, color: "var(--foreground)", fontFamily: "monospace" }}>{wallet}</span>
+                      <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 7px", borderRadius: 99, background: "rgba(34,197,94,0.1)", color: "#16a34a", border: "1px solid rgba(34,197,94,0.2)" }}>
+                        Verified
+                      </span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2 }}>Solana</div>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No wallet connected.</p>
+                  {isOwnProfile && (
+                    <Link href="/settings" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
+                      Connect wallet
+                    </Link>
+                  )}
+                </div>
+              )}
+            </SectionCard>
+
+            {/* Active gigs */}
+            <SectionCard>
+              <SectionLabel>Active gigs</SectionLabel>
+              {user.gigs?.length > 0 ? (
+                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+                  {user.gigs.slice(0, 3).map((gig: any) => (
+                    <Link key={gig.id} href={`/gigs/${gig.id}`} style={{ display: "block", padding: "0.75rem", borderRadius: 8, border: "1px solid var(--card-border)", textDecoration: "none", background: "var(--background)" }}>
+                      <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 3 }}>
+                        {gig.title}
+                      </div>
+                      <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                        Starting at <span style={{ color: "#14B8A6", fontWeight: 600 }}>${gig.price}</span>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              ) : (
+                <div>
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No active gigs yet.</p>
+                  {isOwnProfile && (
+                    <Link href="/gigs/new" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
+                      Post a gig
+                    </Link>
+                  )}
+                </div>
+              )}
             </SectionCard>
 
             {/* CV */}
             {isOwnProfile ? (
-              <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>CV / Resume</div>
+              <SectionCard>
+                <SectionLabel>CV / Resume</SectionLabel>
                 <CvUpload currentCvUrl={user.cvUrl ?? null} />
               </SectionCard>
             ) : user.cvUrl ? (
-              <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>CV / Resume</div>
-                <a
-                  href={user.cvUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    display: "flex", alignItems: "center", gap: "0.6rem",
-                    padding: "0.65rem 0.9rem", borderRadius: 10,
-                    border: "1px solid var(--card-border)", background: "var(--background)", textDecoration: "none",
-                  }}
-                >
+              <SectionCard>
+                <SectionLabel>CV / Resume</SectionLabel>
+                <a href={user.cvUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", alignItems: "center", gap: "0.6rem", padding: "0.65rem 0.9rem", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--background)", textDecoration: "none" }}>
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
                   </svg>
@@ -475,34 +542,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     <div style={{ fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)" }}>Download CV</div>
                     <div style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>PDF</div>
                   </div>
-                  <svg style={{ marginLeft: "auto" }} width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
-                  </svg>
                 </a>
               </SectionCard>
             ) : null}
 
-            {/* Wallet */}
-            {wallet && (
-              <SectionCard style={{ padding: "1.25rem" }}>
-                <div style={{ fontSize: "0.72rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--text-muted)", marginBottom: "0.75rem" }}>Wallet</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                  <WalletVerifiedBadge />
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "var(--foreground)" }}>{wallet}</span>
-                </div>
-                <div style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>Solana</div>
-              </SectionCard>
+            {/* Post a Gig (own profile) */}
+            {isOwnProfile && (
+              <Link href="/gigs/new" style={{ display: "block", textAlign: "center", padding: "0.75rem", background: "#14B8A6", color: "#fff", borderRadius: 10, fontWeight: 700, fontSize: "0.82rem", textDecoration: "none", letterSpacing: "0.04em" }}>
+                + Post a Gig
+              </Link>
+            )}
+
+            {/* Sign out + Delete account (own profile) */}
+            {isOwnProfile && (
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", paddingTop: "0.25rem" }}
+                className="profile-signout-wrap">
+                <LogoutButton />
+                <DeleteAccountButton />
+              </div>
             )}
 
           </div>
         </div>
-
-        {/* Logout */}
-        {isOwnProfile && (
-          <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "0.5rem", maxWidth: 720 }}>
-            <LogoutButton />
-          </div>
-        )}
 
       </div>
     </main>

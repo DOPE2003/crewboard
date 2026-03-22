@@ -256,8 +256,8 @@ export type OrderWhereInput = {
   txHash?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
-  gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
 }
@@ -273,8 +273,8 @@ export type OrderOrderByWithRelationInput = {
   txHash?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
-  gig?: Prisma.GigOrderByWithRelationInput
   buyer?: Prisma.UserOrderByWithRelationInput
+  gig?: Prisma.GigOrderByWithRelationInput
   seller?: Prisma.UserOrderByWithRelationInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
 }
@@ -293,8 +293,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   txHash?: Prisma.StringNullableFilter<"Order"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Order"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Order"> | Date | string
-  gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
 }, "id" | "escrowAddress">
@@ -341,8 +341,8 @@ export type OrderCreateInput = {
   txHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
+  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
 }
@@ -369,8 +369,8 @@ export type OrderUpdateInput = {
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
+  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
 }
@@ -671,8 +671,8 @@ export type OrderCreateWithoutSellerInput = {
   txHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
+  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
 }
 
@@ -807,8 +807,8 @@ export type OrderCreateWithoutReviewsInput = {
   txHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
+  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
 }
 
@@ -849,8 +849,8 @@ export type OrderUpdateWithoutReviewsInput = {
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
+  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
 }
 
@@ -937,8 +937,8 @@ export type OrderUpdateWithoutSellerInput = {
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
+  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
 }
 
@@ -1059,8 +1059,8 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   txHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviews?: boolean | Prisma.Order$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
@@ -1077,8 +1077,8 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   txHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1093,8 +1093,8 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   txHash?: boolean
   createdAt?: boolean
   updatedAt?: boolean
-  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1113,28 +1113,28 @@ export type OrderSelectScalar = {
 
 export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gigId" | "buyerId" | "sellerId" | "amount" | "status" | "escrowAddress" | "txHash" | "createdAt" | "updatedAt", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviews?: boolean | Prisma.Order$reviewsArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type OrderIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Order"
   objects: {
-    gig: Prisma.$GigPayload<ExtArgs>
     buyer: Prisma.$UserPayload<ExtArgs>
+    gig: Prisma.$GigPayload<ExtArgs>
     seller: Prisma.$UserPayload<ExtArgs>
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
   }
@@ -1543,8 +1543,8 @@ readonly fields: OrderFieldRefs;
  */
 export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  gig<T extends Prisma.GigDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GigDefaultArgs<ExtArgs>>): Prisma.Prisma__GigClient<runtime.Types.Result.GetResult<Prisma.$GigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   buyer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  gig<T extends Prisma.GigDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GigDefaultArgs<ExtArgs>>): Prisma.Prisma__GigClient<runtime.Types.Result.GetResult<Prisma.$GigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   seller<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviews<T extends Prisma.Order$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**

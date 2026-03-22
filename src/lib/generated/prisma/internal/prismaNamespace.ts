@@ -392,7 +392,9 @@ export const ModelName = {
   Message: 'Message',
   Gig: 'Gig',
   Order: 'Order',
-  Review: 'Review'
+  Review: 'Review',
+  ShowcasePost: 'ShowcasePost',
+  ShowcaseInteraction: 'ShowcaseInteraction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "order" | "review"
+    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "order" | "review" | "showcasePost" | "showcaseInteraction"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1080,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ShowcasePost: {
+      payload: Prisma.$ShowcasePostPayload<ExtArgs>
+      fields: Prisma.ShowcasePostFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShowcasePostFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShowcasePostFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>
+        }
+        findFirst: {
+          args: Prisma.ShowcasePostFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShowcasePostFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>
+        }
+        findMany: {
+          args: Prisma.ShowcasePostFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>[]
+        }
+        create: {
+          args: Prisma.ShowcasePostCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>
+        }
+        createMany: {
+          args: Prisma.ShowcasePostCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ShowcasePostCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>[]
+        }
+        delete: {
+          args: Prisma.ShowcasePostDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>
+        }
+        update: {
+          args: Prisma.ShowcasePostUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>
+        }
+        deleteMany: {
+          args: Prisma.ShowcasePostDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShowcasePostUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ShowcasePostUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>[]
+        }
+        upsert: {
+          args: Prisma.ShowcasePostUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcasePostPayload>
+        }
+        aggregate: {
+          args: Prisma.ShowcasePostAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShowcasePost>
+        }
+        groupBy: {
+          args: Prisma.ShowcasePostGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShowcasePostGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShowcasePostCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShowcasePostCountAggregateOutputType> | number
+        }
+      }
+    }
+    ShowcaseInteraction: {
+      payload: Prisma.$ShowcaseInteractionPayload<ExtArgs>
+      fields: Prisma.ShowcaseInteractionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ShowcaseInteractionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ShowcaseInteractionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>
+        }
+        findFirst: {
+          args: Prisma.ShowcaseInteractionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ShowcaseInteractionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>
+        }
+        findMany: {
+          args: Prisma.ShowcaseInteractionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>[]
+        }
+        create: {
+          args: Prisma.ShowcaseInteractionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>
+        }
+        createMany: {
+          args: Prisma.ShowcaseInteractionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ShowcaseInteractionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>[]
+        }
+        delete: {
+          args: Prisma.ShowcaseInteractionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>
+        }
+        update: {
+          args: Prisma.ShowcaseInteractionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>
+        }
+        deleteMany: {
+          args: Prisma.ShowcaseInteractionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ShowcaseInteractionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ShowcaseInteractionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>[]
+        }
+        upsert: {
+          args: Prisma.ShowcaseInteractionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ShowcaseInteractionPayload>
+        }
+        aggregate: {
+          args: Prisma.ShowcaseInteractionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateShowcaseInteraction>
+        }
+        groupBy: {
+          args: Prisma.ShowcaseInteractionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShowcaseInteractionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ShowcaseInteractionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ShowcaseInteractionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1119,11 +1269,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
-  passwordHash: 'passwordHash',
   twitterId: 'twitterId',
   twitterHandle: 'twitterHandle',
-  walletAddress: 'walletAddress',
   name: 'name',
   image: 'image',
   role: 'role',
@@ -1131,16 +1278,22 @@ export const UserScalarFieldEnum = {
   bio: 'bio',
   availability: 'availability',
   profileComplete: 'profileComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  walletAddress: 'walletAddress',
   isOG: 'isOG',
-  humanVerified: 'humanVerified',
+  worldIdLevel: 'worldIdLevel',
+  worldIdNullifier: 'worldIdNullifier',
+  stripeVerificationId: 'stripeVerificationId',
+  email: 'email',
+  passwordHash: 'passwordHash',
   lastSeenAt: 'lastSeenAt',
   portfolioItems: 'portfolioItems',
   cvUrl: 'cvUrl',
-  worldIdNullifier: 'worldIdNullifier',
-  worldIdLevel: 'worldIdLevel',
-  stripeVerificationId: 'stripeVerificationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  telegramHandle: 'telegramHandle',
+  website: 'website',
+  bannerImage: 'bannerImage',
+  humanVerified: 'humanVerified'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1162,9 +1315,9 @@ export const NotificationScalarFieldEnum = {
   type: 'type',
   title: 'title',
   body: 'body',
-  link: 'link',
   read: 'read',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  link: 'link'
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
@@ -1251,6 +1404,35 @@ export const ReviewScalarFieldEnum = {
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const ShowcasePostScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  mediaUrl: 'mediaUrl',
+  mediaType: 'mediaType',
+  category: 'category',
+  tags: 'tags',
+  views: 'views',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShowcasePostScalarFieldEnum = (typeof ShowcasePostScalarFieldEnum)[keyof typeof ShowcasePostScalarFieldEnum]
+
+
+export const ShowcaseInteractionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  postId: 'postId',
+  type: 'type',
+  watchPercent: 'watchPercent',
+  createdAt: 'createdAt'
+} as const
+
+export type ShowcaseInteractionScalarFieldEnum = (typeof ShowcaseInteractionScalarFieldEnum)[keyof typeof ShowcaseInteractionScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1479,6 +1661,8 @@ export type GlobalOmitConfig = {
   gig?: Prisma.GigOmit
   order?: Prisma.OrderOmit
   review?: Prisma.ReviewOmit
+  showcasePost?: Prisma.ShowcasePostOmit
+  showcaseInteraction?: Prisma.ShowcaseInteractionOmit
 }
 
 /* Types for Logging */

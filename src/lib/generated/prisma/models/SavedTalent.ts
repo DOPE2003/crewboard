@@ -174,8 +174,8 @@ export type SavedTalentWhereInput = {
   saverId?: Prisma.StringFilter<"SavedTalent"> | string
   savedUserId?: Prisma.StringFilter<"SavedTalent"> | string
   createdAt?: Prisma.DateTimeFilter<"SavedTalent"> | Date | string
-  saver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   savedUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  saver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
 export type SavedTalentOrderByWithRelationInput = {
@@ -183,8 +183,8 @@ export type SavedTalentOrderByWithRelationInput = {
   saverId?: Prisma.SortOrder
   savedUserId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
-  saver?: Prisma.UserOrderByWithRelationInput
   savedUser?: Prisma.UserOrderByWithRelationInput
+  saver?: Prisma.UserOrderByWithRelationInput
 }
 
 export type SavedTalentWhereUniqueInput = Prisma.AtLeast<{
@@ -196,8 +196,8 @@ export type SavedTalentWhereUniqueInput = Prisma.AtLeast<{
   saverId?: Prisma.StringFilter<"SavedTalent"> | string
   savedUserId?: Prisma.StringFilter<"SavedTalent"> | string
   createdAt?: Prisma.DateTimeFilter<"SavedTalent"> | Date | string
-  saver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   savedUser?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  saver?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }, "id" | "saverId_savedUserId">
 
 export type SavedTalentOrderByWithAggregationInput = {
@@ -223,8 +223,8 @@ export type SavedTalentScalarWhereWithAggregatesInput = {
 export type SavedTalentCreateInput = {
   id?: string
   createdAt?: Date | string
-  saver: Prisma.UserCreateNestedOneWithoutSavedTalentsInput
   savedUser: Prisma.UserCreateNestedOneWithoutSavedByTalentsInput
+  saver: Prisma.UserCreateNestedOneWithoutSavedTalentsInput
 }
 
 export type SavedTalentUncheckedCreateInput = {
@@ -237,8 +237,8 @@ export type SavedTalentUncheckedCreateInput = {
 export type SavedTalentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  saver?: Prisma.UserUpdateOneRequiredWithoutSavedTalentsNestedInput
   savedUser?: Prisma.UserUpdateOneRequiredWithoutSavedByTalentsNestedInput
+  saver?: Prisma.UserUpdateOneRequiredWithoutSavedTalentsNestedInput
 }
 
 export type SavedTalentUncheckedUpdateInput = {
@@ -303,13 +303,6 @@ export type SavedTalentMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
 }
 
-export type SavedTalentCreateNestedManyWithoutSaverInput = {
-  create?: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput> | Prisma.SavedTalentCreateWithoutSaverInput[] | Prisma.SavedTalentUncheckedCreateWithoutSaverInput[]
-  connectOrCreate?: Prisma.SavedTalentCreateOrConnectWithoutSaverInput | Prisma.SavedTalentCreateOrConnectWithoutSaverInput[]
-  createMany?: Prisma.SavedTalentCreateManySaverInputEnvelope
-  connect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
-}
-
 export type SavedTalentCreateNestedManyWithoutSavedUserInput = {
   create?: Prisma.XOR<Prisma.SavedTalentCreateWithoutSavedUserInput, Prisma.SavedTalentUncheckedCreateWithoutSavedUserInput> | Prisma.SavedTalentCreateWithoutSavedUserInput[] | Prisma.SavedTalentUncheckedCreateWithoutSavedUserInput[]
   connectOrCreate?: Prisma.SavedTalentCreateOrConnectWithoutSavedUserInput | Prisma.SavedTalentCreateOrConnectWithoutSavedUserInput[]
@@ -317,7 +310,7 @@ export type SavedTalentCreateNestedManyWithoutSavedUserInput = {
   connect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
 }
 
-export type SavedTalentUncheckedCreateNestedManyWithoutSaverInput = {
+export type SavedTalentCreateNestedManyWithoutSaverInput = {
   create?: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput> | Prisma.SavedTalentCreateWithoutSaverInput[] | Prisma.SavedTalentUncheckedCreateWithoutSaverInput[]
   connectOrCreate?: Prisma.SavedTalentCreateOrConnectWithoutSaverInput | Prisma.SavedTalentCreateOrConnectWithoutSaverInput[]
   createMany?: Prisma.SavedTalentCreateManySaverInputEnvelope
@@ -331,18 +324,11 @@ export type SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput = {
   connect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
 }
 
-export type SavedTalentUpdateManyWithoutSaverNestedInput = {
+export type SavedTalentUncheckedCreateNestedManyWithoutSaverInput = {
   create?: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput> | Prisma.SavedTalentCreateWithoutSaverInput[] | Prisma.SavedTalentUncheckedCreateWithoutSaverInput[]
   connectOrCreate?: Prisma.SavedTalentCreateOrConnectWithoutSaverInput | Prisma.SavedTalentCreateOrConnectWithoutSaverInput[]
-  upsert?: Prisma.SavedTalentUpsertWithWhereUniqueWithoutSaverInput | Prisma.SavedTalentUpsertWithWhereUniqueWithoutSaverInput[]
   createMany?: Prisma.SavedTalentCreateManySaverInputEnvelope
-  set?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
-  disconnect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
-  delete?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
   connect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
-  update?: Prisma.SavedTalentUpdateWithWhereUniqueWithoutSaverInput | Prisma.SavedTalentUpdateWithWhereUniqueWithoutSaverInput[]
-  updateMany?: Prisma.SavedTalentUpdateManyWithWhereWithoutSaverInput | Prisma.SavedTalentUpdateManyWithWhereWithoutSaverInput[]
-  deleteMany?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
 }
 
 export type SavedTalentUpdateManyWithoutSavedUserNestedInput = {
@@ -359,7 +345,7 @@ export type SavedTalentUpdateManyWithoutSavedUserNestedInput = {
   deleteMany?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
 }
 
-export type SavedTalentUncheckedUpdateManyWithoutSaverNestedInput = {
+export type SavedTalentUpdateManyWithoutSaverNestedInput = {
   create?: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput> | Prisma.SavedTalentCreateWithoutSaverInput[] | Prisma.SavedTalentUncheckedCreateWithoutSaverInput[]
   connectOrCreate?: Prisma.SavedTalentCreateOrConnectWithoutSaverInput | Prisma.SavedTalentCreateOrConnectWithoutSaverInput[]
   upsert?: Prisma.SavedTalentUpsertWithWhereUniqueWithoutSaverInput | Prisma.SavedTalentUpsertWithWhereUniqueWithoutSaverInput[]
@@ -387,26 +373,18 @@ export type SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput = {
   deleteMany?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
 }
 
-export type SavedTalentCreateWithoutSaverInput = {
-  id?: string
-  createdAt?: Date | string
-  savedUser: Prisma.UserCreateNestedOneWithoutSavedByTalentsInput
-}
-
-export type SavedTalentUncheckedCreateWithoutSaverInput = {
-  id?: string
-  savedUserId: string
-  createdAt?: Date | string
-}
-
-export type SavedTalentCreateOrConnectWithoutSaverInput = {
-  where: Prisma.SavedTalentWhereUniqueInput
-  create: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput>
-}
-
-export type SavedTalentCreateManySaverInputEnvelope = {
-  data: Prisma.SavedTalentCreateManySaverInput | Prisma.SavedTalentCreateManySaverInput[]
-  skipDuplicates?: boolean
+export type SavedTalentUncheckedUpdateManyWithoutSaverNestedInput = {
+  create?: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput> | Prisma.SavedTalentCreateWithoutSaverInput[] | Prisma.SavedTalentUncheckedCreateWithoutSaverInput[]
+  connectOrCreate?: Prisma.SavedTalentCreateOrConnectWithoutSaverInput | Prisma.SavedTalentCreateOrConnectWithoutSaverInput[]
+  upsert?: Prisma.SavedTalentUpsertWithWhereUniqueWithoutSaverInput | Prisma.SavedTalentUpsertWithWhereUniqueWithoutSaverInput[]
+  createMany?: Prisma.SavedTalentCreateManySaverInputEnvelope
+  set?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
+  disconnect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
+  delete?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
+  connect?: Prisma.SavedTalentWhereUniqueInput | Prisma.SavedTalentWhereUniqueInput[]
+  update?: Prisma.SavedTalentUpdateWithWhereUniqueWithoutSaverInput | Prisma.SavedTalentUpdateWithWhereUniqueWithoutSaverInput[]
+  updateMany?: Prisma.SavedTalentUpdateManyWithWhereWithoutSaverInput | Prisma.SavedTalentUpdateManyWithWhereWithoutSaverInput[]
+  deleteMany?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
 }
 
 export type SavedTalentCreateWithoutSavedUserInput = {
@@ -431,30 +409,26 @@ export type SavedTalentCreateManySavedUserInputEnvelope = {
   skipDuplicates?: boolean
 }
 
-export type SavedTalentUpsertWithWhereUniqueWithoutSaverInput = {
+export type SavedTalentCreateWithoutSaverInput = {
+  id?: string
+  createdAt?: Date | string
+  savedUser: Prisma.UserCreateNestedOneWithoutSavedByTalentsInput
+}
+
+export type SavedTalentUncheckedCreateWithoutSaverInput = {
+  id?: string
+  savedUserId: string
+  createdAt?: Date | string
+}
+
+export type SavedTalentCreateOrConnectWithoutSaverInput = {
   where: Prisma.SavedTalentWhereUniqueInput
-  update: Prisma.XOR<Prisma.SavedTalentUpdateWithoutSaverInput, Prisma.SavedTalentUncheckedUpdateWithoutSaverInput>
   create: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput>
 }
 
-export type SavedTalentUpdateWithWhereUniqueWithoutSaverInput = {
-  where: Prisma.SavedTalentWhereUniqueInput
-  data: Prisma.XOR<Prisma.SavedTalentUpdateWithoutSaverInput, Prisma.SavedTalentUncheckedUpdateWithoutSaverInput>
-}
-
-export type SavedTalentUpdateManyWithWhereWithoutSaverInput = {
-  where: Prisma.SavedTalentScalarWhereInput
-  data: Prisma.XOR<Prisma.SavedTalentUpdateManyMutationInput, Prisma.SavedTalentUncheckedUpdateManyWithoutSaverInput>
-}
-
-export type SavedTalentScalarWhereInput = {
-  AND?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
-  OR?: Prisma.SavedTalentScalarWhereInput[]
-  NOT?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
-  id?: Prisma.StringFilter<"SavedTalent"> | string
-  saverId?: Prisma.StringFilter<"SavedTalent"> | string
-  savedUserId?: Prisma.StringFilter<"SavedTalent"> | string
-  createdAt?: Prisma.DateTimeFilter<"SavedTalent"> | Date | string
+export type SavedTalentCreateManySaverInputEnvelope = {
+  data: Prisma.SavedTalentCreateManySaverInput | Prisma.SavedTalentCreateManySaverInput[]
+  skipDuplicates?: boolean
 }
 
 export type SavedTalentUpsertWithWhereUniqueWithoutSavedUserInput = {
@@ -473,10 +447,30 @@ export type SavedTalentUpdateManyWithWhereWithoutSavedUserInput = {
   data: Prisma.XOR<Prisma.SavedTalentUpdateManyMutationInput, Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserInput>
 }
 
-export type SavedTalentCreateManySaverInput = {
-  id?: string
-  savedUserId: string
-  createdAt?: Date | string
+export type SavedTalentScalarWhereInput = {
+  AND?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
+  OR?: Prisma.SavedTalentScalarWhereInput[]
+  NOT?: Prisma.SavedTalentScalarWhereInput | Prisma.SavedTalentScalarWhereInput[]
+  id?: Prisma.StringFilter<"SavedTalent"> | string
+  saverId?: Prisma.StringFilter<"SavedTalent"> | string
+  savedUserId?: Prisma.StringFilter<"SavedTalent"> | string
+  createdAt?: Prisma.DateTimeFilter<"SavedTalent"> | Date | string
+}
+
+export type SavedTalentUpsertWithWhereUniqueWithoutSaverInput = {
+  where: Prisma.SavedTalentWhereUniqueInput
+  update: Prisma.XOR<Prisma.SavedTalentUpdateWithoutSaverInput, Prisma.SavedTalentUncheckedUpdateWithoutSaverInput>
+  create: Prisma.XOR<Prisma.SavedTalentCreateWithoutSaverInput, Prisma.SavedTalentUncheckedCreateWithoutSaverInput>
+}
+
+export type SavedTalentUpdateWithWhereUniqueWithoutSaverInput = {
+  where: Prisma.SavedTalentWhereUniqueInput
+  data: Prisma.XOR<Prisma.SavedTalentUpdateWithoutSaverInput, Prisma.SavedTalentUncheckedUpdateWithoutSaverInput>
+}
+
+export type SavedTalentUpdateManyWithWhereWithoutSaverInput = {
+  where: Prisma.SavedTalentScalarWhereInput
+  data: Prisma.XOR<Prisma.SavedTalentUpdateManyMutationInput, Prisma.SavedTalentUncheckedUpdateManyWithoutSaverInput>
 }
 
 export type SavedTalentCreateManySavedUserInput = {
@@ -485,22 +479,10 @@ export type SavedTalentCreateManySavedUserInput = {
   createdAt?: Date | string
 }
 
-export type SavedTalentUpdateWithoutSaverInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  savedUser?: Prisma.UserUpdateOneRequiredWithoutSavedByTalentsNestedInput
-}
-
-export type SavedTalentUncheckedUpdateWithoutSaverInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  savedUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-}
-
-export type SavedTalentUncheckedUpdateManyWithoutSaverInput = {
-  id?: Prisma.StringFieldUpdateOperationsInput | string
-  savedUserId?: Prisma.StringFieldUpdateOperationsInput | string
-  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+export type SavedTalentCreateManySaverInput = {
+  id?: string
+  savedUserId: string
+  createdAt?: Date | string
 }
 
 export type SavedTalentUpdateWithoutSavedUserInput = {
@@ -521,6 +503,24 @@ export type SavedTalentUncheckedUpdateManyWithoutSavedUserInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
+export type SavedTalentUpdateWithoutSaverInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  savedUser?: Prisma.UserUpdateOneRequiredWithoutSavedByTalentsNestedInput
+}
+
+export type SavedTalentUncheckedUpdateWithoutSaverInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  savedUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
+export type SavedTalentUncheckedUpdateManyWithoutSaverInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  savedUserId?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+}
+
 
 
 export type SavedTalentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -528,8 +528,8 @@ export type SavedTalentSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   saverId?: boolean
   savedUserId?: boolean
   createdAt?: boolean
-  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   savedUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedTalent"]>
 
 export type SavedTalentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -537,8 +537,8 @@ export type SavedTalentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   saverId?: boolean
   savedUserId?: boolean
   createdAt?: boolean
-  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   savedUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedTalent"]>
 
 export type SavedTalentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -546,8 +546,8 @@ export type SavedTalentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   saverId?: boolean
   savedUserId?: boolean
   createdAt?: boolean
-  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   savedUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["savedTalent"]>
 
 export type SavedTalentSelectScalar = {
@@ -559,23 +559,23 @@ export type SavedTalentSelectScalar = {
 
 export type SavedTalentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "saverId" | "savedUserId" | "createdAt", ExtArgs["result"]["savedTalent"]>
 export type SavedTalentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   savedUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type SavedTalentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   savedUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 export type SavedTalentIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   savedUser?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  saver?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
 
 export type $SavedTalentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "SavedTalent"
   objects: {
-    saver: Prisma.$UserPayload<ExtArgs>
     savedUser: Prisma.$UserPayload<ExtArgs>
+    saver: Prisma.$UserPayload<ExtArgs>
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -976,8 +976,8 @@ readonly fields: SavedTalentFieldRefs;
  */
 export interface Prisma__SavedTalentClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
-  saver<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   savedUser<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  saver<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.

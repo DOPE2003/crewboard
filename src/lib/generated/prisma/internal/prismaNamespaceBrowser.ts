@@ -59,7 +59,9 @@ export const ModelName = {
   Message: 'Message',
   Gig: 'Gig',
   Order: 'Order',
-  Review: 'Review'
+  Review: 'Review',
+  ShowcasePost: 'ShowcasePost',
+  ShowcaseInteraction: 'ShowcaseInteraction'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -80,11 +82,8 @@ export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof
 
 export const UserScalarFieldEnum = {
   id: 'id',
-  email: 'email',
-  passwordHash: 'passwordHash',
   twitterId: 'twitterId',
   twitterHandle: 'twitterHandle',
-  walletAddress: 'walletAddress',
   name: 'name',
   image: 'image',
   role: 'role',
@@ -92,16 +91,22 @@ export const UserScalarFieldEnum = {
   bio: 'bio',
   availability: 'availability',
   profileComplete: 'profileComplete',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  walletAddress: 'walletAddress',
   isOG: 'isOG',
-  humanVerified: 'humanVerified',
+  worldIdLevel: 'worldIdLevel',
+  worldIdNullifier: 'worldIdNullifier',
+  stripeVerificationId: 'stripeVerificationId',
+  email: 'email',
+  passwordHash: 'passwordHash',
   lastSeenAt: 'lastSeenAt',
   portfolioItems: 'portfolioItems',
   cvUrl: 'cvUrl',
-  worldIdNullifier: 'worldIdNullifier',
-  worldIdLevel: 'worldIdLevel',
-  stripeVerificationId: 'stripeVerificationId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  telegramHandle: 'telegramHandle',
+  website: 'website',
+  bannerImage: 'bannerImage',
+  humanVerified: 'humanVerified'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -123,9 +128,9 @@ export const NotificationScalarFieldEnum = {
   type: 'type',
   title: 'title',
   body: 'body',
-  link: 'link',
   read: 'read',
-  createdAt: 'createdAt'
+  createdAt: 'createdAt',
+  link: 'link'
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
@@ -212,6 +217,35 @@ export const ReviewScalarFieldEnum = {
 } as const
 
 export type ReviewScalarFieldEnum = (typeof ReviewScalarFieldEnum)[keyof typeof ReviewScalarFieldEnum]
+
+
+export const ShowcasePostScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  title: 'title',
+  description: 'description',
+  mediaUrl: 'mediaUrl',
+  mediaType: 'mediaType',
+  category: 'category',
+  tags: 'tags',
+  views: 'views',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ShowcasePostScalarFieldEnum = (typeof ShowcasePostScalarFieldEnum)[keyof typeof ShowcasePostScalarFieldEnum]
+
+
+export const ShowcaseInteractionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  postId: 'postId',
+  type: 'type',
+  watchPercent: 'watchPercent',
+  createdAt: 'createdAt'
+} as const
+
+export type ShowcaseInteractionScalarFieldEnum = (typeof ShowcaseInteractionScalarFieldEnum)[keyof typeof ShowcaseInteractionScalarFieldEnum]
 
 
 export const SortOrder = {

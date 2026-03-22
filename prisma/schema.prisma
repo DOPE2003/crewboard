@@ -8,49 +8,52 @@ datasource db {
 }
 
 model User {
-  id              String         @id @default(cuid())
-  // Crewboard native auth
-  email           String?        @unique
-  passwordHash    String?
-  // Twitter OAuth (optional — for users who signed up via Twitter)
-  twitterId       String?        @unique
-  twitterHandle   String         @unique
-  walletAddress   String?        @unique
-  name            String?
-  image           String?
-  role            String?
-  skills          String[]
-  bio             String?
-  availability    String?
-  profileComplete  Boolean        @default(false)
-  isOG             Boolean        @default(false)
-  humanVerified    Boolean        @default(false)
-  lastSeenAt       DateTime?
-  portfolioItems   Json           @default("[]")
-  cvUrl            String?
-  worldIdNullifier     String?  @unique
+  id                   String                @id @default(cuid())
+  twitterId            String?               @unique
+  twitterHandle        String                @unique
+  name                 String?
+  image                String?
+  role                 String?
+  skills               String[]
+  bio                  String?
+  availability         String?
+  profileComplete      Boolean               @default(false)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  walletAddress        String?               @unique
+  isOG                 Boolean               @default(false)
   worldIdLevel         String?
-  stripeVerificationId String?  @unique
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  notifications   Notification[]
-  gigs            Gig[]
-  sentMessages    Message[]
-  buyerOrders     Order[]        @relation("BuyerOrders")
-  sellerOrders    Order[]        @relation("SellerOrders")
-  savedTalents    SavedTalent[]  @relation("SavedByMe")
-  savedByTalents  SavedTalent[]  @relation("SavedMe")
-  reviewsGiven    Review[]       @relation("ReviewsGiven")
-  reviewsReceived Review[]       @relation("ReviewsReceived")
+  worldIdNullifier     String?               @unique
+  stripeVerificationId String?               @unique
+  email                String?               @unique
+  passwordHash         String?
+  lastSeenAt           DateTime?
+  portfolioItems       Json                  @default("[]")
+  cvUrl                String?
+  telegramHandle       String?
+  website              String?
+  bannerImage          String?
+  humanVerified        Boolean               @default(false)
+  gigs                 Gig[]
+  sentMessages         Message[]
+  notifications        Notification[]
+  buyerOrders          Order[]               @relation("BuyerOrders")
+  sellerOrders         Order[]               @relation("SellerOrders")
+  reviewsReceived      Review[]              @relation("ReviewsReceived")
+  reviewsGiven         Review[]              @relation("ReviewsGiven")
+  savedByTalents       SavedTalent[]         @relation("SavedMe")
+  savedTalents         SavedTalent[]         @relation("SavedByMe")
+  showcaseInteractions ShowcaseInteraction[]
+  showcasePosts        ShowcasePost[]
 }
 
 model SavedTalent {
   id          String   @id @default(cuid())
   saverId     String
   savedUserId String
-  saver       User     @relation("SavedByMe", fields: [saverId], references: [id], onDelete: Cascade)
-  savedUser   User     @relation("SavedMe", fields: [savedUserId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
+  savedUser   User     @relation("SavedMe", fields: [savedUserId], references: [id], onDelete: Cascade)
+  saver       User     @relation("SavedByMe", fields: [saverId], references: [id], onDelete: Cascade)
 
   @@unique([saverId, savedUserId])
 }
@@ -61,11 +64,10 @@ model Notification {
   type      String   @default("system")
   title     String
   body      String
-  link      String?
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link      String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([userId, read])
@@ -85,29 +87,28 @@ model Project {
 model Conversation {
   id           String    @id @default(cuid())
   participants String[]
-  messages     Message[]
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
+  messages     Message[]
 }
 
 model Message {
   id             String       @id @default(cuid())
   conversationId String
-  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
   senderId       String
-  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
   body           String
   read           Boolean      @default(false)
   createdAt      DateTime     @default(now())
   replyToId      String?
-  replyTo        Message?     @relation("MessageReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  replyTo        Message?     @relation("MessageReplies", fields: [replyToId], references: [id])
   replies        Message[]    @relation("MessageReplies")
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
 }
 
 model Gig {
   id           String   @id @default(cuid())
   userId       String
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   title        String
   description  String
   price        Int
@@ -117,26 +118,27 @@ model Gig {
   status       String   @default("active")
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   orders       Order[]
 
   @@index([userId, status])
 }
 
 model Order {
-  id             String   @id @default(cuid())
-  gigId          String
-  gig            Gig      @relation(fields: [gigId], references: [id])
-  buyerId        String
-  buyer          User     @relation("BuyerOrders", fields: [buyerId], references: [id])
-  sellerId       String
-  seller         User     @relation("SellerOrders", fields: [sellerId], references: [id])
-  amount         Int      // Price in USDC
-  status         String   @default("pending") // pending, funded, delivered, completed, disputed, cancelled
-  escrowAddress  String?  @unique // Solana PDA or account
-  txHash         String?  // Funding transaction hash
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
-  reviews        Review[]
+  id            String   @id @default(cuid())
+  gigId         String
+  buyerId       String
+  sellerId      String
+  amount        Int
+  status        String   @default("pending")
+  escrowAddress String?  @unique
+  txHash        String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  buyer         User     @relation("BuyerOrders", fields: [buyerId], references: [id])
+  gig           Gig      @relation(fields: [gigId], references: [id])
+  seller        User     @relation("SellerOrders", fields: [sellerId], references: [id])
+  reviews       Review[]
 
   @@index([buyerId])
   @@index([sellerId])
@@ -145,16 +147,43 @@ model Order {
 }
 
 model Review {
-  id          String   @id @default(cuid())
-  orderId     String
-  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
-  reviewerId  String
-  reviewer    User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
-  revieweeId  String
-  reviewee    User     @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
-  rating      Int      // 1-5
-  body        String?
-  createdAt   DateTime @default(now())
+  id         String   @id @default(cuid())
+  orderId    String
+  reviewerId String
+  revieweeId String
+  rating     Int
+  body       String?
+  createdAt  DateTime @default(now())
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  reviewee   User     @relation("ReviewsReceived", fields: [revieweeId], references: [id], onDelete: Cascade)
+  reviewer   User     @relation("ReviewsGiven", fields: [reviewerId], references: [id], onDelete: Cascade)
 
-  @@unique([orderId, reviewerId]) // one review per person per order
+  @@unique([orderId, reviewerId])
+}
+
+model ShowcasePost {
+  id           String                @id @default(cuid())
+  userId       String
+  title        String
+  description  String?
+  mediaUrl     String
+  mediaType    String
+  category     String
+  tags         String[]
+  views        Int                   @default(0)
+  createdAt    DateTime              @default(now())
+  updatedAt    DateTime              @updatedAt
+  interactions ShowcaseInteraction[]
+  user         User                  @relation(fields: [userId], references: [id])
+}
+
+model ShowcaseInteraction {
+  id           String       @id @default(cuid())
+  userId       String
+  postId       String
+  type         String
+  watchPercent Int?
+  createdAt    DateTime     @default(now())
+  post         ShowcasePost @relation(fields: [postId], references: [id])
+  user         User         @relation(fields: [userId], references: [id])
 }

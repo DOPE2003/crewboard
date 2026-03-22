@@ -5,8 +5,8 @@ import NavSearch from "./NavSearch";
 import NavProfileMenu from "./NavProfileMenu";
 import NavControlsClient from "./NavControlsClient";
 import NavCategoryGroup from "./NavCategoryGroup";
-import type { NavNotif } from "./NavNotificationsDropdown";
-import type { NavOrder } from "./NavOrdersDropdown";
+
+import type { NavNotif, NavOrder } from "@/types/nav";
 import T from "@/components/ui/T";
 
 
@@ -248,9 +248,6 @@ export default async function Navbar() {
                 unreadCount={unreadCount}
                 gigsCount={gigsCount}
               />
-            )}
-            {!user && (
-              <Link href="/login" className="nav-pill"><T k="nav.login" /></Link>
             )}
           </NavControlsClient>
         </div>

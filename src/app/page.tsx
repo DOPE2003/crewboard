@@ -267,7 +267,7 @@ export default async function HomePage() {
             maxWidth: "36rem",
             marginBottom: "3rem",
           }}>
-            From signing up to shipping your first project — here's the full journey on Crewboard.
+            From signing up to shipping your first project — here&apos;s the full journey on Crewboard.
           </p>
 
           <div className="how-it-works-grid">
