@@ -317,7 +317,18 @@ nav {
   color: #0f172a;
 }
 @media (max-width: 640px) {
-  .btn-hero-secondary { width: 100%; }
+  .btn-hero-primary {
+    width: 100%;
+  }
+  .btn-hero-secondary {
+    width: 100%;
+    border: 2px solid var(--foreground);
+    color: var(--foreground);
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+  }
 }
 
 /* Buttons */
@@ -4732,16 +4743,21 @@ img { max-width: 100%; }
 @media (max-width: 767px) {
   .page { padding-top: 70px; }
 
-  /* Fill only the nav gap (70px padding-top) with the hero teal color so no white
-     sliver shows between navbar and hero. Transparent by 80px — well before trust strip. */
+  /* Remove teal fill behind navbar — hero floats below with a white gap */
   .landing-page-main {
-    background: linear-gradient(to bottom, rgba(20,184,166,0.13) 0px, transparent 80px);
+    background: none;
   }
 
-  /* Hero: auto height on mobile — only as tall as its content */
+  /* Hero: float below navbar with rounded top corners and small gap.
+     Remove the outer background gradient so teal doesn't start at the
+     very top of the hero (which sits right below the navbar). The inner
+     glow <div> already provides the visual teal effect. */
   .landing-hero {
     min-height: auto !important;
     padding-bottom: 2.5rem !important;
+    border-radius: 16px 16px 0 0 !important;
+    margin: 8px 8px 0 !important;
+    background: transparent !important;
   }
 
   /* Sections after hero must be white so no teal bleeds through */

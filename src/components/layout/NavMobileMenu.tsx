@@ -40,7 +40,7 @@ const CATEGORIES = [
   },
 ]
 
-const BORDER = '0.5px solid var(--color-border-tertiary, rgba(0,0,0,0.08))'
+const BORDER = '0.5px solid var(--border)'
 
 interface Props {
   isOpen: boolean
@@ -71,7 +71,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
         position: 'fixed', top: 0, left: 0,
         width: '100vw', height: '100vh',
         zIndex: 50,
-        background: 'var(--color-background-primary, #fff)',
+        background: 'var(--background)',
         display: 'flex', flexDirection: 'column',
         padding: '20px 24px',
         overflowY: 'auto',
@@ -90,7 +90,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
           width: 40, height: 40,
           display: 'flex', alignItems: 'center', justifyContent: 'center',
           background: 'transparent', border: 'none', cursor: 'pointer',
-          color: 'var(--color-text-primary, #0f172a)',
+          color: 'var(--foreground)',
           padding: 0,
         }}
       >
@@ -114,7 +114,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
                   background: 'transparent', border: 'none',
                   cursor: 'pointer',
                   fontSize: 17, fontWeight: 400,
-                  color: 'var(--color-text-primary, #0f172a)',
+                  color: 'var(--foreground)',
                   textAlign: 'left',
                 }}
               >
@@ -122,7 +122,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
                 <ChevronRight
                   size={16}
                   style={{
-                    color: 'var(--color-text-secondary, #64748b)',
+                    color: 'var(--text-muted)',
                     flexShrink: 0,
                     transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
                     transition: 'transform 0.18s ease',
@@ -144,14 +144,14 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
                         padding: '12px 0 12px 16px',
                         borderBottom: BORDER,
                         fontSize: 14, fontWeight: 400,
-                        color: 'var(--color-text-secondary, #64748b)',
+                        color: 'var(--text-muted)',
                         textDecoration: 'none',
                       }}
                     >
                       {item.label}
                       <ChevronRight
                         size={14}
-                        style={{ color: 'var(--color-text-secondary, #64748b)', flexShrink: 0 }}
+                        style={{ color: 'var(--text-muted)', flexShrink: 0 }}
                       />
                     </Link>
                   ))}
@@ -169,14 +169,14 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
           display: 'flex', alignItems: 'center', justifyContent: 'space-between',
           padding: '14px 0',
         }}>
-          <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--color-text-primary, #0f172a)' }}>
+          <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--foreground)' }}>
             Dark mode
           </span>
           <ThemeToggle />
         </div>
 
         {/* Divider */}
-        <div style={{ height: '0.5px', background: 'var(--color-border-tertiary, rgba(0,0,0,0.08))' }} />
+        <div style={{ height: '0.5px', background: 'var(--border)' }} />
 
         {/* User section */}
         {loggedIn ? (
@@ -195,7 +195,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
                 }
               </div>
               {userName && (
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary, #0f172a)' }}>
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--foreground)' }}>
                   {userName}
                 </span>
               )}
@@ -205,11 +205,11 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
               style={{
                 background: 'transparent', border: 'none', cursor: 'pointer',
                 fontSize: 13, fontWeight: 500,
-                color: 'var(--color-text-secondary, #64748b)',
+                color: 'var(--text-muted)',
                 padding: 0,
               }}
               onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-secondary, #64748b)' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)' }}
             >
               Sign out
             </button>
@@ -261,7 +261,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
         style={{
           minWidth: 44, minHeight: 44,
           background: 'transparent', border: 'none', cursor: 'pointer',
-          color: 'var(--color-text-primary, #0f172a)',
+          color: 'var(--foreground)',
         }}
       >
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">

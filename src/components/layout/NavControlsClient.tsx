@@ -20,6 +20,8 @@ interface Props {
   orders: NavOrder[]
   activeCount: number
   hasIncompleteOnboarding: boolean
+  userImage?: string | null
+  twitterHandle?: string | null
   children: ReactNode
 }
 
@@ -28,6 +30,8 @@ export default function NavControlsClient({
   totalUnread,
   unreadCount,
   activeCount,
+  userImage,
+  twitterHandle,
   children,
 }: Props) {
   const [openPanel, setOpenPanel] = useState<Panel>(null)
@@ -101,6 +105,51 @@ export default function NavControlsClient({
       <span className="hidden md:block"><ThemeToggle /></span>
 
       <span className="hidden md:block">{children}</span>
+
+      {/* ── Mobile-only: Bell + Avatar ── */}
+      {loggedIn && (
+        <div className="flex md:hidden items-center gap-0.5">
+          <Link
+            href="/activities"
+            style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 44 }}
+          >
+            <Bell size={20} style={{ color: 'var(--foreground)' }} />
+            {totalBadge > 0 && (
+              <span style={{
+                position: 'absolute', top: 8, right: 4,
+                minWidth: 16, height: 16, borderRadius: 99,
+                background: '#14B8A6', color: '#fff',
+                fontSize: 10, fontWeight: 700, lineHeight: '16px', textAlign: 'center',
+                padding: '0 3px',
+              }}>
+                {totalBadge > 9 ? '9+' : totalBadge}
+              </span>
+            )}
+          </Link>
+          {twitterHandle && (
+            <Link
+              href={`/u/${twitterHandle}`}
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 40, height: 44 }}
+            >
+              <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', background: 'var(--avatar-bg)', flexShrink: 0 }}>
+                {userImage
+                  ? <img src={userImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#134e4a,#0f172a)' }} />
+                }
+              </div>
+            </Link>
+          )}
+        </div>
+      )}
+      {!loggedIn && (
+        <Link
+          href="/login"
+          className="flex md:hidden"
+          style={{ fontSize: 13, fontWeight: 600, color: '#14B8A6', textDecoration: 'none', padding: '6px 10px' }}
+        >
+          Log in
+        </Link>
+      )}
 
       <NavMobileMenu
         isOpen={openPanel === 'menu'}

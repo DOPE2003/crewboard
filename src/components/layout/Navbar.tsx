@@ -237,6 +237,8 @@ export default async function Navbar() {
             orders={navOrders}
             activeCount={activeOrderCount}
             hasIncompleteOnboarding={hasIncompleteOnboarding}
+            userImage={user?.image ?? null}
+            twitterHandle={(user as any)?.twitterHandle ?? null}
           >
             {user && (
               <NavProfileMenu
