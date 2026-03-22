@@ -55,7 +55,7 @@ export default function NavControlsClient({
         <Link
           href="/activities"
           className={cn(
-            'inline-flex items-center gap-1.5 h-9 px-2 text-[13px] font-medium transition-colors duration-150 no-underline',
+            'hidden md:inline-flex items-center gap-1.5 h-9 px-2 text-[13px] font-medium transition-colors duration-150 no-underline',
             isActive
               ? 'text-[#14B8A6] dark:text-teal-400'
               : 'text-gray-700 dark:text-gray-300 hover:text-[#14B8A6] dark:hover:text-teal-400'
@@ -72,7 +72,7 @@ export default function NavControlsClient({
       )}
 
       {!loggedIn && (
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div className="hidden md:flex" style={{ alignItems: "center", gap: 8 }}>
           <Link
             href="/login"
             style={{
@@ -98,9 +98,9 @@ export default function NavControlsClient({
         </div>
       )}
 
-      <ThemeToggle />
+      <span className="hidden md:block"><ThemeToggle /></span>
 
-      {children}
+      <span className="hidden md:block">{children}</span>
 
       <NavMobileMenu
         isOpen={openPanel === 'menu'}

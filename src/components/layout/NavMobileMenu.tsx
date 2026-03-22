@@ -3,18 +3,9 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { ChevronRight, X } from 'lucide-react'
 import ThemeToggle from '@/components/ui/ThemeToggle'
-
-const NAV_LINKS = [
-  { label: 'Home',            href: '/' },
-  { label: 'Browse Profiles', href: '/talent' },
-  { label: 'Services',        href: '/gigs' },
-  { label: 'Showcase',        href: '/showcase', dot: true },
-  { label: 'Activities',      href: '/activities' },
-]
 
 const CATEGORIES = [
   {
@@ -49,6 +40,8 @@ const CATEGORIES = [
   },
 ]
 
+const BORDER = '0.5px solid var(--color-border-tertiary, rgba(0,0,0,0.08))'
+
 interface Props {
   isOpen: boolean
   onOpen: () => void
@@ -58,12 +51,12 @@ interface Props {
 
 export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = false }: Props) {
   const [mounted, setMounted] = useState(false)
-  const pathname = usePathname()
+  const [expanded, setExpanded] = useState<string | null>(null)
   const { data: session } = useSession()
 
   useEffect(() => { setMounted(true) }, [])
+  useEffect(() => { if (!isOpen) setExpanded(null) }, [isOpen])
 
-  // Lock body scroll when open
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
@@ -73,225 +66,204 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
   const userImage = session?.user?.image ?? null
 
   const drawer = (
-    <>
-      {/* Backdrop */}
-      <div
+    <div
+      style={{
+        position: 'fixed', top: 0, left: 0,
+        width: '100vw', height: '100vh',
+        zIndex: 50,
+        background: 'var(--color-background-primary, #fff)',
+        display: 'flex', flexDirection: 'column',
+        padding: '20px 24px',
+        overflowY: 'auto',
+        transform: isOpen ? 'translateY(0)' : 'translateY(-8px)',
+        opacity: isOpen ? 1 : 0,
+        transition: 'transform 0.2s ease, opacity 0.2s ease',
+        pointerEvents: isOpen ? 'all' : 'none',
+      }}
+    >
+      {/* X close button */}
+      <button
         onClick={onClose}
+        aria-label="Close menu"
         style={{
-          position: 'fixed', inset: 0, zIndex: 1999,
-          background: 'rgba(0,0,0,0.35)',
-          opacity: isOpen ? 1 : 0,
-          pointerEvents: isOpen ? 'all' : 'none',
-          transition: 'opacity 0.2s ease',
-        }}
-      />
-
-      {/* Full-screen overlay */}
-      <div
-        style={{
-          position: 'fixed', top: 0, left: 0,
-          width: '100vw', height: '100vh',
-          zIndex: 2000,
-          background: 'var(--color-background-primary, #fff)',
-          display: 'flex', flexDirection: 'column',
-          padding: '20px 24px',
-          overflowY: 'auto',
-          transform: isOpen ? 'translateY(0)' : 'translateY(-100%)',
-          opacity: isOpen ? 1 : 0,
-          transition: 'transform 0.2s ease, opacity 0.2s ease',
-          pointerEvents: isOpen ? 'all' : 'none',
+          position: 'absolute', top: 20, right: 20,
+          width: 40, height: 40,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'transparent', border: 'none', cursor: 'pointer',
+          color: 'var(--color-text-primary, #0f172a)',
+          padding: 0,
         }}
       >
-        {/* X close button — top right */}
-        <button
-          onClick={onClose}
-          aria-label="Close menu"
-          style={{
-            position: 'absolute', top: 20, right: 20,
-            width: 40, height: 40,
-            display: 'flex', alignItems: 'center', justifyContent: 'center',
-            background: 'transparent', border: 'none', cursor: 'pointer',
-            color: 'var(--color-text-primary, #0f172a)',
-            padding: 0,
-          }}
-        >
-          <X size={20} />
-        </button>
+        <X size={20} />
+      </button>
 
-        {/* Nav links */}
-        <nav style={{ marginTop: 52 }}>
-          {NAV_LINKS.map((item) => {
-            const active = pathname === item.href || (item.href !== '/' && pathname.startsWith(item.href))
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={onClose}
+      {/* Categories */}
+      <div style={{ marginTop: 52, flex: 1 }}>
+        {CATEGORIES.map((cat) => {
+          const open = expanded === cat.label
+          return (
+            <div key={cat.label}>
+              {/* Category row */}
+              <button
+                onClick={() => setExpanded(open ? null : cat.label)}
                 style={{
-                  display: 'flex', alignItems: 'center', gap: 8,
-                  padding: '14px 0',
-                  borderBottom: '0.5px solid var(--color-border, rgba(0,0,0,0.08))',
-                  fontSize: 18, fontWeight: 400,
-                  color: active ? '#14B8A6' : 'var(--color-text-primary, #0f172a)',
-                  textDecoration: 'none',
-                  transition: 'color 0.15s',
+                  width: '100%', display: 'flex', alignItems: 'center',
+                  justifyContent: 'space-between',
+                  padding: '16px 0',
+                  borderBottom: BORDER,
+                  background: 'transparent', border: 'none',
+                  cursor: 'pointer',
+                  fontSize: 17, fontWeight: 400,
+                  color: 'var(--color-text-primary, #0f172a)',
+                  textAlign: 'left',
                 }}
               >
-                {item.label}
-                {item.dot && (
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#14B8A6', flexShrink: 0, marginTop: 1 }} />
-                )}
-              </Link>
-            )
-          })}
-        </nav>
-
-        {/* Browse by category */}
-        <div style={{ marginTop: 28 }}>
-          <span style={{
-            display: 'block',
-            fontSize: 11, fontWeight: 600,
-            textTransform: 'uppercase', letterSpacing: '0.1em',
-            color: 'var(--color-text-muted, #94a3b8)',
-            marginBottom: 8,
-          }}>
-            Browse by category
-          </span>
-
-          {CATEGORIES.map((cat) => (
-            <div key={cat.label} style={{ marginBottom: 4 }}>
-              {/* Category label */}
-              <div style={{
-                fontSize: 11, fontWeight: 600,
-                textTransform: 'uppercase', letterSpacing: '0.08em',
-                color: 'var(--color-text-muted, #94a3b8)',
-                padding: '8px 0 4px',
-              }}>
                 {cat.label}
-              </div>
-              {/* Sub-items */}
-              {cat.items.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={onClose}
+                <ChevronRight
+                  size={16}
                   style={{
-                    display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-                    padding: '11px 0',
-                    borderBottom: '0.5px solid var(--color-border, rgba(0,0,0,0.06))',
-                    fontSize: 15, fontWeight: 400,
-                    color: 'var(--color-text-primary, #0f172a)',
-                    textDecoration: 'none',
+                    color: 'var(--color-text-secondary, #64748b)',
+                    flexShrink: 0,
+                    transform: open ? 'rotate(90deg)' : 'rotate(0deg)',
+                    transition: 'transform 0.18s ease',
                   }}
-                >
-                  {item.label}
-                  <ChevronRight size={15} style={{ color: 'var(--color-text-muted, #94a3b8)', flexShrink: 0 }} />
-                </Link>
-              ))}
+                />
+              </button>
+
+              {/* Subcategories */}
+              {open && (
+                <div>
+                  {cat.items.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      onClick={onClose}
+                      style={{
+                        display: 'flex', alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: '12px 0 12px 16px',
+                        borderBottom: BORDER,
+                        fontSize: 14, fontWeight: 400,
+                        color: 'var(--color-text-secondary, #64748b)',
+                        textDecoration: 'none',
+                      }}
+                    >
+                      {item.label}
+                      <ChevronRight
+                        size={14}
+                        style={{ color: 'var(--color-text-secondary, #64748b)', flexShrink: 0 }}
+                      />
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
+          )
+        })}
+      </div>
+
+      {/* Bottom section */}
+      <div style={{ paddingTop: 8 }}>
+        {/* Theme toggle */}
+        <div style={{
+          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+          padding: '14px 0',
+        }}>
+          <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--color-text-primary, #0f172a)' }}>
+            Dark mode
+          </span>
+          <ThemeToggle />
         </div>
 
-        {/* Bottom section */}
-        <div style={{ marginTop: 'auto', paddingTop: 24 }}>
-          {/* Theme toggle row */}
+        {/* Divider */}
+        <div style={{ height: '0.5px', background: 'var(--color-border-tertiary, rgba(0,0,0,0.08))' }} />
+
+        {/* User section */}
+        {loggedIn ? (
           <div style={{
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            paddingBottom: 16,
+            padding: '14px 0',
           }}>
-            <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--color-text-primary, #0f172a)' }}>
-              Dark mode
-            </span>
-            <ThemeToggle />
-          </div>
-
-          {/* Divider */}
-          <div style={{ height: '0.5px', background: 'var(--color-border, rgba(0,0,0,0.08))', marginBottom: 16 }} />
-
-          {/* User section */}
-          {loggedIn ? (
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                <div style={{ width: 32, height: 32, borderRadius: '50%', overflow: 'hidden', flexShrink: 0, background: '#e2e8f0' }}>
-                  {userImage
-                    ? <img src={userImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                    : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#134e4a,#0f172a)' }} />
-                  }
-                </div>
-                {userName && (
-                  <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary, #0f172a)' }}>
-                    {userName}
-                  </span>
-                )}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div style={{
+                width: 32, height: 32, borderRadius: '50%',
+                overflow: 'hidden', flexShrink: 0, background: '#e2e8f0',
+              }}>
+                {userImage
+                  ? <img src={userImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                  : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#134e4a,#0f172a)' }} />
+                }
               </div>
-              <button
-                onClick={() => { signOut({ callbackUrl: '/' }); onClose() }}
-                style={{
-                  background: 'transparent', border: 'none', cursor: 'pointer',
-                  fontSize: 13, fontWeight: 500,
-                  color: 'var(--color-text-muted, #94a3b8)',
-                  padding: '6px 0',
-                  transition: 'color 0.15s',
-                }}
-                onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
-                onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-muted, #94a3b8)' }}
-              >
-                Sign out
-              </button>
+              {userName && (
+                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--color-text-primary, #0f172a)' }}>
+                  {userName}
+                </span>
+              )}
             </div>
-          ) : (
-            <div style={{ display: 'flex', gap: 10 }}>
-              <Link
-                href="/login"
-                onClick={onClose}
-                style={{
-                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  height: 44, borderRadius: 99,
-                  border: '1px solid #14B8A6', color: '#14B8A6',
-                  fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                  background: 'transparent',
-                }}
-              >
-                Log in
-              </Link>
-              <Link
-                href="/register"
-                onClick={onClose}
-                style={{
-                  flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  height: 44, borderRadius: 99,
-                  background: '#14B8A6', color: '#fff',
-                  fontSize: 14, fontWeight: 600, textDecoration: 'none',
-                  border: 'none',
-                }}
-              >
-                Join
-              </Link>
-            </div>
-          )}
+            <button
+              onClick={() => { signOut({ callbackUrl: '/' }); onClose() }}
+              style={{
+                background: 'transparent', border: 'none', cursor: 'pointer',
+                fontSize: 13, fontWeight: 500,
+                color: 'var(--color-text-secondary, #64748b)',
+                padding: 0,
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
+              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--color-text-secondary, #64748b)' }}
+            >
+              Sign out
+            </button>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', gap: 10, padding: '14px 0' }}>
+            <Link
+              href="/login"
+              onClick={onClose}
+              style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                height: 44, borderRadius: 99,
+                border: '1px solid #14B8A6', color: '#14B8A6',
+                fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                background: 'transparent',
+              }}
+            >
+              Log in
+            </Link>
+            <Link
+              href="/register"
+              onClick={onClose}
+              style={{
+                flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                height: 44, borderRadius: 99,
+                background: '#14B8A6', color: '#fff',
+                fontSize: 14, fontWeight: 600, textDecoration: 'none',
+                border: 'none',
+              }}
+            >
+              Join
+            </Link>
+          </div>
+        )}
 
-          {/* Safe area spacing */}
-          <div style={{ height: 24 }} />
-        </div>
+        {/* Safe-area bottom spacing */}
+        <div style={{ height: 16 }} />
       </div>
-    </>
+    </div>
   )
 
   return (
     <>
-      {/* Hamburger button */}
+      {/* Hamburger — mobile only */}
       <button
         onClick={() => isOpen ? onClose() : onOpen()}
         aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        className="md:hidden"
+        className="md:hidden flex items-center justify-center"
         style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
           minWidth: 44, minHeight: 44,
           background: 'transparent', border: 'none', cursor: 'pointer',
           color: 'var(--color-text-primary, #0f172a)',
         }}
       >
-        {/* Hamburger icon */}
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
           <line x1="3" y1="6"  x2="21" y2="6" />
           <line x1="3" y1="12" x2="21" y2="12" />

@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Camera, X } from "lucide-react";
-import { removeBannerImage } from "@/actions/profile";
+import { saveBannerImage, removeBannerImage } from "@/actions/profile";
 
 interface Props {
   currentBanner: string | null;
@@ -17,42 +17,33 @@ export default function BannerUpload({ currentBanner }: Props) {
     const file = e.target.files?.[0];
     if (!file) return;
     if (!file.type.startsWith("image/")) return;
+
+    if (file.size > 2 * 1024 * 1024) {
+      alert("Image must be under 2MB.");
+      return;
+    }
+
     setUploading(true);
 
     try {
-      // Step 1: show local preview immediately
-      const objectUrl = URL.createObjectURL(file);
-      setPreview(objectUrl);
-
-      // Step 2: upload file to Vercel Blob via existing route
-      const formData = new FormData();
-      formData.append("file", file);
-      const uploadRes = await fetch("/api/upload", { method: "POST", body: formData });
-
-      if (!uploadRes.ok) {
-        const err = await uploadRes.json().catch(() => ({}));
-        console.error("Banner blob upload failed:", err);
-        setPreview(currentBanner); // revert preview
-        return;
-      }
-
-      const { url } = await uploadRes.json();
-      setPreview(url); // update to permanent URL
-
-      // Step 3: save URL to user record
-      const saveRes = await fetch("/api/user/banner", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url }),
+      // Convert to base64
+      const base64 = await new Promise<string>((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
       });
 
-      if (!saveRes.ok) {
-        console.error("Banner save failed:", await saveRes.text());
-      } else {
-        window.location.reload();
-      }
+      // Show preview immediately
+      setPreview(base64);
+
+      // Save to DB via server action
+      await saveBannerImage(base64);
+
+      window.location.reload();
     } catch (err) {
-      console.error("Banner upload error:", err);
+      console.error("Banner save failed:", err);
+      alert("Failed to save banner. Please try again.");
       setPreview(currentBanner);
     } finally {
       setUploading(false);
@@ -69,9 +60,11 @@ export default function BannerUpload({ currentBanner }: Props) {
         position: "relative",
         borderRadius: "16px 16px 0 0",
         overflow: "hidden",
+        background: preview ? undefined : undefined,
         backgroundImage: preview ? `url(${preview})` : undefined,
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
         opacity: uploading ? 0.7 : 1,
         transition: "opacity 0.2s",
       }}
@@ -83,7 +76,7 @@ export default function BannerUpload({ currentBanner }: Props) {
         </div>
       )}
 
-      {/* Remove banner button — hover-only, only when image exists */}
+      {/* Remove button — hover-only */}
       {preview && (
         <button
           type="button"
@@ -94,6 +87,7 @@ export default function BannerUpload({ currentBanner }: Props) {
               window.location.reload();
             } catch (err) {
               console.error("Remove banner failed:", err);
+              alert("Failed to remove banner. Please try again.");
             }
           }}
           disabled={uploading}
@@ -105,14 +99,14 @@ export default function BannerUpload({ currentBanner }: Props) {
             background: "#fff", border: "1px solid #e5e7eb",
             display: "flex", alignItems: "center", justifyContent: "center",
             cursor: uploading ? "wait" : "pointer",
-            zIndex: 10, transition: "background 0.15s",
+            zIndex: 10,
           }}
         >
           <X size={16} color="#ef4444" />
         </button>
       )}
 
-      {/* Camera button — bottom right */}
+      {/* Camera button */}
       <button
         type="button"
         onClick={() => fileRef.current?.click()}
@@ -124,7 +118,7 @@ export default function BannerUpload({ currentBanner }: Props) {
           background: "#fff", border: "1px solid #e5e7eb",
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: uploading ? "wait" : "pointer",
-          zIndex: 10, transition: "border-color 0.15s",
+          zIndex: 10,
         }}
       >
         <Camera size={16} color="#6b7280" />

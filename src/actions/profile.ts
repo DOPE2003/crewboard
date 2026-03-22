@@ -21,9 +21,18 @@ export async function updateSocialLinks({
   await db.user.update({ where: { id: userId }, data });
 }
 
+export async function saveBannerImage(bannerImage: string) {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) throw new Error("Not authenticated");
+  await db.user.update({ where: { id: userId }, data: { bannerImage } });
+  return { success: true };
+}
+
 export async function removeBannerImage() {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) throw new Error("Not authenticated");
   await db.user.update({ where: { id: userId }, data: { bannerImage: null } });
+  return { success: true };
 }

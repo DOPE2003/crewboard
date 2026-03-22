@@ -178,8 +178,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               className="profile-cover-banner"
               style={{
                 height: 140, position: "relative",
+                background: user.bannerImage ? undefined : "#E8FAF7",
                 backgroundImage: user.bannerImage ? `url(${user.bannerImage})` : undefined,
                 backgroundSize: "cover", backgroundPosition: "center",
+                backgroundRepeat: "no-repeat",
                 borderRadius: "16px 16px 0 0", overflow: "hidden", borderBottom: "none",
               }}
             />

@@ -184,7 +184,7 @@ export default async function Navbar() {
         </Link>
 
         {/* Center: category nav (desktop only) */}
-        <div className="nav-cats-center">
+        <div className="nav-cats-center hidden md:flex">
           <ul className="nav-links" style={{ margin: 0 }}>
             <NavCategoryGroup
               label="Creative"
@@ -225,7 +225,7 @@ export default async function Navbar() {
 
         {/* Right: search + icons + auth */}
         <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
-          <div className="nav-search-wrap" style={{ display: "flex", justifyContent: "center" }}>
+          <div className="nav-search-wrap hidden md:flex" style={{ justifyContent: "center" }}>
             <NavSearch />
           </div>
           <NavControlsClient
