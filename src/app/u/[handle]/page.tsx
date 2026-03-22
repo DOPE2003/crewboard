@@ -136,7 +136,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     { label: "Availability", done: !!user.availability },
     { label: "Portfolio item", done: (user.portfolioItems?.length ?? 0) > 0 },
     { label: "CV / Resume", done: !!user.cvUrl },
-    { label: "Gig posted", done: user.gigs?.length > 0 },
+    { label: "Service posted", done: user.gigs?.length > 0 },
   ];
   const completionPct = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100);
   const nextItem = completionItems.find(i => !i.done);
@@ -499,7 +499,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
             {/* Active gigs */}
             <SectionCard>
-              <SectionLabel>Active gigs</SectionLabel>
+              <SectionLabel>Active services</SectionLabel>
               {user.gigs?.length > 0 ? (
                 <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
                   {user.gigs.slice(0, 3).map((gig: any) => (
@@ -515,10 +515,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 </div>
               ) : (
                 <div>
-                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No active gigs yet.</p>
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No active services yet.</p>
                   {isOwnProfile && (
                     <Link href="/gigs/new" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
-                      Post a gig
+                      Post a service
                     </Link>
                   )}
                 </div>
@@ -549,7 +549,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             {/* Post a Gig (own profile) */}
             {isOwnProfile && (
               <Link href="/gigs/new" style={{ display: "block", textAlign: "center", padding: "0.75rem", background: "#14B8A6", color: "#fff", borderRadius: 10, fontWeight: 700, fontSize: "0.82rem", textDecoration: "none", letterSpacing: "0.04em" }}>
-                + Post a Gig
+                + Post a Service
               </Link>
             )}
 

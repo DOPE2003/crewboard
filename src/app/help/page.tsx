@@ -99,7 +99,7 @@ export default function HelpPage() {
             a="Browse the talent directory at /talent. Filter by role, skills, chain, and availability to find exactly who you need."
           />
           <Q
-            q="How do I post a gig?"
+            q="How do I post a service?"
             a={'Go to your dashboard and click "Post a Service". Fill in your title, category, price, and delivery time.'}
           />
         </Section>

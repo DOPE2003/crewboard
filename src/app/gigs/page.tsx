@@ -70,7 +70,7 @@ export default async function GigsPage({
 
         {gigs.length === 0 ? (
           <div className="talent-empty">
-            <p>No gigs found{q || category ? " for this search" : ""}.</p>
+            <p>No services found{q || category ? " for this search" : ""}.</p>
             {isLoggedIn && (
               <Link href="/gigs/new" className="btn-primary" style={{ marginTop: 16, display: "inline-flex" }}>
                 <T k="gigs.postFirst" />

@@ -26,7 +26,7 @@ const SKILL_PRESETS = [
 ];
 
 const STEPS = [
-  { n: 1, label: "Gig Details",        sub: "Title, category & description" },
+  { n: 1, label: "Service Details",     sub: "Title, category & description" },
   { n: 2, label: "Pricing & Delivery", sub: "Set your rates & timeline" },
   { n: 3, label: "Publish",            sub: "Review & go live" },
 ];
@@ -100,7 +100,7 @@ export default function NewGigPage() {
       });
       router.push(`/gigs/${gig.id}`);
     } catch (e: any) {
-      setError(e.message ?? "Failed to create gig.");
+      setError(e.message ?? "Failed to create service.");
     } finally {
       setLoading(false);
     }
@@ -115,7 +115,7 @@ export default function NewGigPage() {
       <aside className="pg-sidebar">
         <div className="pg-sidebar-inner">
           <div className="pg-sb-kicker">— CREWBOARD</div>
-          <h1 className="pg-sb-title">Post a Gig</h1>
+          <h1 className="pg-sb-title">Post a Service</h1>
           <p className="pg-sb-sub">Offer your services to Web3 clients worldwide.</p>
 
           {/* Step indicators */}
@@ -156,7 +156,7 @@ export default function NewGigPage() {
               <span className="pg-pro-tip-title">Pro Tip</span>
             </div>
             <p className="pg-pro-tip-body">
-              Gigs with clear titles and detailed descriptions get{" "}
+              Services with clear titles and detailed descriptions get{" "}
               <strong>3x more</strong> client inquiries on Crewboard.
             </p>
           </div>
@@ -330,7 +330,7 @@ export default function NewGigPage() {
           {step === 3 && (
             <div className="pg-step-form">
               <p className="pg-helper" style={{ marginBottom: 24 }}>
-                Review your gig before publishing.
+                Review your service before publishing.
               </p>
 
               <div className="pg-summary">
@@ -382,7 +382,7 @@ export default function NewGigPage() {
                   onClick={handlePublish}
                   disabled={loading}
                 >
-                  {loading ? "Publishing..." : "Publish Gig"}
+                  {loading ? "Publishing..." : "Publish Service"}
                 </button>
               </div>
             </div>

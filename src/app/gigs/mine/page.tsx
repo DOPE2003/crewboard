@@ -59,7 +59,7 @@ export default async function MyGigsPage() {
           — Services
         </div>
         <Link href="/gigs/new" className="btn-primary" style={{ display: "inline-flex", fontSize: "0.78rem", padding: "0.6rem 1.4rem" }}>
-          + Post a Gig
+          + Post a Service
         </Link>
       </div>
 
@@ -70,7 +70,7 @@ export default async function MyGigsPage() {
         <div className="mine-col" style={{ overflowY: "auto", borderRight: "1px solid rgba(255,255,255,0.07)", padding: "1.25rem 1.25rem 2rem" }}>
           <SectionLabel>My Offered Services</SectionLabel>
           {gigs.length === 0 ? (
-            <EmptyState message="You haven't posted any gigs yet." cta="Post your first gig" href="/gigs/new" />
+            <EmptyState message="You haven't posted any services yet." cta="Post your first service" href="/gigs/new" />
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
               {gigs.map((gig) => (
@@ -124,7 +124,7 @@ export default async function MyGigsPage() {
         <div className="mine-col" style={{ overflowY: "auto", padding: "1.25rem 1.25rem 2rem" }}>
           <SectionLabel>Services I Requested</SectionLabel>
           {buyerOrders.length === 0 ? (
-            <EmptyState message="You haven't hired anyone yet." cta="Browse gigs" href="/gigs" />
+            <EmptyState message="You haven't hired anyone yet." cta="Browse services" href="/gigs" />
           ) : (
             <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
               {buyerOrders.map((o: any) => (

@@ -28,9 +28,9 @@ const ITEMS = [
   },
   {
     key: "needsGig" as keyof OnboardingStatus,
-    label: "Post your first gig",
+    label: "Post your first service",
     href: "/gigs/new",
-    action: "Post gig",
+    action: "Post service",
   },
 ];
 

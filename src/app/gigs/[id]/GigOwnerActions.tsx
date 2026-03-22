@@ -26,7 +26,7 @@ export default function GigOwnerActions({ gigId, currentStatus }: Props) {
   }
 
   async function handleDelete() {
-    if (!confirm("Delete this gig? This cannot be undone.")) return;
+    if (!confirm("Delete this service? This cannot be undone.")) return;
     setLoading(true);
     try {
       await deleteGig(gigId);
@@ -45,7 +45,7 @@ export default function GigOwnerActions({ gigId, currentStatus }: Props) {
         disabled={loading}
         style={{ flex: 1 }}
       >
-        {loading ? "..." : currentStatus === "active" ? "Pause Gig" : "Activate Gig"}
+        {loading ? "..." : currentStatus === "active" ? "Pause Service" : "Activate Service"}
       </button>
       <button
         onClick={handleDelete}
@@ -63,7 +63,7 @@ export default function GigOwnerActions({ gigId, currentStatus }: Props) {
           cursor: "pointer",
         }}
       >
-        Delete Gig
+        Delete Service
       </button>
     </div>
   );

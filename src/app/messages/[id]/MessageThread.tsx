@@ -70,7 +70,7 @@ function parseGigCard(body: string): GigCard | null {
 }
 
 function replyBodyPreview(body: string): string {
-  if (body.startsWith(GIG_PREFIX)) return "Gig Request";
+  if (body.startsWith(GIG_PREFIX)) return "Service Request";
   return body.slice(0, 60) + (body.length > 60 ? "…" : "");
 }
 
@@ -94,7 +94,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         color: "#2DD4BF",
         marginBottom: "0.35rem",
       }}>
-        Gig Request
+        Service Request
       </div>
       <div style={{
         fontFamily: "Inter, sans-serif",
@@ -122,7 +122,7 @@ function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
         fontSize: "0.68rem",
         color: mine ? "rgba(255,255,255,0.5)" : "var(--text-muted)",
       }}>
-        Tap to view gig →
+        Tap to view service →
       </div>
     </Link>
   );

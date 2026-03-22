@@ -30,7 +30,7 @@ export default function GigsFilters({ categories, defaultQ, defaultCategory, def
     <div className="gigs-filter-bar">
       <input
         className="gigs-filter-input"
-        placeholder="Search gigs..."
+        placeholder="Search services..."
         value={q}
         onChange={(e) => setQ(e.target.value)}
         onKeyDown={(e) => { if (e.key === "Enter") apply(q, category, maxPrice); }}

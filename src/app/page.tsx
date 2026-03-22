@@ -170,7 +170,7 @@ export default async function HomePage() {
           zIndex: 1,
         }}>
           <Link href="/talent" className="btn-hero-primary">
-            Browse Talent
+            Browse Profiles
           </Link>
           <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
             {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
@@ -278,9 +278,9 @@ export default async function HomePage() {
                 { step: "03", title: "Browse the talent pool", desc: "Search and filter builders by role, skill, chain, and availability. Find exactly who you need.", tag: "Discover" },
               ],
               [
-                { step: "04", title: "Hire or get hired", desc: "Founders send offers directly to builders. Builders apply to open gigs. No middlemen, no agencies.", tag: "Collaborate" },
+                { step: "04", title: "Hire or get hired", desc: "Founders send offers directly to builders. Builders apply to open services. No middlemen, no agencies.", tag: "Collaborate" },
                 { step: "05", title: "Communicate in-platform", desc: "All coordination happens inside Crewboard. No DMs scattered across Discord, Telegram, or X.", tag: "Communicate" },
-                { step: "06", title: "Ship & get paid", desc: "Deliver your work, get paid in SOL or USDC. Every completed gig builds your verifiable on-chain reputation.", tag: "Grow" },
+                { step: "06", title: "Ship & get paid", desc: "Deliver your work, get paid in SOL or USDC. Every completed service builds your verifiable on-chain reputation.", tag: "Grow" },
               ],
             ] as const).map((row, rowIdx) => (
               <div key={rowIdx} className="how-it-works-row">

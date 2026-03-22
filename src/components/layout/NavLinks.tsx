@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { label: 'Home', href: '/', isNew: false },
   { label: 'Showcase', href: '/showcase', isNew: true },
   { label: 'Talent', href: '/talent', isNew: false },
-  { label: 'Gigs', href: '/gigs', isNew: false },
+  { label: 'Services', href: '/gigs', isNew: false },
 ]
 
 export default function NavLinks() {

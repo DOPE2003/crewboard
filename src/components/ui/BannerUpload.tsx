@@ -2,7 +2,6 @@
 
 import { useRef, useState } from "react";
 import { Camera, X } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { removeBannerImage } from "@/actions/profile";
 
 interface Props {
@@ -13,7 +12,6 @@ export default function BannerUpload({ currentBanner }: Props) {
   const [preview, setPreview] = useState(currentBanner);
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
-  const router = useRouter();
 
   async function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -51,7 +49,7 @@ export default function BannerUpload({ currentBanner }: Props) {
       if (!saveRes.ok) {
         console.error("Banner save failed:", await saveRes.text());
       } else {
-        router.refresh();
+        window.location.reload();
       }
     } catch (err) {
       console.error("Banner upload error:", err);
@@ -93,7 +91,7 @@ export default function BannerUpload({ currentBanner }: Props) {
             try {
               await removeBannerImage();
               setPreview(null);
-              router.refresh();
+              window.location.reload();
             } catch (err) {
               console.error("Remove banner failed:", err);
             }

@@ -496,7 +496,7 @@ export default function ActivitiesClient({
                 </button>
               </div>
               {convs.length === 0
-                ? <EmptyState icon={<Inbox size={40} className="text-gray-300" />} title="No messages yet" description="Start a conversation with a builder." action={{ label: 'Browse Talent', href: '/talent' }} />
+                ? <EmptyState icon={<Inbox size={40} className="text-gray-300" />} title="No messages yet" description="Start a conversation with a builder." action={{ label: 'Browse Profiles', href: '/talent' }} />
                 : <>
                     <div style={{ paddingTop: '20px' }}>{convs.map(c => <MessageRow key={c.id} c={c} />)}</div>
                     <div style={{ paddingTop: '16px' }}>
@@ -543,7 +543,7 @@ export default function ActivitiesClient({
                 </Link>
               </div>
               {orders.length === 0
-                ? <EmptyState icon={<Users size={40} className="text-gray-300" />} title="No orders yet" description="Browse talent and make your first hire." action={{ label: 'Browse Talent', href: '/talent' }} />
+                ? <EmptyState icon={<Users size={40} className="text-gray-300" />} title="No orders yet" description="Browse talent and make your first hire." action={{ label: 'Browse Profiles', href: '/talent' }} />
                 : <div style={{ paddingTop: '20px' }}>{orders.map(o => <OrderRow key={o.id} o={o} />)}</div>
               }
             </>

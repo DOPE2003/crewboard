@@ -107,7 +107,7 @@ export default async function DashboardPage() {
         {/* Stats */}
         <div style={{ display: "grid", gridTemplateColumns: "repeat(4,1fr)", gap: "0.75rem", marginBottom: "1.5rem" }} className="dash-stats-grid">
           {([
-            { label: "Active Gigs",      value: dbUser.gigs.length },
+            { label: "Active Services",   value: dbUser.gigs.length },
             { label: "Active Orders",    value: activeOrderCount },
             { label: "Completed",        value: completedOrderCount },
             { label: "Profile Views",    value: profileViewCount },
@@ -167,7 +167,7 @@ export default async function DashboardPage() {
                         </div>
                         <div style={{ fontSize: "0.63rem", color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                           {last.body.startsWith("__GIGREQUEST__:")
-                            ? (() => { try { return "Gig Request: " + JSON.parse(last.body.slice(15)).title; } catch { return "Gig Request"; } })()
+                            ? (() => { try { return "Service Request: " + JSON.parse(last.body.slice(15)).title; } catch { return "Service Request"; } })()
                             : last.body.slice(0, 40) + (last.body.length > 40 ? "…" : "")}
                         </div>
                       </div>

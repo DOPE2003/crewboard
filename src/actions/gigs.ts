@@ -25,7 +25,7 @@ export async function createGig(data: {
   });
 
   if (!user?.profileComplete) {
-    throw new Error("Complete your profile before creating a gig.");
+    throw new Error("Complete your profile before creating a service.");
   }
 
   const { title, description, price, deliveryDays, category, tags } = data;

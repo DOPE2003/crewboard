@@ -15,7 +15,7 @@ const INTENTS = [
       </svg>
     ),
     label: "Offer my services",
-    desc: "Post gigs, get hired by Web3 projects",
+    desc: "Post services, get hired by Web3 projects",
   },
   {
     id: "hire",
