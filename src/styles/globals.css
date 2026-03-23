@@ -2708,6 +2708,7 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 .msgs-thread-body {
   flex: 1;
   overflow-y: auto;
+  background: var(--background);
   padding: 1.25rem 1.5rem;
   display: flex;
   flex-direction: column;
@@ -2872,6 +2873,7 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
   flex-wrap: wrap;
   gap: 8px;
   padding: 10px 14px 4px;
+  background: var(--background);
   border-top: 1px solid var(--card-border);
 }
 .msgs-quick-pill {
@@ -2945,12 +2947,16 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
     z-index: 50;
     background: var(--background);
     border-right: none;
+    overflow: hidden;
   }
   .msgs-view-profile-btn { display: flex; }
   .msgs-back-btn { display: flex; }
   .msgs-bubble { max-width: 82%; }
   .msgs-thread-body { padding: 1rem; }
-  .msgs-input-row { padding: 10px 12px; }
+  .msgs-input-row {
+    padding: 10px 12px;
+    padding-bottom: max(10px, env(safe-area-inset-bottom, 10px));
+  }
 }
 
 /* ── DARK MODE ── */

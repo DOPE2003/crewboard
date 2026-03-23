@@ -31,9 +31,9 @@ interface Props {
 }
 
 const QUICK_REPLIES = [
-  "👋 What are your rates?",
-  "📅 Are you available?",
-  "📎 Send portfolio",
+  { label: "👋 What are your rates?", text: "What are your rates?" },
+  { label: "📅 Are you available?", text: "Are you available?" },
+  { label: "📎 Send portfolio", text: "Send me your portfolio" },
 ];
 
 function formatTime(iso: string) {
@@ -239,9 +239,8 @@ export default function MessageThread({
     }
   };
 
-  const send = async () => {
-    if (!body.trim() || sending) return;
-    const text = body.trim();
+  const sendText = async (text: string) => {
+    if (!text || sending) return;
     if (containsSocial(text)) {
       setSocialWarning(true);
       return;
@@ -278,6 +277,23 @@ export default function MessageThread({
       setSending(false);
       inputRef.current?.focus();
     }
+  };
+
+  const send = async () => {
+    if (!body.trim() || sending) return;
+    await sendText(body.trim());
+  };
+
+  const handleQuickReply = async (text: string) => {
+    if (!text || sending) return;
+    await sendText(text);
+  };
+
+  const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    e.target.value = "";
+    await sendText(`📎 Attached: ${file.name}`);
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -433,12 +449,13 @@ export default function MessageThread({
         <div className="msgs-quick-replies">
           {QUICK_REPLIES.map((q) => (
             <button
-              key={q}
+              key={q.text}
               type="button"
               className="msgs-quick-pill"
-              onClick={() => { setBody(q); inputRef.current?.focus(); }}
+              onClick={() => handleQuickReply(q.text)}
+              disabled={sending}
             >
-              {q}
+              {q.label}
             </button>
           ))}
         </div>
@@ -446,7 +463,8 @@ export default function MessageThread({
 
       {/* Input bar */}
       <div className="msgs-input-row">
-        <button className="msgs-input-icon-btn" type="button" aria-label="Emoji">
+        {/* Emoji button — hidden until properly implemented */}
+        <button className="msgs-input-icon-btn" type="button" aria-label="Emoji" style={{ display: "none" }}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <circle cx="12" cy="12" r="10"/>
             <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
@@ -454,7 +472,21 @@ export default function MessageThread({
             <line x1="15" y1="9" x2="15.01" y2="9"/>
           </svg>
         </button>
-        <button className="msgs-input-icon-btn" type="button" aria-label="Attachment">
+        {/* Attachment button */}
+        <input
+          type="file"
+          id="file-attach"
+          className="msgs-input-icon-btn"
+          style={{ display: "none" }}
+          onChange={handleFileAttach}
+          accept="image/*,.pdf,.doc,.docx"
+        />
+        <button
+          className="msgs-input-icon-btn"
+          type="button"
+          aria-label="Attachment"
+          onClick={() => document.getElementById("file-attach")?.click()}
+        >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
           </svg>

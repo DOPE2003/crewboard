@@ -5,8 +5,6 @@ import { createPortal } from 'react-dom'
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 import { ChevronRight, X } from 'lucide-react'
-import ThemeToggle from '@/components/ui/ThemeToggle'
-
 const CATEGORIES = [
   {
     label: 'Creative',
@@ -52,10 +50,27 @@ interface Props {
 export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = false }: Props) {
   const [mounted, setMounted] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [isDark, setIsDark] = useState(false)
   const { data: session } = useSession()
 
-  useEffect(() => { setMounted(true) }, [])
+  useEffect(() => {
+    setMounted(true)
+    setIsDark(document.body.classList.contains('dark'))
+  }, [])
   useEffect(() => { if (!isOpen) setExpanded(null) }, [isOpen])
+
+  const toggleDarkMode = () => {
+    const nextDark = !isDark
+    if (nextDark) {
+      document.body.classList.add('dark')
+      localStorage.setItem('cb-theme', 'dark')
+    } else {
+      document.body.classList.remove('dark')
+      localStorage.setItem('cb-theme', 'light')
+    }
+    localStorage.setItem('cb-theme-v', '2')
+    setIsDark(nextDark)
+  }
 
   useEffect(() => {
     document.body.style.overflow = isOpen ? 'hidden' : ''
@@ -165,14 +180,28 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
       {/* Bottom section */}
       <div style={{ paddingTop: 8 }}>
         {/* Theme toggle */}
-        <div style={{
-          display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-          padding: '14px 0',
-        }}>
+        <div
+          onClick={toggleDarkMode}
+          style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            padding: '14px 0', cursor: 'pointer',
+          }}
+        >
           <span style={{ fontSize: 14, fontWeight: 400, color: 'var(--foreground)' }}>
             Dark mode
           </span>
-          <ThemeToggle />
+          <div style={{
+            width: 44, height: 24, borderRadius: 99,
+            background: isDark ? '#14B8A6' : '#e5e7eb',
+            position: 'relative', transition: 'background 0.2s', flexShrink: 0,
+          }}>
+            <div style={{
+              width: 20, height: 20, borderRadius: '50%',
+              background: 'white', position: 'absolute',
+              top: 2, left: isDark ? 22 : 2,
+              transition: 'left 0.2s',
+            }} />
+          </div>
         </div>
 
         {/* Divider */}
