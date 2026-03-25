@@ -202,13 +202,13 @@ export default function ActivitiesClient({
           <span style={{
             position: 'absolute', bottom: 0, right: 0,
             width: 10, height: 10, borderRadius: '50%',
-            border: '2px solid white',
+            border: '2px solid var(--card-bg)',
             background: unread > 0 ? '#14B8A6' : online ? '#4ade80' : '#d1d5db',
           }} />
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '15px', fontWeight: unread > 0 ? '600' : '500', color: unread > 0 ? '#111827' : '#1f2937', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '15px', fontWeight: unread > 0 ? '600' : '500', color: 'var(--foreground)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {c.otherUser?.name ?? c.otherUser?.twitterHandle ?? 'Unknown'}
             </span>
             <span style={{ fontSize: '11px', color: '#9ca3af', flexShrink: 0, marginTop: '2px' }}>{fmtTime(c.lastMessageTime)}</span>
@@ -245,7 +245,7 @@ export default function ActivitiesClient({
         <NotifIconCircle type={n.type} />
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '15px', fontWeight: !n.read ? '600' : '500', color: !n.read ? '#111827' : '#1f2937', lineHeight: 1.3 }}>
+            <span style={{ fontSize: '15px', fontWeight: !n.read ? '600' : '500', color: 'var(--foreground)', lineHeight: 1.3 }}>
               {n.title}
             </span>
             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, marginTop: '2px' }}>
@@ -285,7 +285,7 @@ export default function ActivitiesClient({
           transition: 'background 0.1s',
         }}
       >
-        <div style={{ width: 48, height: 48, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', background: '#f3f4f6', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div style={{ width: 48, height: 48, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', background: 'rgba(var(--foreground-rgb), 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
           {o.other?.image ? (
             <Image src={o.other.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           ) : (
@@ -296,7 +296,7 @@ export default function ActivitiesClient({
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '15px', fontWeight: '500', color: '#1f2937', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: '15px', fontWeight: '500', color: 'var(--foreground)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {o.gigTitle}
             </span>
             <span style={{ fontSize: '16px', fontWeight: '600', color: '#14B8A6', flexShrink: 0 }}>${o.amount.toLocaleString()}</span>
@@ -383,7 +383,7 @@ export default function ActivitiesClient({
       {/* ── Tab bar ── */}
       <div style={{
         width: '100%',
-        borderBottom: '1px solid #e5e7eb',
+        borderBottom: '1px solid var(--card-border)',
         backgroundColor: 'var(--background)',
         position: 'sticky',
         top: '56px',
@@ -446,7 +446,7 @@ export default function ActivitiesClient({
           {/* ALL ACTIVITIES */}
           {activeTab === 'All Activities' && (
             <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid #e5e7eb' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
                 <button
                   onClick={handleMarkAllRead}
                   disabled={markingAll || !hasAnyUnread}
@@ -486,7 +486,7 @@ export default function ActivitiesClient({
           {/* MESSAGES */}
           {activeTab === 'Messages' && (
             <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid #e5e7eb' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
                 <button
                   onClick={async () => { setMarkingAll(true); setConvs(c => c.map(x => ({ ...x, unread: 0 }))); setUnreadMsgs(0); try { await markAllConversationsRead(); router.refresh() } finally { setMarkingAll(false) } }}
                   disabled={markingAll || !convs.some(c => c.unread > 0)}
@@ -510,7 +510,7 @@ export default function ActivitiesClient({
           {/* NOTIFICATIONS */}
           {activeTab === 'Notifications' && (
             <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid #e5e7eb' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
                 <button
                   onClick={async () => { setMarkingAll(true); setNotifs(n => n.map(x => ({ ...x, read: true }))); setUnreadNotifs(0); try { await markAllNotificationsAsRead(); router.refresh() } finally { setMarkingAll(false) } }}
                   disabled={markingAll || !notifs.some(n => !n.read)}
@@ -534,7 +534,7 @@ export default function ActivitiesClient({
           {/* ORDERS */}
           {activeTab === 'Orders' && (
             <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid #e5e7eb' }}>
+              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
                 <Link
                   href="/orders"
                   style={{ fontSize: '13px', color: '#14B8A6', fontWeight: '500', textDecoration: 'none' }}

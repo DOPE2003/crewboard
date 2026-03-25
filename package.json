@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "postinstall": "prisma generate",
-    "dev": "pkill -f 'next dev' || true && pkill -f 'next-server' || true && rm -rf .next/dev/lock && next dev",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
