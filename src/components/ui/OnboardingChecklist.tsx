@@ -11,19 +11,19 @@ const ITEMS = [
   {
     key: "needsAvatar" as keyof OnboardingStatus,
     label: "Upload a profile photo",
-    href: "/settings",
+    href: "/dashboard",
     action: "Upload",
   },
   {
     key: "needsCv" as keyof OnboardingStatus,
     label: "Upload your CV",
-    href: "/settings",
+    href: "/dashboard",
     action: "Upload",
   },
   {
     key: "needsWallet" as keyof OnboardingStatus,
     label: "Connect your wallet",
-    href: "/settings",
+    href: "/billing",
     action: "Connect",
   },
   {

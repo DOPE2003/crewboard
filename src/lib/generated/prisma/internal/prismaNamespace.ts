@@ -394,7 +394,8 @@ export const ModelName = {
   Order: 'Order',
   Review: 'Review',
   ShowcasePost: 'ShowcasePost',
-  ShowcaseInteraction: 'ShowcaseInteraction'
+  ShowcaseInteraction: 'ShowcaseInteraction',
+  ProWaitlist: 'ProWaitlist'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -410,7 +411,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "order" | "review" | "showcasePost" | "showcaseInteraction"
+    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1228,6 +1229,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    ProWaitlist: {
+      payload: Prisma.$ProWaitlistPayload<ExtArgs>
+      fields: Prisma.ProWaitlistFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.ProWaitlistFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.ProWaitlistFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>
+        }
+        findFirst: {
+          args: Prisma.ProWaitlistFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.ProWaitlistFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>
+        }
+        findMany: {
+          args: Prisma.ProWaitlistFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>[]
+        }
+        create: {
+          args: Prisma.ProWaitlistCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>
+        }
+        createMany: {
+          args: Prisma.ProWaitlistCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.ProWaitlistCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>[]
+        }
+        delete: {
+          args: Prisma.ProWaitlistDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>
+        }
+        update: {
+          args: Prisma.ProWaitlistUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>
+        }
+        deleteMany: {
+          args: Prisma.ProWaitlistDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.ProWaitlistUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.ProWaitlistUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>[]
+        }
+        upsert: {
+          args: Prisma.ProWaitlistUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$ProWaitlistPayload>
+        }
+        aggregate: {
+          args: Prisma.ProWaitlistAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateProWaitlist>
+        }
+        groupBy: {
+          args: Prisma.ProWaitlistGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProWaitlistGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.ProWaitlistCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.ProWaitlistCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1433,6 +1508,16 @@ export const ShowcaseInteractionScalarFieldEnum = {
 } as const
 
 export type ShowcaseInteractionScalarFieldEnum = (typeof ShowcaseInteractionScalarFieldEnum)[keyof typeof ShowcaseInteractionScalarFieldEnum]
+
+
+export const ProWaitlistScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  joinedAt: 'joinedAt',
+  notified: 'notified'
+} as const
+
+export type ProWaitlistScalarFieldEnum = (typeof ProWaitlistScalarFieldEnum)[keyof typeof ProWaitlistScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1663,6 +1748,7 @@ export type GlobalOmitConfig = {
   review?: Prisma.ReviewOmit
   showcasePost?: Prisma.ShowcasePostOmit
   showcaseInteraction?: Prisma.ShowcaseInteractionOmit
+  proWaitlist?: Prisma.ProWaitlistOmit
 }
 
 /* Types for Logging */

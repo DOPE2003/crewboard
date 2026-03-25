@@ -1,11 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { useRouter } from 'next/navigation'
-import { Bell, MessageSquare, ClipboardList, Eye, Star, CheckCheck, Users, Inbox } from 'lucide-react'
-import { cn } from '@/lib/utils'
 import { markAllConversationsRead } from '@/actions/messages'
 import { markAllNotificationsAsRead, markNotificationRead } from '@/actions/notifications'
 import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
@@ -19,23 +17,31 @@ interface Props {
   activeOrderCount: number
 }
 
-const STATUS_COLORS: Record<string, string> = {
-  pending:   '#f59e0b',
-  accepted:  '#3b82f6',
-  funded:    '#3b82f6',
-  delivered: '#8b5cf6',
-  completed: '#22c55e',
-  cancelled: '#94a3b8',
-  disputed:  '#ef4444',
+const AVATAR_COLORS = ['#475569', '#0f766e', '#b45309', '#6d28d9', '#0369a1']
+function avatarBg(str: string) {
+  let h = 0
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) & 0xffffffff
+  return AVATAR_COLORS[Math.abs(h) % AVATAR_COLORS.length]
 }
+
+const CHIP: Record<string, { bg: string; color: string; label: string }> = {
+  message:      { bg: '#EBF4FF', color: '#2563EB', label: 'Message' },
+  order:        { bg: '#ECFDF5', color: '#059669', label: 'Order' },
+  offer:        { bg: '#FFF7ED', color: '#C2410C', label: 'Offer' },
+  review:       { bg: '#F5F3FF', color: '#7C3AED', label: 'Review' },
+  system:       { bg: '#F3F4F6', color: '#6B7280', label: 'System' },
+  profile_view: { bg: '#F3F4F6', color: '#6B7280', label: 'System' },
+  welcome:      { bg: '#F3F4F6', color: '#6B7280', label: 'System' },
+  signin:       { bg: '#F3F4F6', color: '#6B7280', label: 'System' },
+}
+
 const STATUS_LABELS: Record<string, string> = {
-  pending:   'Pending',
-  accepted:  'In Progress',
-  funded:    'In Progress',
-  delivered: 'Delivered',
-  completed: 'Completed',
-  cancelled: 'Cancelled',
-  disputed:  'Disputed',
+  pending: 'Pending', accepted: 'In Progress', funded: 'In Progress',
+  delivered: 'Delivered', completed: 'Completed', cancelled: 'Cancelled', disputed: 'Disputed',
+}
+const STATUS_COLORS: Record<string, string> = {
+  pending: '#f59e0b', accepted: '#3b82f6', funded: '#3b82f6',
+  delivered: '#8b5cf6', completed: '#22c55e', cancelled: '#94a3b8', disputed: '#ef4444',
 }
 
 function fmtTime(iso: string | null): string {
@@ -48,73 +54,30 @@ function fmtTime(iso: string | null): string {
   return new Date(iso).toLocaleDateString([], { month: 'short', day: 'numeric' })
 }
 
-function isOnline(iso: string | null): boolean {
-  if (!iso) return false
-  return Date.now() - new Date(iso).getTime() < 3 * 60 * 1000
-}
-
 function getDateGroup(iso: string): string {
   const d = new Date(iso)
   const now = new Date()
   const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const itemDay = new Date(d.getFullYear(), d.getMonth(), d.getDate())
   const diffDays = Math.floor((today.getTime() - itemDay.getTime()) / 86400000)
-  if (diffDays === 0) return 'Today'
-  if (diffDays === 1) return 'Yesterday'
-  if (diffDays < 7) return 'This week'
-  return 'Earlier'
+  if (diffDays === 0) return 'TODAY'
+  if (diffDays === 1) return 'YESTERDAY'
+  if (diffDays < 7) return 'THIS WEEK'
+  return 'EARLIER'
 }
 
-function renderNotifBody(type: string, body: string) {
-  if (type !== 'review') return <>{body}</>
-  const parts = body.split(/(★+|☆+)/)
-  return (
-    <>
-      {parts.map((part, i) =>
-        /[★☆]/.test(part)
-          ? <span key={i} style={{ color: '#f59e0b' }}>{'★'.repeat(part.length)}</span>
-          : part
-      )}
-    </>
-  )
-}
-
-function NotifIconCircle({ type }: { type: string }) {
-  const bg =
-    type === 'message'      ? 'bg-teal-400/10' :
-    type === 'order'        ? 'bg-amber-400/10' :
-    type === 'profile_view' ? 'bg-purple-400/10' :
-    type === 'review'       ? 'bg-amber-400/10' :
-    'bg-gray-100 dark:bg-white/[0.07]'
-
-  const icon =
-    type === 'message'      ? <MessageSquare size={20} style={{ color: '#14b8a6' }} /> :
-    type === 'order'        ? <ClipboardList  size={20} style={{ color: '#f59e0b' }} /> :
-    type === 'profile_view' ? <Eye            size={20} style={{ color: '#8b5cf6' }} /> :
-    type === 'review'       ? <Star           size={20} style={{ color: '#f59e0b', fill: '#f59e0b' }} /> :
-    <Bell size={20} style={{ color: '#64748b' }} />
-
-  return (
-    <div className={cn('w-11 h-11 rounded-full flex-shrink-0 flex items-center justify-center', bg)}>
-      {icon}
-    </div>
-  )
-}
-
-function TabBadge({ count }: { count: number }) {
-  if (count === 0) return null
-  return (
-    <span className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full bg-[#14B8A6] text-white text-[9px] font-bold leading-none">
-      {count > 99 ? '99+' : count}
-    </span>
-  )
-}
-
-type Tab = 'all' | 'messages' | 'notifications' | 'orders'
+type SidebarTab = 'all' | 'messages' | 'orders' | 'notifications' | 'reviews'
 type FeedItem =
   | { kind: 'message';      data: NavConv;  ts: number }
   | { kind: 'notification'; data: NavNotif; ts: number }
   | { kind: 'order';        data: NavOrder; ts: number }
+
+// ── Inline SVG icons ───────────────────────────────────────────────────────────
+function IconMsg()   { return <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> }
+function IconOrder() { return <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2.5"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg> }
+function IconBell()  { return <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#6B7280" strokeWidth="2.5"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg> }
+function IconStar()  { return <svg width="10" height="10" viewBox="0 0 24 24" fill="#7C3AED"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg> }
+function IconSearch() { return <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg> }
 
 export default function ActivitiesClient({
   conversations: initialConvs,
@@ -128,16 +91,23 @@ export default function ActivitiesClient({
   const [notifs, setNotifs]             = useState(initialNotifs)
   const [unreadMsgs, setUnreadMsgs]     = useState(initialMsgUnread)
   const [unreadNotifs, setUnreadNotifs] = useState(initialNotifUnread)
-  const [activeTab, setActiveTab]       = useState('All Activities')
+  const [activeTab, setActiveTab]       = useState<SidebarTab>('all')
   const [markingAll, setMarkingAll]     = useState(false)
+  const [search, setSearch]             = useState('')
+  const [dateFilter, setDateFilter]     = useState('all')
   const router = useRouter()
 
-  const totalBadge   = unreadMsgs + unreadNotifs + activeOrderCount
-  const hasAnyUnread = convs.some(c => c.unread > 0) || notifs.some(n => !n.read)
+  const totalUnread   = unreadMsgs + unreadNotifs
+  const hasAnyUnread  = convs.some(c => c.unread > 0) || notifs.some(n => !n.read)
+  const reviewNotifs  = useMemo(() => notifs.filter(n => n.type === 'review'), [notifs])
+  const sysNotifs     = useMemo(() => notifs.filter(n => n.type !== 'review'), [notifs])
+  const reviewUnread  = reviewNotifs.filter(n => !n.read).length
+  const sysUnread     = sysNotifs.filter(n => !n.read).length
 
   async function handleMarkAllRead() {
-    const prev = { convs, notifs, unreadMsgs, unreadNotifs }
+    if (markingAll || !hasAnyUnread) return
     setMarkingAll(true)
+    const prev = { convs, notifs, unreadMsgs, unreadNotifs }
     setConvs(c => c.map(x => ({ ...x, unread: 0 })))
     setNotifs(n => n.map(x => ({ ...x, read: true })))
     setUnreadMsgs(0)
@@ -146,16 +116,12 @@ export default function ActivitiesClient({
       await Promise.all([markAllConversationsRead(), markAllNotificationsAsRead()])
       router.refresh()
     } catch {
-      setConvs(prev.convs)
-      setNotifs(prev.notifs)
-      setUnreadMsgs(prev.unreadMsgs)
-      setUnreadNotifs(prev.unreadNotifs)
-    } finally {
-      setMarkingAll(false)
-    }
+      setConvs(prev.convs); setNotifs(prev.notifs)
+      setUnreadMsgs(prev.unreadMsgs); setUnreadNotifs(prev.unreadNotifs)
+    } finally { setMarkingAll(false) }
   }
 
-  async function handleNotifClick(n: NavNotif) {
+  const handleNotifClick = useCallback((n: NavNotif) => {
     if (!n.read) {
       setNotifs(prev => prev.map(x => x.id === n.id ? { ...x, read: true } : x))
       setUnreadNotifs(c => Math.max(0, c - 1))
@@ -164,413 +130,362 @@ export default function ActivitiesClient({
         setUnreadNotifs(c => c + 1)
       })
     }
+  }, [])
+
+  // ── Build feed ────────────────────────────────────────────────────────────
+  const baseItems = useMemo<FeedItem[]>(() => {
+    const msgItems   = convs.map(c => ({ kind: 'message'      as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
+    const orderItems = orders.map(o => ({ kind: 'order'        as const, data: o, ts: new Date(o.createdAt).getTime() }))
+
+    let notifSrc = notifs
+    if (activeTab === 'reviews')       notifSrc = reviewNotifs
+    else if (activeTab === 'notifications') notifSrc = sysNotifs
+    const notifItems = notifSrc.map(n => ({ kind: 'notification' as const, data: n, ts: new Date(n.createdAt).getTime() }))
+
+    let items: FeedItem[] =
+      activeTab === 'all'           ? [...msgItems, ...notifItems, ...orderItems] :
+      activeTab === 'messages'      ? msgItems :
+      activeTab === 'orders'        ? orderItems :
+                                      notifItems
+
+    const q = search.toLowerCase().trim()
+    if (q) {
+      items = items.filter(item => {
+        if (item.kind === 'message') {
+          const u = item.data.otherUser
+          return (u?.name ?? '').toLowerCase().includes(q) ||
+            (u?.twitterHandle ?? '').toLowerCase().includes(q) ||
+            (item.data.lastMessage ?? '').toLowerCase().includes(q)
+        }
+        if (item.kind === 'notification')
+          return item.data.title.toLowerCase().includes(q) || item.data.body.toLowerCase().includes(q)
+        return item.data.gigTitle.toLowerCase().includes(q) ||
+          (item.data.other?.name ?? '').toLowerCase().includes(q)
+      })
+    }
+
+    if (dateFilter !== 'all') {
+      const now = Date.now()
+      const cutoff = dateFilter === 'today' ? now - 86400000 :
+                     dateFilter === 'week'  ? now - 7 * 86400000 : now - 30 * 86400000
+      items = items.filter(item => item.ts >= cutoff)
+    }
+
+    return items.sort((a, b) => b.ts - a.ts)
+  }, [convs, notifs, orders, activeTab, search, dateFilter, reviewNotifs, sysNotifs])
+
+  const groupedItems = useMemo(() => {
+    const ORDER = ['TODAY', 'YESTERDAY', 'THIS WEEK', 'EARLIER']
+    const groups: { label: string; items: FeedItem[] }[] = []
+    for (const item of baseItems) {
+      const ts = item.kind === 'message' ? item.data.lastMessageTime :
+                 item.kind === 'notification' ? item.data.createdAt : item.data.createdAt
+      const label = ts ? getDateGroup(ts) : 'EARLIER'
+      const g = groups.find(x => x.label === label)
+      if (g) g.items.push(item)
+      else groups.push({ label, items: [item] })
+    }
+    groups.sort((a, b) => ORDER.indexOf(a.label) - ORDER.indexOf(b.label))
+    return groups
+  }, [baseItems])
+
+  // ── Sidebar categories ────────────────────────────────────────────────────
+  const sidebarCats: { key: SidebarTab; label: string; count: number }[] = [
+    { key: 'all',           label: 'All Activities',  count: totalUnread + activeOrderCount },
+    { key: 'messages',      label: 'Messages',         count: unreadMsgs },
+    { key: 'orders',        label: 'Orders',           count: activeOrderCount },
+    { key: 'notifications', label: 'Notifications',    count: sysUnread },
+    { key: 'reviews',       label: 'Reviews',          count: reviewUnread },
+  ]
+
+  // ── Sub-components ────────────────────────────────────────────────────────
+  function Avatar({ name, handle, image, size = 42 }: { name?: string | null; handle?: string | null; image?: string | null; size?: number }) {
+    const label = (name ?? handle ?? '?').slice(0, 1).toUpperCase()
+    const bg = avatarBg(name ?? handle ?? 'x')
+    if (image) return (
+      <Image src={image} alt="" width={size} height={size}
+        style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
+    )
+    return (
+      <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: size * 0.38, fontWeight: 700 }}>
+        {label}
+      </div>
+    )
   }
 
-  // ── Row renderers ─────────────────────────────────────────────────────────
-
-  function MessageRow({ c }: { c: NavConv }) {
-    const unread = convs.find(x => x.id === c.id)?.unread ?? c.unread
-    const online = isOnline(c.otherUser?.lastSeenAt ?? null)
+  function TypeChip({ type }: { type: string }) {
+    const c = CHIP[type] ?? CHIP.system
     return (
-      <Link
-        href={`/messages/${c.id}`}
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '16px',
-          paddingTop: '20px',
-          paddingBottom: '20px',
-          paddingLeft: unread > 0 ? '12px' : '3px',
-          paddingRight: '0',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
-          borderLeft: unread > 0 ? '3px solid #14B8A6' : '3px solid transparent',
-          background: unread > 0 ? 'rgba(20,184,166,0.04)' : 'transparent',
-          textDecoration: 'none',
-          cursor: 'pointer',
-          transition: 'background 0.1s',
-        }}
-      >
+      <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: 99, background: c.bg, color: c.color, fontSize: 11, fontWeight: 600, lineHeight: 1.5, flexShrink: 0 }}>
+        {c.label}
+      </span>
+    )
+  }
+
+  function AvatarBadge({ children }: { children: React.ReactNode }) {
+    return (
+      <span className="act-avatar-badge">
+        {children}
+      </span>
+    )
+  }
+
+  function ActivityCard({ children, unread, href, onClick }: {
+    children: React.ReactNode; unread: boolean; href?: string; onClick?: () => void
+  }) {
+    const cls = `act-card${unread ? ' act-card--unread' : ''}`
+    if (href) return (
+      <Link href={href} className={cls} onClick={onClick}>
+        {children}
+        {unread && <span className="act-unread-dot" />}
+      </Link>
+    )
+    return (
+      <div className={cls} onClick={onClick}>
+        {children}
+        {unread && <span className="act-unread-dot" />}
+      </div>
+    )
+  }
+
+  function MessageCard({ c }: { c: NavConv }) {
+    const unread = convs.find(x => x.id === c.id)?.unread ?? c.unread
+    const name = c.otherUser?.name ?? c.otherUser?.twitterHandle ?? 'Unknown'
+    return (
+      <ActivityCard unread={unread > 0} href={`/messages/${c.id}`}>
         <div style={{ position: 'relative', flexShrink: 0 }}>
-          {c.otherUser?.image ? (
-            <Image src={c.otherUser.image} alt="" width={48} height={48}
-              style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }} />
-          ) : (
-            <div style={{ width: 48, height: 48, borderRadius: '50%', background: '#14B8A6', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: '14px', fontWeight: '600' }}>
-              {(c.otherUser?.name ?? c.otherUser?.twitterHandle ?? '?').slice(0, 2).toUpperCase()}
-            </div>
-          )}
-          <span style={{
-            position: 'absolute', bottom: 0, right: 0,
-            width: 10, height: 10, borderRadius: '50%',
-            border: '2px solid var(--card-bg)',
-            background: unread > 0 ? '#14B8A6' : online ? '#4ade80' : '#d1d5db',
-          }} />
+          <Avatar name={c.otherUser?.name} handle={c.otherUser?.twitterHandle} image={c.otherUser?.image} />
+          <AvatarBadge><IconMsg /></AvatarBadge>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '15px', fontWeight: unread > 0 ? '600' : '500', color: 'var(--foreground)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {c.otherUser?.name ?? c.otherUser?.twitterHandle ?? 'Unknown'}
-            </span>
-            <span style={{ fontSize: '11px', color: '#9ca3af', flexShrink: 0, marginTop: '2px' }}>{fmtTime(c.lastMessageTime)}</span>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 5 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+              <span className="act-name" style={{ fontWeight: unread > 0 ? 700 : 600 }}>{name}</span>
+              <TypeChip type="message" />
+            </div>
+            <span suppressHydrationWarning className="act-time">{fmtTime(c.lastMessageTime)}</span>
           </div>
-          <p style={{ fontSize: '13px', lineHeight: '1.6', marginTop: '4px', marginBottom: 0, color: unread > 0 ? '#374151' : '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          <p className="act-body" style={{ paddingRight: 20 }}>
             {c.lastMessage ?? 'No messages yet'}
           </p>
         </div>
-      </Link>
+      </ActivityCard>
     )
   }
 
-  function NotifRow({ n }: { n: NavNotif }) {
+  function NotifCard({ n }: { n: NavNotif }) {
+    const isReview = n.type === 'review'
     return (
-      <Link
-        href={n.link ?? '/notifications'}
-        onClick={() => handleNotifClick(n)}
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '16px',
-          paddingTop: '20px',
-          paddingBottom: '20px',
-          paddingLeft: !n.read ? '12px' : '3px',
-          paddingRight: '0',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
-          borderLeft: !n.read ? '3px solid #14B8A6' : '3px solid transparent',
-          background: !n.read ? 'rgba(20,184,166,0.04)' : 'transparent',
-          textDecoration: 'none',
-          cursor: 'pointer',
-          transition: 'background 0.1s',
-        }}
-      >
-        <NotifIconCircle type={n.type} />
-        <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '15px', fontWeight: !n.read ? '600' : '500', color: 'var(--foreground)', lineHeight: 1.3 }}>
-              {n.title}
-            </span>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0, marginTop: '2px' }}>
-              {!n.read && <span style={{ width: 8, height: 8, borderRadius: '50%', background: '#14B8A6', display: 'inline-block' }} />}
-              <span style={{ fontSize: '11px', color: '#9ca3af' }}>{fmtTime(n.createdAt)}</span>
-            </div>
+      <ActivityCard unread={!n.read} href={n.link ?? '/notifications'} onClick={() => handleNotifClick(n)}>
+        <div style={{ position: 'relative', flexShrink: 0 }}>
+          <div style={{ width: 42, height: 42, borderRadius: '50%', background: isReview ? '#f5f3ff' : '#f0fdf9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            {isReview
+              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#7C3AED"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              : n.type === 'message'
+              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              : n.type === 'order'
+              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            }
           </div>
-          <p style={{ fontSize: '13px', lineHeight: '1.6', marginTop: '4px', marginBottom: 0, color: '#6b7280' }}>
-            {renderNotifBody(n.type, n.body)}
-          </p>
-        </div>
-      </Link>
-    )
-  }
-
-  function OrderRow({ o }: { o: NavOrder }) {
-    const color    = STATUS_COLORS[o.status] ?? '#94a3b8'
-    const label    = STATUS_LABELS[o.status] ?? o.status
-    const isActive = ['pending', 'accepted', 'funded', 'delivered'].includes(o.status)
-    return (
-      <Link
-        href={`/orders/${o.id}`}
-        style={{
-          display: 'flex',
-          alignItems: 'flex-start',
-          gap: '16px',
-          paddingTop: '20px',
-          paddingBottom: '20px',
-          paddingLeft: isActive ? '12px' : '3px',
-          paddingRight: '0',
-          minHeight: '80px',
-          borderBottom: '1px solid rgba(0,0,0,0.06)',
-          borderLeft: isActive ? '3px solid #f59e0b' : '3px solid transparent',
-          background: isActive ? 'rgba(245,158,11,0.03)' : 'transparent',
-          textDecoration: 'none',
-          cursor: 'pointer',
-          transition: 'background 0.1s',
-        }}
-      >
-        <div style={{ width: 48, height: 48, borderRadius: '50%', flexShrink: 0, overflow: 'hidden', background: 'rgba(var(--foreground-rgb), 0.06)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          {o.other?.image ? (
-            <Image src={o.other.image} alt="" width={48} height={48} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-          ) : (
-            <span style={{ fontSize: '14px', fontWeight: '600', color: '#9ca3af' }}>
-              {(o.other?.name ?? o.other?.twitterHandle ?? '?').slice(0, 2).toUpperCase()}
-            </span>
-          )}
+          <AvatarBadge>{isReview ? <IconStar /> : <IconBell />}</AvatarBadge>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: '8px' }}>
-            <span style={{ fontSize: '15px', fontWeight: '500', color: 'var(--foreground)', lineHeight: 1.3, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-              {o.gigTitle}
-            </span>
-            <span style={{ fontSize: '16px', fontWeight: '600', color: '#14B8A6', flexShrink: 0 }}>${o.amount.toLocaleString()}</span>
-          </div>
-          <p style={{ fontSize: '13px', lineHeight: '1.6', marginTop: '4px', marginBottom: '6px', color: '#6b7280', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-            {o.role === 'buyer' ? 'Seller' : 'Buyer'}: {o.other?.name ?? o.other?.twitterHandle ?? 'Unknown'}
-          </p>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <span style={{ fontSize: '11px', color: '#9ca3af', marginTop: '2px' }}>{fmtTime(o.createdAt)}</span>
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '4px', padding: '4px 12px', borderRadius: '99px', background: `${color}18`, border: `1px solid ${color}40`, color, fontSize: '11px', fontWeight: '600', flexShrink: 0 }}>
-              <span style={{ width: 6, height: 6, borderRadius: '50%', background: color, flexShrink: 0 }} />
-              {label}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 5 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+              <span className="act-name" style={{ fontWeight: !n.read ? 700 : 600 }}>{n.title}</span>
+              <TypeChip type={n.type} />
             </div>
+            <span className="act-time">{fmtTime(n.createdAt)}</span>
           </div>
+          <p className="act-body" style={{ paddingRight: 20, lineHeight: 1.55 }}>{n.body}</p>
         </div>
-      </Link>
+      </ActivityCard>
     )
   }
 
-  // ── Build chronological feed ──────────────────────────────────────────────
-
-  const allItems: FeedItem[] = [
-    ...convs.map(c => ({
-      kind: 'message' as const, data: c,
-      ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0,
-    })),
-    ...notifs.map(n => ({
-      kind: 'notification' as const, data: n,
-      ts: new Date(n.createdAt).getTime(),
-    })),
-    ...orders.map(o => ({
-      kind: 'order' as const, data: o,
-      ts: new Date(o.createdAt).getTime(),
-    })),
-  ].sort((a, b) => b.ts - a.ts)
-
-  const labelOrder = ['Today', 'Yesterday', 'This week', 'Earlier']
-  const groupedItems: { label: string; items: FeedItem[] }[] = []
-  for (const item of allItems) {
-    const ts =
-      item.kind === 'message'      ? item.data.lastMessageTime :
-      item.kind === 'notification' ? item.data.createdAt :
-      item.data.createdAt
-    const label = ts ? getDateGroup(ts) : 'Earlier'
-    const group = groupedItems.find(g => g.label === label)
-    if (group) group.items.push(item)
-    else groupedItems.push({ label, items: [item] })
+  function OrderCard({ o }: { o: NavOrder }) {
+    const isActive   = ['pending', 'accepted', 'funded', 'delivered'].includes(o.status)
+    const statusColor = STATUS_COLORS[o.status] ?? '#94a3b8'
+    const statusLabel = STATUS_LABELS[o.status] ?? o.status
+    const otherName   = o.other?.name ?? o.other?.twitterHandle ?? 'Unknown'
+    return (
+      <ActivityCard unread={isActive} href={`/orders/${o.id}`}>
+        <div style={{ position: 'relative', flexShrink: 0 }}>
+          <Avatar name={o.other?.name} handle={o.other?.twitterHandle} image={o.other?.image} />
+          <AvatarBadge><IconOrder /></AvatarBadge>
+        </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
+              <span className="act-name" style={{ fontWeight: 600 }}>{otherName}</span>
+              <TypeChip type="order" />
+            </div>
+            <span suppressHydrationWarning className="act-time">{fmtTime(o.createdAt)}</span>
+          </div>
+          {/* Preview card */}
+          <div className="act-preview-card">
+            <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(5,150,105,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            </div>
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div className="act-preview-title">{o.gigTitle}</div>
+              <div className="act-preview-sub">
+                {o.role === 'buyer' ? 'Buying from' : 'Selling to'} {otherName}
+                {o.gigCategory ? ` · ${o.gigCategory}` : ''}
+              </div>
+            </div>
+            <span className="act-preview-price">${o.amount.toLocaleString()}</span>
+          </div>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 99, background: `${statusColor}18`, color: statusColor, fontSize: 11, fontWeight: 600 }}>
+              <span style={{ width: 5, height: 5, borderRadius: '50%', background: statusColor, flexShrink: 0 }} />
+              {statusLabel}
+            </span>
+          </div>
+        </div>
+      </ActivityCard>
+    )
   }
-  groupedItems.sort((a, b) => labelOrder.indexOf(a.label) - labelOrder.indexOf(b.label))
 
-  const tabs: { key: Tab; label: string; count: number }[] = [
-    { key: 'all',           label: 'All Activities', count: totalBadge      },
-    { key: 'messages',      label: 'Messages',       count: unreadMsgs      },
-    { key: 'notifications', label: 'Notifications',  count: unreadNotifs    },
-    { key: 'orders',        label: 'Orders',         count: activeOrderCount },
-  ]
-
-  const tabCounts: Record<string, number> = {
-    'All Activities': totalBadge,
-    'Messages':       unreadMsgs,
-    'Notifications':  unreadNotifs,
-    'Orders':         activeOrderCount,
+  function EmptyState({ message }: { message: string }) {
+    return (
+      <div style={{ textAlign: 'center', padding: '56px 24px', color: 'var(--text-muted)' }}>
+        <div style={{ fontSize: 36, marginBottom: 14, opacity: 0.4 }}>◎</div>
+        <p style={{ fontSize: 15, fontWeight: 600, color: 'var(--foreground)', margin: '0 0 6px' }}>Nothing here yet</p>
+        <p style={{ fontSize: 13, margin: 0, maxWidth: 260, marginInline: 'auto', lineHeight: 1.6 }}>{message}</p>
+      </div>
+    )
   }
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  const tabLabel =
+    activeTab === 'all'           ? 'All Activities' :
+    activeTab === 'messages'      ? 'Messages' :
+    activeTab === 'orders'        ? 'Orders' :
+    activeTab === 'notifications' ? 'Notifications' : 'Reviews'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
+      <div className="act-layout">
 
-      {/* ── Header ── */}
-      <div style={{
-        maxWidth: '720px',
-        margin: '0 auto',
-        padding: '80px 24px 16px',
-      }}>
-        <h1 style={{
-          fontSize: '28px',
-          fontWeight: '700',
-          color: '#0f172a',
-          marginBottom: '4px',
-        }}>
-          Activities
-        </h1>
-      </div>
+        {/* ── Sidebar ───────────────────────────────────────────────────── */}
+        <aside className="act-sidebar">
+          <p className="act-sidebar-label">Filters</p>
+          {sidebarCats.map(cat => {
+            const isActive = activeTab === cat.key
+            return (
+              <button key={cat.key} onClick={() => setActiveTab(cat.key)}
+                className={`act-sidebar-btn${isActive ? ' act-sidebar-btn--active' : ''}`}>
+                <span className="act-sidebar-btn-label">{cat.label}</span>
+                {cat.count > 0 && (
+                  <span className={`act-sidebar-badge${isActive ? ' act-sidebar-badge--active' : ''}`}>
+                    {cat.count > 99 ? '99+' : cat.count}
+                  </span>
+                )}
+              </button>
+            )
+          })}
 
-      {/* ── Tab bar ── */}
-      <div style={{
-        width: '100%',
-        borderBottom: '1px solid var(--card-border)',
-        backgroundColor: 'var(--background)',
-        position: 'sticky',
-        top: '56px',
-        zIndex: 40,
-      }}>
-        <div style={{ maxWidth: '768px', margin: '0 auto', display: 'flex' }}>
-          {['All Activities', 'Messages', 'Notifications', 'Orders'].map((tab) => (
-            <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              style={{
-                flex: 1,
-                padding: '14px 8px',
-                fontSize: '14px',
-                fontWeight: activeTab === tab ? '600' : '400',
-                color: activeTab === tab ? '#14B8A6' : '#6b7280',
-                borderBottom: activeTab === tab ? '2px solid #14B8A6' : '2px solid transparent',
-                borderTop: 'none',
-                borderLeft: 'none',
-                borderRight: 'none',
-                background: 'none',
-                cursor: 'pointer',
-                textAlign: 'center',
-                whiteSpace: 'nowrap',
-                fontFamily: 'inherit',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '6px',
-              }}
-            >
-              {tab}
-              {tabCounts[tab] > 0 && (
-                <span style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  minWidth: '18px',
-                  height: '18px',
-                  padding: '0 4px',
-                  borderRadius: '99px',
-                  background: '#14B8A6',
-                  color: '#fff',
-                  fontSize: '9px',
-                  fontWeight: '700',
-                  lineHeight: 1,
-                }}>
-                  {tabCounts[tab] > 99 ? '99+' : tabCounts[tab]}
-                </span>
-              )}
-            </button>
+          <div className="act-sidebar-divider" />
+          <p className="act-sidebar-label">Quick Actions</p>
+          {[
+            { label: 'Post a Project', href: '/projects' },
+            { label: 'Find Talent',    href: '/talent' },
+          ].map(({ label, href }) => (
+            <Link key={href} href={href} className="act-sidebar-link">{label}</Link>
           ))}
-        </div>
-      </div>
+        </aside>
 
-      {/* ── Content ── */}
-      <div style={{ maxWidth: '768px', margin: '0 auto', padding: '0 24px' }}>
-        <div style={{ paddingBottom: '80px' }}>
+        {/* ── Main ──────────────────────────────────────────────────────── */}
+        <main style={{ minWidth: 0 }}>
 
-          {/* ALL ACTIVITIES */}
-          {activeTab === 'All Activities' && (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
-                <button
-                  onClick={handleMarkAllRead}
-                  disabled={markingAll || !hasAnyUnread}
-                  style={{ fontSize: '13px', color: '#14B8A6', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', opacity: (markingAll || !hasAnyUnread) ? 0.4 : 1, fontFamily: 'inherit' }}
-                >
-                  {markingAll ? 'Marking…' : 'Mark all read'}
-                </button>
-              </div>
-              {allItems.length === 0
-                ? <EmptyState icon={<Bell size={40} className="text-gray-300" />} title="No activity yet" description="Your messages, notifications and orders will show up here." />
-                : groupedItems.map((group, gi) => (
-                  <div key={group.label}>
-                    <p style={{
-                      fontSize: '12px',
-                      fontWeight: '600',
-                      color: '#9ca3af',
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.08em',
-                      padding: gi === 0 ? '24px 0 10px' : '32px 0 10px',
-                      margin: 0,
-                    }}>
-                      {group.label}
-                    </p>
-                    {group.items.map((item, i) => (
-                      <div key={`${item.kind}-${item.data.id}-${i}`}>
-                        {item.kind === 'message'      && <MessageRow c={item.data} />}
-                        {item.kind === 'notification' && <NotifRow   n={item.data} />}
-                        {item.kind === 'order'        && <OrderRow   o={item.data} />}
-                      </div>
-                    ))}
+          {/* Page header */}
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 22 }}>
+            <div>
+              <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 4px', letterSpacing: '-0.01em' }}>
+                Activities
+              </h1>
+              <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
+                {totalUnread > 0 ? `${totalUnread} unread` : 'All caught up'} · last updated just now
+              </p>
+            </div>
+            <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+              <Link href="/notifications" className="act-btn-ghost">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                Settings
+              </Link>
+              <button
+                onClick={handleMarkAllRead}
+                disabled={markingAll || !hasAnyUnread}
+                className={`act-btn-primary${!hasAnyUnread || markingAll ? ' act-btn-primary--disabled' : ''}`}
+              >
+                {markingAll ? 'Marking…' : 'Mark all read'}
+              </button>
+            </div>
+          </div>
+
+          {/* Toolbar */}
+          <div className="act-toolbar">
+            <div style={{ position: 'relative', flex: '1 1 180px', minWidth: 140 }}>
+              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)', display: 'flex' }}>
+                <IconSearch />
+              </span>
+              <input
+                type="text"
+                placeholder="Search activities…"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="act-search"
+              />
+            </div>
+            <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="act-select">
+              <option value="all">All time</option>
+              <option value="today">Today</option>
+              <option value="week">This week</option>
+              <option value="month">This month</option>
+            </select>
+            {hasAnyUnread && (
+              <button onClick={handleMarkAllRead} disabled={markingAll}
+                style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 500, color: '#14B8A6', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '9px 4px', whiteSpace: 'nowrap' }}>
+                {markingAll ? 'Marking…' : 'Mark all read'}
+              </button>
+            )}
+          </div>
+
+          {/* Tab label */}
+          <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '0 0 10px' }}>
+            {tabLabel}
+          </p>
+
+          {/* Feed */}
+          {baseItems.length === 0 ? (
+            <EmptyState message={
+              search              ? 'No results match your search.' :
+              activeTab === 'messages'      ? 'Your conversations will appear here.' :
+              activeTab === 'orders'        ? 'Your orders will appear here.' :
+              activeTab === 'reviews'       ? 'Reviews you receive will appear here.' :
+              activeTab === 'notifications' ? 'Notifications will appear here.' :
+              'No activity yet.'
+            } />
+          ) : (
+            groupedItems.map((group, gi) => (
+              <div key={group.label}>
+                <p className="act-date-label" style={{ paddingTop: gi === 0 ? 0 : 16 }}>
+                  {group.label}
+                </p>
+                {group.items.map((item, i) => (
+                  <div key={`${item.kind}-${item.data.id}-${i}`}>
+                    {item.kind === 'message'      && <MessageCard c={item.data} />}
+                    {item.kind === 'notification' && <NotifCard   n={item.data} />}
+                    {item.kind === 'order'        && <OrderCard   o={item.data} />}
                   </div>
-                ))
-              }
-            </>
-          )}
-
-          {/* MESSAGES */}
-          {activeTab === 'Messages' && (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
-                <button
-                  onClick={async () => { setMarkingAll(true); setConvs(c => c.map(x => ({ ...x, unread: 0 }))); setUnreadMsgs(0); try { await markAllConversationsRead(); router.refresh() } finally { setMarkingAll(false) } }}
-                  disabled={markingAll || !convs.some(c => c.unread > 0)}
-                  style={{ fontSize: '13px', color: '#14B8A6', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', opacity: (markingAll || !convs.some(c => c.unread > 0)) ? 0.4 : 1, fontFamily: 'inherit' }}
-                >
-                  {markingAll ? 'Marking…' : 'Mark all read'}
-                </button>
+                ))}
               </div>
-              {convs.length === 0
-                ? <EmptyState icon={<Inbox size={40} className="text-gray-300" />} title="No messages yet" description="Start a conversation with a builder." action={{ label: 'Browse Profiles', href: '/talent' }} />
-                : <>
-                    <div style={{ paddingTop: '20px' }}>{convs.map(c => <MessageRow key={c.id} c={c} />)}</div>
-                    <div style={{ paddingTop: '16px' }}>
-                      <Link href="/messages" className="text-[13px] font-semibold text-[#14B8A6] no-underline">Open full inbox →</Link>
-                    </div>
-                  </>
-              }
-            </>
+            ))
           )}
-
-          {/* NOTIFICATIONS */}
-          {activeTab === 'Notifications' && (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
-                <button
-                  onClick={async () => { setMarkingAll(true); setNotifs(n => n.map(x => ({ ...x, read: true }))); setUnreadNotifs(0); try { await markAllNotificationsAsRead(); router.refresh() } finally { setMarkingAll(false) } }}
-                  disabled={markingAll || !notifs.some(n => !n.read)}
-                  style={{ fontSize: '13px', color: '#14B8A6', fontWeight: '500', background: 'none', border: 'none', cursor: 'pointer', opacity: (markingAll || !notifs.some(n => !n.read)) ? 0.4 : 1, fontFamily: 'inherit' }}
-                >
-                  {markingAll ? 'Marking…' : 'Mark all read'}
-                </button>
-              </div>
-              {notifs.length === 0
-                ? <EmptyState icon={<CheckCheck size={40} className="text-gray-300" />} title="You're all caught up!" description="No new notifications right now." />
-                : <>
-                    <div style={{ paddingTop: '20px' }}>{notifs.map(n => <NotifRow key={n.id} n={n} />)}</div>
-                    <div style={{ paddingTop: '16px' }}>
-                      <Link href="/notifications" className="text-[13px] font-semibold text-[#14B8A6] no-underline">View all notifications →</Link>
-                    </div>
-                  </>
-              }
-            </>
-          )}
-
-          {/* ORDERS */}
-          {activeTab === 'Orders' && (
-            <>
-              <div style={{ display: 'flex', justifyContent: 'flex-end', padding: '12px 0', borderBottom: '1px solid var(--card-border)' }}>
-                <Link
-                  href="/orders"
-                  style={{ fontSize: '13px', color: '#14B8A6', fontWeight: '500', textDecoration: 'none' }}
-                >
-                  View all orders →
-                </Link>
-              </div>
-              {orders.length === 0
-                ? <EmptyState icon={<Users size={40} className="text-gray-300" />} title="No orders yet" description="Browse talent and make your first hire." action={{ label: 'Browse Profiles', href: '/talent' }} />
-                : <div style={{ paddingTop: '20px' }}>{orders.map(o => <OrderRow key={o.id} o={o} />)}</div>
-              }
-            </>
-          )}
-
-        </div>
+        </main>
       </div>
-    </div>
-  )
-}
-
-function EmptyState({ icon, title, description, action }: {
-  icon: React.ReactNode
-  title: string
-  description: string
-  action?: { label: string; href: string }
-}) {
-  return (
-    <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="mb-4 opacity-50">{icon}</div>
-      <p className="text-[16px] font-semibold text-gray-700 dark:text-gray-300">{title}</p>
-      <p className="text-[13px] text-gray-400 mt-1.5 max-w-[260px] leading-relaxed">{description}</p>
-      {action && (
-        <Link href={action.href} className="mt-5 inline-flex items-center h-9 px-5 rounded-full bg-[#14B8A6] hover:bg-teal-500 text-white text-[13px] font-semibold no-underline transition-colors">
-          {action.label}
-        </Link>
-      )}
     </div>
   )
 }

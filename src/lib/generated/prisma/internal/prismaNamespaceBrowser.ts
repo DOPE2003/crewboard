@@ -61,7 +61,8 @@ export const ModelName = {
   Order: 'Order',
   Review: 'Review',
   ShowcasePost: 'ShowcasePost',
-  ShowcaseInteraction: 'ShowcaseInteraction'
+  ShowcaseInteraction: 'ShowcaseInteraction',
+  ProWaitlist: 'ProWaitlist'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -246,6 +247,16 @@ export const ShowcaseInteractionScalarFieldEnum = {
 } as const
 
 export type ShowcaseInteractionScalarFieldEnum = (typeof ShowcaseInteractionScalarFieldEnum)[keyof typeof ShowcaseInteractionScalarFieldEnum]
+
+
+export const ProWaitlistScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  joinedAt: 'joinedAt',
+  notified: 'notified'
+} as const
+
+export type ProWaitlistScalarFieldEnum = (typeof ProWaitlistScalarFieldEnum)[keyof typeof ProWaitlistScalarFieldEnum]
 
 
 export const SortOrder = {

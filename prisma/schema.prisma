@@ -45,6 +45,7 @@ model User {
   savedTalents         SavedTalent[]         @relation("SavedByMe")
   showcaseInteractions ShowcaseInteraction[]
   showcasePosts        ShowcasePost[]
+  proWaitlist          ProWaitlist?
 }
 
 model SavedTalent {
@@ -186,4 +187,12 @@ model ShowcaseInteraction {
   createdAt    DateTime     @default(now())
   post         ShowcasePost @relation(fields: [postId], references: [id])
   user         User         @relation(fields: [userId], references: [id])
+}
+
+model ProWaitlist {
+  id       String   @id @default(cuid())
+  userId   String   @unique
+  joinedAt DateTime @default(now())
+  notified Boolean  @default(false)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

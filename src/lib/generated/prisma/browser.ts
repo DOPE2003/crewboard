@@ -72,3 +72,8 @@ export type ShowcasePost = Prisma.ShowcasePostModel
  * 
  */
 export type ShowcaseInteraction = Prisma.ShowcaseInteractionModel
+/**
+ * Model ProWaitlist
+ * 
+ */
+export type ProWaitlist = Prisma.ProWaitlistModel

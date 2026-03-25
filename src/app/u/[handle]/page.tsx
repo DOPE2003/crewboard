@@ -331,7 +331,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 {isOwnProfile ? (
                   <PortfolioEditor initialItems={portfolioItems} handle={user.twitterHandle} />
                 ) : portfolioItems.length > 0 ? (
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
+                  <div className="portfolio-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
                     {portfolioItems.map((item: PortfolioItem) => {
                       const colors = ["#E8FAF7", "#EEF2FF", "#FFF7ED", "#F0FDF4", "#FDF4FF"];
                       const idx = item.id.charCodeAt(0) % colors.length;
@@ -409,7 +409,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </div>
 
           {/* ── RIGHT SIDEBAR ── */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          <div className="profile-sidebar-col" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
             {/* Hire + Message (visitor only) */}
             {canMessage && (
@@ -491,7 +491,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <div>
                   <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No wallet connected.</p>
                   {isOwnProfile && (
-                    <Link href="/settings" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
+                    <Link href="/billing" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
                       Connect wallet
                     </Link>
                   )}

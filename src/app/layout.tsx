@@ -15,6 +15,7 @@ import ThemeRouteClass from "@/components/ui/ThemeRouteClass";
 import ThemeProvider from "@/components/ui/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import HeartbeatPing from "@/components/ui/HeartbeatPing";
+import BottomTabBarServer from "@/components/mobile/BottomTabBarServer";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <Navbar />
             {children}
             <Footer />
+            <BottomTabBarServer />
           </LanguageProvider>
         </AuthProvider>
         <Analytics />
