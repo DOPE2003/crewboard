@@ -8,7 +8,7 @@ interface Props {
   unreadActivities?: number
 }
 
-const BRAND = '#0dc9a1'
+const BRAND = '#14B8A6'
 const MUTED = '#9ca3af'
 
 function HomeIcon({ active }: { active: boolean }) {

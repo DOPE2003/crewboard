@@ -47,8 +47,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             <ThemeRouteClass />
             <HeartbeatPing />
             <Navbar />
-            {children}
-            <Footer />
+            <div className="main-content">
+              {children}
+              <Footer />
+            </div>
             <BottomTabBarServer />
           </LanguageProvider>
         </AuthProvider>
