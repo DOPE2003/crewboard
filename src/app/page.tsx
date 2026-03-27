@@ -45,7 +45,7 @@ export default async function HomePage() {
         alignItems: "center",
         justifyContent: "flex-start",
         textAlign: "center",
-        padding: "clamp(1rem, 3vw, 2.5rem) clamp(1rem, 4vw, 2rem) clamp(1.5rem, 3vw, 3rem)",
+        padding: "80px clamp(1rem, 4vw, 2rem) clamp(1.5rem, 3vw, 3rem)",
         position: "relative",
         overflow: "hidden",
       }} className="landing-hero">

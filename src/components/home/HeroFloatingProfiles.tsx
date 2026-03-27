@@ -217,18 +217,18 @@ export default function HeroFloatingProfiles({ profiles }: Props) {
       <FloatCard
         profile={profiles[0]}
         animClass="hero-float-1"
-        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "6%", zIndex: 2 }}
+        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "18%", zIndex: 2 }}
       />
       <FloatCard
         profile={profiles[1]}
         animClass="hero-float-2"
-        style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "38%", zIndex: 2 }}
+        style={{ position: "absolute", left: "clamp(5rem, 10vw, 11rem)", top: "44%", zIndex: 2 }}
       />
       {profiles[4] && (
         <FloatCard
           profile={profiles[4]}
           animClass="hero-float-5"
-          style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "68%", zIndex: 2 }}
+          style={{ position: "absolute", left: "clamp(1rem, 4vw, 4.5rem)", top: "70%", zIndex: 2 }}
         />
       )}
       {/* Right column — 3 cards */}
@@ -236,21 +236,21 @@ export default function HeroFloatingProfiles({ profiles }: Props) {
         <FloatCard
           profile={profiles[2]}
           animClass="hero-float-3"
-          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "10%", zIndex: 2 }}
+          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "20%", zIndex: 2 }}
         />
       )}
       {profiles[3] && (
         <FloatCard
           profile={profiles[3]}
           animClass="hero-float-4"
-          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "42%", zIndex: 2 }}
+          style={{ position: "absolute", right: "clamp(5rem, 10vw, 11rem)", top: "46%", zIndex: 2 }}
         />
       )}
       {profiles[5] && (
         <FloatCard
           profile={profiles[5]}
           animClass="hero-float-6"
-          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "72%", zIndex: 2 }}
+          style={{ position: "absolute", right: "clamp(1rem, 4vw, 4.5rem)", top: "74%", zIndex: 2 }}
         />
       )}
     </>

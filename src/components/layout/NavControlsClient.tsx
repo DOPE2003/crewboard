@@ -111,7 +111,7 @@ export default function NavControlsClient({
         <Link
           href={`/u/${twitterHandle}`}
           className="flex md:hidden"
-          style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}
+          style={{ alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}
         >
           <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', background: 'var(--avatar-bg)', flexShrink: 0 }}>
             {userImage
