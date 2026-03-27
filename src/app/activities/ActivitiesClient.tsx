@@ -95,7 +95,15 @@ export default function ActivitiesClient({
   const [markingAll, setMarkingAll]     = useState(false)
   const [search, setSearch]             = useState('')
   const [dateFilter, setDateFilter]     = useState('all')
+  const [avatarSize, setAvatarSize]     = useState(42)
   const router = useRouter()
+
+  useEffect(() => {
+    const update = () => setAvatarSize(window.innerWidth < 768 ? 36 : 42)
+    update()
+    window.addEventListener('resize', update)
+    return () => window.removeEventListener('resize', update)
+  }, [])
 
   const totalUnread   = unreadMsgs + unreadNotifs
   const hasAnyUnread  = convs.some(c => c.unread > 0) || notifs.some(n => !n.read)
@@ -254,20 +262,21 @@ export default function ActivitiesClient({
     return (
       <ActivityCard unread={unread > 0} href={`/messages/${c.id}`}>
         <div style={{ position: 'relative', flexShrink: 0 }}>
-          <Avatar name={c.otherUser?.name} handle={c.otherUser?.twitterHandle} image={c.otherUser?.image} />
+          <Avatar name={c.otherUser?.name} handle={c.otherUser?.twitterHandle} image={c.otherUser?.image} size={avatarSize} />
           <AvatarBadge><IconMsg /></AvatarBadge>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 5 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
               <span className="act-name" style={{ fontWeight: unread > 0 ? 700 : 600 }}>{name}</span>
-              <TypeChip type="message" />
+              <div className="act-chip-desktop"><TypeChip type="message" /></div>
             </div>
             <span suppressHydrationWarning className="act-time">{fmtTime(c.lastMessageTime)}</span>
           </div>
-          <p className="act-body" style={{ paddingRight: 20 }}>
+          <p className="act-body">
             {c.lastMessage ?? 'No messages yet'}
           </p>
+          <div className="act-chip-mobile"><TypeChip type="message" /></div>
         </div>
       </ActivityCard>
     )
@@ -275,56 +284,63 @@ export default function ActivitiesClient({
 
   function NotifCard({ n }: { n: NavNotif }) {
     const isReview = n.type === 'review'
+    const iconSize = avatarSize
     return (
       <ActivityCard unread={!n.read} href={n.link ?? '/notifications'} onClick={() => handleNotifClick(n)}>
         <div style={{ position: 'relative', flexShrink: 0 }}>
-          <div style={{ width: 42, height: 42, borderRadius: '50%', background: isReview ? '#f5f3ff' : '#f0fdf9', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <div style={{ width: iconSize, height: iconSize, borderRadius: '50%', background: isReview ? '#f5f3ff' : '#f0fdf9', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
             {isReview
-              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="#7C3AED"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+              ? <svg width="18" height="18" viewBox="0 0 24 24" fill="#7C3AED"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
               : n.type === 'message'
-              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
               : n.type === 'order'
-              ? <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-              : <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              ? <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+              : <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
             }
           </div>
           <AvatarBadge>{isReview ? <IconStar /> : <IconBell />}</AvatarBadge>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 5 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
               <span className="act-name" style={{ fontWeight: !n.read ? 700 : 600 }}>{n.title}</span>
-              <TypeChip type={n.type} />
+              <div className="act-chip-desktop"><TypeChip type={n.type} /></div>
             </div>
             <span className="act-time">{fmtTime(n.createdAt)}</span>
           </div>
-          <p className="act-body" style={{ paddingRight: 20, lineHeight: 1.55 }}>{n.body}</p>
+          <p className="act-body" style={{ lineHeight: 1.55 }}>{n.body}</p>
+          <div className="act-chip-mobile"><TypeChip type={n.type} /></div>
         </div>
       </ActivityCard>
     )
   }
 
   function OrderCard({ o }: { o: NavOrder }) {
-    const isActive   = ['pending', 'accepted', 'funded', 'delivered'].includes(o.status)
+    const isActive    = ['pending', 'accepted', 'funded', 'delivered'].includes(o.status)
     const statusColor = STATUS_COLORS[o.status] ?? '#94a3b8'
     const statusLabel = STATUS_LABELS[o.status] ?? o.status
     const otherName   = o.other?.name ?? o.other?.twitterHandle ?? 'Unknown'
     return (
       <ActivityCard unread={isActive} href={`/orders/${o.id}`}>
         <div style={{ position: 'relative', flexShrink: 0 }}>
-          <Avatar name={o.other?.name} handle={o.other?.twitterHandle} image={o.other?.image} />
+          <Avatar name={o.other?.name} handle={o.other?.twitterHandle} image={o.other?.image} size={avatarSize} />
           <AvatarBadge><IconOrder /></AvatarBadge>
         </div>
         <div style={{ flex: 1, minWidth: 0 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, marginBottom: 3 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 7, minWidth: 0 }}>
               <span className="act-name" style={{ fontWeight: 600 }}>{otherName}</span>
-              <TypeChip type="order" />
+              <div className="act-chip-desktop"><TypeChip type="order" /></div>
             </div>
             <span suppressHydrationWarning className="act-time">{fmtTime(o.createdAt)}</span>
           </div>
-          {/* Preview card */}
-          <div className="act-preview-card">
+          {/* Preview body — desktop full card, mobile compact */}
+          <p className="act-body act-order-body-mobile">
+            {o.gigTitle} · ${o.amount.toLocaleString()}
+          </p>
+          <div className="act-chip-mobile"><TypeChip type="order" /></div>
+          {/* Desktop preview card */}
+          <div className="act-preview-card act-preview-card--desktop">
             <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(5,150,105,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#059669" strokeWidth="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
             </div>
@@ -337,7 +353,7 @@ export default function ActivitiesClient({
             </div>
             <span className="act-preview-price">${o.amount.toLocaleString()}</span>
           </div>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 8 }}>
+          <div className="act-order-status-row">
             <span style={{ display: 'inline-flex', alignItems: 'center', gap: 4, padding: '3px 10px', borderRadius: 99, background: `${statusColor}18`, color: statusColor, fontSize: 11, fontWeight: 600 }}>
               <span style={{ width: 5, height: 5, borderRadius: '50%', background: statusColor, flexShrink: 0 }} />
               {statusLabel}
@@ -367,9 +383,40 @@ export default function ActivitiesClient({
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
+
+      {/* ── Mobile header (hidden on desktop) ─────────────────────────── */}
+      <div className="act-mobile-header md:hidden">
+        <span style={{ fontSize: 18, fontWeight: 600, color: '#111' }}>Activities</span>
+        <button
+          onClick={handleMarkAllRead}
+          disabled={markingAll}
+          style={{ fontSize: 11, color: '#14B8A6', fontWeight: 500, background: 'none', border: 'none', cursor: markingAll ? 'default' : 'pointer', fontFamily: 'inherit', padding: 0, opacity: markingAll ? 0.5 : 1 }}
+        >
+          {markingAll ? 'Marking…' : 'Mark all read'}
+        </button>
+      </div>
+
+      {/* ── Mobile filter tabs (hidden on desktop) ────────────────────── */}
+      <div className="act-mobile-tabs md:hidden">
+        {([
+          { key: 'all' as SidebarTab,           label: 'All' },
+          { key: 'messages' as SidebarTab,      label: 'Messages' },
+          { key: 'notifications' as SidebarTab, label: 'Notifs' },
+          { key: 'orders' as SidebarTab,        label: 'Orders' },
+        ]).map(tab => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`act-mobile-tab${activeTab === tab.key ? ' act-mobile-tab--active' : ''}`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
       <div className="act-layout">
 
-        {/* ── Sidebar ───────────────────────────────────────────────────── */}
+        {/* ── Sidebar (hidden on mobile via CSS) ────────────────────────── */}
         <aside className="act-sidebar">
           <p className="act-sidebar-label">Filters</p>
           {sidebarCats.map(cat => {
@@ -400,63 +447,69 @@ export default function ActivitiesClient({
         {/* ── Main ──────────────────────────────────────────────────────── */}
         <main style={{ minWidth: 0 }}>
 
-          {/* Page header */}
-          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 22 }}>
-            <div>
-              <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 4px', letterSpacing: '-0.01em' }}>
-                Activities
-              </h1>
-              <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
-                {totalUnread > 0 ? `${totalUnread} unread` : 'All caught up'} · last updated just now
-              </p>
-            </div>
-            <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-              <Link href="/notifications" className="act-btn-ghost">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                Settings
-              </Link>
-              <button
-                onClick={handleMarkAllRead}
-                disabled={markingAll || !hasAnyUnread}
-                className={`act-btn-primary${!hasAnyUnread || markingAll ? ' act-btn-primary--disabled' : ''}`}
-              >
-                {markingAll ? 'Marking…' : 'Mark all read'}
-              </button>
+          {/* Desktop page header (hidden on mobile) */}
+          <div className="hidden md:block">
+            <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 22 }}>
+              <div>
+                <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 4px', letterSpacing: '-0.01em' }}>
+                  Activities
+                </h1>
+                <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
+                  {totalUnread > 0 ? `${totalUnread} unread` : 'All caught up'} · last updated just now
+                </p>
+              </div>
+              <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
+                <Link href="/notifications" className="act-btn-ghost">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+                  Settings
+                </Link>
+                <button
+                  onClick={handleMarkAllRead}
+                  disabled={markingAll || !hasAnyUnread}
+                  className={`act-btn-primary${!hasAnyUnread || markingAll ? ' act-btn-primary--disabled' : ''}`}
+                >
+                  {markingAll ? 'Marking…' : 'Mark all read'}
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Toolbar */}
-          <div className="act-toolbar">
-            <div style={{ position: 'relative', flex: '1 1 180px', minWidth: 140 }}>
-              <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)', display: 'flex' }}>
-                <IconSearch />
-              </span>
-              <input
-                type="text"
-                placeholder="Search activities…"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="act-search"
-              />
+          {/* Desktop toolbar (hidden on mobile) */}
+          <div className="hidden md:block">
+            <div className="act-toolbar">
+              <div style={{ position: 'relative', flex: '1 1 180px', minWidth: 140 }}>
+                <span style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', pointerEvents: 'none', color: 'var(--text-muted)', display: 'flex' }}>
+                  <IconSearch />
+                </span>
+                <input
+                  type="text"
+                  placeholder="Search activities…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="act-search"
+                />
+              </div>
+              <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="act-select">
+                <option value="all">All time</option>
+                <option value="today">Today</option>
+                <option value="week">This week</option>
+                <option value="month">This month</option>
+              </select>
+              {hasAnyUnread && (
+                <button onClick={handleMarkAllRead} disabled={markingAll}
+                  style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 500, color: '#14B8A6', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '9px 4px', whiteSpace: 'nowrap' }}>
+                  {markingAll ? 'Marking…' : 'Mark all read'}
+                </button>
+              )}
             </div>
-            <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="act-select">
-              <option value="all">All time</option>
-              <option value="today">Today</option>
-              <option value="week">This week</option>
-              <option value="month">This month</option>
-            </select>
-            {hasAnyUnread && (
-              <button onClick={handleMarkAllRead} disabled={markingAll}
-                style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 500, color: '#14B8A6', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '9px 4px', whiteSpace: 'nowrap' }}>
-                {markingAll ? 'Marking…' : 'Mark all read'}
-              </button>
-            )}
           </div>
 
-          {/* Tab label */}
-          <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '0 0 10px' }}>
-            {tabLabel}
-          </p>
+          {/* Desktop tab label (hidden on mobile) */}
+          <div className="hidden md:block">
+            <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '0 0 10px' }}>
+              {tabLabel}
+            </p>
+          </div>
 
           {/* Feed */}
           {baseItems.length === 0 ? (
