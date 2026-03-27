@@ -76,17 +76,18 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
       aria-label="Bottom navigation"
       style={{
         position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
-        zIndex: 200,
+        bottom: '0px',
+        top: 'auto',
+        left: '0px',
+        right: '0px',
+        zIndex: 9999,
         display: 'flex',
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-around',
-        height: 56,
-        background: 'var(--surface)',
-        borderTop: '0.5px solid var(--border)',
+        height: '56px',
+        backgroundColor: '#ffffff',
+        borderTop: '1px solid #e5e7eb',
         paddingBottom: 'env(safe-area-inset-bottom, 0px)',
       }}
     >
