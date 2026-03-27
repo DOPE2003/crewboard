@@ -170,17 +170,17 @@ export default async function Navbar() {
           {/* Hex mark */}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 60" style={{ width: 28, height: 32, flexShrink: 0 }}>
             <polygon points="46,30 37,46 19,46 10,30 19,14 37,14"
-              fill="none" stroke="var(--brand)" strokeWidth="3" strokeLinejoin="round"/>
-            <line x1="28" y1="20" x2="18" y2="38" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="28" y1="20" x2="38" y2="38" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="18" y1="38" x2="38" y2="38" stroke="var(--brand)" strokeWidth="2.5" strokeLinecap="round"/>
-            <circle cx="28" cy="20" r="3" fill="var(--brand)"/>
-            <circle cx="18" cy="38" r="3" fill="var(--brand)"/>
-            <circle cx="38" cy="38" r="3" fill="var(--brand)"/>
+              fill="none" stroke="var(--text-1)" strokeWidth="3" strokeLinejoin="round"/>
+            <line x1="28" y1="20" x2="18" y2="38" stroke="var(--text-1)" strokeWidth="2.5" strokeLinecap="round"/>
+            <line x1="28" y1="20" x2="38" y2="38" stroke="var(--text-1)" strokeWidth="2.5" strokeLinecap="round"/>
+            <line x1="18" y1="38" x2="38" y2="38" stroke="var(--text-1)" strokeWidth="2.5" strokeLinecap="round"/>
+            <circle cx="28" cy="20" r="3" fill="var(--text-1)"/>
+            <circle cx="18" cy="38" r="3" fill="var(--text-1)"/>
+            <circle cx="38" cy="38" r="3" fill="var(--text-1)"/>
           </svg>
           {/* Wordmark */}
           <span className="nav-wordmark">
-            <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--brand)", fontWeight: 700 }}>board</span>
+            <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--text-1)", fontWeight: 700 }}>board</span>
           </span>
         </Link>
 

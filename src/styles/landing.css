@@ -133,3 +133,77 @@ body.dark .glass-card {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* ── Mobile overrides (≤767px) ── */
+@media (max-width: 767px) {
+  .landing-hero {
+    background: #E8FAF7 !important;
+    height: auto !important;
+    min-height: unset !important;
+    padding: 28px 16px 24px !important;
+  }
+
+  .hero-h1 {
+    font-size: 28px !important;
+    font-weight: 500 !important;
+    line-height: 1.2 !important;
+  }
+
+  .hero-beta-badge {
+    font-size: 11px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .hero-welcome-block {
+    margin-bottom: 10px !important;
+  }
+
+  .hero-welcome-name {
+    font-size: 20px !important;
+    font-weight: 600 !important;
+  }
+
+  .hero-welcome-label {
+    font-size: 12px !important;
+  }
+
+  .hero-subtitle {
+    font-size: 13px !important;
+    line-height: 1.5 !important;
+    margin-bottom: 20px !important;
+  }
+
+  .hero-cta-wrap {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 10px !important;
+  }
+
+  .btn-hero-primary {
+    width: 100% !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    border-radius: 10px !important;
+    padding: 14px !important;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    justify-content: center !important;
+  }
+
+  .btn-hero-secondary {
+    width: 100% !important;
+    font-size: 13px !important;
+    border-radius: 10px !important;
+    padding: 13px !important;
+    border: 1.5px solid #e5e7eb !important;
+    justify-content: center !important;
+  }
+
+  .how-it-works-row {
+    flex-direction: column !important;
+  }
+
+  .roadmap-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
