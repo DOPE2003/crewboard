@@ -72,21 +72,90 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
   ]
 
   return (
-    <nav className="btab-bar md:hidden" aria-label="Bottom navigation">
+    <nav
+      aria-label="Bottom navigation"
+      style={{
+        position: 'fixed',
+        bottom: 0,
+        left: 0,
+        right: 0,
+        zIndex: 200,
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'space-around',
+        height: 56,
+        background: 'var(--surface)',
+        borderTop: '0.5px solid var(--border)',
+        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+      }}
+    >
       {tabs.map((tab) => {
         const active = tab.match(pathname)
         return (
-          <Link key={tab.href} href={tab.href} className={`btab-item${active ? ' btab-item--active' : ''}`}>
-            <span className="btab-icon">
+          <Link
+            key={tab.href}
+            href={tab.href}
+            style={{
+              flex: 1,
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 2,
+              padding: '6px 0',
+              textDecoration: 'none',
+              color: active ? BRAND : MUTED,
+              position: 'relative',
+              minHeight: 44,
+              WebkitTapHighlightColor: 'transparent',
+            }}
+          >
+            <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28 }}>
               {tab.icon(active)}
               {tab.href === '/activities' && unreadActivities > 0 && (
-                <span className="btab-badge">
+                <span style={{
+                  position: 'absolute',
+                  top: -4,
+                  right: -6,
+                  minWidth: 16,
+                  height: 16,
+                  padding: '0 3px',
+                  borderRadius: 99,
+                  background: '#ef4444',
+                  color: 'white',
+                  fontSize: 9,
+                  fontWeight: 700,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  lineHeight: 1,
+                }}>
                   {unreadActivities > 9 ? '9+' : unreadActivities}
                 </span>
               )}
             </span>
-            <span className="btab-label">{tab.label}</span>
-            {active && <span className="btab-dot" />}
+            <span style={{
+              fontSize: 10,
+              fontWeight: active ? 700 : 500,
+              letterSpacing: '0.04em',
+              lineHeight: 1,
+              color: active ? BRAND : MUTED,
+            }}>
+              {tab.label}
+            </span>
+            {active && (
+              <span style={{
+                position: 'absolute',
+                bottom: 1,
+                left: '50%',
+                transform: 'translateX(-50%)',
+                width: 4,
+                height: 4,
+                borderRadius: '50%',
+                background: BRAND,
+              }} />
+            )}
           </Link>
         )
       })}

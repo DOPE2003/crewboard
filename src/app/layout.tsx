@@ -51,7 +51,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {children}
               <Footer />
             </div>
-            <BottomTabBarServer />
+            <div className="md:hidden">
+              <BottomTabBarServer />
+            </div>
           </LanguageProvider>
         </AuthProvider>
         <Analytics />
