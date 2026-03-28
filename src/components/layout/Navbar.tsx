@@ -168,15 +168,23 @@ export default async function Navbar() {
         {/* Logo */}
         <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center", textDecoration: "none", gap: "0.5rem" }}>
           {/* Hex mark */}
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 60" style={{ width: 28, height: 32, flexShrink: 0 }}>
-            <polygon points="46,30 37,46 19,46 10,30 19,14 37,14"
-              fill="none" stroke="var(--text-1)" strokeWidth="3" strokeLinejoin="round"/>
-            <line x1="28" y1="20" x2="18" y2="38" stroke="var(--text-1)" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="28" y1="20" x2="38" y2="38" stroke="var(--text-1)" strokeWidth="2.5" strokeLinecap="round"/>
-            <line x1="18" y1="38" x2="38" y2="38" stroke="var(--text-1)" strokeWidth="2.5" strokeLinecap="round"/>
-            <circle cx="28" cy="20" r="3" fill="var(--text-1)"/>
-            <circle cx="18" cy="38" r="3" fill="var(--text-1)"/>
-            <circle cx="38" cy="38" r="3" fill="var(--text-1)"/>
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 34, height: 34, flexShrink: 0 }}>
+            {/* Regular flat-top hexagon, center (24,24), circumradius 20 */}
+            <polygon
+              points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3"
+              fill="none"
+              stroke="var(--text-1)"
+              strokeWidth="2.5"
+              strokeLinejoin="round"
+            />
+            {/* Triangle lines */}
+            <line x1="24" y1="15" x2="16" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="24" y1="15" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
+            <line x1="16" y1="32" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
+            {/* Nodes */}
+            <circle cx="24" cy="15" r="3.5" fill="var(--text-1)"/>
+            <circle cx="16" cy="32" r="3.5" fill="var(--text-1)"/>
+            <circle cx="32" cy="32" r="3.5" fill="var(--text-1)"/>
           </svg>
           {/* Wordmark */}
           <span className="nav-wordmark">

@@ -1,25 +1,6 @@
 import db from "@/lib/db";
-import Link from "next/link";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-
-const ORDER_STATUS_COLORS: Record<string, string> = {
-  pending:   "#f59e0b",
-  funded:    "#3b82f6",
-  delivered: "#8b5cf6",
-  completed: "#22c55e",
-  cancelled: "#94a3b8",
-  disputed:  "#ef4444",
-};
-
-const ORDER_STATUS_LABELS: Record<string, string> = {
-  pending:   "Pending",
-  funded:    "In Progress",
-  delivered: "Delivered",
-  completed: "Completed",
-  cancelled: "Cancelled",
-  disputed:  "Disputed",
-};
 
 export default async function MyGigsPage() {
   const session = await auth();
@@ -31,7 +12,6 @@ export default async function MyGigsPage() {
       where: { userId },
       orderBy: { createdAt: "desc" },
     }),
-    // Orders where I'm the seller (working on)
     db.order.findMany({
       where: { sellerId: userId, status: { in: ["pending", "funded", "delivered"] } },
       orderBy: { createdAt: "desc" },
@@ -40,7 +20,6 @@ export default async function MyGigsPage() {
         buyer: { select: { name: true, twitterHandle: true, image: true } },
       },
     }),
-    // Orders where I'm the buyer (requested)
     db.order.findMany({
       where: { buyerId: userId, status: { notIn: ["completed", "cancelled"] } },
       orderBy: { createdAt: "desc" },
@@ -52,140 +31,246 @@ export default async function MyGigsPage() {
   ]);
 
   return (
-    <main className="page" style={{ paddingBottom: 0 }}>
-      {/* Top bar */}
-      <div style={{ maxWidth: "100%", padding: "0 1.5rem 1rem", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
-        <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8" }}>
-          — Services
+    <div style={{ minHeight: "100vh", background: "#f7f8fa" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "32px 24px" }}>
+
+        {/* Header */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 32 }}>
+          <div>
+            <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 4, margin: "0 0 4px 0" }}>
+              Dashboard
+            </p>
+            <h1 style={{ fontSize: 28, fontWeight: 700, color: "#111827", margin: 0 }}>My Services</h1>
+          </div>
+          <a
+            href="/gigs/new"
+            style={{
+              background: "#14B8A6", color: "white", padding: "12px 20px",
+              borderRadius: 12, fontWeight: 600, fontSize: 14,
+              textDecoration: "none", display: "flex", alignItems: "center", gap: 6,
+            }}
+          >
+            + Post a Service
+          </a>
         </div>
-        <Link href="/gigs/new" className="btn-primary" style={{ display: "inline-flex", fontSize: "0.78rem", padding: "0.6rem 1.4rem" }}>
-          + Post a Service
-        </Link>
-      </div>
 
-      {/* 3-column vertical split */}
-      <div className="mine-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 0, height: "calc(100vh - 145px)", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+        {/* 3-column grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3" style={{ gap: 24 }}>
 
-        {/* ── Column 1: My offered services ── */}
-        <div className="mine-col" style={{ overflowY: "auto", borderRight: "1px solid rgba(255,255,255,0.07)", padding: "1.25rem 1.25rem 2rem" }}>
-          <SectionLabel>My Offered Services</SectionLabel>
-          {gigs.length === 0 ? (
-            <EmptyState message="You haven't posted any services yet." cta="Post your first service" href="/gigs/new" />
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-              {gigs.map((gig) => (
-                <Link key={gig.id} href={`/gigs/${gig.id}`} className="gig-card">
-                  <div className="gig-card-top">
-                    <span className="gig-category-badge">{gig.category}</span>
-                    <span className="gig-price">${gig.price}</span>
+          {/* Column 1: My Offered Services */}
+          <div>
+            <h2 style={{
+              fontSize: 11, fontWeight: 700, color: "#9ca3af",
+              textTransform: "uppercase", letterSpacing: "0.08em",
+              paddingBottom: 12, borderBottom: "1px solid #e5e7eb",
+              marginBottom: 16, margin: "0 0 16px 0",
+            }}>
+              My Offered Services
+            </h2>
+
+            {gigs.length === 0 ? (
+              <EmptyState label="No services posted yet" />
+            ) : (
+              gigs.map((gig) => (
+                <div
+                  key={gig.id}
+                  style={{
+                    background: "white",
+                    border: "1px solid #e5e7eb",
+                    borderRadius: 16,
+                    padding: 20,
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 12,
+                    marginBottom: 16,
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                  }}
+                >
+                  {/* Category + price */}
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                    <span style={{
+                      fontSize: 11, fontWeight: 600, padding: "4px 12px",
+                      borderRadius: 99, background: "#E1F5EE", color: "#0F6E56",
+                    }}>
+                      {gig.category}
+                    </span>
+                    <span style={{ fontSize: 20, fontWeight: 700, color: "#14B8A6" }}>${gig.price}</span>
                   </div>
-                  <h2 className="gig-title">{gig.title}</h2>
-                  <p className="gig-desc">{gig.description}</p>
+
+                  {/* Title */}
+                  <h3 style={{ fontSize: 14, fontWeight: 600, color: "#111827", margin: 0, lineHeight: 1.4 }}>
+                    {gig.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p style={{
+                    fontSize: 12, color: "#6b7280", margin: 0, lineHeight: 1.6,
+                    overflow: "hidden", display: "-webkit-box",
+                    WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
+                  }}>
+                    {gig.description}
+                  </p>
+
+                  {/* Tags */}
                   {gig.tags.length > 0 && (
-                    <div className="gig-tags">
-                      {gig.tags.slice(0, 4).map((t) => (
-                        <span key={t} className="dash-skill-chip">{t}</span>
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
+                      {gig.tags.slice(0, 4).map((tag) => (
+                        <span key={tag} style={{
+                          fontSize: 11, fontWeight: 500, padding: "2px 10px",
+                          borderRadius: 99, background: "#f3f4f6", color: "#6b7280",
+                        }}>
+                          {tag}
+                        </span>
                       ))}
-                      {gig.tags.length > 4 && <span className="dash-skill-chip">+{gig.tags.length - 4}</span>}
                     </div>
                   )}
-                  <div className="gig-footer">
-                    <span style={{
-                      fontSize: "0.7rem", fontWeight: 700, padding: "2px 8px", borderRadius: 999,
-                      background: gig.status === "active" ? "rgba(20,184,166,0.15)" : "rgba(255,255,255,0.06)",
-                      color: gig.status === "active" ? "#14b8a6" : "#64748b",
-                      textTransform: "uppercase", letterSpacing: "0.05em",
-                    }}>
-                      {gig.status}
-                    </span>
-                    <span className="gig-delivery">{gig.deliveryDays}d delivery</span>
+
+                  {/* Status + delivery + actions */}
+                  <div style={{
+                    display: "flex", alignItems: "center", justifyContent: "space-between",
+                    paddingTop: 12, borderTop: "1px solid #f3f4f6", marginTop: 4,
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{
+                        fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99,
+                        background: gig.status === "active" ? "#dcfce7" : "#f3f4f6",
+                        color: gig.status === "active" ? "#16a34a" : "#9ca3af",
+                      }}>
+                        {gig.status.toUpperCase()}
+                      </span>
+                      <span style={{ fontSize: 12, color: "#9ca3af" }}>{gig.deliveryDays}d delivery</span>
+                    </div>
+                    <div style={{ display: "flex", gap: 16 }}>
+                      <a href={`/gigs/${gig.id}`} style={{ fontSize: 12, color: "#9ca3af", textDecoration: "none" }}>
+                        View
+                      </a>
+                      <a href={`/gigs/${gig.id}/edit`} style={{ fontSize: 12, fontWeight: 600, color: "#14B8A6", textDecoration: "none" }}>
+                        Edit →
+                      </a>
+                    </div>
                   </div>
-                </Link>
-              ))}
-            </div>
-          )}
-        </div>
+                </div>
+              ))
+            )}
+          </div>
 
-        {/* ── Column 2: Services I'm working on (seller) ── */}
-        <div className="mine-col" style={{ overflowY: "auto", borderRight: "1px solid rgba(255,255,255,0.07)", padding: "1.25rem 1.25rem 2rem" }}>
-          <SectionLabel>Services I&apos;m Working On</SectionLabel>
-          {sellerOrders.length === 0 ? (
-            <EmptyState message="No active orders to deliver right now." />
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
-              {sellerOrders.map((o: any) => (
-                <OrderCard key={o.id} order={o} other={o.buyer} role="seller" />
-              ))}
-            </div>
-          )}
-        </div>
+          {/* Column 2: Services I'm Working On (seller) */}
+          <div>
+            <h2 style={{
+              fontSize: 11, fontWeight: 700, color: "#9ca3af",
+              textTransform: "uppercase", letterSpacing: "0.08em",
+              paddingBottom: 12, borderBottom: "1px solid #e5e7eb",
+              marginBottom: 16, margin: "0 0 16px 0",
+            }}>
+              Services I&apos;m Working On
+            </h2>
 
-        {/* ── Column 3: Services I requested (buyer) ── */}
-        <div className="mine-col" style={{ overflowY: "auto", padding: "1.25rem 1.25rem 2rem" }}>
-          <SectionLabel>Services I Requested</SectionLabel>
-          {buyerOrders.length === 0 ? (
-            <EmptyState message="You haven't hired anyone yet." cta="Browse services" href="/gigs" />
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem" }}>
-              {buyerOrders.map((o: any) => (
-                <OrderCard key={o.id} order={o} other={o.seller} role="buyer" />
-              ))}
-            </div>
-          )}
-        </div>
+            {sellerOrders.length === 0 ? (
+              <EmptyState label="No active orders to deliver" />
+            ) : (
+              sellerOrders.map((o: any) => (
+                <OrderCard key={o.id} order={o} other={o.buyer} />
+              ))
+            )}
+          </div>
 
+          {/* Column 3: Services I Requested (buyer) */}
+          <div>
+            <h2 style={{
+              fontSize: 11, fontWeight: 700, color: "#9ca3af",
+              textTransform: "uppercase", letterSpacing: "0.08em",
+              paddingBottom: 12, borderBottom: "1px solid #e5e7eb",
+              marginBottom: 16, margin: "0 0 16px 0",
+            }}>
+              Services I Requested
+            </h2>
+
+            {buyerOrders.length === 0 ? (
+              <EmptyState label="You haven't hired anyone yet" />
+            ) : (
+              buyerOrders.map((o: any) => (
+                <OrderCard key={o.id} order={o} other={o.seller} />
+              ))
+            )}
+          </div>
+
+        </div>
       </div>
-    </main>
-  );
-}
-
-function SectionLabel({ children }: { children: React.ReactNode }) {
-  return (
-    <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.9rem" }}>
-      {children}
     </div>
   );
 }
 
-function EmptyState({ message, cta, href }: { message: string; cta?: string; href?: string }) {
+function EmptyState({ label }: { label: string }) {
   return (
-    <div style={{ padding: "1.25rem", borderRadius: 12, border: "1px solid rgba(255,255,255,0.07)", fontSize: "0.8rem", color: "#64748b", textAlign: "center" }}>
-      {message}
-      {cta && href && (
-        <> <Link href={href} style={{ color: "#2DD4BF", textDecoration: "none" }}>{cta} →</Link></>
-      )}
-    </div>
-  );
-}
-
-function OrderCard({ order, other, role }: { order: any; other: any; role: "buyer" | "seller" }) {
-  const color = ORDER_STATUS_COLORS[order.status] ?? "#94a3b8";
-  const label = ORDER_STATUS_LABELS[order.status] ?? order.status;
-  return (
-    <Link href={`/orders/${order.id}`} style={{
-      display: "flex", alignItems: "center", gap: "1rem",
-      padding: "1rem 1.25rem", borderRadius: 14,
-      border: "1px solid rgba(255,255,255,0.07)", background: "#1e2433",
-      textDecoration: "none", transition: "border-color 0.15s",
+    <div style={{
+      display: "flex", flexDirection: "column", alignItems: "center",
+      justifyContent: "center", padding: "48px 24px", textAlign: "center",
+      background: "white", border: "1px dashed #e5e7eb", borderRadius: 16,
     }}>
-      <div style={{ width: 38, height: 38, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "rgba(255,255,255,0.08)" }}>
-        {other?.image && <img src={other.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-      </div>
-      <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "#f1f5f9", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {order.gig.title}
+      <span style={{ fontSize: 36, marginBottom: 12 }}>📭</span>
+      <p style={{ fontSize: 14, color: "#9ca3af", margin: 0 }}>{label}</p>
+    </div>
+  );
+}
+
+function OrderCard({ order, other }: { order: any; other: any }) {
+  const statusBg =
+    order.status === "completed" ? "#dcfce7" :
+    order.status === "pending"   ? "#fef3c7" :
+    order.status === "cancelled" ? "#f3f4f6" :
+    order.status === "disputed"  ? "#fee2e2" : "#ccfbf1";
+
+  const statusColor =
+    order.status === "completed" ? "#16a34a" :
+    order.status === "pending"   ? "#d97706" :
+    order.status === "cancelled" ? "#9ca3af" :
+    order.status === "disputed"  ? "#dc2626" : "#0f766e";
+
+  return (
+    <a
+      href={`/orders/${order.id}`}
+      style={{
+        display: "block", background: "white", border: "1px solid #e5e7eb",
+        borderRadius: 16, padding: 16, marginBottom: 12, textDecoration: "none",
+        boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+      }}
+    >
+      <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+        {other?.image ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={other.image}
+            alt=""
+            style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }}
+          />
+        ) : (
+          <div style={{
+            width: 44, height: 44, borderRadius: "50%", flexShrink: 0,
+            background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            <span style={{ fontSize: 14, fontWeight: 700, color: "#14B8A6" }}>
+              {(other?.name ?? other?.twitterHandle ?? "?")[0].toUpperCase()}
+            </span>
+          </div>
+        )}
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <p style={{ fontSize: 13, fontWeight: 600, color: "#111827", margin: "0 0 4px 0", lineHeight: 1.4 }}>
+            {order.gig.title}
+          </p>
+          <p style={{ fontSize: 12, color: "#9ca3af", margin: "0 0 10px 0" }}>
+            with {other?.name ?? other?.twitterHandle ?? "Unknown"}
+          </p>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+            <span style={{ fontSize: 16, fontWeight: 700, color: "#14B8A6" }}>${order.amount}</span>
+            <span style={{
+              fontSize: 11, fontWeight: 600, padding: "3px 10px", borderRadius: 99,
+              background: statusBg, color: statusColor,
+            }}>
+              {order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+            </span>
+          </div>
         </div>
-        <div style={{ fontSize: "0.68rem", color: "#94a3b8", marginTop: 2 }}>
-          {role === "buyer" ? "Seller" : "Buyer"}: {other?.name ?? other?.twitterHandle ?? "Unknown"} · {order.gig.category}
-        </div>
       </div>
-      <div style={{ textAlign: "right", flexShrink: 0 }}>
-        <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "#2DD4BF" }}>${order.amount}</div>
-        <div style={{ display: "inline-flex", alignItems: "center", gap: 5, marginTop: 4, padding: "2px 10px", borderRadius: 99, background: `${color}18`, border: `1px solid ${color}40` }}>
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: color }} />
-          <span style={{ fontSize: "0.6rem", fontWeight: 600, color, letterSpacing: "0.04em" }}>{label}</span>
-        </div>
-      </div>
-    </Link>
+    </a>
   );
 }

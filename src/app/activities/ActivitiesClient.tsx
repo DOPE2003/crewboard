@@ -221,10 +221,10 @@ export default function ActivitiesClient({
     )
   }
 
-  function TypeChip({ type }: { type: string }) {
+  function TypeChip({ type, small }: { type: string; small?: boolean }) {
     const c = CHIP[type] ?? CHIP.system
     return (
-      <span style={{ display: 'inline-flex', alignItems: 'center', padding: '2px 8px', borderRadius: 99, background: c.bg, color: c.color, fontSize: 11, fontWeight: 600, lineHeight: 1.5, flexShrink: 0 }}>
+      <span style={{ display: 'inline-flex', alignItems: 'center', padding: small ? '2px 7px' : '2px 8px', borderRadius: 99, background: c.bg, color: c.color, fontSize: small ? 9 : 11, fontWeight: 600, lineHeight: 1.5, flexShrink: 0 }}>
         {c.label}
       </span>
     )
@@ -276,7 +276,7 @@ export default function ActivitiesClient({
           <p className="act-body">
             {c.lastMessage ?? 'No messages yet'}
           </p>
-          <div className="act-chip-mobile"><TypeChip type="message" /></div>
+          <div className="act-chip-mobile"><TypeChip type="message" small /></div>
         </div>
       </ActivityCard>
     )
@@ -309,7 +309,7 @@ export default function ActivitiesClient({
             <span className="act-time">{fmtTime(n.createdAt)}</span>
           </div>
           <p className="act-body" style={{ lineHeight: 1.55 }}>{n.body}</p>
-          <div className="act-chip-mobile"><TypeChip type={n.type} /></div>
+          <div className="act-chip-mobile"><TypeChip type={n.type} small /></div>
         </div>
       </ActivityCard>
     )
@@ -338,7 +338,7 @@ export default function ActivitiesClient({
           <p className="act-body act-order-body-mobile">
             {o.gigTitle} · ${o.amount.toLocaleString()}
           </p>
-          <div className="act-chip-mobile"><TypeChip type="order" /></div>
+          <div className="act-chip-mobile"><TypeChip type="order" small /></div>
           {/* Desktop preview card */}
           <div className="act-preview-card act-preview-card--desktop">
             <div style={{ width: 36, height: 36, borderRadius: 8, background: 'rgba(5,150,105,0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

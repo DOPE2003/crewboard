@@ -71,7 +71,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
   const isBuyer = order.buyerId === userId;
   const isSeller = order.sellerId === userId;
-  const isActive = !["completed", "cancelled", "disputed"].includes(order.status) && order.status !== "funded";
+  const isActive = !["completed", "cancelled", "disputed"].includes(order.status);
+  const showActions = order.status !== "cancelled";
   const stepIndex = STATUS_STEPS.indexOf(order.status);
 
   const other = isBuyer ? order.seller : order.buyer;
@@ -173,7 +174,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
         </div>
 
         {/* Actions */}
-        {isActive && (
+        {showActions && (
           <div style={CARD_SM}>
             <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.9rem" }}>Actions</div>
             <EscrowActions
@@ -184,6 +185,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               isSeller={isSeller}
               sellerWallet={order.seller.walletAddress ?? null}
               buyerWallet={order.buyer.walletAddress ?? null}
+              txHash={order.txHash ?? null}
             />
           </div>
         )}

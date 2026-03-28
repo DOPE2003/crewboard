@@ -6311,21 +6311,29 @@ body.dark .act-mobile-tabs { background: var(--surface); border-color: var(--bor
     padding: 12px 14px;
     gap: 10px;
     border-radius: 0;
-    border-left-width: 0;
-    border-right: none;
+    border: none;
+    border-bottom: 0.5px solid #f0f0f0;
+    margin-bottom: 0;
+    background: white;
     box-shadow: none !important;
     transform: none !important;
+    transition: none !important;
   }
   .act-card--unread {
     border-left: 3px solid #14B8A6 !important;
+    border-bottom: 0.5px solid #f0f0f0 !important;
     background: #f6fffe !important;
   }
+  .act-card:hover { box-shadow: none !important; border-color: inherit !important; transform: none !important; }
   .act-name { font-size: 12px; }
-  .act-body { font-size: 11px; margin-bottom: 0; }
+  .act-body { font-size: 11px; margin-bottom: 0; color: #4a4a4a; }
   .act-time { font-size: 10px; }
-  .act-date-label { padding: 10px 14px 4px; font-size: 10px; }
+  .act-date-label { padding: 10px 14px 4px; font-size: 10px; margin: 0; }
   /* hide avatar badge icon on mobile */
   .act-avatar-badge { display: none !important; }
+  /* dark mode mobile cards */
+  body.dark .act-card { background: var(--surface); border-bottom-color: var(--border); }
+  body.dark .act-card--unread { background: rgba(20,184,166,0.07) !important; }
 }
 
 /* Sidebar */

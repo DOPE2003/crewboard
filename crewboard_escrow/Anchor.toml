@@ -6,10 +6,10 @@ seeds = false
 skip-lint = false
 
 [programs.localnet]
-crewboard_escrow = "8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo"
+crewboard_escrow = "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp"
 
 [programs.devnet]
-crewboard_escrow = "8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo"
+crewboard_escrow = "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp"
 
 [registry]
 url = "https://api.apr.dev"

@@ -13,7 +13,7 @@ export default async function HomePage() {
   const rawProfiles = await db.user.findMany({
     where: { profileComplete: true, image: { not: null } },
     orderBy: { createdAt: "desc" },
-    take: 6,
+    take: 20,
     select: {
       twitterHandle: true, name: true, image: true, role: true,
       availability: true, skills: true, bio: true, createdAt: true,
@@ -43,7 +43,7 @@ export default async function HomePage() {
       <div
         className="landing-hero"
         style={{
-          minHeight: "100vh",
+          minHeight: "max(100vh, 700px)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",

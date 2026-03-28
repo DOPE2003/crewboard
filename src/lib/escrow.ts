@@ -3,14 +3,14 @@ import { Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solan
 import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
 
-export const PROGRAM_ID = new PublicKey("8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo");
+export const PROGRAM_ID = new PublicKey("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
 
 // Devnet USDC mint
 export const USDC_MINT = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
 export const USDC_DECIMALS = 6;
 
 const IDL: Idl = {
-  address: "8vhcBUX8YVXCiBdaEKQ68YVpfw6VFg24EppGQCBNmzyo",
+  address: "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp",
   metadata: { name: "crewboard_escrow", version: "0.1.0", spec: "0.1.0" },
   instructions: [
     {
@@ -112,15 +112,23 @@ export async function fundEscrow(
 ) {
   const program = getProgram(wallet, connection);
   const buyer = wallet.publicKey;
-  const amount = new BN(amountUsd * Math.pow(10, USDC_DECIMALS));
-
-  const [escrowState, bump] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
+  const amount = new BN(Math.round(amountUsd * Math.pow(10, USDC_DECIMALS)));
+  const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
 
   const buyerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, buyer);
   const escrowTokenAccount = await getAssociatedTokenAddress(USDC_MINT, escrowState, true);
 
+  // Create buyer's USDC ATA if it doesn't exist yet (new wallets on devnet)
+  const preInstructions = [];
+  const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
+  if (!buyerAtaInfo) {
+    preInstructions.push(
+      createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT)
+    );
+  }
+
   const tx = await program.methods
-    .initialize_escrow(orderId, amount)
+    .initializeEscrow(orderId, amount)
     .accounts({
       buyer,
       seller: sellerPubkey,
@@ -132,6 +140,7 @@ export async function fundEscrow(
       tokenProgram: TOKEN_PROGRAM_ID,
       rent: SYSVAR_RENT_PUBKEY,
     })
+    .preInstructions(preInstructions)
     .rpc();
 
   return tx;
@@ -152,7 +161,7 @@ export async function releaseFunds(
   const sellerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, sellerPubkey);
 
   const tx = await program.methods
-    .release_funds()
+    .releaseFunds()
     .accounts({
       buyer,
       seller: sellerPubkey,

@@ -16,6 +16,7 @@ import ThemeProvider from "@/components/ui/ThemeProvider";
 import { LanguageProvider } from "@/contexts/LanguageContext";
 import HeartbeatPing from "@/components/ui/HeartbeatPing";
 import BottomTabBarServer from "@/components/mobile/BottomTabBarServer";
+import { SolanaProvider } from "@/components/ui/SolanaProvider";
 import { Analytics } from "@vercel/analytics/next";
 
 export const metadata: Metadata = {
@@ -43,17 +44,19 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <AuthProvider>
           <LanguageProvider>
-            <ThemeProvider />
-            <ThemeRouteClass />
-            <HeartbeatPing />
-            <Navbar />
-            <div className="main-content">
-              {children}
-              <Footer />
-            </div>
-            <div className="md:hidden">
-              <BottomTabBarServer />
-            </div>
+            <SolanaProvider>
+              <ThemeProvider />
+              <ThemeRouteClass />
+              <HeartbeatPing />
+              <Navbar />
+              <div className="main-content">
+                {children}
+                <Footer />
+              </div>
+              <div className="md:hidden">
+                <BottomTabBarServer />
+              </div>
+            </SolanaProvider>
           </LanguageProvider>
         </AuthProvider>
         <Analytics />

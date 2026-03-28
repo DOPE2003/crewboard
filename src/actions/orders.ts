@@ -49,11 +49,11 @@ export async function updateOrderStatus(orderId: string, status: string) {
   if (!isBuyer && !isSeller) throw new Error("Unauthorized");
 
   const allowed: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
-    accepted:  { by: "seller", from: ["pending"] },
+    accepted:  { by: "seller", from: ["pending", "funded"] },
     delivered: { by: "seller", from: ["accepted"] },
     completed: { by: "buyer",  from: ["delivered"] },
     cancelled: { by: "both",   from: ["pending"] },
-    disputed:  { by: "both",   from: ["accepted", "delivered"] },
+    disputed:  { by: "both",   from: ["accepted", "funded", "delivered"] },
   };
 
   const rule = allowed[status];
