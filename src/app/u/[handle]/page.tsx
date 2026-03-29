@@ -471,21 +471,28 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <SectionCard>
               <SectionLabel>Wallet</SectionLabel>
               {wallet ? (
-                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                  <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "rgba(20,184,166,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/>
-                    </svg>
-                  </div>
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <span style={{ fontSize: "13px", fontWeight: 500, color: "var(--foreground)", fontFamily: "monospace" }}>{wallet}</span>
-                      <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 7px", borderRadius: 99, background: "rgba(34,197,94,0.1)", color: "#16a34a", border: "1px solid rgba(34,197,94,0.2)" }}>
-                        Verified
-                      </span>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0, background: "rgba(20,184,166,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/>
+                      </svg>
                     </div>
-                    <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2 }}>Solana</div>
+                    <div>
+                      <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ fontSize: "13px", fontWeight: 500, color: "var(--foreground)", fontFamily: "monospace" }}>{wallet}</span>
+                        <span style={{ fontSize: "10px", fontWeight: 600, padding: "2px 7px", borderRadius: 99, background: "rgba(34,197,94,0.1)", color: "#16a34a", border: "1px solid rgba(34,197,94,0.2)" }}>
+                          Verified
+                        </span>
+                      </div>
+                      <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2 }}>Solana</div>
+                    </div>
                   </div>
+                  {isOwnProfile && (
+                    <Link href="/billing" style={{ fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none", flexShrink: 0 }}>
+                      $Wallet →
+                    </Link>
+                  )}
                 </div>
               ) : (
                 <div>
