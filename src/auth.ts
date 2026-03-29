@@ -195,9 +195,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.userId = dbUser?.id;
         token.twitterHandle = dbUser?.twitterHandle || handleFromProfile;
         token.profileComplete = dbUser?.profileComplete ?? false;
-        // Store access token so we can refresh the avatar periodically
-        if (account.access_token) token.twitterAccessToken = account.access_token;
-        token.imageRefreshedAt = Date.now();
       } else if (trigger === "update") {
         const passed = session as { profileComplete?: boolean } | null;
         if (passed?.profileComplete !== undefined) token.profileComplete = passed.profileComplete;
@@ -231,36 +228,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             token.profileComplete = recovered.profileComplete;
           }
         } catch { /* ignore recovery failure */ }
-      } else if (token.twitterAccessToken && token.userId) {
-        // Refresh avatar from Twitter API once per hour
-        const lastRefresh = (token.imageRefreshedAt as number) ?? 0;
-        const oneHourMs = 60 * 60 * 1000;
-        if (Date.now() - lastRefresh > oneHourMs) {
-          try {
-            const res = await fetch(
-              "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name",
-              { headers: { Authorization: `Bearer ${token.twitterAccessToken}` } }
-            );
-            if (res.ok) {
-              const json = await res.json();
-              const twitterData = json?.data as Record<string, string> | undefined;
-              if (twitterData?.profile_image_url) {
-                // Use higher-res version (_normal → _400x400)
-                const imageUrl = twitterData.profile_image_url.replace("_normal", "_400x400");
-                await db.user.update({
-                  where: { id: token.userId as string },
-                  data: {
-                    image: imageUrl,
-                    ...(twitterData.name ? { name: twitterData.name } : {}),
-                  },
-                });
-                token.picture = imageUrl;
-              }
-            }
-          } catch { /* ignore — image stays as-is */ }
-          token.imageRefreshedAt = Date.now();
-        }
       }
+      // Keep token lean — do not store access tokens, image URLs, or timestamps.
+      // Image is fetched from DB by components that need it; avatar is updated on sign-in.
+      delete (token as Record<string, unknown>).picture;
+      delete (token as Record<string, unknown>).twitterAccessToken;
+      delete (token as Record<string, unknown>).imageRefreshedAt;
       return token;
     },
 

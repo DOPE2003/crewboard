@@ -1,5 +1,5 @@
 import { Program, AnchorProvider, Idl, BN } from "@coral-xyz/anchor";
-import { Connection, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
+import { Connection, Keypair, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
 
@@ -113,13 +113,19 @@ export async function fundEscrow(
   const program = getProgram(wallet, connection);
   const buyer = wallet.publicKey;
   const amount = new BN(Math.round(amountUsd * Math.pow(10, USDC_DECIMALS)));
+
   const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
 
   const buyerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, buyer);
-  const escrowTokenAccount = await getAssociatedTokenAddress(USDC_MINT, escrowState, true);
 
-  // Create buyer's USDC ATA if it doesn't exist yet (new wallets on devnet)
+  // Rust uses `init` (non-PDA) for escrow_token_account — requires a fresh Keypair signer.
+  // The program calls create_account via CPI which requires the new account to sign.
+  const escrowTokenAccountKeypair = Keypair.generate();
+  const escrowTokenAccount = escrowTokenAccountKeypair.publicKey;
+
   const preInstructions = [];
+
+  // Create buyer ATA if needed
   const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
   if (!buyerAtaInfo) {
     preInstructions.push(
@@ -127,6 +133,7 @@ export async function fundEscrow(
     );
   }
 
+  // Build transaction object without sending
   const tx = await program.methods
     .initializeEscrow(orderId, amount)
     .accounts({
@@ -141,9 +148,29 @@ export async function fundEscrow(
       rent: SYSVAR_RENT_PUBKEY,
     })
     .preInstructions(preInstructions)
-    .rpc();
+    .transaction();
 
-  return tx;
+  // Attach blockhash and fee payer
+  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = buyer;
+
+  // Pre-sign with the escrow token account keypair BEFORE Phantom sees the transaction.
+  // Phantom only needs to add the buyer's signature — it won't be prompted for the keypair.
+  tx.partialSign(escrowTokenAccountKeypair);
+
+  // Wallet (Phantom) signs as the buyer/fee payer
+  const signedTx = await wallet.signTransaction(tx);
+
+  // Broadcast
+  const txHash = await connection.sendRawTransaction(signedTx.serialize(), {
+    skipPreflight: false,
+    preflightCommitment: "confirmed",
+  });
+
+  await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature: txHash }, "confirmed");
+
+  return txHash;
 }
 
 export async function releaseFunds(
@@ -154,11 +181,22 @@ export async function releaseFunds(
 ) {
   const program = getProgram(wallet, connection);
   const buyer = wallet.publicKey;
-
   const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
 
-  const escrowTokenAccount = await getAssociatedTokenAddress(USDC_MINT, escrowState, true);
+  // The escrow token account was a fresh keypair at fund time — stored in EscrowState on chain.
+  const state = await (program.account as any).escrowState.fetch(escrowState);
+  const escrowTokenAccount = state.escrowTokenAccount as PublicKey;
+
   const sellerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, sellerPubkey);
+
+  // Create seller's USDC ATA if it doesn't exist yet
+  const preInstructions = [];
+  const sellerAtaInfo = await connection.getAccountInfo(sellerTokenAccount);
+  if (!sellerAtaInfo) {
+    preInstructions.push(
+      createAssociatedTokenAccountInstruction(buyer, sellerTokenAccount, sellerPubkey, USDC_MINT)
+    );
+  }
 
   const tx = await program.methods
     .releaseFunds()
@@ -170,6 +208,7 @@ export async function releaseFunds(
       sellerTokenAccount,
       tokenProgram: TOKEN_PROGRAM_ID,
     })
+    .preInstructions(preInstructions)
     .rpc();
 
   return tx;

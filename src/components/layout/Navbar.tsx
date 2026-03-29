@@ -246,12 +246,12 @@ export default async function Navbar() {
             orders={navOrders}
             activeCount={activeOrderCount}
             hasIncompleteOnboarding={hasIncompleteOnboarding}
-            userImage={user?.image ?? null}
+            userImage={dbUser?.image ?? user?.image ?? null}
             twitterHandle={(user as any)?.twitterHandle ?? null}
           >
             {user && (
               <NavProfileMenu
-                image={user.image ?? null}
+                image={dbUser?.image ?? user.image ?? null}
                 name={user.name ?? null}
                 twitterHandle={(user as any).twitterHandle ?? null}
                 role={dbUser?.role ?? null}

@@ -292,7 +292,7 @@ export default function NavProfileDropdown({
         <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 10 }}>
           <span style={{
             width: 7, height: 7, borderRadius: "50%", flexShrink: 0,
-            background: availability === "available" ? "#22c55e" : "rgba(255,255,255,0.35)",
+            background: availability === "available" ? "#22c55e" : "#9ca3af",
           }} />
           <span style={{ fontSize: 12, color: "white", fontWeight: 600 }}>
             {availability === "available" ? "Available for work" : "Not available"}
@@ -353,10 +353,10 @@ export default function NavProfileDropdown({
 
       {/* ── SECTION 3: Profile completion ── */}
       {extra && (
-        <div style={{ background: "#fffbf0", padding: "9px 18px" }}>
+        <div style={{ background: "#f0fdf9", padding: "9px 18px" }}>
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <span style={{ fontSize: 11, color: "#92400e", fontWeight: 500, flexShrink: 0 }}>Profile</span>
-            <div style={{ flex: 1, height: 5, background: "#fde68a", borderRadius: 99, overflow: "hidden" }}>
+            <span style={{ fontSize: 11, color: "#0f766e", fontWeight: 500, flexShrink: 0 }}>Profile</span>
+            <div style={{ flex: 1, height: 5, background: "#ccfbf1", borderRadius: 99, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${extra.profileCompletion}%`, background: "linear-gradient(90deg, #14B8A6, #0F6E56)", borderRadius: 99, transition: "width 0.4s" }} />
             </div>
             <span style={{ fontSize: 11, color: "#0f766e", fontWeight: 700, flexShrink: 0 }}>{extra.profileCompletion}%</span>
@@ -376,39 +376,17 @@ export default function NavProfileDropdown({
 
       {/* ── SECTION 5: Navigation ── */}
       <div>
-        <NavItem href="/dashboard" onClick={onClose} label="Dashboard" icon={
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
-        } />
-        <NavItem href={twitterHandle ? `/u/${twitterHandle}` : "/dashboard"} onClick={onClose} label="My Profile" icon={
+        <NavItem href={twitterHandle ? `/u/${twitterHandle}` : "/onboarding"} onClick={onClose} label="My Profile" icon={
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         } />
         <NavItem href="/gigs/mine" onClick={onClose} label="My Services" badge={gigsCount > 0 ? `${gigsCount} active` : null} icon={
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
         } />
-        <NavItem href="/orders" onClick={onClose} label="Orders" icon={
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/></svg>
+        <NavItem href="/billing" onClick={onClose} label="$Wallet" icon={
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
         } />
         <NavItem href="/messages" onClick={onClose} label="Messages" badge={unreadCount > 0 ? unreadCount : null} badgeColor="red" icon={
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-        } />
-        <NavItem href="/saved-talents" onClick={onClose} label="Saved Profiles" icon={
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-        } />
-      </div>
-
-      <Divider />
-
-      {/* ── SECTION 6: Account ── */}
-      <div>
-        <SectionLabel>Account</SectionLabel>
-        <NavItem href="/billing" onClick={onClose} label="Billing & Wallet" icon={
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
-        } />
-        <NavItem href="/orders" onClick={onClose} label="Transactions" icon={
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-        } />
-        <NavItem href="/referral" onClick={onClose} label="Referral Program" badge="Earn 15%" icon={
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
         } />
       </div>
 
@@ -471,7 +449,7 @@ export default function NavProfileDropdown({
           </div>
         </div>
 
-        <NavItem href="/help" onClick={onClose} label="Help & Support" icon={
+        <NavItem href="mailto:support@crewboard.fun" onClick={onClose} label="Help & Support" icon={
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         } />
       </div>

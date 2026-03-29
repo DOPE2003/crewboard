@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, CloseAccount, Mint, Token, TokenAccount, Transfer};
+use anchor_spl::associated_token::AssociatedToken;
+use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
 
 declare_id!("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
 
@@ -7,114 +8,53 @@ declare_id!("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
 pub mod crewboard_escrow {
     use super::*;
 
-    pub fn initialize_escrow(
-        ctx: Context<InitializeEscrow>,
-        gig_id: String,
-        amount: u64,
-    ) -> Result<()> {
-        let escrow_state = &mut ctx.accounts.escrow_state;
-        escrow_state.buyer = ctx.accounts.buyer.key();
-        escrow_state.seller = ctx.accounts.seller.key();
-        escrow_state.mint = ctx.accounts.mint.key();
-        escrow_state.escrow_token_account = ctx.accounts.escrow_token_account.key();
-        escrow_state.gig_id = gig_id;
-        escrow_state.amount = amount;
-        escrow_state.bump = ctx.bumps.escrow_state; // Use the context bumps
+    pub fn initialize_escrow(ctx: Context<InitializeEscrow>, gig_id: String, amount: u64) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow_state;
+        escrow.buyer = ctx.accounts.buyer.key();
+        escrow.seller = ctx.accounts.seller.key();
+        escrow.mint = ctx.accounts.mint.key();
+        escrow.escrow_token_account = ctx.accounts.escrow_token_account.key();
+        escrow.gig_id = gig_id;
+        escrow.amount = amount;
+        escrow.bump = ctx.bumps.escrow_state;
 
-        // Transfer funds from buyer to the escrow PDA token account
-        let cpi_accounts = Transfer {
-            from: ctx.accounts.buyer_token_account.to_account_info(),
-            to: ctx.accounts.escrow_token_account.to_account_info(),
-            authority: ctx.accounts.buyer.to_account_info(),
-        };
-        let cpi_program = ctx.accounts.token_program.to_account_info();
-        let cpi_ctx = CpiContext::new(cpi_program, cpi_accounts);
-        token::transfer(cpi_ctx, amount)?;
-
+        token::transfer(
+            CpiContext::new(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.buyer_token_account.to_account_info(),
+                    to: ctx.accounts.escrow_token_account.to_account_info(),
+                    authority: ctx.accounts.buyer.to_account_info(),
+                },
+            ),
+            amount,
+        )?;
         Ok(())
     }
 
     pub fn release_funds(ctx: Context<ReleaseFunds>) -> Result<()> {
-        let escrow_state = &ctx.accounts.escrow_state;
-
-        let bump = escrow_state.bump;
-        let buyer_key = escrow_state.buyer.key();
-        let seller_key = escrow_state.seller.key();
-        let gig_id = escrow_state.gig_id.as_bytes();
+        let escrow = &ctx.accounts.escrow_state;
         let seeds = &[
             b"escrow",
-            buyer_key.as_ref(),
-            seller_key.as_ref(),
-            gig_id,
-            &[bump],
+            escrow.buyer.as_ref(),
+            escrow.seller.as_ref(),
+            escrow.gig_id.as_bytes(),
+            &[escrow.bump],
         ];
-        let signer = &[&seeds[..]];
+        let signer_seeds = &[&seeds[..]];
 
-        // Transfer from escrow PDA to seller
-        let cpi_accounts = Transfer {
-            from: ctx.accounts.escrow_token_account.to_account_info(),
-            to: ctx.accounts.seller_token_account.to_account_info(),
-            authority: ctx.accounts.escrow_state.to_account_info(),
-        };
-        let cpi_program = ctx.accounts.token_program.to_account_info();
-        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
-        token::transfer(cpi_ctx, escrow_state.amount)?;
-
-        // Close the escrow token account, sending rent back to the buyer
-        let cpi_accounts_close = CloseAccount {
-            account: ctx.accounts.escrow_token_account.to_account_info(),
-            destination: ctx.accounts.buyer.to_account_info(),
-            authority: ctx.accounts.escrow_state.to_account_info(),
-        };
-        let cpi_program_close = ctx.accounts.token_program.to_account_info();
-        let cpi_ctx_close = CpiContext::new_with_signer(cpi_program_close, cpi_accounts_close, signer);
-        token::close_account(cpi_ctx_close)?;
-
-        Ok(())
-    }
-
-    pub fn resolve_dispute(ctx: Context<ResolveDispute>, route_to_buyer: bool) -> Result<()> {
-        let escrow_state = &ctx.accounts.escrow_state;
-
-        let bump = escrow_state.bump;
-        let buyer_key = escrow_state.buyer.key();
-        let seller_key = escrow_state.seller.key();
-        let gig_id = escrow_state.gig_id.as_bytes();
-        let seeds = &[
-            b"escrow",
-            buyer_key.as_ref(),
-            seller_key.as_ref(),
-            gig_id,
-            &[bump],
-        ];
-        let signer = &[&seeds[..]];
-
-        let destination = if route_to_buyer {
-            ctx.accounts.buyer_token_account.to_account_info()
-        } else {
-            ctx.accounts.seller_token_account.to_account_info()
-        };
-
-        // Transfer funds
-        let cpi_accounts = Transfer {
-            from: ctx.accounts.escrow_token_account.to_account_info(),
-            to: destination,
-            authority: ctx.accounts.escrow_state.to_account_info(),
-        };
-        let cpi_program = ctx.accounts.token_program.to_account_info();
-        let cpi_ctx = CpiContext::new_with_signer(cpi_program, cpi_accounts, signer);
-        token::transfer(cpi_ctx, escrow_state.amount)?;
-
-        // Close the escrow token account
-        let cpi_accounts_close = CloseAccount {
-            account: ctx.accounts.escrow_token_account.to_account_info(),
-            destination: ctx.accounts.admin.to_account_info(), // admin gets rent for resolving
-            authority: ctx.accounts.escrow_state.to_account_info(),
-        };
-        let cpi_program_close = ctx.accounts.token_program.to_account_info();
-        let cpi_ctx_close = CpiContext::new_with_signer(cpi_program_close, cpi_accounts_close, signer);
-        token::close_account(cpi_ctx_close)?;
-
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.escrow_token_account.to_account_info(),
+                    to: ctx.accounts.seller_token_account.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            escrow.amount,
+        )?;
         Ok(())
     }
 }
@@ -124,36 +64,27 @@ pub mod crewboard_escrow {
 pub struct InitializeEscrow<'info> {
     #[account(mut)]
     pub buyer: Signer<'info>,
-
-    /// CHECK: Safe because we only store the pubkey
+    /// CHECK: seller is just a recipient
     pub seller: AccountInfo<'info>,
-
     pub mint: Account<'info, Mint>,
-
-    #[account(
-        mut,
-        constraint = buyer_token_account.owner == buyer.key(),
-        constraint = buyer_token_account.mint == mint.key()
-    )]
+    #[account(mut)]
     pub buyer_token_account: Account<'info, TokenAccount>,
-
     #[account(
         init,
         payer = buyer,
+        space = EscrowState::LEN,
         seeds = [b"escrow", buyer.key().as_ref(), seller.key().as_ref(), gig_id.as_bytes()],
         bump,
-        space = 8 + 32 + 32 + 32 + 32 + 4 + gig_id.len() + 8 + 1
     )]
     pub escrow_state: Account<'info, EscrowState>,
-
     #[account(
         init,
         payer = buyer,
-        token::mint = mint,
-        token::authority = escrow_state,
+        associated_token::mint = mint,
+        associated_token::authority = escrow_state,
     )]
     pub escrow_token_account: Account<'info, TokenAccount>,
-
+    pub associated_token_program: Program<'info, AssociatedToken>,
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
     pub rent: Sysvar<'info, Rent>,
@@ -163,78 +94,20 @@ pub struct InitializeEscrow<'info> {
 pub struct ReleaseFunds<'info> {
     #[account(mut)]
     pub buyer: Signer<'info>,
-
-    /// CHECK: Checked via seeds
+    /// CHECK: seller receives funds
     #[account(mut)]
     pub seller: AccountInfo<'info>,
-
     #[account(
         mut,
-        has_one = buyer,
-        has_one = seller,
-        has_one = escrow_token_account,
-        close = buyer, // Close escrow_state account and return rent to buyer
-        seeds = [b"escrow", buyer.key().as_ref(), seller.key().as_ref(), escrow_state.gig_id.as_bytes()],
+        seeds = [b"escrow", escrow_state.buyer.as_ref(), escrow_state.seller.as_ref(), escrow_state.gig_id.as_bytes()],
         bump = escrow_state.bump,
+        close = buyer,
     )]
     pub escrow_state: Account<'info, EscrowState>,
-
     #[account(mut)]
     pub escrow_token_account: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        constraint = seller_token_account.owner == seller.key(),
-        constraint = seller_token_account.mint == escrow_state.mint
-    )]
+    #[account(mut)]
     pub seller_token_account: Account<'info, TokenAccount>,
-
-    pub token_program: Program<'info, Token>,
-}
-
-#[derive(Accounts)]
-pub struct ResolveDispute<'info> {
-    // In a real production app, this would be validated against a config account
-    // or a hardcoded pubkey to ensure only the true admin can resolve.
-    #[account(mut)]
-    pub admin: Signer<'info>,
-
-    /// CHECK: Checked via seeds
-    #[account(mut)]
-    pub buyer: AccountInfo<'info>,
-
-    /// CHECK: Checked via seeds
-    #[account(mut)]
-    pub seller: AccountInfo<'info>,
-
-    #[account(
-        mut,
-        has_one = buyer,
-        has_one = seller,
-        has_one = escrow_token_account,
-        close = admin, // close state and send rent to admin as fee
-        seeds = [b"escrow", buyer.key().as_ref(), seller.key().as_ref(), escrow_state.gig_id.as_bytes()],
-        bump = escrow_state.bump,
-    )]
-    pub escrow_state: Account<'info, EscrowState>,
-
-    #[account(mut)]
-    pub escrow_token_account: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        constraint = buyer_token_account.owner == buyer.key(),
-        constraint = buyer_token_account.mint == escrow_state.mint
-    )]
-    pub buyer_token_account: Account<'info, TokenAccount>,
-
-    #[account(
-        mut,
-        constraint = seller_token_account.owner == seller.key(),
-        constraint = seller_token_account.mint == escrow_state.mint
-    )]
-    pub seller_token_account: Account<'info, TokenAccount>,
-
     pub token_program: Program<'info, Token>,
 }
 
@@ -247,4 +120,8 @@ pub struct EscrowState {
     pub gig_id: String,
     pub amount: u64,
     pub bump: u8,
+}
+
+impl EscrowState {
+    pub const LEN: usize = 8 + 32 + 32 + 32 + 32 + 4 + 64 + 8 + 1;
 }
