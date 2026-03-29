@@ -113,19 +113,24 @@ function GigCard({ gig }: { gig: Gig }) {
         <div style={{ display: "flex", gap: 14, alignItems: "center" }}>
           <a href={`/gigs/${gig.id}`} style={{ fontSize: 12, color: "#9ca3af", textDecoration: "none" }}>View</a>
           <a href={`/gigs/${gig.id}/edit`} style={{ fontSize: 12, fontWeight: 700, color: "#14B8A6", textDecoration: "none" }}>Edit →</a>
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            style={{
-              fontSize: 12, fontWeight: 600, color: "#ef4444",
-              background: "none", border: "none", cursor: "pointer",
-              padding: 0, fontFamily: "inherit", opacity: deleting ? 0.5 : 1,
-            }}
-          >
-            {deleting ? "..." : "Delete"}
-          </button>
         </div>
       </div>
+
+      {/* Delete row — full width, easy tap target on mobile */}
+      <button
+        onClick={handleDelete}
+        disabled={deleting}
+        style={{
+          width: "100%", padding: "10px", borderRadius: 10,
+          border: "1px solid rgba(239,68,68,0.25)",
+          background: "rgba(239,68,68,0.04)",
+          color: "#ef4444", fontSize: 13, fontWeight: 600,
+          cursor: "pointer", fontFamily: "inherit",
+          opacity: deleting ? 0.5 : 1,
+        }}
+      >
+        {deleting ? "Deleting..." : "Delete Service"}
+      </button>
     </div>
   );
 }
