@@ -179,23 +179,47 @@ export default async function HomePage() {
 
         {/* CTA buttons */}
         <div
-          className="hero-cta-wrap"
           style={{
             display: "flex",
-            gap: "0.85rem",
-            justifyContent: "center",
-            marginBottom: "1.5rem",
+            flexDirection: "column",
+            alignItems: "center",
+            gap: 12,
+            marginBottom: 32,
             opacity: 0,
             animation: "fadeUp 0.6s 0.7s forwards",
             position: "relative",
             zIndex: 1,
           }}
         >
-          <Link href="/talent" className="btn-hero-primary">
-            Browse Profiles
-          </Link>
-          <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
-            {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
+          {/* Row 1: Browse Profiles + Post a Service */}
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
+            <Link href="/talent" className="btn-hero-primary">
+              Browse Profiles
+            </Link>
+            <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
+              {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
+            </Link>
+          </div>
+
+          {/* Row 2: Look for a Service */}
+          <Link
+            href="/gigs"
+            style={{
+              background: "transparent",
+              color: "#14B8A6",
+              padding: "12px 32px",
+              borderRadius: 12,
+              fontWeight: 600,
+              fontSize: 14,
+              textDecoration: "none",
+              border: "1.5px solid #14B8A6",
+              letterSpacing: "0.02em",
+              display: "flex",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            🔍 Look for a Service
           </Link>
         </div>
 
@@ -206,7 +230,7 @@ export default async function HomePage() {
           alignItems: "center",
           gap: 0,
           opacity: 0,
-          animation: "fadeUp 0.6s 0.7s forwards",
+          animation: "fadeUp 0.6s 0.85s forwards",
           position: "relative",
           zIndex: 1,
         }}>
