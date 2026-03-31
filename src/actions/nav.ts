@@ -14,6 +14,7 @@ export async function getNavDropdownData() {
       select: {
         walletAddress: true,
         isOG: true,
+        isAdmin: true,
         createdAt: true,
         profileComplete: true,
         name: true,
@@ -60,6 +61,7 @@ export async function getNavDropdownData() {
   return {
     walletAddress: user.walletAddress,
     isOG: user.isOG,
+    isAdmin: user.isAdmin,
     createdAt: user.createdAt.toISOString(),
     profileComplete: user.profileComplete,
     profileCompletion,

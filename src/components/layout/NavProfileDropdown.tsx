@@ -376,6 +376,20 @@ export default function NavProfileDropdown({
 
       {/* ── SECTION 5: Navigation ── */}
       <div>
+        {extra?.isAdmin && (
+          <NavItem 
+            href="/admin" 
+            onClick={onClose} 
+            label="Admin Dashboard" 
+            badge="STAFF"
+            badgeColor="red"
+            icon={
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/>
+              </svg>
+            } 
+          />
+        )}
         <NavItem href={twitterHandle ? `/u/${twitterHandle}` : "/onboarding"} onClick={onClose} label="My Profile" icon={
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
         } />
