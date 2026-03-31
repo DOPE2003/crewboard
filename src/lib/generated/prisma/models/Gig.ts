@@ -29,11 +29,15 @@ export type AggregateGig = {
 export type GigAvgAggregateOutputType = {
   price: number | null
   deliveryDays: number | null
+  avgRating: number | null
+  reviewCount: number | null
 }
 
 export type GigSumAggregateOutputType = {
   price: number | null
   deliveryDays: number | null
+  avgRating: number | null
+  reviewCount: number | null
 }
 
 export type GigMinAggregateOutputType = {
@@ -45,6 +49,8 @@ export type GigMinAggregateOutputType = {
   deliveryDays: number | null
   category: string | null
   status: string | null
+  avgRating: number | null
+  reviewCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +64,8 @@ export type GigMaxAggregateOutputType = {
   deliveryDays: number | null
   category: string | null
   status: string | null
+  avgRating: number | null
+  reviewCount: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -72,6 +80,8 @@ export type GigCountAggregateOutputType = {
   category: number
   tags: number
   status: number
+  avgRating: number
+  reviewCount: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -81,11 +91,15 @@ export type GigCountAggregateOutputType = {
 export type GigAvgAggregateInputType = {
   price?: true
   deliveryDays?: true
+  avgRating?: true
+  reviewCount?: true
 }
 
 export type GigSumAggregateInputType = {
   price?: true
   deliveryDays?: true
+  avgRating?: true
+  reviewCount?: true
 }
 
 export type GigMinAggregateInputType = {
@@ -97,6 +111,8 @@ export type GigMinAggregateInputType = {
   deliveryDays?: true
   category?: true
   status?: true
+  avgRating?: true
+  reviewCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -110,6 +126,8 @@ export type GigMaxAggregateInputType = {
   deliveryDays?: true
   category?: true
   status?: true
+  avgRating?: true
+  reviewCount?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -124,6 +142,8 @@ export type GigCountAggregateInputType = {
   category?: true
   tags?: true
   status?: true
+  avgRating?: true
+  reviewCount?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -225,6 +245,8 @@ export type GigGroupByOutputType = {
   category: string
   tags: string[]
   status: string
+  avgRating: number
+  reviewCount: number
   createdAt: Date
   updatedAt: Date
   _count: GigCountAggregateOutputType | null
@@ -262,6 +284,8 @@ export type GigWhereInput = {
   category?: Prisma.StringFilter<"Gig"> | string
   tags?: Prisma.StringNullableListFilter<"Gig">
   status?: Prisma.StringFilter<"Gig"> | string
+  avgRating?: Prisma.FloatFilter<"Gig"> | number
+  reviewCount?: Prisma.IntFilter<"Gig"> | number
   createdAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -278,6 +302,8 @@ export type GigOrderByWithRelationInput = {
   category?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -297,6 +323,8 @@ export type GigWhereUniqueInput = Prisma.AtLeast<{
   category?: Prisma.StringFilter<"Gig"> | string
   tags?: Prisma.StringNullableListFilter<"Gig">
   status?: Prisma.StringFilter<"Gig"> | string
+  avgRating?: Prisma.FloatFilter<"Gig"> | number
+  reviewCount?: Prisma.IntFilter<"Gig"> | number
   createdAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -313,6 +341,8 @@ export type GigOrderByWithAggregationInput = {
   category?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.GigCountOrderByAggregateInput
@@ -335,6 +365,8 @@ export type GigScalarWhereWithAggregatesInput = {
   category?: Prisma.StringWithAggregatesFilter<"Gig"> | string
   tags?: Prisma.StringNullableListFilter<"Gig">
   status?: Prisma.StringWithAggregatesFilter<"Gig"> | string
+  avgRating?: Prisma.FloatWithAggregatesFilter<"Gig"> | number
+  reviewCount?: Prisma.IntWithAggregatesFilter<"Gig"> | number
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Gig"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Gig"> | Date | string
 }
@@ -348,6 +380,8 @@ export type GigCreateInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutGigsInput
@@ -364,6 +398,8 @@ export type GigUncheckedCreateInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutGigInput
@@ -378,6 +414,8 @@ export type GigUpdateInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutGigsNestedInput
@@ -394,6 +432,8 @@ export type GigUncheckedUpdateInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutGigNestedInput
@@ -409,6 +449,8 @@ export type GigCreateManyInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -422,6 +464,8 @@ export type GigUpdateManyMutationInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -436,6 +480,8 @@ export type GigUncheckedUpdateManyInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -460,6 +506,8 @@ export type GigCountOrderByAggregateInput = {
   category?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -467,6 +515,8 @@ export type GigCountOrderByAggregateInput = {
 export type GigAvgOrderByAggregateInput = {
   price?: Prisma.SortOrder
   deliveryDays?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
 }
 
 export type GigMaxOrderByAggregateInput = {
@@ -478,6 +528,8 @@ export type GigMaxOrderByAggregateInput = {
   deliveryDays?: Prisma.SortOrder
   category?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -491,6 +543,8 @@ export type GigMinOrderByAggregateInput = {
   deliveryDays?: Prisma.SortOrder
   category?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -498,6 +552,8 @@ export type GigMinOrderByAggregateInput = {
 export type GigSumOrderByAggregateInput = {
   price?: Prisma.SortOrder
   deliveryDays?: Prisma.SortOrder
+  avgRating?: Prisma.SortOrder
+  reviewCount?: Prisma.SortOrder
 }
 
 export type GigScalarRelationFilter = {
@@ -564,6 +620,14 @@ export type GigUpdatetagsInput = {
   push?: string | string[]
 }
 
+export type FloatFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type GigCreateNestedOneWithoutOrdersInput = {
   create?: Prisma.XOR<Prisma.GigCreateWithoutOrdersInput, Prisma.GigUncheckedCreateWithoutOrdersInput>
   connectOrCreate?: Prisma.GigCreateOrConnectWithoutOrdersInput
@@ -587,6 +651,8 @@ export type GigCreateWithoutUserInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderCreateNestedManyWithoutGigInput
@@ -601,6 +667,8 @@ export type GigUncheckedCreateWithoutUserInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   orders?: Prisma.OrderUncheckedCreateNestedManyWithoutGigInput
@@ -645,6 +713,8 @@ export type GigScalarWhereInput = {
   category?: Prisma.StringFilter<"Gig"> | string
   tags?: Prisma.StringNullableListFilter<"Gig">
   status?: Prisma.StringFilter<"Gig"> | string
+  avgRating?: Prisma.FloatFilter<"Gig"> | number
+  reviewCount?: Prisma.IntFilter<"Gig"> | number
   createdAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Gig"> | Date | string
 }
@@ -658,6 +728,8 @@ export type GigCreateWithoutOrdersInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutGigsInput
@@ -673,6 +745,8 @@ export type GigUncheckedCreateWithoutOrdersInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -702,6 +776,8 @@ export type GigUpdateWithoutOrdersInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutGigsNestedInput
@@ -717,6 +793,8 @@ export type GigUncheckedUpdateWithoutOrdersInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -730,6 +808,8 @@ export type GigCreateManyUserInput = {
   category: string
   tags?: Prisma.GigCreatetagsInput | string[]
   status?: string
+  avgRating?: number
+  reviewCount?: number
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -743,6 +823,8 @@ export type GigUpdateWithoutUserInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUpdateManyWithoutGigNestedInput
@@ -757,6 +839,8 @@ export type GigUncheckedUpdateWithoutUserInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   orders?: Prisma.OrderUncheckedUpdateManyWithoutGigNestedInput
@@ -771,6 +855,8 @@ export type GigUncheckedUpdateManyWithoutUserInput = {
   category?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.GigUpdatetagsInput | string[]
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  avgRating?: Prisma.FloatFieldUpdateOperationsInput | number
+  reviewCount?: Prisma.IntFieldUpdateOperationsInput | number
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -816,6 +902,8 @@ export type GigSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   category?: boolean
   tags?: boolean
   status?: boolean
+  avgRating?: boolean
+  reviewCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -833,6 +921,8 @@ export type GigSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   category?: boolean
   tags?: boolean
   status?: boolean
+  avgRating?: boolean
+  reviewCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -848,6 +938,8 @@ export type GigSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   category?: boolean
   tags?: boolean
   status?: boolean
+  avgRating?: boolean
+  reviewCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -863,11 +955,13 @@ export type GigSelectScalar = {
   category?: boolean
   tags?: boolean
   status?: boolean
+  avgRating?: boolean
+  reviewCount?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type GigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "price" | "deliveryDays" | "category" | "tags" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["gig"]>
+export type GigOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "title" | "description" | "price" | "deliveryDays" | "category" | "tags" | "status" | "avgRating" | "reviewCount" | "createdAt" | "updatedAt", ExtArgs["result"]["gig"]>
 export type GigInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   orders?: boolean | Prisma.Gig$ordersArgs<ExtArgs>
@@ -896,6 +990,8 @@ export type $GigPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     category: string
     tags: string[]
     status: string
+    avgRating: number
+    reviewCount: number
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["gig"]>
@@ -1332,6 +1428,8 @@ export interface GigFieldRefs {
   readonly category: Prisma.FieldRef<"Gig", 'String'>
   readonly tags: Prisma.FieldRef<"Gig", 'String[]'>
   readonly status: Prisma.FieldRef<"Gig", 'String'>
+  readonly avgRating: Prisma.FieldRef<"Gig", 'Float'>
+  readonly reviewCount: Prisma.FieldRef<"Gig", 'Int'>
   readonly createdAt: Prisma.FieldRef<"Gig", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Gig", 'DateTime'>
 }

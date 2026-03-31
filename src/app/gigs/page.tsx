@@ -26,13 +26,19 @@ export const GIG_CATEGORIES = [
 export default async function GigsPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; maxPrice?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; minPrice?: string; maxPrice?: string; sort?: string }>;
 }) {
-  const { q = "", category = "", maxPrice = "" } = await searchParams;
+  const params = await searchParams;
+  const q = params.q || "";
+  const category = params.category || "";
+  const minPrice = params.minPrice || "0";
+  const maxPrice = params.maxPrice || "5000";
+  const sort = params.sort || "newest";
+
   const session = await auth();
   const isLoggedIn = !!(session?.user as any)?.userId;
 
-  const where: Record<string, unknown> = { status: "active" };
+  const where: Record<string, any> = { status: "active" };
 
   if (q.trim()) {
     where.OR = [
@@ -41,19 +47,50 @@ export default async function GigsPage({
     ];
   }
   if (category) where.category = category;
-  const maxPriceNum = parseInt(maxPrice, 10);
-  if (maxPriceNum > 0) where.price = { lte: maxPriceNum };
+  
+  const minP = parseInt(minPrice, 10) || 0;
+  const maxP = parseInt(maxPrice, 10) || 5000;
+  where.price = { gte: minP, lte: maxP };
 
-  const gigs = await db.gig.findMany({
+  // 1. Fetch Gigs with their reviews
+  const rawGigs = await db.gig.findMany({
     where,
-    orderBy: { createdAt: "desc" },
     include: {
       user: { select: { name: true, twitterHandle: true, image: true, role: true } },
+      orders: {
+        where: { status: "completed" },
+        select: { 
+          reviews: { select: { rating: true } }
+        }
+      }
     },
+    // We sort by price or date at the DB level first
+    orderBy: sort === "price_asc" ? { price: "asc" } : 
+             sort === "price_desc" ? { price: "desc" } : 
+             { createdAt: "desc" }
   });
 
+  // 2. Calculate average ratings on the spot
+  const gigs = rawGigs.map(gig => {
+    const allRatings = gig.orders.flatMap(o => o.reviews.map(r => r.rating));
+    const reviewCount = allRatings.length;
+    const avgRating = reviewCount > 0 
+      ? allRatings.reduce((sum, r) => sum + r, 0) / reviewCount 
+      : 0;
+    
+    return { ...gig, avgRating, reviewCount };
+  });
+
+  // 3. Apply custom "Top Rated" sort in memory if requested
+  if (sort === "top_rated") {
+    gigs.sort((a, b) => {
+      if (b.avgRating !== a.avgRating) return b.avgRating - a.avgRating;
+      return b.reviewCount - a.reviewCount;
+    });
+  }
+
   return (
-    <main className="page">
+    <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
       <section className="talent-wrap">
         <div className="talent-header">
           <div className="auth-kicker"><T k="gigs.kicker" /></div>
@@ -66,7 +103,14 @@ export default async function GigsPage({
           )}
         </div>
 
-        <GigsFilters categories={GIG_CATEGORIES} defaultQ={q} defaultCategory={category} defaultMaxPrice={maxPrice} />
+        <GigsFilters 
+          categories={GIG_CATEGORIES} 
+          defaultQ={q} 
+          defaultCategory={category} 
+          defaultMinPrice={minPrice}
+          defaultMaxPrice={maxPrice}
+          defaultSort={sort}
+        />
 
         {gigs.length === 0 ? (
           <div className="talent-empty">
@@ -93,16 +137,7 @@ export default async function GigsPage({
                   </div>
                   <h2 className="gig-title">{gig.title}</h2>
                   <p className="gig-desc">{gig.description}</p>
-                  {gig.tags.length > 0 && (
-                    <div className="gig-tags">
-                      {gig.tags.slice(0, 3).map((t) => (
-                        <span key={t} className="dash-skill-chip">{t}</span>
-                      ))}
-                      {gig.tags.length > 3 && (
-                        <span className="dash-skill-chip">+{gig.tags.length - 3}</span>
-                      )}
-                    </div>
-                  )}
+                  
                   <div className="gig-footer">
                     <div className="gig-user">
                       {gig.user.image ? (
@@ -113,7 +148,14 @@ export default async function GigsPage({
                       )}
                       <div className="gig-user-info">
                         <span className="gig-user-name">{userName}</span>
-                        {gig.user.role && <span className="gig-user-role">{gig.user.role}</span>}
+                        <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
+                          <span className="gig-user-role">{gig.user.role || "Builder"}</span>
+                          {gig.reviewCount > 0 && (
+                            <span style={{ fontSize: "0.6rem", color: "#f59e0b", fontWeight: 700, display: "flex", alignItems: "center", gap: "2px" }}>
+                              ★ {gig.avgRating.toFixed(1)} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({gig.reviewCount})</span>
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                     <div className="gig-delivery-wrap">
