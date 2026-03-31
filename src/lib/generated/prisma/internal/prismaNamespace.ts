@@ -1353,6 +1353,7 @@ export const UserScalarFieldEnum = {
   bio: 'bio',
   availability: 'availability',
   profileComplete: 'profileComplete',
+  isAdmin: 'isAdmin',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   walletAddress: 'walletAddress',
@@ -1445,8 +1446,6 @@ export const GigScalarFieldEnum = {
   category: 'category',
   tags: 'tags',
   status: 'status',
-  avgRating: 'avgRating',
-  reviewCount: 'reviewCount',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

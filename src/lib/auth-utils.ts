@@ -1,14 +1,19 @@
-"use server";
-
 import { auth } from "@/auth";
+import { redirect } from "next/navigation";
 
-/**
- * Extracts the authenticated user's DB id from the session.
- * Throws "Unauthorized" if no session or userId is present.
- */
-export async function requireUserId(): Promise<string> {
+export async function requireAdmin() {
+  const session = await auth();
+  if (!session?.user?.isAdmin) {
+    redirect("/");
+  }
+  return session.user;
+}
+
+export async function requireUserId() {
   const session = await auth();
   const userId = session?.user?.userId;
-  if (!userId) throw new Error("Unauthorized");
+  if (!userId) {
+    redirect("/login");
+  }
   return userId;
 }

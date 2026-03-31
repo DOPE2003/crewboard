@@ -187,7 +187,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         // First sign-in — populate token from DB
         const dbUser = await db.user.findUnique({
           where: { twitterId: account.providerAccountId },
-          select: { id: true, twitterHandle: true, profileComplete: true },
+          select: { id: true, twitterHandle: true, profileComplete: true, isAdmin: true },
         });
         const p = profile as Record<string, unknown>;
         const data = (p?.data ?? p) as Record<string, unknown>;
@@ -195,6 +195,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         token.userId = dbUser?.id;
         token.twitterHandle = dbUser?.twitterHandle || handleFromProfile;
         token.profileComplete = dbUser?.profileComplete ?? false;
+        token.isAdmin = dbUser?.isAdmin ?? false;
       } else if (trigger === "update") {
         const passed = session as { profileComplete?: boolean } | null;
         if (passed?.profileComplete !== undefined) token.profileComplete = passed.profileComplete;
@@ -242,6 +243,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       session.user.userId = token.userId as string | undefined;
       session.user.twitterHandle = token.twitterHandle as string | undefined;
       session.user.profileComplete = token.profileComplete as boolean | undefined;
+      session.user.isAdmin = token.isAdmin as boolean | undefined;
       return session;
     },
   },

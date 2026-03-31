@@ -18,6 +18,7 @@ model User {
   bio                  String?
   availability         String?
   profileComplete      Boolean               @default(false)
+  isAdmin              Boolean               @default(false)
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   walletAddress        String?               @unique
