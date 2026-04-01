@@ -55,10 +55,17 @@ export default function ConversationListUI({
 
   return (
     <>
-      <div className="msgs-sidebar-header">
-        <div className="msgs-title">Messages</div>
-        <div className="msgs-search-wrap">
-          <svg className="msgs-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      {/* Sidebar header */}
+      <div style={{ padding: "20px 16px 14px", borderBottom: "1px solid var(--card-border)", flexShrink: 0 }}>
+        <div style={{ fontSize: 20, fontWeight: 700, color: "var(--foreground)", marginBottom: 12, fontFamily: "Inter, sans-serif" }}>
+          Messages
+        </div>
+        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+          <svg
+            width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
+            style={{ position: "absolute", left: 11, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", pointerEvents: "none" }}
+          >
             <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
           </svg>
           <input
@@ -66,14 +73,26 @@ export default function ConversationListUI({
             placeholder="Search conversations..."
             value={q}
             onChange={(e) => setQ(e.target.value)}
+            style={{
+              width: "100%", height: 38, paddingLeft: 34, paddingRight: 12,
+              border: "1px solid var(--card-border)", borderRadius: 10,
+              background: "var(--background)", color: "var(--foreground)",
+              fontFamily: "Inter, sans-serif", fontSize: 13, outline: "none",
+              boxSizing: "border-box",
+            }}
           />
         </div>
       </div>
 
-      <div className="msgs-conv-list">
+      {/* Conversation list */}
+      <div style={{ flex: 1, overflowY: "auto" }}>
         {filtered.length === 0 && (
-          <div className="msgs-empty">
-            {q ? <p>No conversations match your search.</p> : (emptyContent ?? <p>No conversations yet.</p>)}
+          <div style={{
+            padding: "2rem 1rem", display: "flex", flexDirection: "column",
+            alignItems: "center", textAlign: "center", gap: "0.5rem",
+            color: "var(--text-muted)", fontSize: "0.8rem", lineHeight: 1.7,
+          }}>
+            {q ? <p style={{ margin: 0 }}>No conversations match your search.</p> : (emptyContent ?? <p style={{ margin: 0 }}>No conversations yet.</p>)}
           </div>
         )}
 
@@ -96,33 +115,89 @@ export default function ConversationListUI({
             }
           }
 
+          const displayName = item.user?.name ?? (item.user?.twitterHandle ? `@${item.user.twitterHandle}` : "Deleted User");
+
           return (
             <Link
               key={item.id}
               href={`/messages/${item.id}`}
-              className={`msgs-conv-row${active ? " active" : ""}`}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: 12,
+                padding: "14px 16px",
+                textDecoration: "none",
+                borderBottom: "1px solid var(--card-border)",
+                borderLeft: active ? "3px solid #14B8A6" : "3px solid transparent",
+                background: active ? "rgba(20,184,166,0.07)" : "transparent",
+                cursor: "pointer",
+                minHeight: 76,
+                boxSizing: "border-box",
+                transition: "background 0.15s",
+              }}
             >
-              <div className="msgs-conv-avatar-wrap">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
+              {/* Avatar */}
+              <div style={{ position: "relative", flexShrink: 0, width: 46, height: 46 }}>
                 {item.user?.image ? (
-                  <img src={item.user.image} alt="" className="msgs-conv-avatar-img" />
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={item.user.image}
+                    alt=""
+                    style={{ width: 46, height: 46, borderRadius: "50%", objectFit: "cover", display: "block" }}
+                  />
                 ) : (
-                  <div className="msgs-conv-avatar-fallback" />
+                  <div style={{ width: 46, height: 46, borderRadius: "50%", background: "var(--avatar-bg)" }} />
                 )}
-                <span className={`msgs-online-dot${online ? " msgs-online-dot--on" : ""}`} />
+                <span style={{
+                  position: "absolute", bottom: 1, right: 1,
+                  width: 11, height: 11, borderRadius: "50%",
+                  background: online ? "#22c55e" : "var(--card-border)",
+                  border: "2px solid var(--dropdown-bg)",
+                }} />
               </div>
-              <div className="msgs-conv-info">
-                <div className="msgs-conv-top">
-                  <span className="msgs-conv-name">
-                    {item.user?.name ?? item.user?.twitterHandle ?? "Unknown"}
+
+              {/* Text */}
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 4 }}>
+                  <span style={{
+                    fontSize: 14,
+                    fontWeight: item.unread > 0 ? 700 : 600,
+                    color: "var(--foreground)",
+                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                    maxWidth: 160,
+                    fontFamily: "Inter, sans-serif",
+                  }}>
+                    {displayName}
                   </span>
-                  <span className="msgs-conv-ts">{convTimestamp(item.updatedAt)}</span>
+                  <span style={{ fontSize: 11, color: "var(--text-muted)", flexShrink: 0, fontFamily: "Inter, sans-serif" }}>
+                    {convTimestamp(item.updatedAt)}
+                  </span>
                 </div>
-                <div className="msgs-conv-preview">{preview}</div>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                  <span style={{
+                    fontSize: 12,
+                    color: item.unread > 0 ? "var(--foreground)" : "var(--text-muted)",
+                    fontWeight: item.unread > 0 ? 600 : 400,
+                    whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
+                    maxWidth: 185,
+                    fontFamily: "Inter, sans-serif",
+                  }}>
+                    {preview}
+                  </span>
+                  {item.unread > 0 && (
+                    <span style={{
+                      background: "#14B8A6", color: "white",
+                      fontSize: 10, fontWeight: 700,
+                      minWidth: 20, height: 20, borderRadius: "50%",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      flexShrink: 0, padding: "0 4px",
+                      fontFamily: "Inter, sans-serif",
+                    }}>
+                      {item.unread > 9 ? "9+" : item.unread}
+                    </span>
+                  )}
+                </div>
               </div>
-              {item.unread > 0 && (
-                <div className="msgs-unread-badge">{item.unread}</div>
-              )}
             </Link>
           );
         })}

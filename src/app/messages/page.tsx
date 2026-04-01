@@ -60,34 +60,55 @@ export default async function MessagesPage() {
 
   return (
     <main className="page">
-      <div className="msgs-shell">
-        <div className="msgs-sidebar">
+      <div className="msgs-shell" style={{ display: "flex", height: "calc(100vh - 64px)", overflow: "hidden", background: "var(--background)" }}>
+        {/* Left sidebar */}
+        <div style={{
+          width: 320, flexShrink: 0,
+          borderRight: "1px solid var(--card-border)",
+          display: "flex", flexDirection: "column", overflow: "hidden",
+          background: "var(--dropdown-bg)",
+        }}>
           <ConversationListUI
             items={items}
             currentUserId={userId}
             emptyContent={
-              <>
-                <p>No conversations yet.</p>
-                <p>Visit a builder&apos;s profile and send them a message.</p>
+              <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <p style={{ margin: 0, color: "var(--text-muted)", fontSize: 13 }}>No conversations yet.</p>
+                <p style={{ margin: 0, color: "var(--text-muted)", fontSize: 12 }}>Visit a builder&apos;s profile and send them a message.</p>
                 <Link
                   href="/talent"
                   className="btn-primary"
-                  style={{ marginTop: "1rem", fontSize: "0.82rem", padding: "0.7rem 1.5rem" }}
+                  style={{ marginTop: "0.5rem", fontSize: "0.82rem", padding: "0.6rem 1.25rem" }}
                 >
                   Browse Talent
                 </Link>
-              </>
+              </div>
             }
           />
         </div>
 
-        <div className="msgs-empty-panel">
-          <div className="msgs-empty-icon">
-            <svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" style={{ opacity: 0.18 }}>
+        {/* Right: empty state */}
+        <div style={{
+          flex: 1, display: "flex", flexDirection: "column",
+          alignItems: "center", justifyContent: "center",
+          background: "var(--background)",
+        }}>
+          <div style={{
+            width: 72, height: 72, borderRadius: 20,
+            background: "rgba(20,184,166,0.12)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            marginBottom: 20, flexShrink: 0,
+          }}>
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
             </svg>
           </div>
-          <p className="msgs-empty-hint">Select a conversation to start messaging</p>
+          <h2 style={{ fontSize: 18, fontWeight: 700, color: "var(--foreground)", margin: "0 0 8px", fontFamily: "Inter, sans-serif" }}>
+            Your Messages
+          </h2>
+          <p style={{ fontSize: 13, color: "var(--text-muted)", margin: 0, textAlign: "center", maxWidth: 260, lineHeight: 1.6, fontFamily: "Inter, sans-serif" }}>
+            Select a conversation from the left to start chatting with your clients and freelancers.
+          </p>
         </div>
       </div>
     </main>

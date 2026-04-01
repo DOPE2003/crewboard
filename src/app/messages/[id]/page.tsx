@@ -161,10 +161,15 @@ export default async function ConversationPage({
 
   return (
     <main className="page">
-      <div className="msgs-shell">
+      <div className="msgs-shell" style={{ display: "flex", height: "calc(100vh - 64px)", overflow: "hidden", background: "var(--background)" }}>
 
         {/* LEFT: Conversations sidebar */}
-        <div className="msgs-sidebar">
+        <div style={{
+          width: 320, flexShrink: 0,
+          borderRight: "1px solid var(--card-border)",
+          display: "flex", flexDirection: "column", overflow: "hidden",
+          background: "var(--dropdown-bg)",
+        }} className="msgs-sidebar">
           <ConversationListUI
             items={convItems}
             activeId={id}
