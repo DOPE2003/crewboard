@@ -34,6 +34,7 @@ export type UserMinAggregateOutputType = {
   bio: string | null
   availability: string | null
   profileComplete: boolean | null
+  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   walletAddress: string | null
@@ -62,6 +63,7 @@ export type UserMaxAggregateOutputType = {
   bio: string | null
   availability: string | null
   profileComplete: boolean | null
+  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   walletAddress: string | null
@@ -91,6 +93,7 @@ export type UserCountAggregateOutputType = {
   bio: number
   availability: number
   profileComplete: number
+  isAdmin: number
   createdAt: number
   updatedAt: number
   walletAddress: number
@@ -122,6 +125,7 @@ export type UserMinAggregateInputType = {
   bio?: true
   availability?: true
   profileComplete?: true
+  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -150,6 +154,7 @@ export type UserMaxAggregateInputType = {
   bio?: true
   availability?: true
   profileComplete?: true
+  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -179,6 +184,7 @@ export type UserCountAggregateInputType = {
   bio?: true
   availability?: true
   profileComplete?: true
+  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -282,6 +288,7 @@ export type UserGroupByOutputType = {
   bio: string | null
   availability: string | null
   profileComplete: boolean
+  isAdmin: boolean
   createdAt: Date
   updatedAt: Date
   walletAddress: string | null
@@ -333,6 +340,7 @@ export type UserWhereInput = {
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
+  isAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   walletAddress?: Prisma.StringNullableFilter<"User"> | string | null
@@ -375,6 +383,7 @@ export type UserOrderByWithRelationInput = {
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -424,6 +433,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
+  isAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isOG?: Prisma.BoolFilter<"User"> | boolean
@@ -462,6 +472,7 @@ export type UserOrderByWithAggregationInput = {
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -498,6 +509,7 @@ export type UserScalarWhereWithAggregatesInput = {
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   availability?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  isAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   walletAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -528,6 +540,7 @@ export type UserCreateInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -570,6 +583,7 @@ export type UserUncheckedCreateInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -612,6 +626,7 @@ export type UserUpdateInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -654,6 +669,7 @@ export type UserUncheckedUpdateInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -696,6 +712,7 @@ export type UserCreateManyInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -726,6 +743,7 @@ export type UserUpdateManyMutationInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -756,6 +774,7 @@ export type UserUncheckedUpdateManyInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -794,6 +813,7 @@ export type UserCountOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -823,6 +843,7 @@ export type UserMaxOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -851,6 +872,7 @@ export type UserMinOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
+  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -1082,6 +1104,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1123,6 +1146,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1169,6 +1193,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1210,6 +1235,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1267,6 +1293,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1308,6 +1335,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1360,6 +1388,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1401,6 +1430,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1442,6 +1472,7 @@ export type UserCreateWithoutNotificationsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1483,6 +1514,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1540,6 +1572,7 @@ export type UserUpdateWithoutNotificationsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1581,6 +1614,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1622,6 +1656,7 @@ export type UserCreateWithoutSentMessagesInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1663,6 +1698,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1720,6 +1756,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1761,6 +1798,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1802,6 +1840,7 @@ export type UserCreateWithoutGigsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1843,6 +1882,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1900,6 +1940,7 @@ export type UserUpdateWithoutGigsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1941,6 +1982,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1982,6 +2024,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2023,6 +2066,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2069,6 +2113,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2110,6 +2155,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2167,6 +2213,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2208,6 +2255,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2260,6 +2308,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2301,6 +2350,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2342,6 +2392,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2383,6 +2434,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2429,6 +2481,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2470,6 +2523,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2527,6 +2581,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2568,6 +2623,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2620,6 +2676,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2661,6 +2718,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2702,6 +2760,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2743,6 +2802,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2800,6 +2860,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2841,6 +2902,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2882,6 +2944,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2923,6 +2986,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2980,6 +3044,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3021,6 +3086,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3062,6 +3128,7 @@ export type UserCreateWithoutProWaitlistInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3103,6 +3170,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3160,6 +3228,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3201,6 +3270,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3363,6 +3433,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3406,6 +3477,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3436,6 +3508,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3466,6 +3539,7 @@ export type UserSelectScalar = {
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
+  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3485,7 +3559,7 @@ export type UserSelectScalar = {
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "website" | "githubHandle" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isAdmin" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "website" | "githubHandle" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -3531,6 +3605,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     bio: string | null
     availability: string | null
     profileComplete: boolean
+    isAdmin: boolean
     createdAt: Date
     updatedAt: Date
     walletAddress: string | null
@@ -3993,6 +4068,7 @@ export interface UserFieldRefs {
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly availability: Prisma.FieldRef<"User", 'String'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
+  readonly isAdmin: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly walletAddress: Prisma.FieldRef<"User", 'String'>
