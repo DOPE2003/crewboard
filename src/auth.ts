@@ -45,7 +45,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const p = profile as Record<string, unknown>;
         // Twitter OAuth 2.0 wraps user data inside a `data` field.
         const data = (p?.data ?? p) as Record<string, unknown>;
-        const handle = (data?.username as string) || "";
+        const handle = ((data?.username as string) || "").toLowerCase();
         const existing = await db.user.findUnique({
           where: { twitterId: account.providerAccountId },
           select: { id: true },

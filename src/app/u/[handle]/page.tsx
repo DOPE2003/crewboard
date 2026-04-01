@@ -55,6 +55,7 @@ function SectionCard({ children, style }: { children: React.ReactNode; style?: R
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
+  const normalizedHandle = handle.toLowerCase();
 
   let user: any = null;
   let session: any = null;
@@ -62,7 +63,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   try {
     [user, session] = await Promise.all([
       db.user.findUnique({
-        where: { twitterHandle: handle },
+        where: { twitterHandle: normalizedHandle },
         include: { gigs: { where: { status: "active" }, orderBy: { createdAt: "desc" } } },
       }),
       auth(),
