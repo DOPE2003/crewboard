@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { auth } from "@/auth";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { Check, Shield, Clock, Star } from "lucide-react";
 import BannerUpload from "@/components/ui/BannerUpload";
@@ -69,7 +69,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     ]);
   } catch (e) { console.error(e); }
 
-  if (!user || !user.profileComplete) notFound();
+  if (!user) notFound();
+  if (!user.profileComplete) {
+    // Own profile not yet complete — send them to dashboard instead of 404
+    const viewerIdEarly = (session?.user as any)?.userId as string | undefined;
+    if (viewerIdEarly && viewerIdEarly === user.id) redirect("/dashboard");
+    notFound();
+  }
 
   const [reviews, completedOrdersCount, totalEarnedAgg] = await Promise.all([
     db.review.findMany({

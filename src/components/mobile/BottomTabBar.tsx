@@ -61,7 +61,7 @@ function ProfileIcon({ active }: { active: boolean }) {
 export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Props) {
   const pathname = usePathname()
 
-  const profileHref = twitterHandle ? `/u/${twitterHandle}` : '/dashboard'
+  const profileHref = twitterHandle ? `/u/${twitterHandle}` : '/login'
 
   const tabs = [
     { href: '/',           label: 'Home',      icon: (a: boolean) => <HomeIcon active={a} />,     match: (p: string) => p === '/' },
