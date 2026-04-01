@@ -34,7 +34,6 @@ export type UserMinAggregateOutputType = {
   bio: string | null
   availability: string | null
   profileComplete: boolean | null
-  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   walletAddress: string | null
@@ -48,6 +47,7 @@ export type UserMinAggregateOutputType = {
   cvUrl: string | null
   telegramHandle: string | null
   website: string | null
+  githubHandle: string | null
   bannerImage: string | null
   humanVerified: boolean | null
 }
@@ -62,7 +62,6 @@ export type UserMaxAggregateOutputType = {
   bio: string | null
   availability: string | null
   profileComplete: boolean | null
-  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   walletAddress: string | null
@@ -76,6 +75,7 @@ export type UserMaxAggregateOutputType = {
   cvUrl: string | null
   telegramHandle: string | null
   website: string | null
+  githubHandle: string | null
   bannerImage: string | null
   humanVerified: boolean | null
 }
@@ -91,7 +91,6 @@ export type UserCountAggregateOutputType = {
   bio: number
   availability: number
   profileComplete: number
-  isAdmin: number
   createdAt: number
   updatedAt: number
   walletAddress: number
@@ -106,6 +105,7 @@ export type UserCountAggregateOutputType = {
   cvUrl: number
   telegramHandle: number
   website: number
+  githubHandle: number
   bannerImage: number
   humanVerified: number
   _all: number
@@ -122,7 +122,6 @@ export type UserMinAggregateInputType = {
   bio?: true
   availability?: true
   profileComplete?: true
-  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -136,6 +135,7 @@ export type UserMinAggregateInputType = {
   cvUrl?: true
   telegramHandle?: true
   website?: true
+  githubHandle?: true
   bannerImage?: true
   humanVerified?: true
 }
@@ -150,7 +150,6 @@ export type UserMaxAggregateInputType = {
   bio?: true
   availability?: true
   profileComplete?: true
-  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -164,6 +163,7 @@ export type UserMaxAggregateInputType = {
   cvUrl?: true
   telegramHandle?: true
   website?: true
+  githubHandle?: true
   bannerImage?: true
   humanVerified?: true
 }
@@ -179,7 +179,6 @@ export type UserCountAggregateInputType = {
   bio?: true
   availability?: true
   profileComplete?: true
-  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -194,6 +193,7 @@ export type UserCountAggregateInputType = {
   cvUrl?: true
   telegramHandle?: true
   website?: true
+  githubHandle?: true
   bannerImage?: true
   humanVerified?: true
   _all?: true
@@ -282,7 +282,6 @@ export type UserGroupByOutputType = {
   bio: string | null
   availability: string | null
   profileComplete: boolean
-  isAdmin: boolean
   createdAt: Date
   updatedAt: Date
   walletAddress: string | null
@@ -297,6 +296,7 @@ export type UserGroupByOutputType = {
   cvUrl: string | null
   telegramHandle: string | null
   website: string | null
+  githubHandle: string | null
   bannerImage: string | null
   humanVerified: boolean
   _count: UserCountAggregateOutputType | null
@@ -333,7 +333,6 @@ export type UserWhereInput = {
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
-  isAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   walletAddress?: Prisma.StringNullableFilter<"User"> | string | null
@@ -348,6 +347,7 @@ export type UserWhereInput = {
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
+  githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
   gigs?: Prisma.GigListRelationFilter
@@ -375,7 +375,6 @@ export type UserOrderByWithRelationInput = {
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -390,6 +389,7 @@ export type UserOrderByWithRelationInput = {
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
   gigs?: Prisma.GigOrderByRelationAggregateInput
@@ -424,7 +424,6 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
-  isAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isOG?: Prisma.BoolFilter<"User"> | boolean
@@ -435,6 +434,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
+  githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
   gigs?: Prisma.GigListRelationFilter
@@ -462,7 +462,6 @@ export type UserOrderByWithAggregationInput = {
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -477,6 +476,7 @@ export type UserOrderByWithAggregationInput = {
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -498,7 +498,6 @@ export type UserScalarWhereWithAggregatesInput = {
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   availability?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  isAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   walletAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -513,6 +512,7 @@ export type UserScalarWhereWithAggregatesInput = {
   cvUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  githubHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   humanVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
@@ -528,7 +528,6 @@ export type UserCreateInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -543,6 +542,7 @@ export type UserCreateInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -570,7 +570,6 @@ export type UserUncheckedCreateInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -585,6 +584,7 @@ export type UserUncheckedCreateInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -612,7 +612,6 @@ export type UserUpdateInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -627,6 +626,7 @@ export type UserUpdateInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -654,7 +654,6 @@ export type UserUncheckedUpdateInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -669,6 +668,7 @@ export type UserUncheckedUpdateInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -696,7 +696,6 @@ export type UserCreateManyInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -711,6 +710,7 @@ export type UserCreateManyInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
 }
@@ -726,7 +726,6 @@ export type UserUpdateManyMutationInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -741,6 +740,7 @@ export type UserUpdateManyMutationInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -756,7 +756,6 @@ export type UserUncheckedUpdateManyInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -771,6 +770,7 @@ export type UserUncheckedUpdateManyInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
@@ -794,7 +794,6 @@ export type UserCountOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -809,6 +808,7 @@ export type UserCountOrderByAggregateInput = {
   cvUrl?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  githubHandle?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
 }
@@ -823,7 +823,6 @@ export type UserMaxOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -837,6 +836,7 @@ export type UserMaxOrderByAggregateInput = {
   cvUrl?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  githubHandle?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
 }
@@ -851,7 +851,6 @@ export type UserMinOrderByAggregateInput = {
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -865,6 +864,7 @@ export type UserMinOrderByAggregateInput = {
   cvUrl?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  githubHandle?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
 }
@@ -1082,7 +1082,6 @@ export type UserCreateWithoutSavedByTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1097,6 +1096,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -1123,7 +1123,6 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1138,6 +1137,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -1169,7 +1169,6 @@ export type UserCreateWithoutSavedTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1184,6 +1183,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -1210,7 +1210,6 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1225,6 +1224,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -1267,7 +1267,6 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1282,6 +1281,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -1308,7 +1308,6 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1323,6 +1322,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -1360,7 +1360,6 @@ export type UserUpdateWithoutSavedTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1375,6 +1374,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -1401,7 +1401,6 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1416,6 +1415,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -1442,7 +1442,6 @@ export type UserCreateWithoutNotificationsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1457,6 +1456,7 @@ export type UserCreateWithoutNotificationsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -1483,7 +1483,6 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1498,6 +1497,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -1540,7 +1540,6 @@ export type UserUpdateWithoutNotificationsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1555,6 +1554,7 @@ export type UserUpdateWithoutNotificationsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -1581,7 +1581,6 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1596,6 +1595,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -1622,7 +1622,6 @@ export type UserCreateWithoutSentMessagesInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1637,6 +1636,7 @@ export type UserCreateWithoutSentMessagesInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -1663,7 +1663,6 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1678,6 +1677,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -1720,7 +1720,6 @@ export type UserUpdateWithoutSentMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1735,6 +1734,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -1761,7 +1761,6 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1776,6 +1775,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -1802,7 +1802,6 @@ export type UserCreateWithoutGigsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1817,6 +1816,7 @@ export type UserCreateWithoutGigsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1843,7 +1843,6 @@ export type UserUncheckedCreateWithoutGigsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1858,6 +1857,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1900,7 +1900,6 @@ export type UserUpdateWithoutGigsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1915,6 +1914,7 @@ export type UserUpdateWithoutGigsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1941,7 +1941,6 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1956,6 +1955,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1982,7 +1982,6 @@ export type UserCreateWithoutBuyerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1997,6 +1996,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -2023,7 +2023,6 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2038,6 +2037,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -2069,7 +2069,6 @@ export type UserCreateWithoutSellerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2084,6 +2083,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -2110,7 +2110,6 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2125,6 +2124,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -2167,7 +2167,6 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2182,6 +2181,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -2208,7 +2208,6 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2223,6 +2222,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -2260,7 +2260,6 @@ export type UserUpdateWithoutSellerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2275,6 +2274,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -2301,7 +2301,6 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2316,6 +2315,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -2342,7 +2342,6 @@ export type UserCreateWithoutReviewsReceivedInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2357,6 +2356,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -2383,7 +2383,6 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2398,6 +2397,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -2429,7 +2429,6 @@ export type UserCreateWithoutReviewsGivenInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2444,6 +2443,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -2470,7 +2470,6 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2485,6 +2484,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -2527,7 +2527,6 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2542,6 +2541,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -2568,7 +2568,6 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2583,6 +2582,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -2620,7 +2620,6 @@ export type UserUpdateWithoutReviewsGivenInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2635,6 +2634,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -2661,7 +2661,6 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2676,6 +2675,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -2702,7 +2702,6 @@ export type UserCreateWithoutShowcasePostsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2717,6 +2716,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -2743,7 +2743,6 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2758,6 +2757,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -2800,7 +2800,6 @@ export type UserUpdateWithoutShowcasePostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2815,6 +2814,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -2841,7 +2841,6 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2856,6 +2855,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -2882,7 +2882,6 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2897,6 +2896,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -2923,7 +2923,6 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2938,6 +2937,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -2980,7 +2980,6 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2995,6 +2994,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -3021,7 +3021,6 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3036,6 +3035,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -3062,7 +3062,6 @@ export type UserCreateWithoutProWaitlistInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3077,6 +3076,7 @@ export type UserCreateWithoutProWaitlistInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
@@ -3103,7 +3103,6 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3118,6 +3117,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   website?: string | null
+  githubHandle?: string | null
   bannerImage?: string | null
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
@@ -3160,7 +3160,6 @@ export type UserUpdateWithoutProWaitlistInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3175,6 +3174,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
@@ -3201,7 +3201,6 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3216,6 +3215,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
@@ -3363,7 +3363,6 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3378,6 +3377,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   cvUrl?: boolean
   telegramHandle?: boolean
   website?: boolean
+  githubHandle?: boolean
   bannerImage?: boolean
   humanVerified?: boolean
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
@@ -3406,7 +3406,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3421,6 +3420,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   cvUrl?: boolean
   telegramHandle?: boolean
   website?: boolean
+  githubHandle?: boolean
   bannerImage?: boolean
   humanVerified?: boolean
 }, ExtArgs["result"]["user"]>
@@ -3436,7 +3436,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3451,6 +3450,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   cvUrl?: boolean
   telegramHandle?: boolean
   website?: boolean
+  githubHandle?: boolean
   bannerImage?: boolean
   humanVerified?: boolean
 }, ExtArgs["result"]["user"]>
@@ -3466,7 +3466,6 @@ export type UserSelectScalar = {
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3481,11 +3480,12 @@ export type UserSelectScalar = {
   cvUrl?: boolean
   telegramHandle?: boolean
   website?: boolean
+  githubHandle?: boolean
   bannerImage?: boolean
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isAdmin" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "website" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "website" | "githubHandle" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -3531,7 +3531,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     bio: string | null
     availability: string | null
     profileComplete: boolean
-    isAdmin: boolean
     createdAt: Date
     updatedAt: Date
     walletAddress: string | null
@@ -3546,6 +3545,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     cvUrl: string | null
     telegramHandle: string | null
     website: string | null
+    githubHandle: string | null
     bannerImage: string | null
     humanVerified: boolean
   }, ExtArgs["result"]["user"]>
@@ -3993,7 +3993,6 @@ export interface UserFieldRefs {
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly availability: Prisma.FieldRef<"User", 'String'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
-  readonly isAdmin: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly walletAddress: Prisma.FieldRef<"User", 'String'>
@@ -4008,6 +4007,7 @@ export interface UserFieldRefs {
   readonly cvUrl: Prisma.FieldRef<"User", 'String'>
   readonly telegramHandle: Prisma.FieldRef<"User", 'String'>
   readonly website: Prisma.FieldRef<"User", 'String'>
+  readonly githubHandle: Prisma.FieldRef<"User", 'String'>
   readonly bannerImage: Prisma.FieldRef<"User", 'String'>
   readonly humanVerified: Prisma.FieldRef<"User", 'Boolean'>
 }
