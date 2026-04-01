@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Twitter, Send, Globe, Plus } from "lucide-react";
+import { Twitter, Send, Globe, Plus, Github } from "lucide-react";
 import { updateSocialLinks } from "@/actions/profile";
 import { useRouter } from "next/navigation";
 
@@ -9,18 +9,22 @@ interface Props {
   twitterHandle: string;
   telegramHandle: string | null;
   website: string | null;
+  githubHandle: string | null;
   isOwnProfile: boolean;
 }
 
-export default function SocialLinksEditor({ twitterHandle, telegramHandle, website, isOwnProfile }: Props) {
+export default function SocialLinksEditor({ twitterHandle, telegramHandle, website, githubHandle, isOwnProfile }: Props) {
   const router = useRouter();
   const [editingTg, setEditingTg] = useState(false);
   const [editingWeb, setEditingWeb] = useState(false);
+  const [editingGh, setEditingGh] = useState(false);
   const [tgVal, setTgVal] = useState(telegramHandle ?? "");
   const [webVal, setWebVal] = useState(website ?? "");
+  const [ghVal, setGhVal] = useState(githubHandle ?? "");
   const [saving, setSaving] = useState(false);
   const tgRef = useRef<HTMLInputElement>(null);
   const webRef = useRef<HTMLInputElement>(null);
+  const ghRef = useRef<HTMLInputElement>(null);
 
   const pill: React.CSSProperties = {
     display: "inline-flex", alignItems: "center", gap: 5,
@@ -56,6 +60,18 @@ export default function SocialLinksEditor({ twitterHandle, telegramHandle, websi
     } finally {
       setSaving(false);
       setEditingWeb(false);
+    }
+  }
+
+  async function saveGh() {
+    if (saving) return;
+    setSaving(true);
+    try {
+      await updateSocialLinks({ githubHandle: ghVal });
+      router.refresh();
+    } finally {
+      setSaving(false);
+      setEditingGh(false);
     }
   }
 
@@ -145,6 +161,44 @@ export default function SocialLinksEditor({ twitterHandle, telegramHandle, websi
         <button onClick={() => setEditingWeb(true)} style={{ ...addPill, background: "none", border: "0.5px dashed var(--card-border)" }}>
           <Plus size={11} />
           Add Website
+        </button>
+      ) : null}
+
+      {/* GitHub */}
+      {editingGh ? (
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+          <Github size={12} style={{ color: "#14B8A6", flexShrink: 0 }} />
+          <input
+            ref={ghRef}
+            autoFocus
+            value={ghVal}
+            onChange={e => setGhVal(e.target.value)}
+            placeholder="username"
+            onBlur={saveGh}
+            onKeyDown={e => { if (e.key === "Enter") { e.preventDefault(); saveGh(); } if (e.key === "Escape") { setEditingGh(false); setGhVal(githubHandle ?? ""); } }}
+            style={{
+              fontSize: "12px", padding: "4px 8px", borderRadius: 8,
+              border: "1px solid #14B8A6", outline: "none",
+              background: "var(--background)", color: "var(--foreground)",
+              width: 120,
+            }}
+          />
+        </span>
+      ) : githubHandle ? (
+        <a
+          href={`https://github.com/${githubHandle}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={isOwnProfile ? (e) => { e.preventDefault(); setEditingGh(true); } : undefined}
+          style={pill}
+        >
+          <Github size={12} />
+          {githubHandle}
+        </a>
+      ) : isOwnProfile ? (
+        <button onClick={() => setEditingGh(true)} style={{ ...addPill, background: "none", border: "0.5px dashed var(--card-border)" }}>
+          <Plus size={11} />
+          Add GitHub
         </button>
       ) : null}
     </div>

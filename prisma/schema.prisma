@@ -33,6 +33,7 @@ model User {
   cvUrl                String?
   telegramHandle       String?
   website              String?
+  githubHandle         String?
   bannerImage          String?
   humanVerified        Boolean               @default(false)
   gigs                 Gig[]

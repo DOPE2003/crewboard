@@ -6,9 +6,11 @@ import db from "@/lib/db";
 export async function updateSocialLinks({
   telegramHandle,
   website,
+  githubHandle,
 }: {
   telegramHandle?: string;
   website?: string;
+  githubHandle?: string;
 }) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
@@ -17,6 +19,7 @@ export async function updateSocialLinks({
   const data: Record<string, string> = {};
   if (telegramHandle !== undefined) data.telegramHandle = telegramHandle.replace(/^@/, "").trim();
   if (website !== undefined) data.website = website.trim();
+  if (githubHandle !== undefined) data.githubHandle = githubHandle.replace(/^@/, "").trim();
 
   await db.user.update({ where: { id: userId }, data });
 }

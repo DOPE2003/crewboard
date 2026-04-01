@@ -15,6 +15,7 @@ import PortfolioEditor from "@/components/forms/PortfolioEditor";
 import SocialLinksEditor from "@/components/ui/SocialLinksEditor";
 import type { PortfolioItem } from "@/actions/portfolio";
 import CvUpload from "@/components/ui/CvUpload";
+import { blobUrl } from "@/lib/blobUrl";
 import AddEmailForm from "@/components/forms/AddEmailForm";
 import DeleteAccountButton from "@/components/ui/DeleteAccountButton";
 
@@ -259,6 +260,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   twitterHandle={user.twitterHandle}
                   telegramHandle={user.telegramHandle ?? null}
                   website={user.website ?? null}
+                  githubHandle={user.githubHandle ?? null}
                   isOwnProfile={isOwnProfile}
                 />
               </div>
@@ -332,16 +334,50 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   <PortfolioEditor initialItems={portfolioItems} handle={user.twitterHandle} />
                 ) : portfolioItems.length > 0 ? (
                   <div className="portfolio-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
-                    {portfolioItems.map((item: PortfolioItem) => {
+                    {portfolioItems.map((item: any) => {
                       const colors = ["#E8FAF7", "#EEF2FF", "#FFF7ED", "#F0FDF4", "#FDF4FF"];
-                      const idx = item.id.charCodeAt(0) % colors.length;
+                      const idx = (item.id ?? "0").charCodeAt(0) % colors.length;
+                      // Handle both old schema (url field for project links) and new schema (mediaUrl for uploads)
+                      const rawMediaUrl: string = item.mediaUrl ?? item.image ?? "";
+                      const rawMediaType: string = item.mediaType ?? item.type ?? (
+                        rawMediaUrl.match(/\.(mp4|webm|mov)$/i) ? "video" :
+                        rawMediaUrl.match(/\.(jpg|jpeg|png|gif|webp|svg)$/i) ? "image" :
+                        rawMediaUrl.match(/\.pdf$/i) ? "pdf" :
+                        rawMediaUrl.startsWith("data:video") ? "video" :
+                        rawMediaUrl.startsWith("data:image") ? "image" :
+                        rawMediaUrl ? "image" : ""
+                      );
+                      const proxiedUrl = rawMediaUrl ? blobUrl(rawMediaUrl) : undefined;
                       return (
-                        <a key={item.id} href={item.url ?? "#"} target={item.url ? "_blank" : undefined} rel="noopener noreferrer"
-                          style={{ display: "block", borderRadius: 10, overflow: "hidden", border: "1px solid var(--card-border)", textDecoration: "none" }}>
-                          <div style={{ height: 80, background: colors[idx], display: "flex", alignItems: "center", justifyContent: "center" }}>
-                            <span style={{ fontSize: "24px", opacity: 0.3 }}>◆</span>
-                          </div>
-                          <div style={{ padding: "0.6rem 0.75rem" }}>
+                        <div key={item.id} style={{ borderRadius: 10, overflow: "hidden", border: "1px solid var(--card-border)" }}>
+                          {/* Media preview */}
+                          {rawMediaType === "video" && proxiedUrl ? (
+                            <div style={{ background: "#000", aspectRatio: "16/9" }}>
+                              <video src={proxiedUrl} controls playsInline preload="metadata" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}>
+                                <source src={proxiedUrl} type="video/mp4" />
+                              </video>
+                            </div>
+                          ) : rawMediaType === "image" && proxiedUrl ? (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img src={proxiedUrl} alt={item.title} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block", background: "#f3f4f6" }}
+                              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                          ) : rawMediaType === "pdf" && proxiedUrl ? (
+                            <a href={proxiedUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#fef2f2", padding: "16px", textDecoration: "none", gap: 4, aspectRatio: "16/9" }}>
+                              <span style={{ fontSize: 28 }}>📄</span>
+                              <span style={{ fontSize: 10, fontWeight: 600, color: "#dc2626" }}>PDF</span>
+                            </a>
+                          ) : proxiedUrl ? (
+                            <a href={proxiedUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#eff6ff", padding: "16px", textDecoration: "none", gap: 4, aspectRatio: "16/9" }}>
+                              <span style={{ fontSize: 28 }}>📋</span>
+                              <span style={{ fontSize: 10, fontWeight: 600, color: "#2563eb" }}>File</span>
+                            </a>
+                          ) : (
+                            <a href={item.url ?? "#"} target={item.url ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", height: 80, background: colors[idx], alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+                              <span style={{ fontSize: "24px", opacity: 0.3 }}>◆</span>
+                            </a>
+                          )}
+                          {/* Info */}
+                          <div style={{ padding: "0.6rem 0.75rem", background: "var(--background)" }}>
                             <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                               {item.title}
                             </div>
@@ -350,8 +386,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                                 {item.description}
                               </div>
                             )}
+                            {item.url && !item.mediaUrl && (
+                              <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "#14B8A6", textDecoration: "none", display: "inline-block", marginTop: 2 }}>
+                                View →
+                              </a>
+                            )}
                           </div>
-                        </a>
+                        </div>
                       );
                     })}
                   </div>
@@ -405,6 +446,40 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 </div>
               )}
             </SectionCard>
+
+            {/* Mobile-only wallet shortcut — desktop has this in the navbar dropdown */}
+            {isOwnProfile && (
+              <div className="md:hidden">
+                <SectionCard>
+                  <SectionLabel>Wallet</SectionLabel>
+                  {wallet ? (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                        <div style={{ width: 32, height: 32, borderRadius: 8, background: "rgba(20,184,166,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h.01"/>
+                          </svg>
+                        </div>
+                        <div>
+                          <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--foreground)", fontFamily: "monospace" }}>{wallet}</div>
+                          <div style={{ fontSize: "10px", color: "var(--text-muted)", marginTop: 1 }}>Solana · Verified</div>
+                        </div>
+                      </div>
+                      <Link href="/billing" style={{ fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none", flexShrink: 0 }}>
+                        $Wallet →
+                      </Link>
+                    </div>
+                  ) : (
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                      <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: 0 }}>No wallet connected.</p>
+                      <Link href="/billing" style={{ fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none", flexShrink: 0 }}>
+                        Connect →
+                      </Link>
+                    </div>
+                  )}
+                </SectionCard>
+              </div>
+            )}
 
           </div>
 
@@ -488,20 +563,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2 }}>Solana</div>
                     </div>
                   </div>
-                  {isOwnProfile && (
-                    <Link href="/billing" style={{ fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none", flexShrink: 0 }}>
-                      $Wallet →
-                    </Link>
-                  )}
                 </div>
               ) : (
                 <div>
-                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No wallet connected.</p>
-                  {isOwnProfile && (
-                    <Link href="/billing" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
-                      Connect wallet
-                    </Link>
-                  )}
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: 0 }}>No wallet connected.</p>
                 </div>
               )}
             </SectionCard>
