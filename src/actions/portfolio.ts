@@ -10,6 +10,10 @@ export interface PortfolioItem {
   description: string;
   url?: string;
   year?: string;
+  mediaUrl?: string;
+  mediaType?: "image" | "video" | "pdf" | "document" | "other";
+  fileName?: string;
+  fileSize?: number;
 }
 
 export async function savePortfolioItems(items: PortfolioItem[]) {
