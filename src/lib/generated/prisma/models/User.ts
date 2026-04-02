@@ -30,11 +30,11 @@ export type UserMinAggregateOutputType = {
   twitterHandle: string | null
   name: string | null
   image: string | null
-  role: string | null
+  userTitle: string | null
+  role: $Enums.Role | null
   bio: string | null
   availability: string | null
   profileComplete: boolean | null
-  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   walletAddress: string | null
@@ -59,11 +59,11 @@ export type UserMaxAggregateOutputType = {
   twitterHandle: string | null
   name: string | null
   image: string | null
-  role: string | null
+  userTitle: string | null
+  role: $Enums.Role | null
   bio: string | null
   availability: string | null
   profileComplete: boolean | null
-  isAdmin: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
   walletAddress: string | null
@@ -88,12 +88,12 @@ export type UserCountAggregateOutputType = {
   twitterHandle: number
   name: number
   image: number
+  userTitle: number
   role: number
   skills: number
   bio: number
   availability: number
   profileComplete: number
-  isAdmin: number
   createdAt: number
   updatedAt: number
   walletAddress: number
@@ -121,11 +121,11 @@ export type UserMinAggregateInputType = {
   twitterHandle?: true
   name?: true
   image?: true
+  userTitle?: true
   role?: true
   bio?: true
   availability?: true
   profileComplete?: true
-  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -150,11 +150,11 @@ export type UserMaxAggregateInputType = {
   twitterHandle?: true
   name?: true
   image?: true
+  userTitle?: true
   role?: true
   bio?: true
   availability?: true
   profileComplete?: true
-  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -179,12 +179,12 @@ export type UserCountAggregateInputType = {
   twitterHandle?: true
   name?: true
   image?: true
+  userTitle?: true
   role?: true
   skills?: true
   bio?: true
   availability?: true
   profileComplete?: true
-  isAdmin?: true
   createdAt?: true
   updatedAt?: true
   walletAddress?: true
@@ -283,12 +283,12 @@ export type UserGroupByOutputType = {
   twitterHandle: string
   name: string | null
   image: string | null
-  role: string | null
+  userTitle: string | null
+  role: $Enums.Role
   skills: string[]
   bio: string | null
   availability: string | null
   profileComplete: boolean
-  isAdmin: boolean
   createdAt: Date
   updatedAt: Date
   walletAddress: string | null
@@ -335,12 +335,12 @@ export type UserWhereInput = {
   twitterHandle?: Prisma.StringFilter<"User"> | string
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
-  role?: Prisma.StringNullableFilter<"User"> | string | null
+  userTitle?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   skills?: Prisma.StringNullableListFilter<"User">
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
-  isAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   walletAddress?: Prisma.StringNullableFilter<"User"> | string | null
@@ -378,12 +378,12 @@ export type UserOrderByWithRelationInput = {
   twitterHandle?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
-  role?: Prisma.SortOrderInput | Prisma.SortOrder
+  userTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
   skills?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -428,12 +428,12 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   name?: Prisma.StringNullableFilter<"User"> | string | null
   image?: Prisma.StringNullableFilter<"User"> | string | null
-  role?: Prisma.StringNullableFilter<"User"> | string | null
+  userTitle?: Prisma.StringNullableFilter<"User"> | string | null
+  role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
   skills?: Prisma.StringNullableListFilter<"User">
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
-  isAdmin?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isOG?: Prisma.BoolFilter<"User"> | boolean
@@ -467,12 +467,12 @@ export type UserOrderByWithAggregationInput = {
   twitterHandle?: Prisma.SortOrder
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   image?: Prisma.SortOrderInput | Prisma.SortOrder
-  role?: Prisma.SortOrderInput | Prisma.SortOrder
+  userTitle?: Prisma.SortOrderInput | Prisma.SortOrder
+  role?: Prisma.SortOrder
   skills?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -504,12 +504,12 @@ export type UserScalarWhereWithAggregatesInput = {
   twitterHandle?: Prisma.StringWithAggregatesFilter<"User"> | string
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
-  role?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  userTitle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
   skills?: Prisma.StringNullableListFilter<"User">
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   availability?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
-  isAdmin?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   walletAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -535,12 +535,12 @@ export type UserCreateInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -578,12 +578,12 @@ export type UserUncheckedCreateInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -621,12 +621,12 @@ export type UserUpdateInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -664,12 +664,12 @@ export type UserUncheckedUpdateInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -707,12 +707,12 @@ export type UserCreateManyInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -738,12 +738,12 @@ export type UserUpdateManyMutationInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -769,12 +769,12 @@ export type UserUncheckedUpdateManyInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -808,12 +808,12 @@ export type UserCountOrderByAggregateInput = {
   twitterHandle?: Prisma.SortOrder
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  userTitle?: Prisma.SortOrder
   role?: Prisma.SortOrder
   skills?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -839,11 +839,11 @@ export type UserMaxOrderByAggregateInput = {
   twitterHandle?: Prisma.SortOrder
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  userTitle?: Prisma.SortOrder
   role?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -868,11 +868,11 @@ export type UserMinOrderByAggregateInput = {
   twitterHandle?: Prisma.SortOrder
   name?: Prisma.SortOrder
   image?: Prisma.SortOrder
+  userTitle?: Prisma.SortOrder
   role?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
-  isAdmin?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   walletAddress?: Prisma.SortOrder
@@ -906,6 +906,10 @@ export type StringFieldUpdateOperationsInput = {
 
 export type NullableStringFieldUpdateOperationsInput = {
   set?: string | null
+}
+
+export type EnumRoleFieldUpdateOperationsInput = {
+  set?: $Enums.Role
 }
 
 export type UserUpdateskillsInput = {
@@ -1099,12 +1103,12 @@ export type UserCreateWithoutSavedByTalentsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1141,12 +1145,12 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1188,12 +1192,12 @@ export type UserCreateWithoutSavedTalentsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1230,12 +1234,12 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1288,12 +1292,12 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1330,12 +1334,12 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1383,12 +1387,12 @@ export type UserUpdateWithoutSavedTalentsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1425,12 +1429,12 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1467,12 +1471,12 @@ export type UserCreateWithoutNotificationsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1509,12 +1513,12 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1567,12 +1571,12 @@ export type UserUpdateWithoutNotificationsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1609,12 +1613,12 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1651,12 +1655,12 @@ export type UserCreateWithoutSentMessagesInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1693,12 +1697,12 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1751,12 +1755,12 @@ export type UserUpdateWithoutSentMessagesInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1793,12 +1797,12 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1835,12 +1839,12 @@ export type UserCreateWithoutGigsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1877,12 +1881,12 @@ export type UserUncheckedCreateWithoutGigsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -1935,12 +1939,12 @@ export type UserUpdateWithoutGigsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1977,12 +1981,12 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2019,12 +2023,12 @@ export type UserCreateWithoutBuyerOrdersInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2061,12 +2065,12 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2108,12 +2112,12 @@ export type UserCreateWithoutSellerOrdersInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2150,12 +2154,12 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2208,12 +2212,12 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2250,12 +2254,12 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2303,12 +2307,12 @@ export type UserUpdateWithoutSellerOrdersInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2345,12 +2349,12 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2387,12 +2391,12 @@ export type UserCreateWithoutReviewsReceivedInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2429,12 +2433,12 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2476,12 +2480,12 @@ export type UserCreateWithoutReviewsGivenInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2518,12 +2522,12 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2576,12 +2580,12 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2618,12 +2622,12 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2671,12 +2675,12 @@ export type UserUpdateWithoutReviewsGivenInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2713,12 +2717,12 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2755,12 +2759,12 @@ export type UserCreateWithoutShowcasePostsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2797,12 +2801,12 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2855,12 +2859,12 @@ export type UserUpdateWithoutShowcasePostsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2897,12 +2901,12 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2939,12 +2943,12 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -2981,12 +2985,12 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3039,12 +3043,12 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3081,12 +3085,12 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3123,12 +3127,12 @@ export type UserCreateWithoutProWaitlistInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3165,12 +3169,12 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   twitterHandle: string
   name?: string | null
   image?: string | null
-  role?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   walletAddress?: string | null
@@ -3223,12 +3227,12 @@ export type UserUpdateWithoutProWaitlistInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3265,12 +3269,12 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  role?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3428,12 +3432,12 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   twitterHandle?: boolean
   name?: boolean
   image?: boolean
+  userTitle?: boolean
   role?: boolean
   skills?: boolean
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3472,12 +3476,12 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   twitterHandle?: boolean
   name?: boolean
   image?: boolean
+  userTitle?: boolean
   role?: boolean
   skills?: boolean
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3503,12 +3507,12 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   twitterHandle?: boolean
   name?: boolean
   image?: boolean
+  userTitle?: boolean
   role?: boolean
   skills?: boolean
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3534,12 +3538,12 @@ export type UserSelectScalar = {
   twitterHandle?: boolean
   name?: boolean
   image?: boolean
+  userTitle?: boolean
   role?: boolean
   skills?: boolean
   bio?: boolean
   availability?: boolean
   profileComplete?: boolean
-  isAdmin?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   walletAddress?: boolean
@@ -3559,7 +3563,7 @@ export type UserSelectScalar = {
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "isAdmin" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "website" | "githubHandle" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "website" | "githubHandle" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -3600,12 +3604,12 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     twitterHandle: string
     name: string | null
     image: string | null
-    role: string | null
+    userTitle: string | null
+    role: $Enums.Role
     skills: string[]
     bio: string | null
     availability: string | null
     profileComplete: boolean
-    isAdmin: boolean
     createdAt: Date
     updatedAt: Date
     walletAddress: string | null
@@ -4063,12 +4067,12 @@ export interface UserFieldRefs {
   readonly twitterHandle: Prisma.FieldRef<"User", 'String'>
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly image: Prisma.FieldRef<"User", 'String'>
-  readonly role: Prisma.FieldRef<"User", 'String'>
+  readonly userTitle: Prisma.FieldRef<"User", 'String'>
+  readonly role: Prisma.FieldRef<"User", 'Role'>
   readonly skills: Prisma.FieldRef<"User", 'String[]'>
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly availability: Prisma.FieldRef<"User", 'String'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
-  readonly isAdmin: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly walletAddress: Prisma.FieldRef<"User", 'String'>

@@ -6,6 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
 
 model User {
   id                   String                @id @default(cuid())
@@ -13,12 +18,12 @@ model User {
   twitterHandle        String                @unique
   name                 String?
   image                String?
-  role                 String?
+  userTitle            String?               // Renamed from role
+  role                 Role                  @default(USER)
   skills               String[]
   bio                  String?
   availability         String?
   profileComplete      Boolean               @default(false)
-  isAdmin              Boolean               @default(false)
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt
   walletAddress        String?               @unique
