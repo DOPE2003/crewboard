@@ -71,6 +71,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
   const [urlError, setUrlError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [isUploading, setIsUploading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [draft, setDraft] = useState<PortfolioItem>({ id: "", title: "", description: "", url: "", year: "" });
@@ -100,6 +101,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     if (!file) return;
     setUploadError(null);
     setIsUploading(true);
+    setIsProcessing(false);
     setUploadProgress(0);
 
     // Send raw binary via XHR — server streams it directly to Vercel Blob (no buffering)
@@ -108,7 +110,15 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
       xhr.open("POST", `/api/portfolio/upload?filename=${encodeURIComponent(file.name)}`);
       xhr.setRequestHeader("Content-Type", file.type);
       xhr.upload.onprogress = (evt) => {
-        if (evt.lengthComputable) setUploadProgress(Math.round((evt.loaded / evt.total) * 100));
+        if (evt.lengthComputable) {
+          // Cap at 95% — remaining 5% reserved for server-side Blob processing
+          setUploadProgress(Math.min(95, Math.round((evt.loaded / evt.total) * 100)));
+        }
+      };
+      xhr.upload.onload = () => {
+        // Data fully sent; server is now forwarding to Vercel Blob
+        setUploadProgress(95);
+        setIsProcessing(true);
       };
       xhr.onload = () => {
         if (xhr.status === 200) {
@@ -137,7 +147,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     });
 
     setIsUploading(false);
-    // reset so same file can be re-selected
+    setIsProcessing(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
   }
 
@@ -245,11 +255,23 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
           {isUploading && (
             <div>
               <div style={{ background: "#f3f4f6", borderRadius: 99, height: 4, overflow: "hidden" }}>
-                <div style={{ background: "#14B8A6", height: "100%", borderRadius: 99, width: `${uploadProgress}%`, transition: "width 0.3s ease" }} />
+                <div style={{
+                  background: "#14B8A6", height: "100%", borderRadius: 99,
+                  width: isProcessing ? "100%" : `${uploadProgress}%`,
+                  transition: isProcessing ? "none" : "width 0.3s ease",
+                  backgroundImage: isProcessing
+                    ? "linear-gradient(90deg, #14B8A6 0%, #0d9488 50%, #14B8A6 100%)"
+                    : undefined,
+                  backgroundSize: isProcessing ? "200% 100%" : undefined,
+                  animation: isProcessing ? "shimmer 1.2s linear infinite" : undefined,
+                }} />
               </div>
-              <p style={{ fontSize: 11, color: "#9ca3af", margin: "4px 0 0" }}>Uploading… {uploadProgress}%</p>
+              <p style={{ fontSize: 11, color: "#9ca3af", margin: "4px 0 0" }}>
+                {isProcessing ? "Saving to cloud…" : `Uploading… ${uploadProgress}%`}
+              </p>
             </div>
           )}
+          <style>{`@keyframes shimmer { 0% { background-position: 200% 0 } 100% { background-position: -200% 0 } }`}</style>
           {uploadError && <div style={{ fontSize: "0.72rem", color: "#ef4444" }}>{uploadError}</div>}
 
           <input style={inp} placeholder="Project title *" value={draft.title} onChange={e => setDraft(d => ({ ...d, title: e.target.value }))} maxLength={80} />
