@@ -1348,7 +1348,6 @@ export const UserScalarFieldEnum = {
   twitterHandle: 'twitterHandle',
   name: 'name',
   image: 'image',
-  userTitle: 'userTitle',
   role: 'role',
   skills: 'skills',
   bio: 'bio',
@@ -1358,6 +1357,7 @@ export const UserScalarFieldEnum = {
   updatedAt: 'updatedAt',
   walletAddress: 'walletAddress',
   isOG: 'isOG',
+  isAdmin: 'isAdmin',
   worldIdLevel: 'worldIdLevel',
   worldIdNullifier: 'worldIdNullifier',
   stripeVerificationId: 'stripeVerificationId',
@@ -1579,20 +1579,6 @@ export type StringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 
  * Reference to a field of type 'String[]'
  */
 export type ListStringFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'String[]'>
-    
-
-
-/**
- * Reference to a field of type 'Role'
- */
-export type EnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role'>
-    
-
-
-/**
- * Reference to a field of type 'Role[]'
- */
-export type ListEnumRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Role[]'>
     
 
 
