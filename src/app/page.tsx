@@ -69,10 +69,12 @@ export default async function HomePage() {
         }} />
 
         {/* Floating profile cards — desktop only */}
-        <div className="hidden md:block">
-          {floatingProfiles.length >= 2 && (
-            <HeroFloatingProfiles profiles={floatingProfiles} />
-          )}
+        <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
+          <div style={{ pointerEvents: "auto" }}>
+            {floatingProfiles.length >= 2 && (
+              <HeroFloatingProfiles profiles={floatingProfiles} />
+            )}
+          </div>
         </div>
 
         {/* Beta badge */}
@@ -191,7 +193,6 @@ export default async function HomePage() {
             zIndex: 1,
           }}
         >
-          {/* Row 1: Browse Profiles + Post a Service */}
           <div style={{ display: "flex", gap: 12, flexWrap: "wrap", justifyContent: "center" }}>
             <Link href="/talent" className="btn-hero-primary">
               Browse Profiles
@@ -200,8 +201,6 @@ export default async function HomePage() {
               {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
             </Link>
           </div>
-
-          {/* Row 2: Look for a Service */}
           <Link
             href="/gigs"
             style={{
@@ -219,7 +218,10 @@ export default async function HomePage() {
               gap: 8,
             }}
           >
-            🔍 Look for a Service
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              </svg>
+              Look for a Service
           </Link>
         </div>
 

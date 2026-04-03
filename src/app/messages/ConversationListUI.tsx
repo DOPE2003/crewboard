@@ -115,7 +115,7 @@ export default function ConversationListUI({
             }
           }
 
-          const displayName = item.user?.name ?? (item.user?.twitterHandle ? `@${item.user.twitterHandle}` : "Deleted User");
+          const displayName = item.user?.name ?? (item.user?.twitterHandle ? `@${item.user.twitterHandle}` : "Unknown User");
 
           return (
             <Link
@@ -138,16 +138,30 @@ export default function ConversationListUI({
             >
               {/* Avatar */}
               <div style={{ position: "relative", flexShrink: 0, width: 46, height: 46 }}>
-                {item.user?.image ? (
-                  // eslint-disable-next-line @next/next/no-img-element
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                {item.user?.image && (
                   <img
                     src={item.user.image}
                     alt=""
                     style={{ width: 46, height: 46, borderRadius: "50%", objectFit: "cover", display: "block" }}
+                    onError={(e) => {
+                      const t = e.currentTarget;
+                      t.style.display = "none";
+                      const fb = t.nextElementSibling as HTMLElement | null;
+                      if (fb) fb.style.display = "flex";
+                    }}
                   />
-                ) : (
-                  <div style={{ width: 46, height: 46, borderRadius: "50%", background: "var(--avatar-bg)" }} />
                 )}
+                <div style={{
+                  width: 46, height: 46, borderRadius: "50%",
+                  background: "linear-gradient(135deg, #14B8A6, #0F6E56)",
+                  display: item.user?.image ? "none" : "flex",
+                  alignItems: "center", justifyContent: "center",
+                  fontSize: 16, fontWeight: 700, color: "white",
+                  flexShrink: 0,
+                }}>
+                  {(item.user?.name ?? item.user?.twitterHandle ?? "U")[0].toUpperCase()}
+                </div>
                 <span style={{
                   position: "absolute", bottom: 1, right: 1,
                   width: 11, height: 11, borderRadius: "50%",

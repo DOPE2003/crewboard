@@ -6,6 +6,7 @@ import MessageThread from "./MessageThread";
 import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
 import ConversationListUI, { ConvItem } from "../ConversationListUI";
 import ProfileBottomSheet, { ProfileSidebarDesktop, ProfileData } from "./ProfileBottomSheet";
+import AvatarWithFallback from "@/components/ui/AvatarWithFallback";
 
 function lastSeenLabel(d: Date | null): string {
   if (!d) return "Offline";
@@ -192,18 +193,18 @@ export default async function ConversationPage({
                 href={`/u/${other.twitterHandle}`}
                 style={{ display: "flex", alignItems: "center", gap: "0.75rem", textDecoration: "none", color: "inherit", flex: 1, minWidth: 0 }}
               >
-                <div className="msgs-thread-avatar" style={{ position: "relative" }}>
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  {other.image ? (
-                    <img src={other.image} alt="" />
-                  ) : (
-                    <div className="msgs-thread-avatar-fallback" />
-                  )}
+                <div style={{ position: "relative", flexShrink: 0, width: 44, height: 44 }}>
+                  <AvatarWithFallback
+                    src={other.image}
+                    name={other.name ?? other.twitterHandle}
+                    size={44}
+                  />
                   <span style={{
                     position: "absolute", bottom: 1, right: 1,
                     width: 11, height: 11, borderRadius: "50%",
                     background: isOtherOnline ? "#22c55e" : "var(--card-border)",
                     border: "2px solid var(--dropdown-bg)",
+                    zIndex: 2,
                   }} />
                 </div>
                 <div style={{ minWidth: 0 }}>

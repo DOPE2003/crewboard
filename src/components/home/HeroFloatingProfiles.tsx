@@ -34,11 +34,11 @@ const AVAIL_LABEL: Record<string, string> = {
 };
 
 const POSITIONS: React.CSSProperties[] = [
-  { position: "absolute", top: "8%",  left:  "2%", zIndex: 10 },
-  { position: "absolute", top: "40%", left:  "4%", zIndex: 11 },
+  { position: "absolute", top: "10%", left:  "2%", zIndex: 10 },
+  { position: "absolute", top: "42%", left:  "4%", zIndex: 11 },
   { position: "absolute", top: "72%", left:  "2%", zIndex: 12 },
-  { position: "absolute", top: "8%",  right: "2%", zIndex: 10 },
-  { position: "absolute", top: "40%", right: "4%", zIndex: 11 },
+  { position: "absolute", top: "10%", right: "2%", zIndex: 10 },
+  { position: "absolute", top: "42%", right: "4%", zIndex: 11 },
   { position: "absolute", top: "72%", right: "2%", zIndex: 12 },
 ];
 

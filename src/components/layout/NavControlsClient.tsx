@@ -11,6 +11,112 @@ import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
 type Panel = 'menu' | null
 
+function NodyButton() {
+  const [showPopup, setShowPopup] = useState(false)
+  const [hovered, setHovered] = useState(false)
+
+  return (
+    <div style={{ position: 'relative' }}>
+      <button
+        onClick={() => setShowPopup((v) => !v)}
+        onMouseEnter={() => setHovered(true)}
+        onMouseLeave={() => setHovered(false)}
+        title="Nody AI Assistant"
+        aria-label="Nody AI Assistant"
+        style={{
+          width: 40, height: 40, borderRadius: 10,
+          border: 'none', background: hovered ? 'rgba(0,0,0,0.05)' : 'transparent',
+          cursor: 'pointer', padding: 4,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          transition: 'background 0.15s',
+        }}
+      >
+        <svg viewBox="0 0 40 40" width="38" height="38" xmlns="http://www.w3.org/2000/svg">
+          {/* White outer body / frame */}
+          <rect x="5" y="10" width="30" height="24" rx="8" ry="8" fill="#ffffff" stroke="#cbd5e1" strokeWidth="1.2"/>
+          {/* Dark face screen */}
+          <rect x="8" y="13" width="24" height="18" rx="5" ry="5" fill="#0f172a"/>
+          {/* Left eye — outer glow */}
+          <ellipse cx="15" cy="21" rx="4" ry="5" fill="#14B8A6" opacity="0.85"/>
+          {/* Left eye — inner bright */}
+          <ellipse cx="15" cy="21" rx="2.5" ry="3.5" fill="#a5f3fc"/>
+          {/* Right eye — outer glow */}
+          <ellipse cx="25" cy="21" rx="4" ry="5" fill="#14B8A6" opacity="0.85"/>
+          {/* Right eye — inner bright */}
+          <ellipse cx="25" cy="21" rx="2.5" ry="3.5" fill="#a5f3fc"/>
+          {/* Smile */}
+          <path d="M15.5 28 Q20 31 24.5 28" stroke="#14B8A6" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+          {/* Crewboard triangle on forehead */}
+          <polygon points="20,14 22,17.5 18,17.5" fill="none" stroke="#14B8A6" strokeWidth="1" strokeLinejoin="round"/>
+          <circle cx="20" cy="14" r="1" fill="#14B8A6"/>
+          <circle cx="18" cy="17.5" r="1" fill="#14B8A6"/>
+          <circle cx="22" cy="17.5" r="1" fill="#14B8A6"/>
+          {/* Left wing */}
+          <path d="M5 21 Q-1 19 0 27 Q2 32 5 30" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1"/>
+          <path d="M2 29 Q1 32 2.5 34" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round"/>
+          {/* Right wing */}
+          <path d="M35 21 Q41 19 40 27 Q38 32 35 30" fill="#e2e8f0" stroke="#94a3b8" strokeWidth="1"/>
+          <path d="M38 29 Q39 32 37.5 34" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round"/>
+        </svg>
+      </button>
+
+      {showPopup && (
+        <>
+          <div onClick={() => setShowPopup(false)} style={{ position: 'fixed', inset: 0, zIndex: 998 }} />
+          <div style={{
+            position: 'absolute', top: 44, right: -8, zIndex: 999,
+            background: 'var(--background, white)', border: '1px solid var(--card-border, #e5e7eb)',
+            borderRadius: 16, padding: '14px 18px',
+            boxShadow: '0 8px 32px rgba(0,0,0,0.14)',
+            minWidth: 230, maxWidth: 270,
+          }}>
+            {/* Arrow */}
+            <div style={{
+              position: 'absolute', top: -7, right: 20,
+              width: 13, height: 13,
+              background: 'var(--background, white)',
+              border: '1px solid var(--card-border, #e5e7eb)',
+              borderRight: 'none', borderBottom: 'none',
+              transform: 'rotate(45deg)',
+            }} />
+            {/* Header row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
+              <div style={{
+                width: 34, height: 34, borderRadius: '50%',
+                background: '#0f172a', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center', overflow: 'hidden',
+              }}>
+                <svg viewBox="0 0 40 40" width="30" height="30" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="6" y="8" width="28" height="24" rx="6" fill="#0f172a"/>
+                  <ellipse cx="14" cy="19" rx="4" ry="5" fill="#14B8A6" opacity="0.85"/>
+                  <ellipse cx="14" cy="19" rx="2.5" ry="3.5" fill="#a5f3fc"/>
+                  <ellipse cx="26" cy="19" rx="4" ry="5" fill="#14B8A6" opacity="0.85"/>
+                  <ellipse cx="26" cy="19" rx="2.5" ry="3.5" fill="#a5f3fc"/>
+                  <path d="M14 27 Q20 30 26 27" stroke="#14B8A6" strokeWidth="1.5" fill="none" strokeLinecap="round"/>
+                </svg>
+              </div>
+              <div>
+                <p style={{ fontSize: 13, fontWeight: 700, color: 'var(--foreground, #111827)', margin: 0 }}>Nody</p>
+                <p style={{ fontSize: 11, color: '#14B8A6', margin: 0, fontWeight: 600 }}>AI Assistant</p>
+              </div>
+            </div>
+            <p style={{
+              fontSize: 13, color: 'var(--foreground, #374151)', margin: 0, lineHeight: 1.55,
+              background: 'rgba(20,184,166,0.07)', borderRadius: 10, padding: '10px 12px',
+              borderLeft: '3px solid #14B8A6',
+            }}>
+              Hey! 👋 I&apos;m Nody — Crewboard&apos;s AI assistant. Coming soon to help you find the perfect freelancer and manage your projects! 🚀
+            </p>
+            <p style={{ fontSize: 11, color: 'var(--text-muted, #9ca3af)', margin: '8px 0 0', textAlign: 'right' }}>
+              Coming soon ✨
+            </p>
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
 interface Props {
   loggedIn: boolean
   conversations: NavConv[]
@@ -52,24 +158,51 @@ export default function NavControlsClient({
 
   const totalBadge = totalUnread + unreadCount + activeCount
   const isActive = pathname === '/activities'
+  const isMsgs = pathname === '/messages' || pathname.startsWith('/messages/')
 
   return (
     <>
       {loggedIn && (
         <Link
           href="/activities"
+          title="Activities"
+          aria-label="Activities"
           className={cn(
-            'hidden md:inline-flex items-center gap-1.5 h-9 px-2 text-[13px] font-medium transition-colors duration-150 no-underline',
+            'hidden md:inline-flex items-center justify-center h-9 w-9 transition-colors duration-150 no-underline rounded-lg',
             isActive
               ? 'text-[#14B8A6] dark:text-teal-400'
               : 'text-gray-700 dark:text-gray-300 hover:text-[#14B8A6] dark:hover:text-teal-400'
           )}
+          style={{ position: 'relative' }}
         >
-          <Bell size={16} />
-          <span>Activities</span>
+          <Bell size={17} />
           {totalBadge > 0 && (
-            <span className="flex items-center justify-center min-w-[18px] h-[18px] px-[5px] rounded-full bg-[#14B8A6] text-white text-[10px] font-bold leading-none">
+            <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-[16px] px-[4px] rounded-full bg-[#14B8A6] text-white text-[9px] font-bold leading-none">
               {totalBadge > 99 ? '99+' : totalBadge}
+            </span>
+          )}
+        </Link>
+      )}
+
+      {loggedIn && (
+        <Link
+          href="/messages"
+          title="Messages"
+          aria-label="Messages"
+          className={cn(
+            'hidden md:inline-flex items-center justify-center h-9 w-9 transition-colors duration-150 no-underline rounded-lg',
+            isMsgs
+              ? 'text-[#14B8A6] dark:text-teal-400'
+              : 'text-gray-700 dark:text-gray-300 hover:text-[#14B8A6] dark:hover:text-teal-400'
+          )}
+          style={{ position: 'relative' }}
+        >
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+          </svg>
+          {totalUnread > 0 && (
+            <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-[16px] px-[4px] rounded-full bg-[#14B8A6] text-white text-[9px] font-bold leading-none">
+              {totalUnread > 99 ? '99+' : totalUnread}
             </span>
           )}
         </Link>
@@ -104,6 +237,12 @@ export default function NavControlsClient({
 
       <span className="hidden md:block"><ThemeToggle /></span>
 
+      {loggedIn && <span className="hidden md:block"><NodyButton /></span>}
+
+      {loggedIn && (
+        <div className="hidden md:block" style={{ width: 1, height: 20, background: 'var(--card-border, #e5e7eb)', margin: '0 2px' }} />
+      )}
+
       <span className="hidden md:block">{children}</span>
 
       {/* ── Mobile-only: Avatar only (bottom tab bar handles bell/nav) ── */}
@@ -113,12 +252,23 @@ export default function NavControlsClient({
           className="flex md:hidden"
           style={{ alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}
         >
-          <div style={{ width: 30, height: 30, borderRadius: '50%', overflow: 'hidden', background: 'var(--avatar-bg)', flexShrink: 0 }}>
-            {userImage
-              ? <img src={userImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-              : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#134e4a,#0f172a)' }} />
-            }
-          </div>
+          {userImage ? (
+            <img
+              src={userImage}
+              alt=""
+              style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
+              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+            />
+          ) : (
+            <div style={{
+              width: 34, height: 34, borderRadius: '50%',
+              background: '#14B8A6',
+              display: 'flex', alignItems: 'center', justifyContent: 'center',
+              fontSize: 14, fontWeight: 700, color: 'white', flexShrink: 0,
+            }}>
+              {twitterHandle[0].toUpperCase()}
+            </div>
+          )}
         </Link>
       )}
       {!loggedIn && (

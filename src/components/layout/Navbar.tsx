@@ -156,44 +156,32 @@ export default async function Navbar() {
   return (
     <nav>
 
-      {/* ── Single bar: Logo | Categories (center) | Search + Icons ── */}
+      {/* ── Single row: Logo | Categories | Search | Icons ── */}
       <div className="nav-row1" style={{
         display: "flex",
         alignItems: "center",
-        justifyContent: "space-between",
         width: "100%",
-        gap: "1rem",
+        gap: "12px",
       }}>
 
         {/* Logo */}
         <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center", textDecoration: "none", gap: "0.5rem" }}>
-          {/* Hex mark */}
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 34, height: 34, flexShrink: 0 }}>
-            {/* Regular flat-top hexagon, center (24,24), circumradius 20 */}
-            <polygon
-              points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3"
-              fill="none"
-              stroke="var(--text-1)"
-              strokeWidth="2.5"
-              strokeLinejoin="round"
-            />
-            {/* Triangle lines */}
+            <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--text-1)" strokeWidth="2.5" strokeLinejoin="round" />
             <line x1="24" y1="15" x2="16" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
             <line x1="24" y1="15" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
             <line x1="16" y1="32" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
-            {/* Nodes */}
             <circle cx="24" cy="15" r="3.5" fill="var(--text-1)"/>
             <circle cx="16" cy="32" r="3.5" fill="var(--text-1)"/>
             <circle cx="32" cy="32" r="3.5" fill="var(--text-1)"/>
           </svg>
-          {/* Wordmark */}
           <span className="nav-wordmark">
             <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--text-1)", fontWeight: 700 }}>board</span>
           </span>
         </Link>
 
-        {/* Center: category nav (desktop only) */}
-        <div className="nav-cats-center hidden md:flex">
+        {/* Categories — right after logo, desktop only */}
+        <div className="nav-cats-center hidden md:flex" style={{ flexShrink: 0 }}>
           <ul className="nav-links" style={{ margin: 0 }}>
             <NavCategoryGroup
               label="Creative"
@@ -232,11 +220,13 @@ export default async function Navbar() {
           </ul>
         </div>
 
-        {/* Right: search + icons + auth */}
-        <div style={{ display: "flex", alignItems: "center", gap: "0.4rem", flexShrink: 0 }}>
-          <div className="nav-search-wrap hidden md:flex" style={{ justifyContent: "center" }}>
-            <NavSearch />
-          </div>
+        {/* Search — takes remaining space, desktop only */}
+        <div className="hidden md:flex" style={{ flex: 1, maxWidth: 480, minWidth: 0 }}>
+          <NavSearch />
+        </div>
+
+        {/* Icons — far right */}
+        <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0, marginLeft: "auto" }}>
           <NavControlsClient
             loggedIn={!!user}
             conversations={navConversations}
@@ -262,6 +252,7 @@ export default async function Navbar() {
             )}
           </NavControlsClient>
         </div>
+
       </div>
 
     </nav>

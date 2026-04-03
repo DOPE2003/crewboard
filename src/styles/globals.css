@@ -580,9 +580,11 @@ body.dark .hero-float-card div[style*="rgba(0,0,0,0.1)"] { background: rgba(255,
   padding-top: 0 !important;
 }
 
-/* Hero section — full-width teal/green gradient background */
+/* Hero section — pull up behind the fixed navbar so gradient fills from top */
 .landing-hero {
   background: radial-gradient(ellipse 120% 70% at 50% 0%, rgba(13,201,161,0.16) 0%, rgba(13,201,161,0.07) 45%, transparent 75%) !important;
+  margin-top: -64px !important;
+  padding-top: calc(64px + clamp(2rem, 5vw, 3.5rem)) !important;
 }
 
 /* .page — layout wrapper handles top padding via .main-content */
@@ -2471,8 +2473,8 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
     gap: 1.5rem !important;
   }
 
-  /* Hero section reduced top padding */
-  .landing-hero { padding-top: 3rem !important; padding-bottom: 2rem !important; }
+  /* Hero section reduced top padding — keep negative margin for mobile navbar */
+  .landing-hero { margin-top: -52px !important; padding-top: calc(52px + 3rem) !important; padding-bottom: 2rem !important; }
 
   /* Reduce section padding */
   .landing-section-inner { padding: 3rem 1.25rem !important; }
@@ -4830,17 +4832,10 @@ body:not(.dark) .verify-page-wrap p { color: #475569 !important; }
 }
 
 /* ── Nav search: max-width + clear gap from categories ── */
+/* nav-search-wrap no longer used for sizing — search is in its own flex slot */
 .nav-search-wrap {
-  max-width: 480px;
-  width: 480px;
-  margin-left: 2rem;
+  width: 100%;
   flex-shrink: 1;
-}
-@media (max-width: 1200px) {
-  .nav-search-wrap { max-width: 320px; width: 320px; }
-}
-@media (max-width: 1024px) {
-  .nav-search-wrap { margin-left: 0; }
 }
 
 /* ── Navbar row1: reduce padding on small screens ── */

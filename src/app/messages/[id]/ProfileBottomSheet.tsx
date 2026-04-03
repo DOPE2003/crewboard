@@ -39,13 +39,36 @@ function ProfileContent({ profile, onClose }: { profile: ProfileData; onClose?: 
   return (
     <div className="msgs-ps-inner">
       <div className="msgs-ps-header">
-        <div className="msgs-ps-avatar" style={{ position: "relative" }}>
+        <div style={{
+          width: 80, height: 80, borderRadius: "50%",
+          overflow: "hidden", flexShrink: 0,
+          marginBottom: "0.85rem", position: "relative",
+          border: "1px solid var(--card-border)",
+        }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          {profile.image ? (
-            <img src={profile.image} alt="" />
-          ) : (
-            <div className="msgs-ps-avatar-fallback" />
+          {profile.image && (
+            <img
+              src={profile.image}
+              alt=""
+              style={{ width: "100%", height: "100%", objectFit: "cover", objectPosition: "center", display: "block" }}
+              onError={(e) => {
+                const t = e.currentTarget;
+                t.style.display = "none";
+                const fb = t.nextElementSibling as HTMLElement | null;
+                if (fb) fb.style.display = "flex";
+              }}
+            />
           )}
+          <div style={{
+            width: "100%", height: "100%",
+            display: profile.image ? "none" : "flex",
+            alignItems: "center", justifyContent: "center",
+            background: "linear-gradient(135deg, #14B8A6, #0F6E56)",
+            color: "white", fontWeight: 700, fontSize: 28,
+            position: "absolute", top: 0, left: 0,
+          }}>
+            {(profile.name ?? profile.twitterHandle ?? "U")[0].toUpperCase()}
+          </div>
         </div>
         <div className="msgs-ps-name-row">
           <div className="msgs-ps-name">{profile.name ?? profile.twitterHandle}</div>
@@ -69,11 +92,11 @@ function ProfileContent({ profile, onClose }: { profile: ProfileData; onClose?: 
           <div className="msgs-ps-stat-key">GIGS</div>
         </div>
         <div className="msgs-ps-stat">
-          <div className="msgs-ps-stat-val">—</div>
+          <div className="msgs-ps-stat-val">N/A</div>
           <div className="msgs-ps-stat-key">ON TIME</div>
         </div>
         <div className="msgs-ps-stat">
-          <div className="msgs-ps-stat-val">{profile.avgDelivery ? `${profile.avgDelivery}d` : "—"}</div>
+          <div className="msgs-ps-stat-val">{profile.avgDelivery ? `${profile.avgDelivery}d` : "N/A"}</div>
           <div className="msgs-ps-stat-key">AVG. DELIVERY</div>
         </div>
       </div>

@@ -33,7 +33,7 @@ interface Props {
 const QUICK_REPLIES = [
   { label: "👋 What are your rates?", text: "What are your rates?" },
   { label: "📅 Are you available?", text: "Are you available?" },
-  { label: "📎 Send portfolio", text: "Send me your portfolio" },
+  { label: "Send portfolio", text: "Send me your portfolio" },
 ];
 
 function formatTime(iso: string) {
@@ -74,53 +74,69 @@ function replyBodyPreview(body: string): string {
   return body.slice(0, 60) + (body.length > 60 ? "…" : "");
 }
 
-function GigCardBubble({ gig, mine }: { gig: GigCard; mine: boolean }) {
+function GigCardBubble({ gig }: { gig: GigCard; mine: boolean }) {
   return (
     <Link href={`/gigs/${gig.id}`} className="msgs-gig-card" style={{
       display: "block",
       textDecoration: "none",
-      borderRadius: 14,
-      border: mine ? "1px solid rgba(255,255,255,0.18)" : "1px solid rgba(45,212,191,0.25)",
-      background: mine ? "rgba(0,0,0,0.12)" : "rgba(45,212,191,0.06)",
-      padding: "0.85rem 1rem",
+      borderRadius: 16,
+      border: "1.5px solid #e5e7eb",
+      background: "white",
+      padding: "16px",
       maxWidth: 280,
       cursor: "pointer",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
     }}>
+      {/* Header */}
       <div style={{
         fontFamily: "Inter, sans-serif",
-        fontSize: "0.5rem",
-        letterSpacing: "0.14em",
+        fontSize: 10,
+        fontWeight: 700,
+        letterSpacing: "0.1em",
         textTransform: "uppercase",
-        color: "#2DD4BF",
-        marginBottom: "0.35rem",
+        color: "#14B8A6",
+        marginBottom: 10,
+        display: "flex",
+        alignItems: "center",
+        gap: 6,
       }}>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        </svg>
         Service Request
       </div>
+      {/* Title */}
       <div style={{
         fontFamily: "Inter, sans-serif",
         fontWeight: 700,
-        fontSize: "0.95rem",
-        color: mine ? "#fff" : "var(--foreground)",
-        lineHeight: 1.3,
-        marginBottom: "0.5rem",
+        fontSize: 14,
+        color: "#111827",
+        lineHeight: 1.4,
+        marginBottom: 6,
       }}>
         {gig.title}
       </div>
-      <div style={{ display: "flex", gap: "0.75rem", alignItems: "center" }}>
-        <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.88rem", color: "#2DD4BF" }}>
+      {/* Price + delivery */}
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 12 }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: 18, color: "#14B8A6" }}>
           ${gig.price}
         </span>
-        <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.7rem", color: mine ? "rgba(255,255,255,0.55)" : "var(--text-muted)" }}>
+        <span style={{ fontFamily: "Inter, sans-serif", fontSize: 12, color: "#9ca3af" }}>
           {gig.days} day{gig.days !== 1 ? "s" : ""} delivery
         </span>
       </div>
+      {/* CTA */}
       <div style={{
-        marginTop: "0.6rem",
-        paddingTop: "0.5rem",
-        borderTop: mine ? "1px solid rgba(255,255,255,0.12)" : "1px solid rgba(45,212,191,0.15)",
+        display: "block",
+        textAlign: "center",
+        background: "#f0fdfa",
+        color: "#14B8A6",
+        border: "1px solid #99f6e4",
+        borderRadius: 10,
+        padding: "8px 16px",
         fontFamily: "Inter, sans-serif",
-        fontSize: "0.68rem",
-        color: mine ? "rgba(255,255,255,0.5)" : "var(--text-muted)",
+        fontSize: 12,
+        fontWeight: 700,
       }}>
         Tap to view service →
       </div>
