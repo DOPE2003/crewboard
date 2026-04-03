@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     const filename = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     const blob = await put(filename, req.body, {
-      access: "public",
+      access: "private",
       contentType,
       multipart: true,
     });
