@@ -89,13 +89,12 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     setIsUploading(true);
     setUploadProgress(0);
 
-    // Use XMLHttpRequest for progress tracking
-    const formData = new FormData();
-    formData.append("file", file);
-
+    // Use XMLHttpRequest for progress tracking — send raw binary to avoid buffering in API route
     await new Promise<void>((resolve, reject) => {
       const xhr = new XMLHttpRequest();
-      xhr.open("POST", "/api/portfolio/upload");
+      xhr.open("POST", `/api/portfolio/upload?filename=${encodeURIComponent(file.name)}`);
+      // Send raw binary — avoids buffering the entire file in the API route
+      xhr.setRequestHeader("Content-Type", file.type);
       xhr.upload.onprogress = (evt) => {
         if (evt.lengthComputable) {
           setUploadProgress(Math.round((evt.loaded / evt.total) * 100));
@@ -129,7 +128,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
         }
       };
       xhr.onerror = () => reject(new Error("Network error"));
-      xhr.send(formData);
+      xhr.send(file);
     }).catch((err) => {
       setUploadError(err.message);
     });

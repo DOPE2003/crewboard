@@ -2,6 +2,9 @@ import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
 const ALLOWED_TYPES = [
   "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
   "video/mp4", "video/webm", "video/quicktime",
@@ -38,37 +41,44 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const form = await req.formData();
-    const file = form.get("file") as File | null;
-    if (!file) return NextResponse.json({ error: "No file." }, { status: 400 });
+    const { searchParams } = new URL(req.url);
+    const originalName = searchParams.get("filename") ?? "upload";
+    // Content-Type header is the file's MIME type when sending raw body
+    const contentType = req.headers.get("content-type") ?? "application/octet-stream";
+    const fileSize = parseInt(req.headers.get("content-length") ?? "0");
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    if (!ALLOWED_TYPES.includes(contentType)) {
       return NextResponse.json({ error: "File type not supported." }, { status: 400 });
     }
 
-    const isVideo = file.type.startsWith("video/");
+    const isVideo = contentType.startsWith("video/");
     const maxSize = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
-    if (file.size > maxSize) {
+    if (fileSize > 0 && fileSize > maxSize) {
       return NextResponse.json(
         { error: `File too large. Max ${isVideo ? "50MB" : "10MB"}.` },
         { status: 400 }
       );
     }
 
-    const mediaType = getMediaType(file.type);
-    const ext = file.name.split(".").pop() ?? "bin";
+    if (!req.body) {
+      return NextResponse.json({ error: "No file body." }, { status: 400 });
+    }
+
+    const mediaType = getMediaType(contentType);
+    const ext = originalName.split(".").pop() ?? "bin";
     const filename = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
-    const blob = await put(filename, file, {
+    const blob = await put(filename, req.body, {
       access: "private",
-      contentType: file.type,
+      contentType,
+      multipart: isVideo,
     });
 
     return NextResponse.json({
       url: blob.url,
       mediaType,
-      fileName: file.name,
-      fileSize: file.size,
+      fileName: originalName,
+      fileSize,
     });
   } catch (err: any) {
     console.error("[portfolio/upload]", err);

@@ -73,11 +73,12 @@ export default function NewPostForm() {
     setSubmitting(true);
 
     try {
-      // 1. Upload media
+      // 1. Upload media — send raw binary to avoid buffering large files in API route
       setUploading(true);
-      const form = new FormData();
-      form.append("file", file);
-      const uploadRes = await fetch("/api/showcase/upload", { method: "POST", body: form });
+      const uploadRes = await fetch(
+        `/api/showcase/upload?filename=${encodeURIComponent(file.name)}`,
+        { method: "POST", body: file, headers: { "Content-Type": file.type } }
+      );
       const uploadData = await uploadRes.json();
       setUploading(false);
 
