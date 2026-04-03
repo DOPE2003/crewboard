@@ -1,14 +1,26 @@
-import { put } from "@vercel/blob";
+import { handleUpload } from "@vercel/blob/client";
+import type { HandleUploadBody } from "@vercel/blob/client";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
-export async function POST(req: NextRequest) {
-  const session = await auth();
-  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export const config = {
+  api: {
+    bodyParser: {
+      sizeLimit: "500mb",
+    },
+    responseLimit: "500mb",
+  },
+};
 
+const ALLOWED_TYPES = [
+  "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
+  "video/mp4", "video/webm", "video/quicktime", "video/mov",
+];
+
+export async function POST(req: NextRequest) {
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
       { error: "Media uploads not configured. Add BLOB_READ_WRITE_TOKEN in Vercel." },
@@ -17,42 +29,32 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const { searchParams } = new URL(req.url);
-    const originalName = searchParams.get("filename") ?? "upload";
-    const contentType = req.headers.get("content-type") ?? "application/octet-stream";
-    const fileSize = parseInt(req.headers.get("content-length") ?? "0");
+    const body = (await req.json()) as HandleUploadBody;
 
-    const isVideo = contentType.startsWith("video/");
-    const isImage = contentType.startsWith("image/");
-    if (!isVideo && !isImage) {
-      return NextResponse.json({ error: "File must be an image or video." }, { status: 400 });
-    }
+    const jsonResponse = await handleUpload({
+      body,
+      request: req,
+      onBeforeGenerateToken: async (pathname) => {
+        const session = await auth();
+        if (!session?.user) throw new Error("Unauthorized");
 
-    const maxSize = isVideo ? 100 * 1024 * 1024 : 10 * 1024 * 1024;
-    if (fileSize > 0 && fileSize > maxSize) {
-      return NextResponse.json(
-        { error: `File too large. Max ${isVideo ? "100MB" : "10MB"}.` },
-        { status: 400 }
-      );
-    }
-
-    if (!req.body) {
-      return NextResponse.json({ error: "No file body." }, { status: 400 });
-    }
-
-    const ext = originalName.split(".").pop() ?? (isVideo ? "mp4" : "jpg");
-    const folder = isVideo ? "showcase/videos" : "showcase/images";
-    const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-    const blob = await put(filename, req.body, {
-      access: "private",
-      contentType,
-      multipart: isVideo,
+        return {
+          allowedContentTypes: ALLOWED_TYPES,
+          maximumSizeInBytes: 500 * 1024 * 1024,
+          tokenPayload: pathname,
+        };
+      },
+      onUploadCompleted: async ({ blob }) => {
+        console.log("[showcase/upload] completed:", blob.url);
+      },
     });
 
-    return NextResponse.json({ url: blob.url, mediaType: isVideo ? "video" : "image" });
+    return NextResponse.json(jsonResponse);
   } catch (err: any) {
-    console.error("[showcase/upload]", err);
-    return NextResponse.json({ error: err?.message ?? "Upload failed." }, { status: 500 });
+    console.error("[showcase/upload] failed:", err);
+    return NextResponse.json(
+      { error: err?.message ?? "Upload failed.", details: String(err) },
+      { status: 400 }
+    );
   }
 }

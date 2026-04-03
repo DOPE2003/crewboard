@@ -1,9 +1,23 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { upload } from "@vercel/blob/client";
 import { savePortfolioItems, type PortfolioItem } from "@/actions/portfolio";
 import { isSocialMediaUrl, SOCIAL_URL_ERROR } from "@/lib/socialLinks";
 import { blobUrl } from "@/lib/blobUrl";
+
+function getMediaType(mimeType: string): "image" | "video" | "pdf" | "document" | "other" {
+  if (mimeType.startsWith("image/")) return "image";
+  if (mimeType.startsWith("video/")) return "video";
+  if (mimeType === "application/pdf") return "pdf";
+  if (
+    mimeType.includes("word") ||
+    mimeType.includes("powerpoint") ||
+    mimeType.includes("presentation") ||
+    mimeType === "application/zip"
+  ) return "document";
+  return "other";
+}
 
 interface Props {
   initialItems: PortfolioItem[];
@@ -89,49 +103,32 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     setIsUploading(true);
     setUploadProgress(0);
 
-    // Use XMLHttpRequest for progress tracking — send raw binary to avoid buffering in API route
-    await new Promise<void>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open("POST", `/api/portfolio/upload?filename=${encodeURIComponent(file.name)}`);
-      // Send raw binary — avoids buffering the entire file in the API route
-      xhr.setRequestHeader("Content-Type", file.type);
-      xhr.upload.onprogress = (evt) => {
-        if (evt.lengthComputable) {
-          setUploadProgress(Math.round((evt.loaded / evt.total) * 100));
-        }
-      };
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          try {
-            const data = JSON.parse(xhr.responseText);
-            setDraft(d => ({
-              ...d,
-              mediaUrl: data.url,
-              mediaType: data.mediaType,
-              fileName: data.fileName,
-              fileSize: data.fileSize,
-              // Auto-fill title from filename if empty
-              title: d.title || file.name.replace(/\.[^/.]+$/, ""),
-            }));
-            setUploadProgress(100);
-            resolve();
-          } catch {
-            reject(new Error("Invalid response"));
-          }
-        } else {
-          try {
-            const err = JSON.parse(xhr.responseText);
-            reject(new Error(err.error ?? "Upload failed"));
-          } catch {
-            reject(new Error("Upload failed"));
-          }
-        }
-      };
-      xhr.onerror = () => reject(new Error("Network error"));
-      xhr.send(file);
-    }).catch((err) => {
-      setUploadError(err.message);
-    });
+    // Upload directly to Vercel Blob CDN — bypasses the 4.5MB serverless body limit
+    try {
+      const ext = file.name.split(".").pop() ?? "bin";
+      const blobFilename = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+      const blob = await upload(blobFilename, file, {
+        access: "public",
+        handleUploadUrl: "/api/portfolio/upload",
+        multipart: true,
+        onUploadProgress: ({ percentage }) => {
+          setUploadProgress(Math.round(percentage));
+        },
+      });
+
+      setDraft(d => ({
+        ...d,
+        mediaUrl: blob.url,
+        mediaType: getMediaType(file.type),
+        fileName: file.name,
+        fileSize: file.size,
+        title: d.title || file.name.replace(/\.[^/.]+$/, ""),
+      }));
+      setUploadProgress(100);
+    } catch (err: any) {
+      setUploadError(err?.message ?? "Upload failed.");
+    }
 
     setIsUploading(false);
     // reset so same file can be re-selected

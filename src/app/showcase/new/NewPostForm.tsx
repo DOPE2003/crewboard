@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Upload, X, ImageIcon, Video } from "lucide-react";
+import { upload } from "@vercel/blob/client";
 
 const CATEGORIES = ["Design", "Development", "Marketing", "Creative", "Content", "Other"];
 const MAX_TAGS = 8;
@@ -73,20 +74,27 @@ export default function NewPostForm() {
     setSubmitting(true);
 
     try {
-      // 1. Upload media — send raw binary to avoid buffering large files in API route
+      // 1. Upload media — direct to Vercel Blob CDN, bypasses 4.5MB serverless limit
       setUploading(true);
-      const uploadRes = await fetch(
-        `/api/showcase/upload?filename=${encodeURIComponent(file.name)}`,
-        { method: "POST", body: file, headers: { "Content-Type": file.type } }
-      );
-      const uploadData = await uploadRes.json();
-      setUploading(false);
-
-      if (!uploadRes.ok) {
-        setError(uploadData.error ?? "Upload failed.");
+      let mediaUrl: string;
+      let mediaType: string;
+      try {
+        const ext = file.name.split(".").pop() ?? "bin";
+        const blobFilename = `showcase/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const blob = await upload(blobFilename, file, {
+          access: "public",
+          handleUploadUrl: "/api/showcase/upload",
+          multipart: true,
+        });
+        mediaUrl = blob.url;
+        mediaType = file.type.startsWith("video/") ? "video" : "image";
+      } catch (err: any) {
+        setError(err?.message ?? "Upload failed.");
         setSubmitting(false);
+        setUploading(false);
         return;
       }
+      setUploading(false);
 
       // 2. Create post
       const postRes = await fetch("/api/showcase/posts", {
@@ -95,8 +103,8 @@ export default function NewPostForm() {
         body: JSON.stringify({
           title: title.trim(),
           description: description.trim() || null,
-          mediaUrl: uploadData.url,
-          mediaType: uploadData.mediaType,
+          mediaUrl,
+          mediaType,
           category,
           tags,
         }),
