@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { upload } from "@vercel/blob/client";
 import { savePortfolioItems, type PortfolioItem } from "@/actions/portfolio";
 import { isSocialMediaUrl, SOCIAL_URL_ERROR } from "@/lib/socialLinks";
 import { blobUrl } from "@/lib/blobUrl";
@@ -103,32 +102,39 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     setIsUploading(true);
     setUploadProgress(0);
 
-    // Upload directly to Vercel Blob CDN — bypasses the 4.5MB serverless body limit
-    try {
-      const ext = file.name.split(".").pop() ?? "bin";
-      const blobFilename = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-
-      const blob = await upload(blobFilename, file, {
-        access: "public",
-        handleUploadUrl: "/api/portfolio/upload",
-        multipart: true,
-        onUploadProgress: ({ percentage }) => {
-          setUploadProgress(Math.round(percentage));
-        },
-      });
-
-      setDraft(d => ({
-        ...d,
-        mediaUrl: blob.url,
-        mediaType: getMediaType(file.type),
-        fileName: file.name,
-        fileSize: file.size,
-        title: d.title || file.name.replace(/\.[^/.]+$/, ""),
-      }));
-      setUploadProgress(100);
-    } catch (err: any) {
-      setUploadError(err?.message ?? "Upload failed.");
-    }
+    // Send raw binary via XHR — server streams it directly to Vercel Blob (no buffering)
+    await new Promise<void>((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.open("POST", `/api/portfolio/upload?filename=${encodeURIComponent(file.name)}`);
+      xhr.setRequestHeader("Content-Type", file.type);
+      xhr.upload.onprogress = (evt) => {
+        if (evt.lengthComputable) setUploadProgress(Math.round((evt.loaded / evt.total) * 100));
+      };
+      xhr.onload = () => {
+        if (xhr.status === 200) {
+          try {
+            const data = JSON.parse(xhr.responseText);
+            setDraft(d => ({
+              ...d,
+              mediaUrl: data.url,
+              mediaType: data.mediaType,
+              fileName: data.fileName,
+              fileSize: data.fileSize,
+              title: d.title || file.name.replace(/\.[^/.]+$/, ""),
+            }));
+            setUploadProgress(100);
+            resolve();
+          } catch { reject(new Error("Invalid response")); }
+        } else {
+          try { reject(new Error(JSON.parse(xhr.responseText).error ?? "Upload failed")); }
+          catch { reject(new Error("Upload failed")); }
+        }
+      };
+      xhr.onerror = () => reject(new Error("Network error"));
+      xhr.send(file);
+    }).catch((err) => {
+      setUploadError(err.message);
+    });
 
     setIsUploading(false);
     // reset so same file can be re-selected

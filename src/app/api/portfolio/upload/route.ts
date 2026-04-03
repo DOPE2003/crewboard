@@ -1,19 +1,9 @@
-import { handleUpload } from "@vercel/blob/client";
-import type { HandleUploadBody } from "@vercel/blob/client";
+import { put } from "@vercel/blob";
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
-
-export const config = {
-  api: {
-    bodyParser: {
-      sizeLimit: "500mb",
-    },
-    responseLimit: "500mb",
-  },
-};
 
 const ALLOWED_TYPES = [
   "image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml",
@@ -26,7 +16,25 @@ const ALLOWED_TYPES = [
   "application/zip",
 ];
 
+const MAX_SIZE = 500 * 1024 * 1024; // 500MB
+
+function getMediaType(mimeType: string): "image" | "video" | "pdf" | "document" | "other" {
+  if (mimeType.startsWith("image/")) return "image";
+  if (mimeType.startsWith("video/")) return "video";
+  if (mimeType === "application/pdf") return "pdf";
+  if (
+    mimeType.includes("word") ||
+    mimeType.includes("powerpoint") ||
+    mimeType.includes("presentation") ||
+    mimeType === "application/zip"
+  ) return "document";
+  return "other";
+}
+
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session?.user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
   if (!process.env.BLOB_READ_WRITE_TOKEN) {
     return NextResponse.json(
       { error: "File uploads not configured. Add BLOB_READ_WRITE_TOKEN in Vercel." },
@@ -35,32 +43,45 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = (await req.json()) as HandleUploadBody;
+    const { searchParams } = new URL(req.url);
+    const originalName = searchParams.get("filename") ?? "upload";
+    const contentType = req.headers.get("content-type") ?? "application/octet-stream";
+    const fileSize = parseInt(req.headers.get("content-length") ?? "0");
 
-    const jsonResponse = await handleUpload({
-      body,
-      request: req,
-      onBeforeGenerateToken: async (pathname) => {
-        const session = await auth();
-        if (!session?.user) throw new Error("Unauthorized");
+    if (!ALLOWED_TYPES.includes(contentType)) {
+      return NextResponse.json({ error: "File type not supported." }, { status: 400 });
+    }
 
-        return {
-          allowedContentTypes: ALLOWED_TYPES,
-          maximumSizeInBytes: 500 * 1024 * 1024,
-          tokenPayload: pathname,
-        };
-      },
-      onUploadCompleted: async ({ blob }) => {
-        console.log("[portfolio/upload] completed:", blob.url);
-      },
+    if (fileSize > 0 && fileSize > MAX_SIZE) {
+      return NextResponse.json({ error: "File too large. Max 500MB." }, { status: 400 });
+    }
+
+    if (!req.body) {
+      return NextResponse.json({ error: "No file body." }, { status: 400 });
+    }
+
+    const mediaType = getMediaType(contentType);
+    const ext = originalName.split(".").pop() ?? "bin";
+    const filename = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+
+    const blob = await put(filename, req.body, {
+      access: "public",
+      contentType,
+      multipart: true,
     });
 
-    return NextResponse.json(jsonResponse);
+    console.log("[portfolio/upload] success:", blob.url);
+    return NextResponse.json({
+      url: blob.url,
+      mediaType,
+      fileName: originalName,
+      fileSize,
+    });
   } catch (err: any) {
     console.error("[portfolio/upload] failed:", err);
     return NextResponse.json(
       { error: err?.message ?? "Upload failed.", details: String(err) },
-      { status: 400 }
+      { status: 500 }
     );
   }
 }
