@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { upload } from "@vercel/blob/client";
 import { savePortfolioItems, type PortfolioItem } from "@/actions/portfolio";
 import { isSocialMediaUrl, SOCIAL_URL_ERROR } from "@/lib/socialLinks";
 import { blobUrl } from "@/lib/blobUrl";
@@ -104,93 +105,40 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     setIsProcessing(false);
     setUploadProgress(0);
 
-    const CHUNK_THRESHOLD = 4 * 1024 * 1024; // files > 4MB use chunked multipart
+    const isVideo = file.type.startsWith("video/");
+    const maxSize = isVideo ? 50 * 1024 * 1024 : 10 * 1024 * 1024;
+    if (file.size > maxSize) {
+      setUploadError(`File too large. Max ${isVideo ? "50MB" : "10MB"}.`);
+      setIsUploading(false);
+      return;
+    }
+
+    // Upload directly from browser to Vercel Blob CDN — bypasses serverless body limit.
+    // multipart only for files >5MB (Vercel Blob minimum part size requirement).
+    const isLargeFile = file.size > 5 * 1024 * 1024;
+    const ext = file.name.split(".").pop() ?? "bin";
+    const blobFilename = `portfolio/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
 
     try {
-      if (file.size <= CHUNK_THRESHOLD) {
-        // ── Small file: single XHR ──────────────────────────────────────────
-        await new Promise<void>((resolve, reject) => {
-          const xhr = new XMLHttpRequest();
-          xhr.open("POST", `/api/portfolio/upload?filename=${encodeURIComponent(file.name)}`);
-          xhr.setRequestHeader("Content-Type", file.type);
-          xhr.upload.onprogress = (evt) => {
-            if (evt.lengthComputable)
-              setUploadProgress(Math.min(90, Math.round((evt.loaded / evt.total) * 100)));
-          };
-          xhr.upload.onload = () => { setUploadProgress(90); setIsProcessing(true); };
-          xhr.onload = () => {
-            if (xhr.status === 200) {
-              try {
-                const data = JSON.parse(xhr.responseText);
-                setDraft(d => ({
-                  ...d, mediaUrl: data.url, mediaType: data.mediaType,
-                  fileName: data.fileName, fileSize: data.fileSize,
-                  title: d.title || file.name.replace(/\.[^/.]+$/, ""),
-                }));
-                setUploadProgress(100);
-                resolve();
-              } catch { reject(new Error("Invalid response")); }
-            } else {
-              try { reject(new Error(JSON.parse(xhr.responseText).error ?? "Upload failed")); }
-              catch { reject(new Error("Upload failed")); }
-            }
-          };
-          xhr.onerror = () => reject(new Error("Network error"));
-          xhr.send(file);
-        });
-      } else {
-        // ── Large file: chunked multipart upload ────────────────────────────
-        const CHUNK_SIZE = 4 * 1024 * 1024; // 4MB per chunk (under Vercel's 4.5MB limit)
-        const fnParam = `filename=${encodeURIComponent(file.name)}`;
+      const blob = await upload(blobFilename, file, {
+        access: "private",
+        handleUploadUrl: "/api/portfolio/upload",
+        multipart: isLargeFile,
+        onUploadProgress: ({ percentage }) => {
+          setUploadProgress(Math.min(95, Math.round(percentage)));
+          if (percentage >= 95) setIsProcessing(true);
+        },
+      });
 
-        // 1. Init
-        setIsProcessing(false);
-        setUploadProgress(1);
-        const initRes = await fetch(
-          `/api/portfolio/upload?action=init&${fnParam}`,
-          { method: "POST", headers: { "Content-Type": file.type } }
-        );
-        if (!initRes.ok) throw new Error((await initRes.json()).error ?? "Init failed");
-        const { uploadId, key, filename, mediaType, fileName } = await initRes.json();
-
-        // 2. Upload chunks sequentially with progress
-        const totalChunks = Math.ceil(file.size / CHUNK_SIZE);
-        const parts: { etag: string; partNumber: number }[] = [];
-
-        for (let i = 0; i < totalChunks; i++) {
-          const start = i * CHUNK_SIZE;
-          const chunk = file.slice(start, Math.min(start + CHUNK_SIZE, file.size));
-          const partNumber = i + 1;
-
-          const partRes = await fetch(
-            `/api/portfolio/upload?action=part&uploadId=${encodeURIComponent(uploadId)}&key=${encodeURIComponent(key)}&partNumber=${partNumber}`,
-            { method: "POST", body: chunk, headers: { "Content-Type": "application/octet-stream" } }
-          );
-          if (!partRes.ok) throw new Error((await partRes.json()).error ?? `Part ${partNumber} failed`);
-          const part = await partRes.json();
-          parts.push(part);
-
-          // Progress: 2%–90% across chunk uploads
-          setUploadProgress(Math.round(2 + ((i + 1) / totalChunks) * 88));
-        }
-
-        // 3. Complete
-        setIsProcessing(true);
-        setUploadProgress(92);
-        const completeRes = await fetch("/api/portfolio/upload?action=complete", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ uploadId, key, parts, filename, mediaType, fileName }),
-        });
-        if (!completeRes.ok) throw new Error((await completeRes.json()).error ?? "Complete failed");
-        const data = await completeRes.json();
-
-        setDraft(d => ({
-          ...d, mediaUrl: data.url, mediaType, fileName: file.name, fileSize: file.size,
-          title: d.title || file.name.replace(/\.[^/.]+$/, ""),
-        }));
-        setUploadProgress(100);
-      }
+      setDraft(d => ({
+        ...d,
+        mediaUrl: blob.url,
+        mediaType: getMediaType(file.type),
+        fileName: file.name,
+        fileSize: file.size,
+        title: d.title || file.name.replace(/\.[^/.]+$/, ""),
+      }));
+      setUploadProgress(100);
     } catch (err: any) {
       setUploadError(err?.message ?? "Upload failed.");
     }
