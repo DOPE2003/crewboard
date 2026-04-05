@@ -29,7 +29,7 @@ export default async function GigPage({
             name: true,
             twitterHandle: true,
             image: true,
-            role: true,
+            userTitle: true,
             bio: true,
             skills: true,
             createdAt: true,
@@ -151,7 +151,7 @@ export default async function GigPage({
                   <div className="gd-seller-meta">
                     <div className="gd-seller-name">{sellerName}</div>
                     <div className="gd-seller-handle">@{gig.user.twitterHandle}</div>
-                    {gig.user.role && <div className="gd-seller-role">{gig.user.role}</div>}
+                    {gig.user.userTitle && <div className="gd-seller-role">{gig.user.userTitle}</div>}
                   </div>
                 </Link>
                 {gig.user.bio && <p className="gd-seller-bio">{gig.user.bio}</p>}

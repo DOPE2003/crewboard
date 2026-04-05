@@ -12,11 +12,11 @@ export async function searchBuilders(q: string) {
       OR: [
         { name:          { contains: query, mode: "insensitive" } },
         { twitterHandle: { contains: query, mode: "insensitive" } },
-        { role:          { contains: query, mode: "insensitive" } },
+        { userTitle:     { contains: query, mode: "insensitive" } },
         { bio:           { contains: query, mode: "insensitive" } },
       ],
     },
-    select: { name: true, twitterHandle: true, image: true, role: true },
+    select: { name: true, twitterHandle: true, image: true, userTitle: true },
     take: 6,
     orderBy: { createdAt: "desc" },
   });

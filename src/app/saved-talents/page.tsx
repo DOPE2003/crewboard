@@ -31,7 +31,7 @@ export default async function SavedTalentsPage() {
           twitterHandle: true,
           name: true,
           image: true,
-          role: true,
+          userTitle: true,
           skills: true,
           availability: true,
           bio: true,
@@ -74,7 +74,7 @@ export default async function SavedTalentsPage() {
                   </div>
                   <div className="talent-name">{u.name ?? u.twitterHandle}</div>
                   <div className="talent-handle">@{u.twitterHandle}</div>
-                  {u.role && <div className="talent-role-badge">{u.role}</div>}
+                  {u.userTitle && <div className="talent-role-badge">{u.userTitle}</div>}
                   {u.bio && <p className="talent-bio">{u.bio}</p>}
                   {u.skills.length > 0 && (
                     <div className="talent-skills">

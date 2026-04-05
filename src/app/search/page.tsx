@@ -21,13 +21,13 @@ async function SearchResults({ q }: { q: string }) {
         OR: [
           { name: { contains: q, mode: "insensitive" } },
           { twitterHandle: { contains: q, mode: "insensitive" } },
-          { role: { contains: q, mode: "insensitive" } },
+          { userTitle: { contains: q, mode: "insensitive" } },
           { bio: { contains: q, mode: "insensitive" } },
         ],
       },
       select: {
         id: true, name: true, twitterHandle: true,
-        image: true, role: true, bio: true, skills: true, availability: true,
+        image: true, userTitle: true, bio: true, skills: true, availability: true,
       },
       take: 20,
     }),
@@ -106,13 +106,13 @@ async function SearchResults({ q }: { q: string }) {
                     <p style={{ fontSize: 12, color: "#9ca3af", margin: 0 }}>@{user.twitterHandle}</p>
                   </div>
                 </div>
-                {user.role && (
+                {user.userTitle && (
                   <span style={{
                     display: "inline-block",
                     fontSize: 11, fontWeight: 600, padding: "3px 10px",
                     borderRadius: 99, background: "#E1F5EE", color: "#0F6E56",
                   }}>
-                    {user.role}
+                    {user.userTitle}
                   </span>
                 )}
                 {user.bio && (

@@ -583,8 +583,8 @@ body.dark .hero-float-card div[style*="rgba(0,0,0,0.1)"] { background: rgba(255,
 /* Hero section — pull up behind the fixed navbar so gradient fills from top */
 .landing-hero {
   background: radial-gradient(ellipse 120% 70% at 50% 0%, rgba(13,201,161,0.16) 0%, rgba(13,201,161,0.07) 45%, transparent 75%) !important;
-  margin-top: -64px !important;
-  padding-top: calc(64px + clamp(2rem, 5vw, 3.5rem)) !important;
+  margin-top: -104px !important;
+  padding-top: calc(104px + clamp(2rem, 5vw, 3.5rem)) !important;
 }
 
 /* .page — layout wrapper handles top padding via .main-content */
@@ -600,11 +600,11 @@ body.dark .hero-float-card div[style*="rgba(0,0,0,0.1)"] { background: rgba(255,
 
 /* ── Layout wrapper ───────────────────────────────────────── */
 .main-content {
-  padding-top: 64px;
+  padding-top: 104px; /* 64px main nav + 40px category row */
 }
 @media (max-width: 767px) {
   .main-content {
-    padding-top: 52px;
+    padding-top: 92px; /* 56px mobile nav + 36px category row */
     padding-bottom: 72px;
   }
 }

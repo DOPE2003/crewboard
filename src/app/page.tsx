@@ -3,6 +3,8 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
+import ProofOfWorkFeed from "@/components/home/ProofOfWorkFeed";
+import Web3NewsFeed from "@/components/home/Web3NewsFeed";
 import "@/styles/landing.css";
 
 
@@ -15,7 +17,7 @@ export default async function HomePage() {
     orderBy: { createdAt: "desc" },
     take: 20,
     select: {
-      twitterHandle: true, name: true, image: true, role: true,
+      twitterHandle: true, name: true, image: true, userTitle: true,
       availability: true, skills: true, bio: true, createdAt: true,
       sellerOrders: { where: { status: "completed" }, select: { amount: true } },
     },
@@ -25,7 +27,7 @@ export default async function HomePage() {
     twitterHandle: u.twitterHandle,
     name: u.name,
     image: u.image,
-    role: u.role,
+    role: u.userTitle,
     availability: u.availability,
     skills: u.skills,
     bio: u.bio,
@@ -33,6 +35,24 @@ export default async function HomePage() {
     totalEarned: (u.sellerOrders as Array<{ amount: number }>).reduce((s: number, o: { amount: number }) => s + o.amount, 0),
     memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
   }));
+
+  const completedOrders = await db.order.findMany({
+    where: { status: "completed" },
+    include: {
+      gig: {
+        select: { id: true, title: true, description: true, category: true, tags: true },
+      },
+      seller: {
+        select: { id: true, name: true, twitterHandle: true, image: true },
+      },
+      reviews: {
+        select: { rating: true, body: true },
+        take: 1,
+      },
+    },
+    orderBy: { updatedAt: "desc" },
+    take: 12,
+  }).catch(() => []);
 
   const userName = session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder";
 
@@ -49,9 +69,9 @@ export default async function HomePage() {
           alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
-          padding: "clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(1.5rem, 3vw, 3rem)",
+          padding: "clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(8rem, 14vw, 12rem)",
           position: "relative",
-          overflow: "hidden",
+          overflow: "visible",
         }}
       >
         {/* Glow — desktop only */}
@@ -249,6 +269,12 @@ export default async function HomePage() {
         </div>
       </div>
 
+
+      {/* ── PROOF OF WORK FEED ── */}
+      <ProofOfWorkFeed orders={completedOrders} />
+
+      {/* ── WEB3 NEWS FEED ── */}
+      <Web3NewsFeed />
 
       {/* ── TRUST STRIP — desktop ── */}
       <div className="hidden md:block" style={{ borderTop: "1px solid var(--card-border)", borderBottom: "1px solid var(--card-border)", padding: "1.5rem 1.25rem", background: "var(--card-bg)", position: "relative", zIndex: 1 }}>

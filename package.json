@@ -38,6 +38,7 @@
     "face-api.js": "^0.22.2",
     "framer-motion": "^12.38.0",
     "lightningcss": "1.32.0",
+    "lightweight-charts": "^5.1.0",
     "lucide-react": "^0.577.0",
     "motion": "^12.34.2",
     "next": "16.1.6",

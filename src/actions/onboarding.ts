@@ -31,7 +31,7 @@ export async function completeOnboarding(data: {
   await db.user.update({
     where: { id: userId },
     data: {
-      role,
+      userTitle: role,           // professional role (e.g. "AI Engineer")
       skills: Array.isArray(skills) ? skills : [],
       bio: bio ?? "",
       availability: availability ?? "available",

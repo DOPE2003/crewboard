@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
         views: true,
         createdAt: true,
         user: {
-          select: { id: true, name: true, twitterHandle: true, image: true, role: true },
+          select: { id: true, name: true, twitterHandle: true, image: true, userTitle: true },
         },
       },
     });

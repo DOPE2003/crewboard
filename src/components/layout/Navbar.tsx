@@ -4,7 +4,6 @@ import db from "@/lib/db";
 import NavSearch from "./NavSearch";
 import NavProfileMenu from "./NavProfileMenu";
 import NavControlsClient from "./NavControlsClient";
-import NavCategoryGroup from "./NavCategoryGroup";
 
 import type { NavNotif, NavOrder } from "@/types/nav";
 import T from "@/components/ui/T";
@@ -180,48 +179,8 @@ export default async function Navbar() {
           </span>
         </Link>
 
-        {/* Categories — right after logo, desktop only */}
-        <div className="nav-cats-center hidden md:flex" style={{ flexShrink: 0 }}>
-          <ul className="nav-links" style={{ margin: 0 }}>
-            <NavCategoryGroup
-              label="Creative"
-              color="#f59e0b"
-              items={[
-                { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
-                { label: "Artist",            href: "/talent?role=Artist" },
-              ]}
-            />
-            <NavCategoryGroup
-              label="Design"
-              color="#8b5cf6"
-              items={[
-                { label: "Web3 Designer",    href: "/talent?role=Web3+Web+Designer" },
-                { label: "Graphic & Design", href: "/talent?role=Graphic+%26+Design" },
-                { label: "Content Creator",  href: "/talent?role=Content+Creator" },
-              ]}
-            />
-            <NavCategoryGroup
-              label="Marketing"
-              color="#14b8a6"
-              items={[
-                { label: "Social Marketing",  href: "/talent?role=Social+Marketing" },
-                { label: "KOL Manager",       href: "/talent?role=KOL+Manager" },
-                { label: "Exchange Listings", href: "/talent?role=Exchange+Listings+Manager" },
-              ]}
-            />
-            <NavCategoryGroup
-              label="Tech"
-              color="#3b82f6"
-              items={[
-                { label: "Coding & Tech", href: "/talent?role=Coding+%26+Tech" },
-                { label: "AI Engineer",   href: "/talent?role=AI+Engineer" },
-              ]}
-            />
-          </ul>
-        </div>
-
-        {/* Search — takes remaining space, desktop only */}
-        <div className="hidden md:flex" style={{ flex: 1, maxWidth: 480, minWidth: 0 }}>
+        {/* Search — stretches to fill available space */}
+        <div className="hidden md:flex" style={{ flex: 1, minWidth: 0 }}>
           <NavSearch />
         </div>
 
@@ -254,6 +213,69 @@ export default async function Navbar() {
         </div>
 
       </div>
+
+      {/* ── Category scroll row ── */}
+      <div style={{
+        background: "linear-gradient(90deg, #f0fdfa 0%, #ccfbf1 50%, #f0fdfa 100%)",
+        borderBottom: "1px solid #99f6e4",
+        overflowX: "auto",
+        scrollbarWidth: "none",
+        msOverflowStyle: "none",
+      } as React.CSSProperties}>
+        <div style={{
+          display: "flex",
+          alignItems: "center",
+          gap: 4,
+          padding: "0 24px",
+          maxWidth: 1280,
+          margin: "0 auto",
+          width: "max-content",
+          minWidth: "100%",
+        }}>
+          {[
+            { label: "🔥 Trending",           href: "/talent" },
+            { label: "💻 Coding & Tech",       href: "/talent?role=Coding+%26+Tech" },
+            { label: "🤖 AI Engineer",         href: "/talent?role=AI+Engineer" },
+            { label: "🎨 Graphic & Design",    href: "/talent?role=Graphic+%26+Design" },
+            { label: "📹 Video & Animation",   href: "/talent?role=Video+%26+Animation" },
+            { label: "📣 Social Marketing",    href: "/talent?role=Social+Marketing" },
+            { label: "🎯 KOL Manager",         href: "/talent?role=KOL+Manager" },
+            { label: "✍️ Content Creator",     href: "/talent?role=Content+Creator" },
+            { label: "🌐 Web3 Designer",       href: "/talent?role=Web3+Web+Designer" },
+            { label: "📊 Exchange Listings",   href: "/talent?role=Exchange+Listings+Manager" },
+          ].map((cat) => (
+            <Link
+              key={cat.label}
+              href={cat.href}
+              className="nav-cat-pill"
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "10px 16px",
+                fontSize: 13,
+                fontWeight: 500,
+                color: "#0f766e",
+                textDecoration: "none",
+                whiteSpace: "nowrap",
+                borderBottom: "2px solid transparent",
+                transition: "all 0.15s",
+                flexShrink: 0,
+              }}
+            >
+              {cat.label}
+            </Link>
+          ))}
+        </div>
+      </div>
+
+      <style>{`
+        .nav-cat-pill:hover {
+          color: #0f172a !important;
+          border-bottom: 2px solid #14B8A6 !important;
+          background: rgba(20,184,166,0.08) !important;
+        }
+        div::-webkit-scrollbar { display: none; }
+      `}</style>
 
     </nav>
   );

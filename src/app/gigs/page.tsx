@@ -56,7 +56,7 @@ export default async function GigsPage({
   const rawGigs = await db.gig.findMany({
     where,
     include: {
-      user: { select: { name: true, twitterHandle: true, image: true, role: true } },
+      user: { select: { name: true, twitterHandle: true, image: true, userTitle: true } },
       orders: {
         where: { status: "completed" },
         select: { 
@@ -149,7 +149,7 @@ export default async function GigsPage({
                       <div className="gig-user-info">
                         <span className="gig-user-name">{userName}</span>
                         <div style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}>
-                          <span className="gig-user-role">{gig.user.role || "Builder"}</span>
+                          <span className="gig-user-role">{gig.user.userTitle || "Builder"}</span>
                           {gig.reviewCount > 0 && (
                             <span style={{ fontSize: "0.6rem", color: "#f59e0b", fontWeight: 700, display: "flex", alignItems: "center", gap: "2px" }}>
                               ★ {gig.avgRating.toFixed(1)} <span style={{ color: "var(--text-muted)", fontWeight: 400 }}>({gig.reviewCount})</span>

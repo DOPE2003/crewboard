@@ -8,7 +8,7 @@ interface Result {
   name: string | null;
   twitterHandle: string;
   image: string | null;
-  role: string | null;
+  userTitle: string | null;
 }
 
 export default function HeroMobileSearch() {
@@ -130,7 +130,7 @@ export default function HeroMobileSearch() {
                   {r.name ?? r.twitterHandle}
                 </div>
                 <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.62rem", color: "rgba(0,0,0,0.45)" }}>
-                  @{r.twitterHandle}{r.role ? ` · ${r.role}` : ""}
+                  @{r.twitterHandle}{r.userTitle ? ` · ${r.userTitle}` : ""}
                 </div>
               </div>
             </button>

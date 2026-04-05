@@ -13,7 +13,7 @@ export interface ProfileData {
   name: string | null;
   twitterHandle: string;
   image: string | null;
-  role: string | null;
+  role: string | null; // maps to userTitle
   bio: string | null;
   skills: string[];
   isOG: boolean;

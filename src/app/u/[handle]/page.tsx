@@ -138,7 +138,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   // Profile completion
   const completionItems = [
     { label: "Profile photo", done: !!user.image },
-    { label: "Role", done: !!user.role },
+    { label: "Role", done: !!user.userTitle },
     { label: "Bio", done: !!user.bio && user.bio.length > 3 },
     { label: "Skills", done: (user.skills?.length ?? 0) > 0 },
     { label: "Availability", done: !!user.availability },
@@ -173,7 +173,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               {/* Edit profile button overlay */}
               <div style={{ position: "absolute", top: "1rem", right: "1.5rem", zIndex: 3 }}>
                 <EditProfilePanel
-                  initialRole={user.role ?? ""}
+                  initialRole={user.userTitle ?? ""}
                   initialSkills={user.skills}
                   initialBio={user.bio ?? ""}
                   initialAvailability={user.availability ?? "available"}
@@ -229,9 +229,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
               {/* Row 2: Role + Availability pills */}
               <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, marginBottom: 6, flexWrap: "wrap" }}>
-                {user.role && (
+                {user.userTitle && (
                   <span style={{ fontSize: "12px", fontWeight: 500, padding: "3px 12px", borderRadius: 99, background: "#E1F5EE", color: "#0F6E56" }}>
-                    {user.role}
+                    {user.userTitle}
                   </span>
                 )}
                 <span style={{

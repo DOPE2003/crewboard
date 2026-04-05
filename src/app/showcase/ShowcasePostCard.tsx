@@ -156,9 +156,9 @@ export default function ShowcasePostCard({ post, onInteract, loggedIn }: Props) 
             <div style={{ fontSize: "0.8125rem", fontWeight: 600, color: "var(--text)", lineHeight: 1.2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
               {post.user.name ?? `@${post.user.twitterHandle}`}
             </div>
-            {post.user.role && (
+            {post.user.userTitle && (
               <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                {post.user.role}
+                {post.user.userTitle}
               </div>
             )}
           </div>

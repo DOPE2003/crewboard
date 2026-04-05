@@ -18,7 +18,7 @@ export type ShowcasePost = {
     name: string | null;
     twitterHandle: string;
     image: string | null;
-    role: string | null;
+    userTitle: string | null;
   };
   likeCount: number;
   saveCount: number;

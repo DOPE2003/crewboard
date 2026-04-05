@@ -9,7 +9,7 @@ export async function GET() {
       name: true,
       twitterHandle: true,
       image: true,
-      role: true,
+      userTitle: true,
       bio: true,
       skills: true,
       availability: true,

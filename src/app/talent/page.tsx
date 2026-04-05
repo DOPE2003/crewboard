@@ -7,7 +7,7 @@ type User = {
   name: string | null;
   twitterHandle: string | null;
   image: string | null;
-  role: string | null;
+  userTitle: string | null;
   bio: string | null;
   skills: string[];
   availability: string | null;
@@ -38,7 +38,7 @@ export default function TalentPage() {
 
   const filtered = selectedRole === "All"
     ? users
-    : users.filter((u) => u.role === selectedRole);
+    : users.filter((u) => u.userTitle === selectedRole);
 
   return (
     <div style={{ minHeight: "100vh", background: "#f7f8fa" }}>
@@ -138,13 +138,13 @@ function ProfileCard({ user }: { user: User }) {
       </div>
 
       {/* Role pill */}
-      {user.role && (
+      {user.userTitle && (
         <span style={{
           display: "inline-block", fontSize: 11, fontWeight: 600,
           padding: "3px 10px", borderRadius: 99,
           background: "#E1F5EE", color: "#0F6E56", marginBottom: 10,
         }}>
-          {user.role}
+          {user.userTitle}
         </span>
       )}
 

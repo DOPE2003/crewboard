@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
         OR: [
           { name: { contains: q, mode: "insensitive" } },
           { twitterHandle: { contains: q, mode: "insensitive" } },
-          { role: { contains: q, mode: "insensitive" } },
+          { userTitle: { contains: q, mode: "insensitive" } },
           { bio: { contains: q, mode: "insensitive" } },
         ],
       },
@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
         name: true,
         twitterHandle: true,
         image: true,
-        role: true,
+        userTitle: true,
         availability: true,
       },
       take: 5,

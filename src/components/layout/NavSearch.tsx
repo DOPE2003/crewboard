@@ -172,7 +172,7 @@ export default function NavSearch() {
                       {user.name ?? `@${user.twitterHandle}`}
                     </p>
                     <p style={{ fontSize: 11, color: "var(--text-muted)", margin: 0 }}>
-                      {user.role ?? "Freelancer"}
+                      {user.userTitle ?? "Freelancer"}
                     </p>
                   </div>
                   <span style={{

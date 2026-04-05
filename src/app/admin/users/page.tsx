@@ -26,6 +26,7 @@ export default async function AdminUsersPage({
       twitterHandle: true,
       email: true,
       role: true,
+      isOG: true,
       createdAt: true,
       profileComplete: true,
     },
@@ -92,7 +93,7 @@ export default async function AdminUsersPage({
                     )}
                   </td>
                   <td style={{ padding: "1.25rem 1.5rem", textAlign: "right" }}>
-                    <AdminUserActions userId={user.id} isAdmin={user.role === "ADMIN"} />
+                    <AdminUserActions userId={user.id} role={user.role} isOG={user.isOG} />
                   </td>
                 </tr>
               ))}

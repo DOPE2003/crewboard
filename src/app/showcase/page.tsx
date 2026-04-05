@@ -36,7 +36,7 @@ export default async function ShowcasePage({
         views: true,
         createdAt: true,
         user: {
-          select: { id: true, name: true, twitterHandle: true, image: true, role: true },
+          select: { id: true, name: true, twitterHandle: true, image: true, userTitle: true },
         },
       },
     })
