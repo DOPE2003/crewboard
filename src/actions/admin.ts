@@ -5,25 +5,23 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Role } from "@/lib/generated/prisma/client";
 
-export async function toggleUserAdmin(userId: string) {
+export async function setUserRole(userId: string, newRole: Role) {
   const admin = await requireAdmin();
   
-  if (admin.userId === userId) {
+  if (admin.userId === userId && newRole !== Role.ADMIN) {
     throw new Error("You cannot revoke your own admin status.");
   }
 
   const user = await db.user.findUnique({
     where: { id: userId },
-    select: { role: true },
+    select: { id: true },
   });
 
   if (!user) throw new Error("User not found.");
 
-  const nextRole = user.role === Role.ADMIN ? Role.USER : Role.ADMIN;
-
   await db.user.update({
     where: { id: userId },
-    data: { role: nextRole },
+    data: { role: newRole },
   });
 
   revalidatePath("/admin/users");
@@ -33,5 +31,4 @@ export async function toggleUserAdmin(userId: string) {
 
 export async function toggleGigFeatured(gigId: string) {
   await requireAdmin();
-  // Future: Toggle 'featured' boolean on Gig model
 }

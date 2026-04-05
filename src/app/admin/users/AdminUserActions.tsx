@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { toggleUserAdmin } from "@/actions/admin";
+import { setUserRole } from "@/actions/admin";
 import Modal from "@/components/ui/Modal";
 
 interface Props {
@@ -12,16 +12,16 @@ interface Props {
 
 export function AdminUserActions({ userId, role }: Props) {
   const [loading, setLoading] = useState(false);
-  const [showModal, setShowModal] = useState(false);
+  const [pendingRole, setPendingRole] = useState<string | null>(null);
   const router = useRouter();
 
-  const isAdmin = role === "ADMIN";
-
-  async function handleToggleAdmin() {
+  async function handleRoleChange() {
+    if (!pendingRole) return;
     setLoading(true);
     try {
-      await toggleUserAdmin(userId);
-      setShowModal(false);
+      // We cast to any here to avoid importing the enum into the client bundle
+      await setUserRole(userId, pendingRole as any);
+      setPendingRole(null);
       router.refresh();
     } catch (e: any) {
       alert(e.message);
@@ -30,51 +30,59 @@ export function AdminUserActions({ userId, role }: Props) {
     }
   }
 
+  const roleStyles: Record<string, any> = {
+    ADMIN: { bg: "rgba(239,68,68,0.05)", color: "#ef4444", border: "rgba(239,68,68,0.2)" },
+    MODERATOR: { bg: "rgba(245,158,11,0.05)", color: "#f59e0b", border: "rgba(245,158,11,0.2)" },
+    USER: { bg: "rgba(var(--foreground-rgb), 0.05)", color: "var(--text-muted)", border: "var(--card-border)" },
+  };
+
   return (
     <div style={{ display: "flex", justifyContent: "flex-end", gap: "0.5rem" }}>
-      <button
-        onClick={() => setShowModal(true)}
+      <select
+        value={role}
+        disabled={loading}
+        onChange={(e) => setPendingRole(e.target.value)}
         style={{
           padding: "0.4rem 0.75rem",
           borderRadius: "6px",
           border: "1px solid var(--card-border)",
-          background: isAdmin ? "rgba(239,68,68,0.05)" : "rgba(20,184,166,0.05)",
-          color: isAdmin ? "#ef4444" : "#14b8a6",
+          background: roleStyles[role]?.bg || "var(--card-bg)",
+          color: roleStyles[role]?.color || "var(--foreground)",
           fontSize: "0.7rem",
           fontWeight: 700,
           cursor: "pointer",
-          transition: "all 0.2s"
+          outline: "none"
         }}
       >
-        {isAdmin ? "Revoke Admin" : "Make Admin"}
-      </button>
+        <option value="USER">User</option>
+        <option value="MODERATOR">Moderator</option>
+        <option value="ADMIN">Admin</option>
+      </select>
 
       <Modal
-        isOpen={showModal}
-        onClose={() => setShowModal(false)}
-        title={isAdmin ? "Revoke Admin Status?" : "Grant Admin Status?"}
+        isOpen={pendingRole !== null}
+        onClose={() => setPendingRole(null)}
+        title="Confirm Role Change"
         footer={(
           <>
-            <button className="btn-secondary" onClick={() => setShowModal(false)} disabled={loading} style={{ padding: "0.5rem 1rem", fontSize: "0.75rem" }}>Cancel</button>
+            <button className="btn-secondary" onClick={() => setPendingRole(null)} disabled={loading} style={{ padding: "0.5rem 1rem", fontSize: "0.75rem" }}>Cancel</button>
             <button 
               className="btn-primary" 
-              onClick={handleToggleAdmin} 
+              onClick={handleRoleChange} 
               disabled={loading}
               style={{ 
                 padding: "0.5rem 1rem", 
                 fontSize: "0.75rem", 
-                background: isAdmin ? "#ef4444" : "#14b8a6" 
+                background: "#14b8a6" 
               }}
             >
-              {loading ? "..." : isAdmin ? "Revoke Status" : "Confirm Grant"}
+              {loading ? "..." : "Confirm Change"}
             </button>
           </>
         )}
       >
-        {isAdmin 
-          ? "This user will lose all administrative privileges, including access to this dashboard and moderation tools."
-          : "This user will gain full administrative access to the platform, including user management and gig moderation."
-        }
+        Are you sure you want to change this user&apos;s role from <strong>{role}</strong> to <strong>{pendingRole}</strong>? 
+        This will immediately update their platform permissions.
       </Modal>
     </div>
   );
