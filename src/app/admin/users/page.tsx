@@ -25,7 +25,7 @@ export default async function AdminUsersPage({
       name: true,
       twitterHandle: true,
       email: true,
-      isAdmin: true,
+      role: true,
       createdAt: true,
       profileComplete: true,
     },
@@ -85,14 +85,14 @@ export default async function AdminUsersPage({
                     )}
                   </td>
                   <td style={{ padding: "1.25rem 1.5rem" }}>
-                    {user.isAdmin ? (
+                    {user.role === "ADMIN" ? (
                       <span style={{ background: "#fef2f2", color: "#ef4444", padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 800, border: "1px solid rgba(239,68,68,0.2)" }}>ADMIN</span>
                     ) : (
                       <span style={{ background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--text-muted)", padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 600 }}>USER</span>
                     )}
                   </td>
                   <td style={{ padding: "1.25rem 1.5rem", textAlign: "right" }}>
-                    <AdminUserActions userId={user.id} isAdmin={user.isAdmin} />
+                    <AdminUserActions userId={user.id} isAdmin={user.role === "ADMIN"} />
                   </td>
                 </tr>
               ))}

@@ -6,13 +6,21 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+enum Role {
+  USER
+  MODERATOR
+  ADMIN
+}
+
 model User {
   id                   String                @id @default(cuid())
   twitterId            String?               @unique
   twitterHandle        String                @unique
   name                 String?
   image                String?
-  role                 String?
+  userTitle            String?               // Job title like "AI Engineer"
+  role                 Role                  @default(USER)
   skills               String[]
   bio                  String?
   availability         String?
@@ -21,7 +29,6 @@ model User {
   updatedAt            DateTime              @updatedAt
   walletAddress        String?               @unique
   isOG                 Boolean               @default(false)
-  isAdmin              Boolean               @default(false)
   worldIdLevel         String?
   worldIdNullifier     String?               @unique
   stripeVerificationId String?               @unique
@@ -31,8 +38,8 @@ model User {
   portfolioItems       Json                  @default("[]")
   cvUrl                String?
   telegramHandle       String?
-  website              String?
   githubHandle         String?
+  website              String?
   bannerImage          String?
   humanVerified        Boolean               @default(false)
   gigs                 Gig[]

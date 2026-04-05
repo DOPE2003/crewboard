@@ -7,13 +7,15 @@ import Modal from "@/components/ui/Modal";
 
 interface Props {
   userId: string;
-  isAdmin: boolean;
+  role: string;
 }
 
-export function AdminUserActions({ userId, isAdmin }: Props) {
+export function AdminUserActions({ userId, role }: Props) {
   const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
+
+  const isAdmin = role === "ADMIN";
 
   async function handleToggleAdmin() {
     setLoading(true);

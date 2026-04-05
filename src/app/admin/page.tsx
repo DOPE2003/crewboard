@@ -12,7 +12,7 @@ export default async function AdminDashboardPage() {
     db.user.findMany({
       orderBy: { createdAt: "desc" },
       take: 10,
-      select: { id: true, name: true, twitterHandle: true, createdAt: true, isAdmin: true, humanVerified: true }
+      select: { id: true, name: true, twitterHandle: true, createdAt: true, role: true, humanVerified: true }
     })
   ]);
 
@@ -32,7 +32,7 @@ export default async function AdminDashboardPage() {
           <StatCard label="Total Users" value={totalUsers} color="#14b8a6" />
           <StatCard label="Active Gigs" value={activeGigs} color="#22c55e" />
           <StatCard label="Total Orders" value={totalOrders} color="#f59e0b" />
-          <StatCard label="Admin Users" value={latestUsers.filter(u => u.isAdmin).length} color="#ef4444" />
+          <StatCard label="Admin Users" value={latestUsers.filter(u => u.role === "ADMIN").length} color="#ef4444" />
         </div>
 
         {/* User Management Table */}
@@ -62,8 +62,8 @@ export default async function AdminDashboardPage() {
                       {new Date(user.createdAt).toLocaleDateString()}
                     </td>
                     <td style={{ padding: "1rem 1.5rem" }}>
-                      {user.isAdmin && <span style={{ background: "#fef2f2", color: "#ef4444", padding: "2px 8px", borderRadius: 4, fontSize: "0.65rem", fontWeight: 700 }}>ADMIN</span>}
-                      {!user.isAdmin && <span style={{ background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--text-muted)", padding: "2px 8px", borderRadius: 4, fontSize: "0.65rem" }}>USER</span>}
+                      {user.role === "ADMIN" && <span style={{ background: "#fef2f2", color: "#ef4444", padding: "2px 8px", borderRadius: 4, fontSize: "0.65rem", fontWeight: 700 }}>ADMIN</span>}
+                      {!user.role === "ADMIN" && <span style={{ background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--text-muted)", padding: "2px 8px", borderRadius: 4, fontSize: "0.65rem" }}>USER</span>}
                     </td>
                     <td style={{ padding: "1rem 1.5rem", textAlign: "right" }}>
                       <Link href={`/u/${user.twitterHandle}`} style={{ color: "#14b8a6", textDecoration: "none" }}>View</Link>

@@ -3,6 +3,7 @@
 import { requireAdmin } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { Role } from "@/lib/generated/prisma/client";
 
 export async function toggleUserAdmin(userId: string) {
   const admin = await requireAdmin();
@@ -13,23 +14,24 @@ export async function toggleUserAdmin(userId: string) {
 
   const user = await db.user.findUnique({
     where: { id: userId },
-    select: { isAdmin: true },
+    select: { role: true },
   });
 
   if (!user) throw new Error("User not found.");
 
+  const nextRole = user.role === Role.ADMIN ? Role.USER : Role.ADMIN;
+
   await db.user.update({
     where: { id: userId },
-    data: { isAdmin: !user.isAdmin },
+    data: { role: nextRole },
   });
 
   revalidatePath("/admin/users");
+  revalidatePath("/admin");
   return { ok: true };
 }
 
 export async function toggleGigFeatured(gigId: string) {
   await requireAdmin();
-  
-  // Note: We'll need a 'featured' field in Gig model if we want this.
-  // For now, let's stick to user management.
+  // Future: Toggle 'featured' boolean on Gig model
 }

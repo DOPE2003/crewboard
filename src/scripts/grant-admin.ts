@@ -1,4 +1,4 @@
-import { PrismaClient } from "../lib/generated/prisma/client";
+import { PrismaClient, Role } from "../lib/generated/prisma/client";
 import { PrismaNeon } from "@prisma/adapter-neon";
 import "dotenv/config";
 
@@ -13,7 +13,6 @@ const adapter = new PrismaNeon({ connectionString: process.env.DATABASE_URL! });
 const db = new PrismaClient({ adapter });
 
 async function main() {
-  // Find user by twitter handle OR email
   const user = await db.user.findFirst({
     where: {
       OR: [
@@ -28,14 +27,14 @@ async function main() {
     process.exit(1);
   }
 
-  const nextStatus = !user.isAdmin;
+  const nextRole = user.role === Role.ADMIN ? Role.USER : Role.ADMIN;
 
   await db.user.update({
     where: { id: user.id },
-    data: { isAdmin: nextStatus },
+    data: { role: nextRole },
   });
 
-  console.log(`Success! User "${identifier}" isAdmin is now: ${nextStatus}`);
+  console.log(`Success! User "${identifier}" role is now: ${nextRole}`);
 }
 
 main()
