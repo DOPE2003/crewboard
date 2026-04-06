@@ -9,38 +9,46 @@ interface NewsItem {
   image: string | null;
 }
 
-/** Returns a relevant emoji based on keywords found in the title. */
+const SOURCE_COLORS: Record<string, { bg: string; color: string }> = {
+  "COINDESK":    { bg: "#1a1a2e", color: "#14B8A6" },
+  "DECRYPT":     { bg: "#0f172a", color: "#818cf8" },
+  "THE BLOCK":   { bg: "#1e1b4b", color: "#a78bfa" },
+  "DEFI PULSE":  { bg: "#052e16", color: "#4ade80" },
+  "NFT NEWS":    { bg: "#1e1b4b", color: "#f472b6" },
+  "CRYPTOSLATE": { bg: "#1a1a2e", color: "#fb923c" },
+  "COINTELEGRAPH": { bg: "#1a1a2e", color: "#facc15" },
+  "BITCOINIST":  { bg: "#1c1917", color: "#f97316" },
+  "BEINCRYPTO":  { bg: "#0f172a", color: "#38bdf8" },
+};
+
 function getEmoji(title: string): string {
   const t = title.toLowerCase();
-  if (/bitcoin|btc\b/.test(t))                            return "🪙";
-  if (/ethereum|eth\b/.test(t))                           return "💎";
-  if (/solana|sol\b/.test(t))                             return "⚡";
-  if (/nft|non.fungible/.test(t))                         return "🎨";
-  if (/defi|decentralized finance|tvl/.test(t))           return "🏦";
-  if (/usdc|usdt|stablecoin/.test(t))                     return "💵";
-  if (/layer.?2|l2|rollup|arbitrum|optimism/.test(t))     return "🔄";
-  if (/ai\b|artificial intelligence|machine learning/.test(t)) return "🤖";
-  if (/web3|on.chain|blockchain/.test(t))                 return "🌐";
-  if (/hack|exploit|security|breach|vuln/.test(t))        return "🔐";
-  if (/airdrop/.test(t))                                  return "🪂";
-  if (/ipo|listing|exchange/.test(t))                     return "🏪";
-  if (/regulation|sec\b|law|legal|compliance/.test(t))    return "⚖️";
-  if (/dao|governance|vote/.test(t))                      return "🗳️";
-  if (/gaming|game|metaverse/.test(t))                    return "🎮";
-  if (/fund|venture|invest|capital/.test(t))              return "💰";
-  if (/market|price|rally|pump|dump|bull|bear/.test(t))   return "📈";
-  if (/wallet|custody|self.custody/.test(t))              return "👛";
-  if (/freelance|job|hire|talent/.test(t))                return "🤝";
-  if (/million|billion|record|milestone/.test(t))         return "🏆";
-  return "📰";
+  if (/bitcoin|btc\b/.test(t))                               return "₿";
+  if (/ethereum|eth\b/.test(t))                              return "◆";
+  if (/solana|sol\b/.test(t))                                return "◎";
+  if (/nft|non.fungible/.test(t))                            return "✦";
+  if (/defi|decentralized finance|tvl/.test(t))              return "⟁";
+  if (/usdc|usdt|stablecoin/.test(t))                        return "$";
+  if (/layer.?2|l2|rollup|arbitrum|optimism/.test(t))        return "⬡";
+  if (/ai\b|artificial intelligence|machine learning/.test(t)) return "◈";
+  if (/hack|exploit|security|breach/.test(t))                return "⚠";
+  if (/regulation|sec\b|law|legal/.test(t))                  return "⚖";
+  if (/fund|venture|invest|capital/.test(t))                 return "◉";
+  if (/market|price|rally|pump|dump|bull|bear/.test(t))      return "▲";
+  return "◇";
+}
+
+function timeAgo(iso: string): string {
+  const h = Math.floor((Date.now() - new Date(iso).getTime()) / 3_600_000);
+  if (h < 1) return "just now";
+  if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
 }
 
 export default function Web3NewsCard({ news }: { news: NewsItem }) {
   const { title, source, publishedAt, url } = news;
-
-  const hoursAgo = Math.floor((Date.now() - new Date(publishedAt).getTime()) / 3_600_000);
-  const timeLabel = hoursAgo < 1 ? "just now" : hoursAgo < 24 ? `${hoursAgo}h ago` : `${Math.floor(hoursAgo / 24)}d ago`;
-
+  const key = source.toUpperCase();
+  const colors = SOURCE_COLORS[key] ?? { bg: "#0f172a", color: "#14B8A6" };
   const emoji = getEmoji(title);
 
   return (
@@ -48,41 +56,61 @@ export default function Web3NewsCard({ news }: { news: NewsItem }) {
       href={url}
       target="_blank"
       rel="noopener noreferrer"
-      className="group flex flex-col bg-white border border-teal-100 rounded-2xl no-underline cursor-pointer transition-all duration-200 hover:-translate-y-1 hover:shadow-lg hover:border-teal-200"
       style={{
-        minHeight: 180,
-        boxShadow: "0 1px 6px rgba(0,0,0,0.05), inset 0 1px 0 rgba(255,255,255,0.9)",
+        display: "flex",
+        flexDirection: "column",
+        background: "white",
+        border: "1px solid #e5e7eb",
+        borderRadius: 16,
+        overflow: "hidden",
+        textDecoration: "none",
+        height: "100%",
+        transition: "transform 0.18s ease, box-shadow 0.18s ease",
+        cursor: "pointer",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.transform = "translateY(-4px)";
+        e.currentTarget.style.boxShadow = "0 12px 32px rgba(0,0,0,0.10)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.transform = "translateY(0)";
+        e.currentTarget.style.boxShadow = "none";
       }}
     >
-      {/* Top gradient band */}
-      <div className="h-[3px] flex-shrink-0 rounded-t-2xl bg-gradient-to-r from-teal-400 via-indigo-400 to-sky-400" />
-
-      <div className="flex flex-col flex-1 px-6 py-5 gap-3">
-        {/* Source + time */}
-        <div className="flex justify-between items-center gap-2">
-          <span className="text-[10px] font-bold tracking-widest uppercase px-2.5 py-1 rounded-full bg-teal-50 border border-teal-100 text-teal-600 truncate max-w-[65%]">
-            {source}
-          </span>
-          <span className="text-[11px] text-slate-400 font-medium flex-shrink-0">{timeLabel}</span>
-        </div>
-
-        {/* Emoji + Title */}
-        <div className="flex gap-2.5 items-start flex-1">
-          <span className="text-[22px] flex-shrink-0 leading-tight mt-0.5" aria-hidden="true">
+      {/* Dark header band */}
+      <div style={{
+        background: colors.bg,
+        padding: "14px 16px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "space-between",
+        flexShrink: 0,
+      }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: 14, color: colors.color, fontWeight: 700, lineHeight: 1, fontFamily: "Space Mono, monospace" }}>
             {emoji}
           </span>
-          <h3 className="text-[14px] font-semibold text-slate-900 leading-[1.55] m-0 line-clamp-3 flex-1">
-            {title}
-          </h3>
+          <span style={{ fontSize: 10, fontWeight: 800, color: colors.color, letterSpacing: "0.12em", textTransform: "uppercase" }}>
+            {source}
+          </span>
         </div>
+        <span style={{ fontSize: 10, color: "rgba(255,255,255,0.35)", fontWeight: 500 }}>
+          {timeAgo(publishedAt)}
+        </span>
+      </div>
 
-        {/* CTA */}
-        <span className="inline-flex items-center gap-1 text-[11.5px] font-semibold text-teal-600 transition-[gap] duration-150 group-hover:gap-2.5 mt-1">
-          Read more
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/>
-            <polyline points="12 5 19 12 12 19"/>
-          </svg>
+      {/* Content */}
+      <div style={{ padding: "16px", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between", gap: 12 }}>
+        <p style={{
+          fontSize: 13, fontWeight: 600, color: "#111827",
+          margin: 0, lineHeight: 1.55,
+          overflow: "hidden", display: "-webkit-box",
+          WebkitLineClamp: 3, WebkitBoxOrient: "vertical",
+        }}>
+          {title}
+        </p>
+        <span style={{ fontSize: 11, color: "#14B8A6", fontWeight: 700, letterSpacing: "0.02em" }}>
+          Read more →
         </span>
       </div>
     </a>

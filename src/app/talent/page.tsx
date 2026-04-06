@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 type User = {
   id: string;
@@ -13,21 +14,21 @@ type User = {
   availability: string | null;
 };
 
-const ROLES = [
-  "All",
-  "Coding & Tech",
-  "AI Engineer",
-  "Graphic & Design",
-  "Video & Animation",
-  "Content Creator",
-  "Social Marketing",
-  "KOL Manager",
-];
-
 export default function TalentPage() {
+  const searchParams = useSearchParams();
   const [users, setUsers] = useState<User[]>([]);
-  const [selectedRole, setSelectedRole] = useState("All");
   const [loading, setLoading] = useState(true);
+
+  // Read ?role= from URL, decode it (set by navbar category strip)
+  const roleParam = searchParams.get("role");
+  const selectedRole = roleParam ? decodeURIComponent(roleParam) : "All";
+
+  useEffect(() => {
+    fetch("/api/talent/browse")
+      .then((r) => r.json())
+      .then((data) => { setUsers(data); setLoading(false); })
+      .catch(() => setLoading(false));
+  }, []);
 
   useEffect(() => {
     fetch("/api/talent/browse")
@@ -51,25 +52,6 @@ export default function TalentPage() {
         <p style={{ fontSize: 14, color: "#6b7280", margin: "0 0 24px 0" }}>
           Find the best Web3 talent for your project
         </p>
-
-        {/* Role filter pills */}
-        <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 32 }}>
-          {ROLES.map((role) => (
-            <button
-              key={role}
-              onClick={() => setSelectedRole(role)}
-              style={{
-                padding: "8px 16px", borderRadius: 99, fontSize: 13, fontWeight: 500,
-                border: selectedRole === role ? "none" : "1px solid #e5e7eb",
-                background: selectedRole === role ? "#14B8A6" : "white",
-                color: selectedRole === role ? "white" : "#6b7280",
-                cursor: "pointer",
-              }}
-            >
-              {role}
-            </button>
-          ))}
-        </div>
 
         {/* Grid */}
         {loading ? (

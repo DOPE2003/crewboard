@@ -6,7 +6,6 @@ import NavProfileMenu from "./NavProfileMenu";
 import NavControlsClient from "./NavControlsClient";
 
 import type { NavNotif, NavOrder } from "@/types/nav";
-import T from "@/components/ui/T";
 
 
 export default async function Navbar() {
@@ -214,10 +213,10 @@ export default async function Navbar() {
 
       </div>
 
-      {/* ── Category scroll row ── */}
+      {/* ── Crewboard Category Strip ── */}
       <div style={{
-        background: "linear-gradient(90deg, #f0fdfa 0%, #ccfbf1 50%, #f0fdfa 100%)",
-        borderBottom: "1px solid #99f6e4",
+        background: "var(--nav-bg, #ffffff)",
+        borderBottom: "1px solid var(--card-border, #e5e7eb)",
         overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
@@ -225,56 +224,76 @@ export default async function Navbar() {
         <div style={{
           display: "flex",
           alignItems: "center",
-          gap: 4,
           padding: "0 24px",
           maxWidth: 1280,
           margin: "0 auto",
-          width: "max-content",
-          minWidth: "100%",
+          gap: 0,
         }}>
-          {[
-            { label: "🔥 Trending",           href: "/talent" },
-            { label: "💻 Coding & Tech",       href: "/talent?role=Coding+%26+Tech" },
-            { label: "🤖 AI Engineer",         href: "/talent?role=AI+Engineer" },
-            { label: "🎨 Graphic & Design",    href: "/talent?role=Graphic+%26+Design" },
-            { label: "📹 Video & Animation",   href: "/talent?role=Video+%26+Animation" },
-            { label: "📣 Social Marketing",    href: "/talent?role=Social+Marketing" },
-            { label: "🎯 KOL Manager",         href: "/talent?role=KOL+Manager" },
-            { label: "✍️ Content Creator",     href: "/talent?role=Content+Creator" },
-            { label: "🌐 Web3 Designer",       href: "/talent?role=Web3+Web+Designer" },
-            { label: "📊 Exchange Listings",   href: "/talent?role=Exchange+Listings+Manager" },
-          ].map((cat) => (
+          {([
+            { label: "Trending",          href: "/talent",                                    hot: true  },
+            { label: "Coding & Tech",     href: "/talent?role=Coding+%26+Tech"               },
+            { label: "AI Engineer",       href: "/talent?role=AI+Engineer",                  isNew: true },
+            { label: "Graphic & Design",  href: "/talent?role=Graphic+%26+Design"            },
+            { label: "Video & Animation", href: "/talent?role=Video+%26+Animation"            },
+            { label: "Social Marketing",  href: "/talent?role=Social+Marketing"               },
+            { label: "KOL Manager",       href: "/talent?role=KOL+Manager"                   },
+            { label: "Content Creator",   href: "/talent?role=Content+Creator"                },
+            { label: "Web3 Designer",     href: "/talent?role=Web3+Web+Designer"              },
+            { label: "Exchange Listings", href: "/talent?role=Exchange+Listings+Manager"      },
+          ] as { label: string; href: string; hot?: boolean; isNew?: boolean }[]).map((cat) => (
             <Link
               key={cat.label}
               href={cat.href}
-              className="nav-cat-pill"
+              className="cb-cat-link"
               style={{
-                display: "flex",
+                display: "inline-flex",
                 alignItems: "center",
-                padding: "10px 16px",
-                fontSize: 13,
+                gap: 6,
+                padding: "11px 16px",
+                fontSize: 12,
                 fontWeight: 500,
-                color: "#0f766e",
+                color: "var(--text-muted, #6b7280)",
                 textDecoration: "none",
                 whiteSpace: "nowrap",
                 borderBottom: "2px solid transparent",
-                transition: "all 0.15s",
+                transition: "color 0.15s, border-color 0.15s",
                 flexShrink: 0,
+                letterSpacing: "0.01em",
               }}
             >
+              {cat.hot && (
+                <span style={{
+                  width: 7, height: 7, borderRadius: "50%",
+                  background: "#14B8A6", display: "inline-block", flexShrink: 0,
+                  animation: "tealPulse 2s ease-in-out infinite",
+                }} />
+              )}
               {cat.label}
+              {cat.isNew && (
+                <span style={{
+                  fontSize: 9, fontWeight: 700,
+                  background: "#14B8A6", color: "white",
+                  padding: "1px 5px", borderRadius: 4,
+                  letterSpacing: "0.05em", lineHeight: 1.6,
+                }}>
+                  NEW
+                </span>
+              )}
             </Link>
           ))}
         </div>
       </div>
 
       <style>{`
-        .nav-cat-pill:hover {
-          color: #0f172a !important;
-          border-bottom: 2px solid #14B8A6 !important;
-          background: rgba(20,184,166,0.08) !important;
+        @keyframes tealPulse {
+          0%, 100% { opacity: 1; transform: scale(1); }
+          50%       { opacity: 0.45; transform: scale(1.5); }
         }
-        div::-webkit-scrollbar { display: none; }
+        .cb-cat-link:hover {
+          color: #14B8A6 !important;
+          border-bottom-color: #14B8A6 !important;
+        }
+        nav ::-webkit-scrollbar { display: none; }
       `}</style>
 
     </nav>

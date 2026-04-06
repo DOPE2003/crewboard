@@ -75,38 +75,35 @@ export default function Web3NewsFeed() {
       <div className="relative z-10 mx-auto" style={{ maxWidth: 1400 }}>
 
         {/* Header */}
-        <div className="mb-12">
-          <div className="flex items-center gap-2 mb-4">
-            <span
-              className="w-1.5 h-1.5 rounded-full flex-shrink-0"
-              style={{ background: "#14B8A6", boxShadow: "0 0 8px rgba(20,184,166,0.7)" }}
-            />
-            <span className="text-[10.5px] font-bold tracking-[0.18em] uppercase text-teal-600">
-              Live Feed
-            </span>
-            <div
-              className="inline-flex items-center gap-1.5 ml-1 px-2.5 py-0.5 rounded-full border text-[10px] font-bold tracking-widest text-red-500"
-              style={{ background: "rgba(239,68,68,0.08)", borderColor: "rgba(239,68,68,0.2)" }}
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse flex-shrink-0" />
-              LIVE
+        <div style={{ marginBottom: 40 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
+            <div style={{
+              display: "inline-flex", alignItems: "center", gap: 6,
+              background: "#fef2f2", border: "1px solid #fecaca",
+              borderRadius: 99, padding: "4px 10px",
+            }}>
+              <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#ef4444", display: "inline-block", animation: "livePulse 1.5s infinite" }} />
+              <span style={{ fontSize: 11, fontWeight: 700, color: "#ef4444", letterSpacing: "0.08em" }}>LIVE</span>
             </div>
+            <h2 style={{ fontSize: "clamp(26px,4vw,40px)", fontWeight: 800, color: "#111827", margin: 0, letterSpacing: "-0.03em" }}>
+              Web3 News
+            </h2>
           </div>
-
-          <h2
-            className="font-extrabold text-slate-900 tracking-tight leading-none m-0 mb-3"
-            style={{ fontSize: "clamp(32px,4vw,48px)", letterSpacing: "-0.04em" }}
-          >
-            Web3 News
-          </h2>
-          <p className="text-[16.5px] text-slate-500 m-0 leading-relaxed">
-            What&apos;s happening in crypto.{" "}
-            <em className="text-slate-400 not-italic">Right now.</em>
+          <p style={{ fontSize: 14, color: "#6b7280", margin: 0 }}>
+            What&apos;s happening in crypto right now
           </p>
+          <style>{`
+            @keyframes livePulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(1.4); } }
+          `}</style>
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+          gap: 16,
+          alignItems: "stretch",
+        }}>
           {loading
             ? Array.from({ length: 6 }).map((_, i) => <SkeletonCard key={i} />)
             : news.map((item) => <Web3NewsCard key={item.id} news={item} />)

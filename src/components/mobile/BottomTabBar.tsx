@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { signOut } from 'next-auth/react'
 
 interface Props {
   twitterHandle?: string | null
@@ -58,108 +60,219 @@ function ProfileIcon({ active }: { active: boolean }) {
   )
 }
 
+function ChevronRight() {
+  return (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <polyline points="9 18 15 12 9 6"/>
+    </svg>
+  )
+}
+
 export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Props) {
   const pathname = usePathname()
+  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
-  const profileHref = twitterHandle ? `/u/${twitterHandle}` : '/login'
+  const isProfileActive = pathname.startsWith('/u/') || pathname === '/dashboard'
 
-  const tabs = [
-    { href: '/',           label: 'Home',      icon: (a: boolean) => <HomeIcon active={a} />,     match: (p: string) => p === '/' },
-    { href: '/talent',     label: 'Discover',  icon: (a: boolean) => <DiscoverIcon active={a} />, match: (p: string) => p.startsWith('/talent') },
-    { href: '/gigs',       label: 'Services',  icon: (a: boolean) => <ServicesIcon active={a} />, match: (p: string) => p.startsWith('/gigs') || p.startsWith('/services') },
-    { href: '/activities', label: 'Activities',icon: (a: boolean) => <BellIcon active={a} />,     match: (p: string) => p.startsWith('/activities') },
-    { href: profileHref,   label: 'Profile',   icon: (a: boolean) => <ProfileIcon active={a} />,  match: (p: string) => p.startsWith('/u/') || p === '/dashboard' },
+  const tabsLeft = [
+    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,      match: (p: string) => p === '/' },
+    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,  match: (p: string) => p.startsWith('/talent') },
+    { href: '/gigs',       label: 'Services',   icon: (a: boolean) => <ServicesIcon active={a} />,  match: (p: string) => p.startsWith('/gigs') },
+    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,      match: (p: string) => p.startsWith('/activities') },
+  ]
+
+  const menuItems = [
+    { label: 'My Profile',    href: twitterHandle ? `/u/${twitterHandle}` : '/login',  icon: '👤' },
+    { label: 'My Services',   href: '/gigs/mine',   icon: '🛠️' },
+    { label: 'Orders',        href: '/orders',       icon: '📋' },
+    { label: 'Messages',      href: '/messages',     icon: '💬' },
+    { label: 'My Wallet',     href: '/billing',      icon: '💳' },
+    { label: 'Payment History', href: '/payments',   icon: '📊' },
+    { label: 'Saved Talent',  href: '/saved-talents',icon: '🔖' },
+    { label: 'Notifications', href: '/notifications',icon: '🔔' },
   ]
 
   return (
-    <nav
-      aria-label="Bottom navigation"
-      style={{
-        position: 'fixed',
-        bottom: '0px',
-        top: 'auto',
-        left: '0px',
-        right: '0px',
-        zIndex: 9999,
-        display: 'flex',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-around',
-        height: '56px',
-        backgroundColor: '#ffffff',
-        borderTop: '1px solid #e5e7eb',
-        paddingBottom: 'env(safe-area-inset-bottom, 0px)',
-      }}
-    >
-      {tabs.map((tab) => {
-        const active = tab.match(pathname)
-        return (
-          <Link
-            key={tab.href}
-            href={tab.href}
-            style={{
-              flex: 1,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 2,
-              padding: '6px 0',
-              textDecoration: 'none',
-              color: active ? BRAND : MUTED,
-              position: 'relative',
-              minHeight: 44,
-              WebkitTapHighlightColor: 'transparent',
-            }}
-          >
-            <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28 }}>
-              {tab.icon(active)}
-              {tab.href === '/activities' && unreadActivities > 0 && (
-                <span style={{
-                  position: 'absolute',
-                  top: -4,
-                  right: -6,
-                  minWidth: 16,
-                  height: 16,
-                  padding: '0 3px',
-                  borderRadius: 99,
-                  background: '#ef4444',
-                  color: 'white',
-                  fontSize: 9,
-                  fontWeight: 700,
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  lineHeight: 1,
-                }}>
-                  {unreadActivities > 9 ? '9+' : unreadActivities}
-                </span>
+    <>
+      <nav
+        aria-label="Bottom navigation"
+        style={{
+          position: 'fixed',
+          bottom: '0px',
+          top: 'auto',
+          left: '0px',
+          right: '0px',
+          zIndex: 9999,
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          height: '56px',
+          backgroundColor: '#ffffff',
+          borderTop: '1px solid #e5e7eb',
+          paddingBottom: 'env(safe-area-inset-bottom, 0px)',
+        }}
+      >
+        {tabsLeft.map((tab) => {
+          const active = tab.match(pathname)
+          return (
+            <Link
+              key={tab.href}
+              href={tab.href}
+              style={{
+                flex: 1,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 2,
+                padding: '6px 0',
+                textDecoration: 'none',
+                color: active ? BRAND : MUTED,
+                position: 'relative',
+                minHeight: 44,
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28 }}>
+                {tab.icon(active)}
+                {tab.href === '/activities' && unreadActivities > 0 && (
+                  <span style={{
+                    position: 'absolute', top: -4, right: -6,
+                    minWidth: 16, height: 16, padding: '0 3px', borderRadius: 99,
+                    background: '#ef4444', color: 'white',
+                    fontSize: 9, fontWeight: 700,
+                    display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1,
+                  }}>
+                    {unreadActivities > 9 ? '9+' : unreadActivities}
+                  </span>
+                )}
+              </span>
+              <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, letterSpacing: '0.04em', lineHeight: 1, color: active ? BRAND : MUTED }}>
+                {tab.label}
+              </span>
+              {active && (
+                <span style={{ position: 'absolute', bottom: 1, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: BRAND }} />
               )}
-            </span>
-            <span style={{
-              fontSize: 10,
-              fontWeight: active ? 700 : 500,
-              letterSpacing: '0.04em',
-              lineHeight: 1,
-              color: active ? BRAND : MUTED,
-            }}>
-              {tab.label}
-            </span>
-            {active && (
-              <span style={{
-                position: 'absolute',
-                bottom: 1,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                width: 4,
-                height: 4,
-                borderRadius: '50%',
-                background: BRAND,
-              }} />
-            )}
-          </Link>
-        )
-      })}
-    </nav>
+            </Link>
+          )
+        })}
+
+        {/* Profile tab — opens bottom sheet */}
+        <button
+          onClick={() => setShowProfileMenu(true)}
+          style={{
+            flex: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 2,
+            padding: '6px 0',
+            background: 'none',
+            border: 'none',
+            cursor: 'pointer',
+            color: isProfileActive ? BRAND : MUTED,
+            position: 'relative',
+            minHeight: 44,
+            WebkitTapHighlightColor: 'transparent',
+          }}
+        >
+          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28 }}>
+            <ProfileIcon active={isProfileActive} />
+          </span>
+          <span style={{ fontSize: 10, fontWeight: isProfileActive ? 700 : 500, letterSpacing: '0.04em', lineHeight: 1 }}>
+            Profile
+          </span>
+          {isProfileActive && (
+            <span style={{ position: 'absolute', bottom: 1, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: BRAND }} />
+          )}
+        </button>
+      </nav>
+
+      {/* Profile bottom sheet */}
+      {showProfileMenu && (
+        <>
+          {/* Backdrop */}
+          <div
+            onClick={() => setShowProfileMenu(false)}
+            style={{
+              position: 'fixed', inset: 0, zIndex: 10000,
+              background: 'rgba(0,0,0,0.45)',
+              backdropFilter: 'blur(3px)',
+            }}
+          />
+
+          {/* Sheet */}
+          <div style={{
+            position: 'fixed', bottom: 0, left: 0, right: 0,
+            zIndex: 10001,
+            background: 'var(--background, #ffffff)',
+            borderRadius: '20px 20px 0 0',
+            boxShadow: '0 -8px 40px rgba(0,0,0,0.18)',
+            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
+            animation: 'btabSlideUp 0.28s cubic-bezier(0.32,0.72,0,1)',
+            maxHeight: '85vh',
+            overflowY: 'auto',
+          }}>
+            <style>{`
+              @keyframes btabSlideUp {
+                from { transform: translateY(100%); }
+                to   { transform: translateY(0); }
+              }
+            `}</style>
+
+            {/* Drag handle */}
+            <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 8px' }}>
+              <div style={{ width: 36, height: 4, background: 'var(--card-border, #d1d5db)', borderRadius: 99 }} />
+            </div>
+
+            {/* Handle label */}
+            <div style={{ padding: '4px 20px 12px', borderBottom: '1px solid var(--card-border, #f3f4f6)' }}>
+              <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--foreground, #111827)' }}>
+                {twitterHandle ? `@${twitterHandle}` : 'My Account'}
+              </p>
+            </div>
+
+            {/* Menu items */}
+            {menuItems.map((item, i) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                onClick={() => setShowProfileMenu(false)}
+                style={{
+                  display: 'flex', alignItems: 'center', gap: 14,
+                  padding: '15px 20px',
+                  textDecoration: 'none',
+                  fontSize: 15, fontWeight: 500,
+                  color: 'var(--foreground, #111827)',
+                  borderBottom: i < menuItems.length - 1 ? '1px solid var(--card-border, #f9fafb)' : 'none',
+                }}
+              >
+                <span style={{ fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 }}>{item.icon}</span>
+                <span style={{ flex: 1 }}>{item.label}</span>
+                <ChevronRight />
+              </Link>
+            ))}
+
+            {/* Sign out */}
+            <button
+              onClick={() => { setShowProfileMenu(false); signOut({ callbackUrl: '/' }); }}
+              style={{
+                display: 'flex', alignItems: 'center', gap: 14,
+                padding: '15px 20px', width: '100%',
+                background: 'none', border: 'none', cursor: 'pointer',
+                fontSize: 15, fontWeight: 500, color: '#ef4444',
+                borderTop: '1px solid var(--card-border, #f3f4f6)',
+                marginTop: 8,
+              }}
+            >
+              <span style={{ fontSize: 20, width: 28, textAlign: 'center' }}>🚪</span>
+              <span>Sign Out</span>
+            </button>
+          </div>
+        </>
+      )}
+    </>
   )
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 
 type Order = {
   id: string;
@@ -110,7 +111,15 @@ export default function BillingClient({
   walletAddress, totalEarned, totalPending, userId, orders,
   earningsByCategory, monthlyEarnings,
 }: Props) {
-  const [copied, setCopied] = useState(false);
+  const [copied, setCopied]               = useState(false);
+  const [transferAddress, setTransferAddress] = useState("");
+  const [transferAmount, setTransferAmount]   = useState("");
+  const [isTransferring, setIsTransferring]   = useState(false);
+  const [transferError, setTransferError]     = useState<string | null>(null);
+  const [transferSuccess, setTransferSuccess] = useState(false);
+
+  const { publicKey, signTransaction } = useWallet();
+  const { connection } = useConnection();
 
   function copyAddress() {
     if (!walletAddress) return;
@@ -118,6 +127,41 @@ export default function BillingClient({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
+  }
+
+  async function handleTransfer() {
+    if (!publicKey || !signTransaction || !connection) {
+      setTransferError("Wallet not connected. Connect via Dashboard first.");
+      return;
+    }
+    if (!transferAddress.trim() || !transferAmount) return;
+    setIsTransferring(true);
+    setTransferError(null);
+    setTransferSuccess(false);
+    try {
+      const { PublicKey, Transaction } = await import("@solana/web3.js");
+      const { createTransferInstruction, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } = await import("@solana/spl-token");
+      const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+      const recipient = new PublicKey(transferAddress.trim());
+      const senderATA    = await getAssociatedTokenAddress(USDC_MINT, publicKey);
+      const recipientATA = await getAssociatedTokenAddress(USDC_MINT, recipient);
+      const amount = Math.round(parseFloat(transferAmount) * 1_000_000);
+      const ix = createTransferInstruction(senderATA, recipientATA, publicKey, amount, [], TOKEN_PROGRAM_ID);
+      const tx = new Transaction().add(ix);
+      const { blockhash } = await connection.getLatestBlockhash();
+      tx.recentBlockhash = blockhash;
+      tx.feePayer = publicKey;
+      const signed = await signTransaction(tx);
+      const sig    = await connection.sendRawTransaction(signed.serialize());
+      await connection.confirmTransaction(sig);
+      setTransferSuccess(true);
+      setTransferAmount("");
+      setTransferAddress("");
+    } catch (err: unknown) {
+      setTransferError((err as Error)?.message ?? "Transfer failed. Check address and balance.");
+    } finally {
+      setIsTransferring(false);
+    }
   }
 
   const hasEarnings  = totalEarned > 0;
@@ -217,6 +261,85 @@ export default function BillingClient({
                   )}
                 </div>
               </div>
+
+              {/* Transfer Funds */}
+              {walletAddress && (
+                <div style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 16, padding: 20 }}>
+                  <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground, #111827)", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ color: "#14B8A6" }}>↗</span> Transfer Funds
+                  </h3>
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                    {/* Recipient */}
+                    <div>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        Recipient Wallet Address
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Solana wallet address…"
+                        value={transferAddress}
+                        onChange={(e) => setTransferAddress(e.target.value)}
+                        style={{
+                          width: "100%", padding: "10px 12px", boxSizing: "border-box",
+                          border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 10,
+                          fontSize: 12, fontFamily: "Space Mono, monospace",
+                          background: "var(--background, #f7f8fa)", color: "var(--foreground, #111827)",
+                          outline: "none",
+                        }}
+                      />
+                    </div>
+
+                    {/* Amount + Send */}
+                    <div>
+                      <label style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
+                        Amount (USDC)
+                      </label>
+                      <div style={{ display: "flex", gap: 8 }}>
+                        <input
+                          type="number"
+                          placeholder="0.00"
+                          value={transferAmount}
+                          onChange={(e) => setTransferAmount(e.target.value)}
+                          min="0"
+                          step="0.01"
+                          style={{
+                            flex: 1, padding: "10px 12px",
+                            border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 10,
+                            fontSize: 13, background: "var(--background, #f7f8fa)",
+                            color: "var(--foreground, #111827)", outline: "none",
+                          }}
+                        />
+                        <button
+                          onClick={handleTransfer}
+                          disabled={isTransferring || !transferAddress.trim() || !transferAmount}
+                          style={{
+                            background: isTransferring || !transferAddress.trim() || !transferAmount ? "#9ca3af" : "#14B8A6",
+                            color: "white", border: "none",
+                            padding: "10px 18px", borderRadius: 10,
+                            fontWeight: 700, fontSize: 13, cursor: isTransferring ? "not-allowed" : "pointer",
+                            flexShrink: 0, minHeight: 44, transition: "background 0.15s",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          {isTransferring ? "Sending…" : "Send →"}
+                        </button>
+                      </div>
+                    </div>
+
+                    {transferError && (
+                      <p style={{ fontSize: 12, color: "#ef4444", margin: 0 }}>{transferError}</p>
+                    )}
+                    {transferSuccess && (
+                      <p style={{ fontSize: 12, color: "#16a34a", margin: 0, fontWeight: 600 }}>Transfer sent successfully.</p>
+                    )}
+
+                    <p style={{ fontSize: 11, color: "#9ca3af", margin: 0, lineHeight: 1.5 }}>
+                      Transfers use your connected Solana wallet via Phantom. Make sure Phantom is unlocked before sending.
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Stats */}
               <div className="wallet-stats" style={{ display: "grid", gap: 12 }}>
