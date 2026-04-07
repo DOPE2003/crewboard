@@ -203,7 +203,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
         <div style={{ height: '0.5px', background: 'var(--border)' }} />
 
         {/* Auth buttons (logged-out only — profile is handled by NavProfileDropdown) */}
-        {!loggedIn ? (
+        {!loggedIn && (
           <div style={{ display: 'flex', gap: 10, padding: '14px 0' }}>
             <Link
               href="/login"
