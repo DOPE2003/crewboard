@@ -169,7 +169,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           {isOwnProfile ? (
             /* Own profile: interactive banner with upload */
             <div style={{ position: "relative" }}>
-              <BannerUpload currentBanner={user.bannerImage ?? null} />
+              <BannerUpload currentBanner={user.bannerImage ?? null} currentHeight={user.bannerHeight} />
               {/* Edit profile button overlay */}
               <div style={{ position: "absolute", top: "1rem", right: "1.5rem", zIndex: 3 }}>
                 <EditProfilePanel
@@ -185,7 +185,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <div
               className="profile-cover-banner"
               style={{
-                height: 140, position: "relative",
+                height: user.bannerHeight || 140, position: "relative",
                 background: user.bannerImage ? undefined : "#E8FAF7",
                 backgroundImage: user.bannerImage ? `url(${user.bannerImage})` : undefined,
                 backgroundSize: "cover", backgroundPosition: "center",

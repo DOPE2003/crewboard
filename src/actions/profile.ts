@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import db from "@/lib/db";
+import { revalidatePath } from "next/cache";
 
 export async function updateSocialLinks({
   telegramHandle,
@@ -29,6 +30,7 @@ export async function saveBannerImage(bannerImage: string) {
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) throw new Error("Not authenticated");
   await db.user.update({ where: { id: userId }, data: { bannerImage } });
+  revalidatePath(`/u/${session.user.twitterHandle}`);
   return { success: true };
 }
 
@@ -37,5 +39,20 @@ export async function removeBannerImage() {
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) throw new Error("Not authenticated");
   await db.user.update({ where: { id: userId }, data: { bannerImage: null } });
+  revalidatePath(`/u/${session.user.twitterHandle}`);
+  return { success: true };
+}
+
+export async function saveBannerHeight(height: number) {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) throw new Error("Not authenticated");
+  
+  await db.user.update({
+    where: { id: userId },
+    data: { bannerHeight: Math.min(Math.max(height, 100), 400) } // Clamp between 100-400
+  });
+
+  revalidatePath(`/u/${session.user.twitterHandle}`);
   return { success: true };
 }

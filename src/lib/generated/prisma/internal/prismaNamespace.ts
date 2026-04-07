@@ -1370,6 +1370,7 @@ export const UserScalarFieldEnum = {
   githubHandle: 'githubHandle',
   website: 'website',
   bannerImage: 'bannerImage',
+  bannerHeight: 'bannerHeight',
   humanVerified: 'humanVerified'
 } as const
 

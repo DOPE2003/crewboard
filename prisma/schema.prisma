@@ -41,6 +41,7 @@ model User {
   githubHandle         String?
   website              String?
   bannerImage          String?
+  bannerHeight         Int                   @default(140)
   humanVerified        Boolean               @default(false)
   gigs                 Gig[]
   sentMessages         Message[]

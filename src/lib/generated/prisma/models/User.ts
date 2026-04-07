@@ -20,8 +20,18 @@ export type UserModel = runtime.Types.Result.DefaultSelection<Prisma.$UserPayloa
 
 export type AggregateUser = {
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
+}
+
+export type UserAvgAggregateOutputType = {
+  bannerHeight: number | null
+}
+
+export type UserSumAggregateOutputType = {
+  bannerHeight: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -50,6 +60,7 @@ export type UserMinAggregateOutputType = {
   githubHandle: string | null
   website: string | null
   bannerImage: string | null
+  bannerHeight: number | null
   humanVerified: boolean | null
 }
 
@@ -79,6 +90,7 @@ export type UserMaxAggregateOutputType = {
   githubHandle: string | null
   website: string | null
   bannerImage: string | null
+  bannerHeight: number | null
   humanVerified: boolean | null
 }
 
@@ -110,10 +122,19 @@ export type UserCountAggregateOutputType = {
   githubHandle: number
   website: number
   bannerImage: number
+  bannerHeight: number
   humanVerified: number
   _all: number
 }
 
+
+export type UserAvgAggregateInputType = {
+  bannerHeight?: true
+}
+
+export type UserSumAggregateInputType = {
+  bannerHeight?: true
+}
 
 export type UserMinAggregateInputType = {
   id?: true
@@ -141,6 +162,7 @@ export type UserMinAggregateInputType = {
   githubHandle?: true
   website?: true
   bannerImage?: true
+  bannerHeight?: true
   humanVerified?: true
 }
 
@@ -170,6 +192,7 @@ export type UserMaxAggregateInputType = {
   githubHandle?: true
   website?: true
   bannerImage?: true
+  bannerHeight?: true
   humanVerified?: true
 }
 
@@ -201,6 +224,7 @@ export type UserCountAggregateInputType = {
   githubHandle?: true
   website?: true
   bannerImage?: true
+  bannerHeight?: true
   humanVerified?: true
   _all?: true
 }
@@ -243,6 +267,18 @@ export type UserAggregateArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
    * 
+   * Select which fields to average
+  **/
+  _avg?: UserAvgAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
+   * Select which fields to sum
+  **/
+  _sum?: UserSumAggregateInputType
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+   * 
    * Select which fields to find the minimum value
   **/
   _min?: UserMinAggregateInputType
@@ -273,6 +309,8 @@ export type UserGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   _count?: UserCountAggregateInputType | true
+  _avg?: UserAvgAggregateInputType
+  _sum?: UserSumAggregateInputType
   _min?: UserMinAggregateInputType
   _max?: UserMaxAggregateInputType
 }
@@ -305,8 +343,11 @@ export type UserGroupByOutputType = {
   githubHandle: string | null
   website: string | null
   bannerImage: string | null
+  bannerHeight: number
   humanVerified: boolean
   _count: UserCountAggregateOutputType | null
+  _avg: UserAvgAggregateOutputType | null
+  _sum: UserSumAggregateOutputType | null
   _min: UserMinAggregateOutputType | null
   _max: UserMaxAggregateOutputType | null
 }
@@ -357,6 +398,7 @@ export type UserWhereInput = {
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
+  bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
   gigs?: Prisma.GigListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
@@ -400,6 +442,7 @@ export type UserOrderByWithRelationInput = {
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
   gigs?: Prisma.GigOrderByRelationAggregateInput
   sentMessages?: Prisma.MessageOrderByRelationAggregateInput
@@ -446,6 +489,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
+  bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
   gigs?: Prisma.GigListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
@@ -489,10 +533,13 @@ export type UserOrderByWithAggregationInput = {
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
+  _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
   _min?: Prisma.UserMinOrderByAggregateInput
+  _sum?: Prisma.UserSumOrderByAggregateInput
 }
 
 export type UserScalarWhereWithAggregatesInput = {
@@ -526,6 +573,7 @@ export type UserScalarWhereWithAggregatesInput = {
   githubHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  bannerHeight?: Prisma.IntWithAggregatesFilter<"User"> | number
   humanVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
 }
 
@@ -557,6 +605,7 @@ export type UserCreateInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -600,6 +649,7 @@ export type UserUncheckedCreateInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -643,6 +693,7 @@ export type UserUpdateInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -686,6 +737,7 @@ export type UserUncheckedUpdateInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -729,6 +781,7 @@ export type UserCreateManyInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
 }
 
@@ -760,6 +813,7 @@ export type UserUpdateManyMutationInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -791,6 +845,7 @@ export type UserUncheckedUpdateManyInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
@@ -830,7 +885,12 @@ export type UserCountOrderByAggregateInput = {
   githubHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
+  bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+}
+
+export type UserAvgOrderByAggregateInput = {
+  bannerHeight?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -859,6 +919,7 @@ export type UserMaxOrderByAggregateInput = {
   githubHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
+  bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
 }
 
@@ -888,7 +949,12 @@ export type UserMinOrderByAggregateInput = {
   githubHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
+  bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+}
+
+export type UserSumOrderByAggregateInput = {
+  bannerHeight?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -927,6 +993,14 @@ export type DateTimeFieldUpdateOperationsInput = {
 
 export type NullableDateTimeFieldUpdateOperationsInput = {
   set?: Date | string | null
+}
+
+export type IntFieldUpdateOperationsInput = {
+  set?: number
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type UserCreateNestedOneWithoutSavedByTalentsInput = {
@@ -1125,6 +1199,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1167,6 +1242,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1214,6 +1290,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1256,6 +1333,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1314,6 +1392,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1356,6 +1435,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1409,6 +1489,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1451,6 +1532,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1493,6 +1575,7 @@ export type UserCreateWithoutNotificationsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -1535,6 +1618,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -1593,6 +1677,7 @@ export type UserUpdateWithoutNotificationsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -1635,6 +1720,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -1677,6 +1763,7 @@ export type UserCreateWithoutSentMessagesInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1719,6 +1806,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1777,6 +1865,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -1819,6 +1908,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -1861,6 +1951,7 @@ export type UserCreateWithoutGigsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
@@ -1903,6 +1994,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
@@ -1961,6 +2053,7 @@ export type UserUpdateWithoutGigsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
@@ -2003,6 +2096,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
@@ -2045,6 +2139,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2087,6 +2182,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2134,6 +2230,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2176,6 +2273,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2234,6 +2332,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2276,6 +2375,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2329,6 +2429,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2371,6 +2472,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2413,6 +2515,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2455,6 +2558,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2502,6 +2606,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2544,6 +2649,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2602,6 +2708,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2644,6 +2751,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2697,6 +2805,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2739,6 +2848,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2781,6 +2891,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2823,6 +2934,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2881,6 +2993,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2923,6 +3036,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2965,6 +3079,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -3007,6 +3122,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -3065,6 +3181,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -3107,6 +3224,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -3149,6 +3267,7 @@ export type UserCreateWithoutProWaitlistInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -3191,6 +3310,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   githubHandle?: string | null
   website?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -3249,6 +3369,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -3291,6 +3412,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -3454,6 +3576,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   githubHandle?: boolean
   website?: boolean
   bannerImage?: boolean
+  bannerHeight?: boolean
   humanVerified?: boolean
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -3498,6 +3621,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   githubHandle?: boolean
   website?: boolean
   bannerImage?: boolean
+  bannerHeight?: boolean
   humanVerified?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -3529,6 +3653,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   githubHandle?: boolean
   website?: boolean
   bannerImage?: boolean
+  bannerHeight?: boolean
   humanVerified?: boolean
 }, ExtArgs["result"]["user"]>
 
@@ -3560,10 +3685,11 @@ export type UserSelectScalar = {
   githubHandle?: boolean
   website?: boolean
   bannerImage?: boolean
+  bannerHeight?: boolean
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "githubHandle" | "website" | "bannerImage" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "githubHandle" | "website" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -3626,6 +3752,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     githubHandle: string | null
     website: string | null
     bannerImage: string | null
+    bannerHeight: number
     humanVerified: boolean
   }, ExtArgs["result"]["user"]>
   composites: {}
@@ -4089,6 +4216,7 @@ export interface UserFieldRefs {
   readonly githubHandle: Prisma.FieldRef<"User", 'String'>
   readonly website: Prisma.FieldRef<"User", 'String'>
   readonly bannerImage: Prisma.FieldRef<"User", 'String'>
+  readonly bannerHeight: Prisma.FieldRef<"User", 'Int'>
   readonly humanVerified: Prisma.FieldRef<"User", 'Boolean'>
 }
     

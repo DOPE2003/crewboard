@@ -1,19 +1,53 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { Camera, X } from "lucide-react";
-import { saveBannerImage, removeBannerImage } from "@/actions/profile";
+import { useRef, useState, useEffect } from "react";
+import { Camera, X, GripHorizontal } from "lucide-react";
+import { saveBannerImage, removeBannerImage, saveBannerHeight } from "@/actions/profile";
 import ImageCropModal from "./ImageCropModal";
 
 interface Props {
   currentBanner: string | null;
+  currentHeight?: number;
 }
 
-export default function BannerUpload({ currentBanner }: Props) {
+export default function BannerUpload({ currentBanner, currentHeight = 140 }: Props) {
   const [preview, setPreview] = useState(currentBanner);
   const [uploading, setUploading] = useState(false);
+  const [height, setHeight] = useState(currentHeight);
+  const [isResizing, setIsBResizing] = useState(false);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
+  const resizeRef = useRef<HTMLDivElement>(null);
+
+  // Drag-to-resize logic
+  useEffect(() => {
+    if (!isResizing) return;
+
+    function handleMouseMove(e: MouseEvent) {
+      const bannerWrap = document.querySelector(".banner-upload-wrap") as HTMLElement;
+      if (!bannerWrap) return;
+      
+      const rect = bannerWrap.getBoundingClientRect();
+      const newHeight = Math.min(Math.max(e.clientY - rect.top, 100), 400);
+      setHeight(newHeight);
+    }
+
+    async function handleMouseUp() {
+      setIsBResizing(false);
+      try {
+        await saveBannerHeight(Math.round(height));
+      } catch (err) {
+        console.error("Failed to save height:", err);
+      }
+    }
+
+    window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mouseup", handleMouseUp);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mouseup", handleMouseUp);
+    };
+  }, [isResizing, height]);
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -52,7 +86,8 @@ export default function BannerUpload({ currentBanner }: Props) {
       <div
         className="profile-cover-banner banner-upload-wrap"
         style={{
-          width: "100%", height: 140,
+          width: "100%", 
+          height: height,
           position: "relative",
           borderRadius: "16px 16px 0 0",
           overflow: "hidden",
@@ -61,17 +96,18 @@ export default function BannerUpload({ currentBanner }: Props) {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           opacity: uploading ? 0.7 : 1,
-          transition: "opacity 0.2s",
+          transition: isResizing ? "none" : "opacity 0.2s, height 0.1s",
+          cursor: isResizing ? "row-resize" : "default"
         }}
       >
         {uploading && (
-          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", zIndex: 20 }}>
             <div style={{ width: 28, height: 28, border: "3px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite" }} />
           </div>
         )}
 
         {/* Remove button */}
-        {preview && (
+        {preview && !isResizing && (
           <button
             type="button"
             onClick={async () => {
@@ -99,26 +135,47 @@ export default function BannerUpload({ currentBanner }: Props) {
         )}
 
         {/* Camera button */}
-        <button
-          type="button"
-          onClick={() => fileRef.current?.click()}
-          disabled={uploading}
-          title="Change banner"
+        {!isResizing && (
+          <button
+            type="button"
+            onClick={() => fileRef.current?.click()}
+            disabled={uploading}
+            title="Change banner"
+            style={{
+              position: "absolute", bottom: 12, right: 16,
+              width: 34, height: 34, borderRadius: "50%",
+              background: "#fff", border: "1px solid #e5e7eb",
+              display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: uploading ? "wait" : "pointer", zIndex: 10,
+            }}
+          >
+            <Camera size={16} color="#6b7280" />
+          </button>
+        )}
+
+        {/* Resize Handle */}
+        <div 
+          onMouseDown={() => setIsBResizing(true)}
           style={{
-            position: "absolute", bottom: 12, right: 16,
-            width: 34, height: 34, borderRadius: "50%",
-            background: "#fff", border: "1px solid #e5e7eb",
-            display: "flex", alignItems: "center", justifyContent: "center",
-            cursor: uploading ? "wait" : "pointer", zIndex: 10,
+            position: "absolute",
+            bottom: 0, left: 0, right: 0,
+            height: "8px",
+            background: isResizing ? "#14B8A6" : "rgba(0,0,0,0.1)",
+            cursor: "row-resize",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            zIndex: 15,
+            transition: "background 0.2s"
           }}
         >
-          <Camera size={16} color="#6b7280" />
-        </button>
+          <div style={{ width: "40px", height: "3px", borderRadius: "2px", background: "rgba(255,255,255,0.5)" }} />
+        </div>
 
         <input ref={fileRef} type="file" accept="image/*" onChange={handleFileSelect} style={{ display: "none" }} />
       </div>
 
-      {/* Crop modal — 16:5 aspect ratio matches the banner display */}
+      {/* Crop modal */}
       {cropSrc && (
         <ImageCropModal
           src={cropSrc}
