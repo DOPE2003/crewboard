@@ -2,8 +2,6 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useState } from 'react'
-import { signOut } from 'next-auth/react'
 
 interface Props {
   twitterHandle?: string | null
@@ -61,19 +59,16 @@ function ProfileIcon({ active }: { active: boolean }) {
   )
 }
 
-function ChevronRight() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke={MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 18 15 12 9 6"/>
-    </svg>
-  )
-}
+
 
 export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Props) {
   const pathname = usePathname()
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
 
   const isProfileActive = pathname.startsWith('/u/') || pathname === '/dashboard'
+
+  function openProfileMenu() {
+    window.dispatchEvent(new CustomEvent('cb:open-profile-menu'))
+  }
 
   const tabsLeft = [
     { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,      match: (p: string) => p === '/',                  activeColor: BRAND  },
@@ -82,16 +77,6 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
     { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,      match: (p: string) => p.startsWith('/activities'), activeColor: YELLOW },
   ]
 
-  const menuItems = [
-    { label: 'My Profile',    href: twitterHandle ? `/u/${twitterHandle}` : '/login',  icon: '👤' },
-    { label: 'My Services',   href: '/gigs/mine',   icon: '🛠️' },
-    { label: 'Orders',        href: '/orders',       icon: '📋' },
-    { label: 'Messages',      href: '/messages',     icon: '💬' },
-    { label: 'My Wallet',     href: '/billing',      icon: '💳' },
-    { label: 'Payment History', href: '/payments',   icon: '📊' },
-    { label: 'Saved Talent',  href: '/saved-talents',icon: '🔖' },
-    { label: 'Notifications', href: '/notifications',icon: '🔔' },
-  ]
 
   return (
     <>
@@ -160,9 +145,9 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
           )
         })}
 
-        {/* Profile tab — opens bottom sheet */}
+        {/* Profile tab — opens NavProfileDropdown bottom sheet via custom event */}
         <button
-          onClick={() => setShowProfileMenu(true)}
+          onClick={openProfileMenu}
           style={{
             flex: 1,
             display: 'flex',
@@ -192,89 +177,6 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
         </button>
       </nav>
 
-      {/* Profile bottom sheet */}
-      {showProfileMenu && (
-        <>
-          {/* Backdrop */}
-          <div
-            onClick={() => setShowProfileMenu(false)}
-            style={{
-              position: 'fixed', inset: 0, zIndex: 10000,
-              background: 'rgba(0,0,0,0.45)',
-              backdropFilter: 'blur(3px)',
-            }}
-          />
-
-          {/* Sheet */}
-          <div style={{
-            position: 'fixed', bottom: 0, left: 0, right: 0,
-            zIndex: 10001,
-            background: 'var(--background, #ffffff)',
-            borderRadius: '20px 20px 0 0',
-            boxShadow: '0 -8px 40px rgba(0,0,0,0.18)',
-            paddingBottom: 'calc(env(safe-area-inset-bottom, 0px) + 16px)',
-            animation: 'btabSlideUp 0.28s cubic-bezier(0.32,0.72,0,1)',
-            maxHeight: '85vh',
-            overflowY: 'auto',
-          }}>
-            <style>{`
-              @keyframes btabSlideUp {
-                from { transform: translateY(100%); }
-                to   { transform: translateY(0); }
-              }
-            `}</style>
-
-            {/* Drag handle */}
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '12px 0 8px' }}>
-              <div style={{ width: 36, height: 4, background: 'var(--card-border, #d1d5db)', borderRadius: 99 }} />
-            </div>
-
-            {/* Handle label */}
-            <div style={{ padding: '4px 20px 12px', borderBottom: '1px solid var(--card-border, #f3f4f6)' }}>
-              <p style={{ margin: 0, fontSize: 16, fontWeight: 700, color: 'var(--foreground, #111827)' }}>
-                {twitterHandle ? `@${twitterHandle}` : 'My Account'}
-              </p>
-            </div>
-
-            {/* Menu items */}
-            {menuItems.map((item, i) => (
-              <Link
-                key={item.label}
-                href={item.href}
-                onClick={() => setShowProfileMenu(false)}
-                style={{
-                  display: 'flex', alignItems: 'center', gap: 14,
-                  padding: '15px 20px',
-                  textDecoration: 'none',
-                  fontSize: 15, fontWeight: 500,
-                  color: 'var(--foreground, #111827)',
-                  borderBottom: i < menuItems.length - 1 ? '1px solid var(--card-border, #f9fafb)' : 'none',
-                }}
-              >
-                <span style={{ fontSize: 20, width: 28, textAlign: 'center', flexShrink: 0 }}>{item.icon}</span>
-                <span style={{ flex: 1 }}>{item.label}</span>
-                <ChevronRight />
-              </Link>
-            ))}
-
-            {/* Sign out */}
-            <button
-              onClick={() => { setShowProfileMenu(false); signOut({ callbackUrl: '/' }); }}
-              style={{
-                display: 'flex', alignItems: 'center', gap: 14,
-                padding: '15px 20px', width: '100%',
-                background: 'none', border: 'none', cursor: 'pointer',
-                fontSize: 15, fontWeight: 500, color: '#ef4444',
-                borderTop: '1px solid var(--card-border, #f3f4f6)',
-                marginTop: 8,
-              }}
-            >
-              <span style={{ fontSize: 20, width: 28, textAlign: 'center' }}>🚪</span>
-              <span>Sign Out</span>
-            </button>
-          </div>
-        </>
-      )}
     </>
   )
 }

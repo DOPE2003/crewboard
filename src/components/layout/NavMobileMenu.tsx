@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 import Link from 'next/link'
-import { signOut, useSession } from 'next-auth/react'
 import { ChevronRight, X } from 'lucide-react'
 const CATEGORIES = [
   {
@@ -51,7 +50,6 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
   const [mounted, setMounted] = useState(false)
   const [expanded, setExpanded] = useState<string | null>(null)
   const [isDark, setIsDark] = useState(false)
-  const { data: session } = useSession()
 
   useEffect(() => {
     setMounted(true)
@@ -76,9 +74,6 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
     document.body.style.overflow = isOpen ? 'hidden' : ''
     return () => { document.body.style.overflow = '' }
   }, [isOpen])
-
-  const userName = session?.user?.name ?? null
-  const userImage = session?.user?.image ?? null
 
   const drawer = (
     <div
@@ -207,43 +202,8 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
         {/* Divider */}
         <div style={{ height: '0.5px', background: 'var(--border)' }} />
 
-        {/* User section */}
-        {loggedIn ? (
-          <div style={{
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
-            padding: '14px 0',
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <div style={{
-                width: 32, height: 32, borderRadius: '50%',
-                overflow: 'hidden', flexShrink: 0, background: '#e2e8f0',
-              }}>
-                {userImage
-                  ? <img src={userImage} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  : <div style={{ width: '100%', height: '100%', background: 'linear-gradient(135deg,#134e4a,#0f172a)' }} />
-                }
-              </div>
-              {userName && (
-                <span style={{ fontSize: 14, fontWeight: 500, color: 'var(--foreground)' }}>
-                  {userName}
-                </span>
-              )}
-            </div>
-            <button
-              onClick={() => { signOut({ callbackUrl: '/' }); onClose() }}
-              style={{
-                background: 'transparent', border: 'none', cursor: 'pointer',
-                fontSize: 13, fontWeight: 500,
-                color: 'var(--text-muted)',
-                padding: 0,
-              }}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-muted)' }}
-            >
-              Sign out
-            </button>
-          </div>
-        ) : (
+        {/* Auth buttons (logged-out only — profile is handled by NavProfileDropdown) */}
+        {!loggedIn ? (
           <div style={{ display: 'flex', gap: 10, padding: '14px 0' }}>
             <Link
               href="/login"

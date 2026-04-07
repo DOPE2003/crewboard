@@ -4,6 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import NavProfileDropdown from "./NavProfileDropdown";
 
+// Custom event dispatched by BottomTabBar to open this menu from outside
+const OPEN_EVENT = "cb:open-profile-menu";
+
 interface Props {
   image: string | null;
   name: string | null;
@@ -28,6 +31,13 @@ export default function NavProfileMenu({
 
   // Close on navigation
   useEffect(() => { setOpen(false); }, [pathname]);
+
+  // Open when BottomTabBar Profile tab is tapped
+  useEffect(() => {
+    const handler = () => setOpen(true);
+    window.addEventListener(OPEN_EVENT, handler);
+    return () => window.removeEventListener(OPEN_EVENT, handler);
+  }, []);
 
   return (
     <div style={{ position: "relative", flexShrink: 0 }}>
