@@ -6,6 +6,7 @@ import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { getNavDropdownData } from "@/actions/nav";
 import { unlinkWallet } from "@/actions/wallet";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 interface Props {
   isOpen: boolean;
@@ -136,7 +137,10 @@ export default function NavProfileDropdown({
   const [disconnecting, setDisconnecting] = useState(false);
   const [isMobile, setIsMobile]   = useState(false);
   const [mounted, setMounted]     = useState(false);
+  const [walletMsg, setWalletMsg] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
+
+  const { publicKey, select } = useWallet();
 
   // Detect mobile
   useEffect(() => {
@@ -247,10 +251,15 @@ export default function NavProfileDropdown({
             <div style={{ fontSize: 11, color: "rgba(255,255,255,0.7)", marginTop: 1 }}>
               {twitterHandle ? `@${twitterHandle}` : ""}{memberSince ? ` · ${memberSince}` : ""}
             </div>
-            <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap" }}>
+            <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
               {role && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>{role.toUpperCase()}</span>}
               {extra?.isOG && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>★ OG</span>}
               {extra?.role === "ADMIN" && <span style={{ background: "rgba(239,68,68,0.35)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>ADMIN</span>}
+              {twitterHandle && (
+                <Link href={`/u/${twitterHandle}`} onClick={onClose} style={{ background: "rgba(255,255,255,0.18)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700, textDecoration: "none", marginLeft: "auto" }}>
+                  View Profile →
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -276,7 +285,7 @@ export default function NavProfileDropdown({
           {[
             { val: extra?.ordersCompleted ?? 0, label: "Jobs Done" },
             { val: ratingDisplay,                label: "Rating"   },
-            { val: "ETH",                        label: "Chain"    },
+            { val: "SOL",                        label: "Chain"    },
           ].map((s, i) => (
             <div key={i} style={{ textAlign: "center", padding: "12px 4px", borderRight: i < 2 ? "1px solid rgba(255,255,255,0.1)" : "none" }}>
               <div style={{ fontSize: isMobile ? 18 : 15, fontWeight: 800, color: "white" }}>{s.val}</div>
@@ -307,7 +316,19 @@ export default function NavProfileDropdown({
         {/* WALLET & PAYMENTS */}
         <SectionLabel icon={I.wallet}>Wallet & Payments</SectionLabel>
         <Card>
-          <Row icon={I.wallet}     label="Wallet Overview"  href="/billing"  onClick={onClose} />
+          <Row icon={I.wallet} label="Wallet Overview" onClick={() => {
+            const phantomConnected =
+              publicKey ||
+              (window as any).phantom?.solana?.isConnected ||
+              (window as any).solana?.isConnected;
+            if (!phantomConnected) { setWalletMsg(true); setTimeout(() => setWalletMsg(false), 3000); }
+            else { onClose(); window.location.href = "/billing"; }
+          }} />
+          {walletMsg && (
+            <div style={{ margin: "0 18px 10px", padding: "8px 12px", borderRadius: 8, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", fontSize: 11, fontWeight: 700, color: "#ef4444", letterSpacing: "0.05em", textAlign: "center" }}>
+              CONNECT A PHANTOM WALLET FIRST
+            </div>
+          )}
           <RowDivider />
           <Row icon={I.history}    label="Payment History"  href="/payments" onClick={onClose} />
           <RowDivider />
@@ -317,7 +338,15 @@ export default function NavProfileDropdown({
             <Row icon={I.disconnect} label={disconnecting ? "Disconnecting…" : "Disconnect Wallet"}
               onClick={handleDisconnectWallet} danger />
           ) : (
-            <Row icon={I.wallet} label="Connect Wallet" href="/dashboard" onClick={onClose} />
+            <Row icon={I.wallet} label="Connect Wallet" onClick={async () => {
+              onClose();
+              const provider = (window as any).phantom?.solana ?? ((window as any).solana?.isPhantom ? (window as any).solana : null);
+              if (!provider) { window.open("https://phantom.app/", "_blank", "noopener,noreferrer"); return; }
+              try {
+                await provider.connect();   // popup first
+                select("Phantom" as any);   // then sync adapter
+              } catch (e: any) { if (e?.code !== 4001) console.error(e); }
+            }} />
           )}
         </Card>
 
@@ -328,9 +357,9 @@ export default function NavProfileDropdown({
           <RowDivider />
           <Row icon={I.applications} label="My Applications"  href="/gigs/mine"     onClick={onClose} badge={gigsCount > 0 ? gigsCount : null} />
           <RowDivider />
-          <Row icon={I.sent}         label="Offers Sent"      href="/messages"      onClick={onClose} />
+          <Row icon={I.sent}         label="Offers Sent"      href="/orders?tab=sent"      onClick={onClose} />
           <RowDivider />
-          <Row icon={I.inbox}        label="Offers Received"  href="/orders"        onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <Row icon={I.inbox}        label="Offers Received"  href="/orders?tab=received"  onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
         </Card>
 
         {/* APP */}

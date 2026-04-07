@@ -25,7 +25,7 @@ export default async function AdminShowcasePage({
 
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "8rem 1.5rem 6rem" }}>
+      <div className="admin-content">
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2rem" }}>
           <div>

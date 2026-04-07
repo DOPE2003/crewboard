@@ -4,6 +4,22 @@ import db from '@/lib/db'
 import ActivitiesClient from './ActivitiesClient'
 import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
+function msgPreview(body: string, maxLen = 60): string {
+  if (body.startsWith('__GIGREQUEST__:')) {
+    try { return 'Gig Request: ' + JSON.parse(body.slice('__GIGREQUEST__:'.length)).title }
+    catch { return 'Gig Request' }
+  }
+  if (body.startsWith('__FILE__:')) {
+    try {
+      const f = JSON.parse(body.slice('__FILE__:'.length))
+      if (f.type?.startsWith('image/')) return '📷 Image'
+      if (f.type?.startsWith('video/')) return '🎥 Video'
+      return '📄 ' + f.name
+    } catch { return '📎 File' }
+  }
+  return body.slice(0, maxLen) + (body.length > maxLen ? '…' : '')
+}
+
 export const metadata = { title: 'Activities — Crewboard' }
 
 export default async function ActivitiesPage() {
@@ -70,12 +86,8 @@ export default async function ActivitiesPage() {
       const lastMsg = c.messages[0]
       let lastMessageText: string | null = null
       if (lastMsg) {
-        if (lastMsg.body.startsWith('__GIGREQUEST__:')) {
-          lastMessageText = (lastMsg.senderId === userId ? 'You: ' : '') + 'Gig Request'
-        } else {
-          const prefix = lastMsg.senderId === userId ? 'You: ' : ''
-          lastMessageText = prefix + lastMsg.body.slice(0, 60) + (lastMsg.body.length > 60 ? '…' : '')
-        }
+        const prefix = lastMsg.senderId === userId ? 'You: ' : ''
+        lastMessageText = prefix + msgPreview(lastMsg.body, 60)
       }
       return {
         id: c.id,

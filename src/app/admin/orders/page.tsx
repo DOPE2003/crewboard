@@ -35,7 +35,7 @@ export default async function AdminOrdersPage({
 
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1100, margin: "0 auto", padding: "8rem 1.5rem 6rem" }}>
+      <div className="admin-content">
 
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2rem" }}>
           <div>
@@ -61,7 +61,7 @@ export default async function AdminOrdersPage({
         </div>
 
         <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden" }}>
-          <div style={{ overflowX: "auto" }}>
+          <div className="admin-table-wrap">
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
               <thead>
                 <tr style={{ background: "rgba(var(--foreground-rgb),0.02)", textAlign: "left" }}>

@@ -82,7 +82,7 @@ export default async function AdminDashboardPage() {
 
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "8rem 1.5rem 6rem" }}>
+      <div className="admin-content">
 
         {/* Header */}
         <div style={{ marginBottom: "2.5rem" }}>
@@ -141,7 +141,7 @@ export default async function AdminDashboardPage() {
               View all →
             </Link>
           </div>
-          <div style={{ overflowX: "auto" }}>
+          <div className="admin-table-wrap">
             <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
               <thead>
                 <tr style={{ textAlign: "left", background: "rgba(var(--foreground-rgb), 0.02)" }}>

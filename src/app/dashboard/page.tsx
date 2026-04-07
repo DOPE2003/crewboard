@@ -5,6 +5,22 @@ import db from "@/lib/db";
 import T from "@/components/ui/T";
 import OnboardingChecklist from "@/components/ui/OnboardingChecklist";
 
+function msgPreview(body: string, maxLen = 40): string {
+  if (body.startsWith("__GIGREQUEST__:")) {
+    try { return "Service Request: " + JSON.parse(body.slice("__GIGREQUEST__:".length)).title; }
+    catch { return "Service Request"; }
+  }
+  if (body.startsWith("__FILE__:")) {
+    try {
+      const f = JSON.parse(body.slice("__FILE__:".length));
+      if (f.type?.startsWith("image/")) return "📷 Image";
+      if (f.type?.startsWith("video/")) return "🎥 Video";
+      return "📄 " + f.name;
+    } catch { return "📎 File"; }
+  }
+  return body.slice(0, maxLen) + (body.length > maxLen ? "…" : "");
+}
+
 export default async function DashboardPage() {
   const session = await auth();
   if (!session?.user?.userId) redirect("/login");
@@ -166,9 +182,7 @@ export default async function DashboardPage() {
                           {other?.name ?? other?.twitterHandle ?? "Unknown"}
                         </div>
                         <div style={{ fontSize: "0.63rem", color: "var(--text-muted)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {last.body.startsWith("__GIGREQUEST__:")
-                            ? (() => { try { return "Service Request: " + JSON.parse(last.body.slice(15)).title; } catch { return "Service Request"; } })()
-                            : last.body.slice(0, 40) + (last.body.length > 40 ? "…" : "")}
+                          {msgPreview(last.body, 40)}
                         </div>
                       </div>
                     </Link>

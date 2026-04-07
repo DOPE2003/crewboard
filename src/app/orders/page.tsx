@@ -20,13 +20,29 @@ const STATUS_LABELS: Record<string, string> = {
   delivered: "Delivered",
   completed: "Completed",
   cancelled: "Cancelled",
-  disputed:  "Disputed",
+  disputed:  "Payment Dispute",
 };
 
-export default async function OrdersPage() {
+type Tab = "all" | "sent" | "received" | "disputes";
+
+const TABS: { key: Tab; label: string }[] = [
+  { key: "all",      label: "All Orders"   },
+  { key: "sent",     label: "Offers Sent"  },
+  { key: "received", label: "Offers Received" },
+  { key: "disputes", label: "Disputes"     },
+];
+
+export default async function OrdersPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ tab?: string }>;
+}) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) redirect("/login");
+
+  const { tab = "all" } = await searchParams;
+  const activeTab = (["all", "sent", "received", "disputes"].includes(tab) ? tab : "all") as Tab;
 
   const [buyerOrders, sellerOrders] = await Promise.all([
     db.order.findMany({
@@ -47,49 +63,109 @@ export default async function OrdersPage() {
     }),
   ]);
 
+  // Filter by tab
+  const sentOrders     = buyerOrders;
+  const receivedOrders = sellerOrders;
+  const disputeOrders  = [...buyerOrders, ...sellerOrders].filter((o) => o.status === "disputed");
+
+  const showSent     = activeTab === "all" || activeTab === "sent";
+  const showReceived = activeTab === "all" || activeTab === "received";
+  const showDisputes = activeTab === "disputes";
+
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
       <div style={{ maxWidth: 760, width: "100%", margin: "0 auto", padding: "2.5rem 1.5rem" }}>
-        <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.3rem", fontFamily: "Inter, sans-serif", letterSpacing: "-0.01em" }}>Orders</h1>
-        <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "2.5rem" }}>Track all your active and past orders.</p>
+        <h1 style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", marginBottom: "0.3rem", letterSpacing: "-0.01em" }}>Orders</h1>
+        <p style={{ fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: "1.5rem" }}>Track all your active and past orders.</p>
 
-        {/* As buyer */}
-        <div style={{ marginBottom: "2.5rem" }}>
-          <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
-            Placed by me
-          </div>
-          {buyerOrders.length === 0 ? (
-            <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center", background: "rgba(var(--foreground-rgb), 0.02)" }}>
-              You haven&apos;t hired anyone yet.{" "}
-              <Link href="/gigs" style={{ color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}>Browse gigs →</Link>
-            </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              {buyerOrders.map((o) => (
-                <OrderRow key={o.id} order={o} other={o.seller} role="buyer" />
-              ))}
-            </div>
-          )}
+        {/* Tabs */}
+        <div style={{ display: "flex", gap: 6, marginBottom: "2rem", flexWrap: "wrap" }}>
+          {TABS.map((t) => (
+            <Link
+              key={t.key}
+              href={`/orders?tab=${t.key}`}
+              style={{
+                padding: "6px 16px", borderRadius: 99, fontSize: "0.75rem", fontWeight: 700,
+                textDecoration: "none",
+                background: activeTab === t.key ? "#14B8A6" : "var(--card-bg)",
+                color: activeTab === t.key ? "#fff" : "var(--text-muted)",
+                border: "1px solid var(--card-border)",
+              }}
+            >
+              {t.label}
+              {t.key === "disputes" && disputeOrders.length > 0 && (
+                <span style={{ marginLeft: 6, background: "#ef444430", color: "#ef4444", borderRadius: 99, padding: "1px 6px", fontSize: 10 }}>
+                  {disputeOrders.length}
+                </span>
+              )}
+            </Link>
+          ))}
         </div>
 
-        {/* As seller */}
-        <div>
-          <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
-            Received orders
+        {/* Payment Disputes section */}
+        {showDisputes && (
+          <div style={{ marginBottom: "2.5rem" }}>
+            <div style={{ fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#ef4444", fontWeight: 700, marginBottom: "0.85rem" }}>
+              Payment Disputes
+            </div>
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", marginBottom: "1rem", lineHeight: 1.6 }}>
+              Disputes are raised when there is a disagreement about payment between buyer and seller. Contact support if you need help resolving a dispute.
+            </p>
+            {disputeOrders.length === 0 ? (
+              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center" }}>
+                No payment disputes. Good work!
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                {disputeOrders.map((o: any) => (
+                  <OrderRow key={o.id} order={o} other={o.buyer ?? o.seller} role={o.buyerId === userId ? "buyer" : "seller"} />
+                ))}
+              </div>
+            )}
           </div>
-          {sellerOrders.length === 0 ? (
-            <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center", background: "rgba(var(--foreground-rgb), 0.02)" }}>
-              No orders received yet.{" "}
-              <Link href="/gigs/new" style={{ color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}>Post a gig →</Link>
+        )}
+
+        {/* Sent (buyer) */}
+        {showSent && (
+          <div style={{ marginBottom: "2.5rem" }}>
+            <div style={{ fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
+              Offers Sent
             </div>
-          ) : (
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              {sellerOrders.map((o) => (
-                <OrderRow key={o.id} order={o} other={o.buyer} role="seller" />
-              ))}
+            {sentOrders.length === 0 ? (
+              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center" }}>
+                You haven&apos;t placed any orders yet.{" "}
+                <Link href="/gigs" style={{ color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}>Browse services →</Link>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                {sentOrders.map((o) => (
+                  <OrderRow key={o.id} order={o} other={o.seller} role="buyer" />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Received (seller) */}
+        {showReceived && (
+          <div>
+            <div style={{ fontSize: "0.58rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.85rem" }}>
+              Offers Received
             </div>
-          )}
-        </div>
+            {receivedOrders.length === 0 ? (
+              <div style={{ fontSize: "0.8rem", color: "var(--text-muted)", padding: "1.5rem", borderRadius: 14, border: "1px solid var(--card-border)", textAlign: "center" }}>
+                No orders received yet.{" "}
+                <Link href="/gigs/new" style={{ color: "#2DD4BF", textDecoration: "none", fontWeight: 600 }}>Post a service →</Link>
+              </div>
+            ) : (
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+                {receivedOrders.map((o) => (
+                  <OrderRow key={o.id} order={o} other={o.buyer} role="seller" />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </main>
   );

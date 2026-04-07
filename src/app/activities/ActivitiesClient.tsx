@@ -2,7 +2,6 @@
 
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
-import Image from 'next/image'
 import { useRouter } from 'next/navigation'
 import { markAllConversationsRead } from '@/actions/messages'
 import { markAllNotificationsAsRead, markNotificationRead } from '@/actions/notifications'
@@ -94,7 +93,6 @@ export default function ActivitiesClient({
   const [activeTab, setActiveTab]       = useState<SidebarTab>('all')
   const [markingAll, setMarkingAll]     = useState(false)
   const [search, setSearch]             = useState('')
-  const [dateFilter, setDateFilter]     = useState('all')
   const [avatarSize, setAvatarSize]     = useState(42)
   const router = useRouter()
 
@@ -172,15 +170,8 @@ export default function ActivitiesClient({
       })
     }
 
-    if (dateFilter !== 'all') {
-      const now = Date.now()
-      const cutoff = dateFilter === 'today' ? now - 86400000 :
-                     dateFilter === 'week'  ? now - 7 * 86400000 : now - 30 * 86400000
-      items = items.filter(item => item.ts >= cutoff)
-    }
-
     return items.sort((a, b) => b.ts - a.ts)
-  }, [convs, notifs, orders, activeTab, search, dateFilter, reviewNotifs, sysNotifs])
+  }, [convs, notifs, orders, activeTab, search, reviewNotifs, sysNotifs])
 
   const groupedItems = useMemo(() => {
     const ORDER = ['TODAY', 'YESTERDAY', 'THIS WEEK', 'EARLIER']
@@ -210,13 +201,22 @@ export default function ActivitiesClient({
   function Avatar({ name, handle, image, size = 42 }: { name?: string | null; handle?: string | null; image?: string | null; size?: number }) {
     const label = (name ?? handle ?? '?').slice(0, 1).toUpperCase()
     const bg = avatarBg(name ?? handle ?? 'x')
-    if (image) return (
-      <Image src={image} alt="" width={size} height={size}
-        style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }} />
-    )
     return (
-      <div style={{ width: size, height: size, borderRadius: '50%', flexShrink: 0, background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: size * 0.38, fontWeight: 700 }}>
-        {label}
+      <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+        {image && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={image}
+            alt=""
+            style={{ width: size, height: size, borderRadius: '50%', objectFit: 'cover', display: 'block' }}
+            onError={(e) => { e.currentTarget.style.display = 'none' }}
+          />
+        )}
+        {(!image) && (
+          <div style={{ width: size, height: size, borderRadius: '50%', background: bg, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: size * 0.38, fontWeight: 700 }}>
+            {label}
+          </div>
+        )}
       </div>
     )
   }
@@ -399,10 +399,10 @@ export default function ActivitiesClient({
       {/* ── Mobile filter tabs (hidden on desktop) ────────────────────── */}
       <div className="act-mobile-tabs md:hidden">
         {([
-          { key: 'all' as SidebarTab,           label: 'All' },
-          { key: 'messages' as SidebarTab,      label: 'Messages' },
-          { key: 'notifications' as SidebarTab, label: 'Notifs' },
-          { key: 'orders' as SidebarTab,        label: 'Orders' },
+          { key: 'all' as SidebarTab,      label: 'All' },
+          { key: 'messages' as SidebarTab, label: 'Messages' },
+          { key: 'orders' as SidebarTab,   label: 'Orders' },
+          { key: 'reviews' as SidebarTab,  label: 'Reviews' },
         ]).map(tab => (
           <button
             key={tab.key}
@@ -459,10 +459,6 @@ export default function ActivitiesClient({
                 </p>
               </div>
               <div style={{ display: 'flex', gap: 8, flexShrink: 0 }}>
-                <Link href="/notifications" className="act-btn-ghost">
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-                  Settings
-                </Link>
                 <button
                   onClick={handleMarkAllRead}
                   disabled={markingAll || !hasAnyUnread}
@@ -489,12 +485,6 @@ export default function ActivitiesClient({
                   className="act-search"
                 />
               </div>
-              <select value={dateFilter} onChange={e => setDateFilter(e.target.value)} className="act-select">
-                <option value="all">All time</option>
-                <option value="today">Today</option>
-                <option value="week">This week</option>
-                <option value="month">This month</option>
-              </select>
               {hasAnyUnread && (
                 <button onClick={handleMarkAllRead} disabled={markingAll}
                   style={{ marginLeft: 'auto', fontSize: 13, fontWeight: 500, color: '#14B8A6', background: 'none', border: 'none', cursor: 'pointer', fontFamily: 'inherit', padding: '9px 4px', whiteSpace: 'nowrap' }}>

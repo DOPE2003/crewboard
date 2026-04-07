@@ -155,12 +155,12 @@ export async function fundEscrow(
   tx.recentBlockhash = blockhash;
   tx.feePayer = buyer;
 
-  // Pre-sign with the escrow token account keypair BEFORE Phantom sees the transaction.
-  // Phantom only needs to add the buyer's signature — it won't be prompted for the keypair.
-  tx.partialSign(escrowTokenAccountKeypair);
-
-  // Wallet (Phantom) signs as the buyer/fee payer
+  // Let Phantom sign first — it only sees buyer as signer, no unknown keys yet.
   const signedTx = await wallet.signTransaction(tx);
+
+  // AFTER Phantom has signed, add the escrow token account keypair signature.
+  // This avoids the "unknown signer" rejection from Phantom.
+  signedTx.partialSign(escrowTokenAccountKeypair);
 
   // Broadcast
   const txHash = await connection.sendRawTransaction(signedTx.serialize(), {

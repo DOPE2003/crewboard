@@ -58,6 +58,7 @@ export const ModelName = {
   Conversation: 'Conversation',
   Message: 'Message',
   Gig: 'Gig',
+  SavedGig: 'SavedGig',
   Order: 'Order',
   Review: 'Review',
   ShowcasePost: 'ShowcasePost',
@@ -192,6 +193,16 @@ export const GigScalarFieldEnum = {
 } as const
 
 export type GigScalarFieldEnum = (typeof GigScalarFieldEnum)[keyof typeof GigScalarFieldEnum]
+
+
+export const SavedGigScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  gigId: 'gigId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedGigScalarFieldEnum = (typeof SavedGigScalarFieldEnum)[keyof typeof SavedGigScalarFieldEnum]
 
 
 export const OrderScalarFieldEnum = {

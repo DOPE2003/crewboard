@@ -7,6 +7,21 @@ import NavControlsClient from "./NavControlsClient";
 
 import type { NavNotif, NavOrder } from "@/types/nav";
 
+function msgPreview(body: string, maxLen = 50): string {
+  if (body.startsWith("__GIGREQUEST__:")) {
+    try { return "Gig Request: " + JSON.parse(body.slice("__GIGREQUEST__:".length)).title; }
+    catch { return "Gig Request"; }
+  }
+  if (body.startsWith("__FILE__:")) {
+    try {
+      const f = JSON.parse(body.slice("__FILE__:".length));
+      if (f.type?.startsWith("image/")) return "📷 Image";
+      if (f.type?.startsWith("video/")) return "🎥 Video";
+      return "📄 " + f.name;
+    } catch { return "📎 File"; }
+  }
+  return body.slice(0, maxLen) + (body.length > maxLen ? "…" : "");
+}
 
 export default async function Navbar() {
   const session = await auth();
@@ -90,12 +105,8 @@ export default async function Navbar() {
         const lastMsg = c.messages[0];
         let lastMessageText: string | null = null;
         if (lastMsg) {
-          if (lastMsg.body.startsWith("__GIGREQUEST__:")) {
-            lastMessageText = (lastMsg.senderId === userId ? "You: " : "") + "Gig Request";
-          } else {
-            const prefix = lastMsg.senderId === userId ? "You: " : "";
-            lastMessageText = prefix + lastMsg.body.slice(0, 50) + (lastMsg.body.length > 50 ? "…" : "");
-          }
+          const prefix = lastMsg.senderId === userId ? "You: " : "";
+          lastMessageText = prefix + msgPreview(lastMsg.body, 50);
         }
         return {
           id: c.id,
@@ -163,8 +174,8 @@ export default async function Navbar() {
       }}>
 
         {/* Logo */}
-        <Link href="/" style={{ flexShrink: 0, display: "flex", alignItems: "center", textDecoration: "none", gap: "0.5rem" }}>
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 34, height: 34, flexShrink: 0 }}>
+        <Link href="/" className="flex items-center gap-3 shrink-0 no-underline">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="shrink-0" style={{ width: 36, height: 36 }}>
             <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--text-1)" strokeWidth="2.5" strokeLinejoin="round" />
             <line x1="24" y1="15" x2="16" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
             <line x1="24" y1="15" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
@@ -173,9 +184,14 @@ export default async function Navbar() {
             <circle cx="16" cy="32" r="3.5" fill="var(--text-1)"/>
             <circle cx="32" cy="32" r="3.5" fill="var(--text-1)"/>
           </svg>
-          <span className="nav-wordmark">
-            <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--text-1)", fontWeight: 700 }}>board</span>
-          </span>
+          <div className="flex flex-col leading-none gap-[3px]">
+            <span className="nav-wordmark" style={{ lineHeight: 1 }}>
+              <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--text-1)", fontWeight: 700 }}>board</span>
+            </span>
+            <span className="hidden sm:block" style={{ fontSize: 8.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: "#14B8A6", lineHeight: 1 }}>
+              Web3 Freelancer Marketplace
+            </span>
+          </div>
         </Link>
 
         {/* Search — stretches to fill available space */}

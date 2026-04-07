@@ -60,7 +60,7 @@ export default async function MessagesPage() {
 
   return (
     <main className="page">
-      <div className="msgs-shell" style={{ display: "flex", height: "calc(100vh - 64px)", overflow: "hidden", background: "var(--background)" }}>
+      <div className="msgs-shell">
         {/* Left sidebar */}
         <div style={{
           width: 320, flexShrink: 0,

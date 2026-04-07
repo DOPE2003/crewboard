@@ -34,7 +34,7 @@ export default async function AdminUsersPage({
 
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 1000, margin: "0 auto", padding: "8rem 1.5rem 6rem" }}>
+      <div className="admin-content">
         
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-end", marginBottom: "2.5rem" }}>
           <div>
@@ -61,7 +61,7 @@ export default async function AdminUsersPage({
         </form>
 
         <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden" }}>
-          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+          <div className="admin-table-wrap"><table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
             <thead>
               <tr style={{ textAlign: "left", background: "rgba(var(--foreground-rgb), 0.02)" }}>
                 <th style={{ padding: "1rem 1.5rem", color: "var(--text-muted)", fontWeight: 600 }}>User Info</th>
@@ -98,7 +98,7 @@ export default async function AdminUsersPage({
                 </tr>
               ))}
             </tbody>
-          </table>
+          </table></div>
           {users.length === 0 && (
             <div style={{ padding: "4rem", textAlign: "center", color: "var(--text-muted)" }}>
               No users found matching "{q}"

@@ -3,6 +3,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import GigsFilters from "./GigsFilters";
 import T from "@/components/ui/T";
+import SaveGigButton from "@/components/gigs/SaveGigButton";
 
 function formatPrice(price: number): string {
   if (price >= 1000000) return "$" + (price / 1000000).toFixed(1) + "m";
@@ -36,7 +37,14 @@ export default async function GigsPage({
   const sort = params.sort || "newest";
 
   const session = await auth();
-  const isLoggedIn = !!(session?.user as any)?.userId;
+  const userId = (session?.user as any)?.userId as string | undefined;
+  const isLoggedIn = !!userId;
+
+  // Fetch saved gig IDs for the current user
+  const savedGigIds = userId
+    ? await db.savedGig.findMany({ where: { userId }, select: { gigId: true } })
+        .then((rows) => new Set(rows.map((r) => r.gigId)))
+    : new Set<string>();
 
   const where: Record<string, any> = { status: "active" };
 
@@ -158,12 +166,17 @@ export default async function GigsPage({
                         </div>
                       </div>
                     </div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                     <div className="gig-delivery-wrap">
                       <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                         <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
                       </svg>
                       <span className="gig-delivery">{gig.deliveryDays}d</span>
                     </div>
+                    {isLoggedIn && (
+                      <SaveGigButton gigId={gig.id} initialSaved={savedGigIds.has(gig.id)} />
+                    )}
+                  </div>
                   </div>
                 </Link>
               );

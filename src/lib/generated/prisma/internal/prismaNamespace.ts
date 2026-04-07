@@ -391,6 +391,7 @@ export const ModelName = {
   Conversation: 'Conversation',
   Message: 'Message',
   Gig: 'Gig',
+  SavedGig: 'SavedGig',
   Order: 'Order',
   Review: 'Review',
   ShowcasePost: 'ShowcasePost',
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist"
+    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -930,6 +931,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.GigCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.GigCountAggregateOutputType> | number
+        }
+      }
+    }
+    SavedGig: {
+      payload: Prisma.$SavedGigPayload<ExtArgs>
+      fields: Prisma.SavedGigFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SavedGigFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SavedGigFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>
+        }
+        findFirst: {
+          args: Prisma.SavedGigFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SavedGigFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>
+        }
+        findMany: {
+          args: Prisma.SavedGigFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>[]
+        }
+        create: {
+          args: Prisma.SavedGigCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>
+        }
+        createMany: {
+          args: Prisma.SavedGigCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SavedGigCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>[]
+        }
+        delete: {
+          args: Prisma.SavedGigDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>
+        }
+        update: {
+          args: Prisma.SavedGigUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>
+        }
+        deleteMany: {
+          args: Prisma.SavedGigDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SavedGigUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SavedGigUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>[]
+        }
+        upsert: {
+          args: Prisma.SavedGigUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SavedGigPayload>
+        }
+        aggregate: {
+          args: Prisma.SavedGigAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSavedGig>
+        }
+        groupBy: {
+          args: Prisma.SavedGigGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedGigGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SavedGigCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SavedGigCountAggregateOutputType> | number
         }
       }
     }
@@ -1455,6 +1530,16 @@ export const GigScalarFieldEnum = {
 export type GigScalarFieldEnum = (typeof GigScalarFieldEnum)[keyof typeof GigScalarFieldEnum]
 
 
+export const SavedGigScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  gigId: 'gigId',
+  createdAt: 'createdAt'
+} as const
+
+export type SavedGigScalarFieldEnum = (typeof SavedGigScalarFieldEnum)[keyof typeof SavedGigScalarFieldEnum]
+
+
 export const OrderScalarFieldEnum = {
   id: 'id',
   gigId: 'gigId',
@@ -1761,6 +1846,7 @@ export type GlobalOmitConfig = {
   conversation?: Prisma.ConversationOmit
   message?: Prisma.MessageOmit
   gig?: Prisma.GigOmit
+  savedGig?: Prisma.SavedGigOmit
   order?: Prisma.OrderOmit
   review?: Prisma.ReviewOmit
   showcasePost?: Prisma.ShowcasePostOmit

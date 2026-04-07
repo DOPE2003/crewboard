@@ -162,7 +162,7 @@ export default async function ConversationPage({
 
   return (
     <main className="page">
-      <div className="msgs-shell" style={{ display: "flex", height: "calc(100vh - 64px)", overflow: "hidden", background: "var(--background)" }}>
+      <div className="msgs-shell">
 
         {/* LEFT: Conversations sidebar */}
         <div style={{

@@ -77,6 +77,11 @@ export type Message = Prisma.MessageModel
  */
 export type Gig = Prisma.GigModel
 /**
+ * Model SavedGig
+ * 
+ */
+export type SavedGig = Prisma.SavedGigModel
+/**
  * Model Order
  * 
  */

@@ -167,17 +167,21 @@ export default function NavControlsClient({
           href="/activities"
           title="Activities"
           aria-label="Activities"
-          className={cn(
-            'hidden md:inline-flex items-center justify-center h-9 w-9 transition-colors duration-150 no-underline rounded-lg',
-            isActive
-              ? 'text-[#14B8A6] dark:text-teal-400'
-              : 'text-gray-700 dark:text-gray-300 hover:text-[#14B8A6] dark:hover:text-teal-400'
-          )}
-          style={{ position: 'relative' }}
+          className="hidden md:inline-flex items-center justify-center h-9 w-9 transition-colors duration-150 no-underline rounded-lg"
+          style={{
+            position: 'relative',
+            color: (isActive || totalBadge > 0) ? '#f59e0b' : 'var(--text-muted, #6b7280)',
+          }}
         >
           <Bell size={17} />
           {totalBadge > 0 && (
-            <span className="absolute -top-0.5 -right-0.5 flex items-center justify-center min-w-[16px] h-[16px] px-[4px] rounded-full bg-[#14B8A6] text-white text-[9px] font-bold leading-none">
+            <span style={{
+              position: 'absolute', top: -2, right: -2,
+              minWidth: 16, height: 16, padding: '0 3px', borderRadius: 99,
+              background: '#f59e0b', color: 'white',
+              fontSize: 9, fontWeight: 700,
+              display: 'flex', alignItems: 'center', justifyContent: 'center', lineHeight: 1,
+            }}>
               {totalBadge > 99 ? '99+' : totalBadge}
             </span>
           )}
@@ -243,34 +247,8 @@ export default function NavControlsClient({
         <div className="hidden md:block" style={{ width: 1, height: 20, background: 'var(--card-border, #e5e7eb)', margin: '0 2px' }} />
       )}
 
-      <span className="hidden md:block">{children}</span>
-
-      {/* ── Mobile-only: Avatar only (bottom tab bar handles bell/nav) ── */}
-      {loggedIn && twitterHandle && (
-        <Link
-          href={`/u/${twitterHandle}`}
-          className="flex md:hidden"
-          style={{ alignItems: 'center', justifyContent: 'center', width: 44, height: 44 }}
-        >
-          {userImage ? (
-            <img
-              src={userImage}
-              alt=""
-              style={{ width: 34, height: 34, borderRadius: '50%', objectFit: 'cover', flexShrink: 0 }}
-              onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-            />
-          ) : (
-            <div style={{
-              width: 34, height: 34, borderRadius: '50%',
-              background: '#14B8A6',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: 14, fontWeight: 700, color: 'white', flexShrink: 0,
-            }}>
-              {twitterHandle[0].toUpperCase()}
-            </div>
-          )}
-        </Link>
-      )}
+      {/* Profile menu: shown on all screen sizes — NavProfileDropdown handles desktop dropdown vs mobile bottom sheet */}
+      <span>{children}</span>
       {!loggedIn && (
         <Link
           href="/login"

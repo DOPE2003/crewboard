@@ -12,6 +12,7 @@ interface Props {
 
 const BRAND = '#14B8A6'
 const MUTED = '#9ca3af'
+const YELLOW = '#f59e0b'
 
 function HomeIcon({ active }: { active: boolean }) {
   return (
@@ -33,18 +34,18 @@ function DiscoverIcon({ active }: { active: boolean }) {
 
 function ServicesIcon({ active }: { active: boolean }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? BRAND : MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1" fill={active ? 'rgba(13,201,161,0.15)' : 'none'}/>
-      <rect x="14" y="3" width="7" height="7" rx="1" fill={active ? 'rgba(13,201,161,0.15)' : 'none'}/>
-      <rect x="3" y="14" width="7" height="7" rx="1" fill={active ? 'rgba(13,201,161,0.15)' : 'none'}/>
-      <rect x="14" y="14" width="7" height="7" rx="1" fill={active ? 'rgba(13,201,161,0.15)' : 'none'}/>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? YELLOW : MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="3" y="3" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
+      <rect x="14" y="3" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
+      <rect x="3" y="14" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
+      <rect x="14" y="14" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
     </svg>
   )
 }
 
 function BellIcon({ active }: { active: boolean }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? BRAND : MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? YELLOW : MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
       <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
     </svg>
@@ -75,10 +76,10 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
   const isProfileActive = pathname.startsWith('/u/') || pathname === '/dashboard'
 
   const tabsLeft = [
-    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,      match: (p: string) => p === '/' },
-    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,  match: (p: string) => p.startsWith('/talent') },
-    { href: '/gigs',       label: 'Services',   icon: (a: boolean) => <ServicesIcon active={a} />,  match: (p: string) => p.startsWith('/gigs') },
-    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,      match: (p: string) => p.startsWith('/activities') },
+    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,      match: (p: string) => p === '/',                  activeColor: BRAND  },
+    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,  match: (p: string) => p.startsWith('/talent'),    activeColor: BRAND  },
+    { href: '/gigs',       label: 'Services',   icon: (a: boolean) => <ServicesIcon active={a} />,  match: (p: string) => p.startsWith('/gigs'),      activeColor: YELLOW },
+    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,      match: (p: string) => p.startsWith('/activities'), activeColor: YELLOW },
   ]
 
   const menuItems = [
@@ -115,6 +116,7 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
       >
         {tabsLeft.map((tab) => {
           const active = tab.match(pathname)
+          const color = active ? tab.activeColor : MUTED
           return (
             <Link
               key={tab.href}
@@ -128,7 +130,7 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
                 gap: 2,
                 padding: '6px 0',
                 textDecoration: 'none',
-                color: active ? BRAND : MUTED,
+                color,
                 position: 'relative',
                 minHeight: 44,
                 WebkitTapHighlightColor: 'transparent',
@@ -148,11 +150,11 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
                   </span>
                 )}
               </span>
-              <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, letterSpacing: '0.04em', lineHeight: 1, color: active ? BRAND : MUTED }}>
+              <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, letterSpacing: '0.04em', lineHeight: 1, color }}>
                 {tab.label}
               </span>
               {active && (
-                <span style={{ position: 'absolute', bottom: 1, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: BRAND }} />
+                <span style={{ position: 'absolute', bottom: 1, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: tab.activeColor }} />
               )}
             </Link>
           )

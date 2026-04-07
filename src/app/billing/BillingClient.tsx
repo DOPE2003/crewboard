@@ -1,7 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { linkWallet } from "@/actions/wallet";
 
 type Order = {
   id: string;
@@ -121,6 +122,37 @@ export default function BillingClient({
   const { publicKey, signTransaction } = useWallet();
   const { connection } = useConnection();
 
+  // Auto-link to DB as soon as any Phantom public key is available
+  useEffect(() => {
+    if (walletAddress) return; // already saved
+
+    const provider =
+      (window as any).phantom?.solana ??
+      ((window as any).solana?.isPhantom ? (window as any).solana : null);
+
+    const save = (pk: string) => {
+      linkWallet({ publicKey: pk })
+        .then(() => window.location.reload())
+        .catch(console.error);
+    };
+
+    // 1. adapter already synced
+    if (publicKey) { save(publicKey.toBase58()); return; }
+
+    // 2. Phantom connected but adapter not synced — read directly
+    if (provider?.isConnected && provider?.publicKey) {
+      save(provider.publicKey.toBase58()); return;
+    }
+
+    // 3. Wait for Phantom connect event
+    const onConnect = () => {
+      const pk = provider?.publicKey?.toBase58();
+      if (pk) save(pk);
+    };
+    provider?.on?.("connect", onConnect);
+    return () => provider?.off?.("connect", onConnect);
+  }, [publicKey, walletAddress]);
+
   function copyAddress() {
     if (!walletAddress) return;
     navigator.clipboard.writeText(walletAddress).then(() => {
@@ -234,36 +266,37 @@ export default function BillingClient({
                 <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 8px" }}>
                   Connected Wallet
                 </p>
-                <p className="billing-wallet-address" style={{ fontSize: 22, fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "0.02em" }}>
-                  {walletAddress ? `${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}` : "No wallet connected"}
-                </p>
-                <p style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 6 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", background: walletAddress ? "#4ade80" : "#6b7280", display: "inline-block", flexShrink: 0 }} />
-                  {walletAddress ? "Solana · Linked" : "Not connected"}
-                </p>
-                <div className="billing-buttons" style={{ display: "flex", gap: 10 }}>
-                  {walletAddress ? (
+                {(() => {
+                  const addr = publicKey?.toBase58() ?? walletAddress;
+                  return (
                     <>
-                      <button onClick={copyAddress} style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 10, padding: "10px 16px", color: "#ffffff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", minHeight: 44 }}>
-                        {copied ? "✓ Copied" : "Copy Address"}
-                      </button>
-                      {walletAddress && (
-                        <a href={`https://solscan.io/account/${walletAddress}`} target="_blank" rel="noopener noreferrer"
-                          style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: 44 }}>
-                          Solscan ↗
-                        </a>
-                      )}
+                      <p className="billing-wallet-address" style={{ fontSize: 22, fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "0.02em" }}>
+                        {addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : "No wallet linked"}
+                      </p>
+                      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 6 }}>
+                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: addr ? "#4ade80" : "#6b7280", display: "inline-block", flexShrink: 0 }} />
+                        {addr ? "Solana · Connected" : "Use the wallet button in the top navbar to connect"}
+                      </p>
+                      <div className="billing-buttons" style={{ display: "flex", gap: 10 }}>
+                        {addr && (
+                          <>
+                            <button onClick={copyAddress} style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 10, padding: "10px 16px", color: "#ffffff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", minHeight: 44 }}>
+                              {copied ? "✓ Copied" : "Copy Address"}
+                            </button>
+                            <a href={`https://solscan.io/account/${addr}`} target="_blank" rel="noopener noreferrer"
+                              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: 44 }}>
+                              Solscan ↗
+                            </a>
+                          </>
+                        )}
+                      </div>
                     </>
-                  ) : (
-                    <a href="/dashboard" style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 10, padding: "10px 16px", color: "#ffffff", fontSize: 12, fontWeight: 700, textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: 44 }}>
-                      Connect Wallet →
-                    </a>
-                  )}
-                </div>
+                  );
+                })()}
               </div>
 
               {/* Transfer Funds */}
-              {walletAddress && (
+              {(publicKey || walletAddress) && (
                 <div style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 16, padding: 20 }}>
                   <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground, #111827)", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
                     <span style={{ color: "#14B8A6" }}>↗</span> Transfer Funds

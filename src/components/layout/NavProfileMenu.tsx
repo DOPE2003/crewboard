@@ -37,8 +37,9 @@ export default function NavProfileMenu({
         onClick={() => setOpen((o) => !o)}
         aria-label="Profile menu"
         style={{
-          background: "none", border: "none", padding: 0,
+          background: "none", border: "none", padding: "4px",
           cursor: "pointer", display: "flex", alignItems: "center",
+          minWidth: 44, minHeight: 44, justifyContent: "center",
         }}
       >
         {image ? (

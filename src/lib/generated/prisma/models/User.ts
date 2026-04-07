@@ -409,6 +409,7 @@ export type UserWhereInput = {
   reviewsGiven?: Prisma.ReviewListRelationFilter
   savedByTalents?: Prisma.SavedTalentListRelationFilter
   savedTalents?: Prisma.SavedTalentListRelationFilter
+  savedGigs?: Prisma.SavedGigListRelationFilter
   showcaseInteractions?: Prisma.ShowcaseInteractionListRelationFilter
   showcasePosts?: Prisma.ShowcasePostListRelationFilter
   proWaitlist?: Prisma.XOR<Prisma.ProWaitlistNullableScalarRelationFilter, Prisma.ProWaitlistWhereInput> | null
@@ -453,6 +454,7 @@ export type UserOrderByWithRelationInput = {
   reviewsGiven?: Prisma.ReviewOrderByRelationAggregateInput
   savedByTalents?: Prisma.SavedTalentOrderByRelationAggregateInput
   savedTalents?: Prisma.SavedTalentOrderByRelationAggregateInput
+  savedGigs?: Prisma.SavedGigOrderByRelationAggregateInput
   showcaseInteractions?: Prisma.ShowcaseInteractionOrderByRelationAggregateInput
   showcasePosts?: Prisma.ShowcasePostOrderByRelationAggregateInput
   proWaitlist?: Prisma.ProWaitlistOrderByWithRelationInput
@@ -500,6 +502,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   reviewsGiven?: Prisma.ReviewListRelationFilter
   savedByTalents?: Prisma.SavedTalentListRelationFilter
   savedTalents?: Prisma.SavedTalentListRelationFilter
+  savedGigs?: Prisma.SavedGigListRelationFilter
   showcaseInteractions?: Prisma.ShowcaseInteractionListRelationFilter
   showcasePosts?: Prisma.ShowcasePostListRelationFilter
   proWaitlist?: Prisma.XOR<Prisma.ProWaitlistNullableScalarRelationFilter, Prisma.ProWaitlistWhereInput> | null
@@ -616,6 +619,7 @@ export type UserCreateInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -660,6 +664,7 @@ export type UserUncheckedCreateInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -704,6 +709,7 @@ export type UserUpdateInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -748,6 +754,7 @@ export type UserUncheckedUpdateInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -1073,6 +1080,20 @@ export type UserUpdateOneRequiredWithoutGigsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutGigsInput, Prisma.UserUpdateWithoutGigsInput>, Prisma.UserUncheckedUpdateWithoutGigsInput>
 }
 
+export type UserCreateNestedOneWithoutSavedGigsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedGigsInput, Prisma.UserUncheckedCreateWithoutSavedGigsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedGigsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSavedGigsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSavedGigsInput, Prisma.UserUncheckedCreateWithoutSavedGigsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSavedGigsInput
+  upsert?: Prisma.UserUpsertWithoutSavedGigsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSavedGigsInput, Prisma.UserUpdateWithoutSavedGigsInput>, Prisma.UserUncheckedUpdateWithoutSavedGigsInput>
+}
+
 export type UserCreateNestedOneWithoutBuyerOrdersInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutBuyerOrdersInput, Prisma.UserUncheckedCreateWithoutBuyerOrdersInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutBuyerOrdersInput
@@ -1209,6 +1230,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -1252,6 +1274,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -1300,6 +1323,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -1343,6 +1367,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -1402,6 +1427,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -1445,6 +1471,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -1499,6 +1526,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -1542,6 +1570,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -1585,6 +1614,7 @@ export type UserCreateWithoutNotificationsInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -1628,6 +1658,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -1687,6 +1718,7 @@ export type UserUpdateWithoutNotificationsInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -1730,6 +1762,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -1773,6 +1806,7 @@ export type UserCreateWithoutSentMessagesInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -1816,6 +1850,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -1875,6 +1910,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -1918,6 +1954,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -1961,6 +1998,7 @@ export type UserCreateWithoutGigsInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -2004,6 +2042,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -2063,6 +2102,7 @@ export type UserUpdateWithoutGigsInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -2098,6 +2138,195 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSavedGigsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  website?: string | null
+  bannerImage?: string | null
+  humanVerified?: boolean
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutSavedGigsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  website?: string | null
+  bannerImage?: string | null
+  humanVerified?: boolean
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutSavedGigsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedGigsInput, Prisma.UserUncheckedCreateWithoutSavedGigsInput>
+}
+
+export type UserUpsertWithoutSavedGigsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSavedGigsInput, Prisma.UserUncheckedUpdateWithoutSavedGigsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSavedGigsInput, Prisma.UserUncheckedCreateWithoutSavedGigsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSavedGigsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSavedGigsInput, Prisma.UserUncheckedUpdateWithoutSavedGigsInput>
+}
+
+export type UserUpdateWithoutSavedGigsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSavedGigsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -2149,6 +2378,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -2192,6 +2422,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -2240,6 +2471,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -2283,6 +2515,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -2342,6 +2575,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -2385,6 +2619,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -2439,6 +2674,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -2482,6 +2718,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -2525,6 +2762,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -2568,6 +2806,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -2616,6 +2855,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
@@ -2659,6 +2899,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
@@ -2718,6 +2959,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -2761,6 +3003,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -2815,6 +3058,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
@@ -2858,6 +3102,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -2902,6 +3147,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
 }
@@ -2945,6 +3191,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
 }
@@ -3004,6 +3251,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
 }
@@ -3047,6 +3295,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -3090,6 +3339,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
 }
@@ -3133,6 +3383,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
 }
@@ -3192,6 +3443,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
 }
@@ -3235,6 +3487,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
 }
@@ -3278,6 +3531,7 @@ export type UserCreateWithoutProWaitlistInput = {
   reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
 }
@@ -3321,6 +3575,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
   savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
   savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
 }
@@ -3380,6 +3635,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
 }
@@ -3423,6 +3679,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
   savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
 }
@@ -3442,6 +3699,7 @@ export type UserCountOutputType = {
   reviewsGiven: number
   savedByTalents: number
   savedTalents: number
+  savedGigs: number
   showcaseInteractions: number
   showcasePosts: number
 }
@@ -3456,6 +3714,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   reviewsGiven?: boolean | UserCountOutputTypeCountReviewsGivenArgs
   savedByTalents?: boolean | UserCountOutputTypeCountSavedByTalentsArgs
   savedTalents?: boolean | UserCountOutputTypeCountSavedTalentsArgs
+  savedGigs?: boolean | UserCountOutputTypeCountSavedGigsArgs
   showcaseInteractions?: boolean | UserCountOutputTypeCountShowcaseInteractionsArgs
   showcasePosts?: boolean | UserCountOutputTypeCountShowcasePostsArgs
 }
@@ -3536,6 +3795,13 @@ export type UserCountOutputTypeCountSavedTalentsArgs<ExtArgs extends runtime.Typ
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountSavedGigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SavedGigWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountShowcaseInteractionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.ShowcaseInteractionWhereInput
 }
@@ -3587,6 +3853,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   reviewsGiven?: boolean | Prisma.User$reviewsGivenArgs<ExtArgs>
   savedByTalents?: boolean | Prisma.User$savedByTalentsArgs<ExtArgs>
   savedTalents?: boolean | Prisma.User$savedTalentsArgs<ExtArgs>
+  savedGigs?: boolean | Prisma.User$savedGigsArgs<ExtArgs>
   showcaseInteractions?: boolean | Prisma.User$showcaseInteractionsArgs<ExtArgs>
   showcasePosts?: boolean | Prisma.User$showcasePostsArgs<ExtArgs>
   proWaitlist?: boolean | Prisma.User$proWaitlistArgs<ExtArgs>
@@ -3700,6 +3967,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   reviewsGiven?: boolean | Prisma.User$reviewsGivenArgs<ExtArgs>
   savedByTalents?: boolean | Prisma.User$savedByTalentsArgs<ExtArgs>
   savedTalents?: boolean | Prisma.User$savedTalentsArgs<ExtArgs>
+  savedGigs?: boolean | Prisma.User$savedGigsArgs<ExtArgs>
   showcaseInteractions?: boolean | Prisma.User$showcaseInteractionsArgs<ExtArgs>
   showcasePosts?: boolean | Prisma.User$showcasePostsArgs<ExtArgs>
   proWaitlist?: boolean | Prisma.User$proWaitlistArgs<ExtArgs>
@@ -3720,6 +3988,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     reviewsGiven: Prisma.$ReviewPayload<ExtArgs>[]
     savedByTalents: Prisma.$SavedTalentPayload<ExtArgs>[]
     savedTalents: Prisma.$SavedTalentPayload<ExtArgs>[]
+    savedGigs: Prisma.$SavedGigPayload<ExtArgs>[]
     showcaseInteractions: Prisma.$ShowcaseInteractionPayload<ExtArgs>[]
     showcasePosts: Prisma.$ShowcasePostPayload<ExtArgs>[]
     proWaitlist: Prisma.$ProWaitlistPayload<ExtArgs> | null
@@ -4157,6 +4426,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   reviewsGiven<T extends Prisma.User$reviewsGivenArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsGivenArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedByTalents<T extends Prisma.User$savedByTalentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedByTalentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedTalentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   savedTalents<T extends Prisma.User$savedTalentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedTalentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedTalentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  savedGigs<T extends Prisma.User$savedGigsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$savedGigsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SavedGigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   showcaseInteractions<T extends Prisma.User$showcaseInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$showcaseInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShowcaseInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   showcasePosts<T extends Prisma.User$showcasePostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$showcasePostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShowcasePostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   proWaitlist<T extends Prisma.User$proWaitlistArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$proWaitlistArgs<ExtArgs>>): Prisma.Prisma__ProWaitlistClient<runtime.Types.Result.GetResult<Prisma.$ProWaitlistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -4824,6 +5094,30 @@ export type User$savedTalentsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.SavedTalentScalarFieldEnum | Prisma.SavedTalentScalarFieldEnum[]
+}
+
+/**
+ * User.savedGigs
+ */
+export type User$savedGigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SavedGig
+   */
+  select?: Prisma.SavedGigSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SavedGig
+   */
+  omit?: Prisma.SavedGigOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SavedGigInclude<ExtArgs> | null
+  where?: Prisma.SavedGigWhereInput
+  orderBy?: Prisma.SavedGigOrderByWithRelationInput | Prisma.SavedGigOrderByWithRelationInput[]
+  cursor?: Prisma.SavedGigWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SavedGigScalarFieldEnum | Prisma.SavedGigScalarFieldEnum[]
 }
 
 /**

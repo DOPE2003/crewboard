@@ -5,7 +5,6 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import PusherClient from "pusher-js";
 import { sendMessage, markMessagesAsRead } from "@/actions/messages";
-import { containsSocial } from "@/lib/filterSocials";
 
 interface ReplyPreview {
   id: string;
@@ -52,6 +51,7 @@ function formatDate(iso: string) {
 }
 
 const GIG_PREFIX = "__GIGREQUEST__:";
+const FILE_PREFIX = "__FILE__:";
 
 interface GigCard {
   id: string;
@@ -69,8 +69,71 @@ function parseGigCard(body: string): GigCard | null {
   }
 }
 
+interface FilePayload {
+  name: string;
+  size: number;
+  type: string;
+  data: string; // base64 data URL
+}
+
+function parseFilePayload(body: string): FilePayload | null {
+  if (!body.startsWith(FILE_PREFIX)) return null;
+  try { return JSON.parse(body.slice(FILE_PREFIX.length)); } catch { return null; }
+}
+
+function FileBubble({ payload, mine }: { payload: FilePayload; mine: boolean }) {
+  const isImage = payload.type.startsWith("image/");
+  const isVideo = payload.type.startsWith("video/");
+  const sizeLabel = payload.size > 1024 * 1024
+    ? `${(payload.size / 1024 / 1024).toFixed(1)} MB`
+    : `${Math.round(payload.size / 1024)} KB`;
+  if (isImage) {
+    return (
+      <a href={payload.data} download={payload.name} style={{ display: "block", maxWidth: 260 }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img src={payload.data} alt={payload.name} style={{ width: "100%", borderRadius: 12, display: "block", cursor: "pointer" }} />
+        <div style={{ fontSize: 10, color: mine ? "rgba(0,0,0,0.45)" : "var(--text-muted)", marginTop: 4, textAlign: "right" }}>{payload.name}</div>
+      </a>
+    );
+  }
+  if (isVideo) {
+    return (
+      <div style={{ maxWidth: 300 }}>
+        <video controls src={payload.data} style={{ width: "100%", borderRadius: 12, display: "block" }} />
+        <div style={{ fontSize: 10, color: mine ? "rgba(0,0,0,0.45)" : "var(--text-muted)", marginTop: 4, textAlign: "right" }}>{payload.name} · {sizeLabel}</div>
+      </div>
+    );
+  }
+  return (
+    <a href={payload.data} download={payload.name} style={{
+      display: "flex", alignItems: "center", gap: 10, textDecoration: "none",
+      padding: "10px 14px", borderRadius: 12,
+      background: mine ? "rgba(0,0,0,0.08)" : "rgba(20,184,166,0.08)",
+      border: `1px solid ${mine ? "rgba(0,0,0,0.1)" : "rgba(20,184,166,0.2)"}`,
+      minWidth: 180, maxWidth: 260,
+    }}>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke={mine ? "#0f766e" : "#14B8A6"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
+      </svg>
+      <div>
+        <div style={{ fontSize: 13, fontWeight: 600, color: mine ? "rgba(0,0,0,0.8)" : "var(--foreground)", maxWidth: 180, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{payload.name}</div>
+        <div style={{ fontSize: 11, color: "var(--text-muted)" }}>{sizeLabel}</div>
+      </div>
+    </a>
+  );
+}
+
 function replyBodyPreview(body: string): string {
   if (body.startsWith(GIG_PREFIX)) return "Service Request";
+  if (body.startsWith(FILE_PREFIX)) {
+    try {
+      const p = JSON.parse(body.slice(FILE_PREFIX.length));
+      if (p.type?.startsWith("image/")) return `📷 ${p.name}`;
+      if (p.type?.startsWith("video/")) return `🎥 ${p.name}`;
+      return `📎 ${p.name}`;
+    } catch {}
+    return "📎 File";
+  }
   return body.slice(0, 60) + (body.length > 60 ? "…" : "");
 }
 
@@ -180,13 +243,19 @@ export default function MessageThread({
   const [messages, setMessages] = useState<Msg[]>(initialMessages);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
-  const [socialWarning, setSocialWarning] = useState(false);
   const [sendError, setSendError] = useState<string | null>(null);
+  const [showPaymentPopup, setShowPaymentPopup] = useState(false);
   const [replyTo, setReplyTo] = useState<Msg | null>(null);
   const [hoveredId, setHoveredId] = useState<string | null>(null);
   const [showActionId, setShowActionId] = useState<string | null>(null);
+  const [attachedFile, setAttachedFile] = useState<FilePayload | null>(null);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [uploading, setUploading] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
   const threadBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const dragCounter = useRef(0);
   const pusherRef = useRef<InstanceType<typeof PusherClient> | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -257,11 +326,6 @@ export default function MessageThread({
 
   const sendText = async (text: string) => {
     if (!text || sending) return;
-    if (containsSocial(text)) {
-      setSocialWarning(true);
-      return;
-    }
-    setSocialWarning(false);
     setSending(true);
 
     const replySnapshot = replyTo;
@@ -283,6 +347,8 @@ export default function MessageThread({
         prev.map((m) => (m.id === optimisticMsg.id ? { ...confirmed, replyTo: confirmed.replyTo ?? null } : m))
       );
       setSendError(null);
+      setShowPaymentPopup(true);
+      setTimeout(() => setShowPaymentPopup(false), 5000);
       router.refresh();
     } catch (err: any) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));
@@ -296,6 +362,14 @@ export default function MessageThread({
   };
 
   const send = async () => {
+    if (attachedFile) {
+      const text = FILE_PREFIX + JSON.stringify(attachedFile);
+      setAttachedFile(null);
+      await sendText(text);
+      if (body.trim()) await sendText(body.trim());
+      setBody("");
+      return;
+    }
     if (!body.trim() || sending) return;
     await sendText(body.trim());
   };
@@ -305,11 +379,48 @@ export default function MessageThread({
     await sendText(text);
   };
 
-  const handleFileAttach = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const processFile = (file: File) => {
+    if (file.size > 10 * 1024 * 1024) { setSendError("File too large (max 10 MB)"); return; }
+    setUploading(true);
+    setUploadProgress(0);
+    const reader = new FileReader();
+    reader.onload = () => {
+      // Simulate upload progress
+      let p = 0;
+      const tick = setInterval(() => {
+        p += Math.random() * 25 + 10;
+        if (p >= 100) { p = 100; clearInterval(tick); setUploading(false); }
+        setUploadProgress(Math.min(p, 100));
+      }, 80);
+      setAttachedFile({ name: file.name, size: file.size, type: file.type, data: reader.result as string });
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleFileAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
     e.target.value = "";
-    await sendText(`📎 Attached: ${file.name}`);
+    processFile(file);
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    dragCounter.current++;
+    if (e.dataTransfer.items && e.dataTransfer.items.length > 0) setIsDragOver(true);
+  };
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    dragCounter.current--;
+    if (dragCounter.current === 0) setIsDragOver(false);
+  };
+  const handleDragOver = (e: React.DragEvent) => { e.preventDefault(); e.stopPropagation(); };
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault(); e.stopPropagation();
+    setIsDragOver(false);
+    dragCounter.current = 0;
+    const file = e.dataTransfer.files?.[0];
+    if (file) processFile(file);
   };
 
   const handleKey = (e: React.KeyboardEvent) => {
@@ -325,7 +436,32 @@ export default function MessageThread({
   let lastDate = "";
 
   return (
-    <div className="msgs-thread">
+    <div
+      className="msgs-thread"
+      style={{ position: "relative" }}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      {/* Drag overlay */}
+      {isDragOver && (
+        <div style={{
+          position: "absolute", inset: 0, zIndex: 50,
+          background: "rgba(20,184,166,0.07)",
+          border: "2px dashed #14B8A6",
+          borderRadius: 12,
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          gap: 12, pointerEvents: "none",
+        }}>
+          <div style={{ width: 56, height: 56, borderRadius: 16, background: "rgba(20,184,166,0.15)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+            </svg>
+          </div>
+          <span style={{ fontSize: 15, fontWeight: 700, color: "#14B8A6" }}>Drop to attach</span>
+        </div>
+      )}
       <div className="msgs-thread-body" ref={threadBodyRef}>
         {messages.length === 0 && (
           <div className="msgs-thread-empty">Send the first message to start the conversation.</div>
@@ -395,25 +531,30 @@ export default function MessageThread({
                   </button>
                 )}
 
-                {gigCard ? (
-                  <div style={{ display: "flex", flexDirection: "column", alignItems: mine ? "flex-end" : "flex-start", gap: "0.25rem" }}>
-                    {m.replyTo && (
-                      <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />
-                    )}
-                    <GigCardBubble gig={gigCard} mine={mine} />
-                    <span className="msgs-bubble-time" style={{ marginRight: mine ? "0.25rem" : 0, marginLeft: mine ? 0 : "0.25rem" }}>
-                      {formatTime(m.createdAt)}
-                    </span>
-                  </div>
-                ) : (
-                  <div className={`msgs-bubble ${mine ? "msgs-bubble-mine" : "msgs-bubble-theirs"}`}>
-                    {m.replyTo && (
-                      <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />
-                    )}
-                    <span className="msgs-bubble-text">{m.body}</span>
-                    <span className="msgs-bubble-time">{formatTime(m.createdAt)}</span>
-                  </div>
-                )}
+                {(() => {
+                  const filePayload = parseFilePayload(m.body);
+                  if (gigCard) return (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: mine ? "flex-end" : "flex-start", gap: "0.25rem" }}>
+                      {m.replyTo && <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />}
+                      <GigCardBubble gig={gigCard} mine={mine} />
+                      <span className="msgs-bubble-time" style={{ marginRight: mine ? "0.25rem" : 0, marginLeft: mine ? 0 : "0.25rem" }}>{formatTime(m.createdAt)}</span>
+                    </div>
+                  );
+                  if (filePayload) return (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: mine ? "flex-end" : "flex-start", gap: "0.25rem" }}>
+                      {m.replyTo && <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />}
+                      <FileBubble payload={filePayload} mine={mine} />
+                      <span className="msgs-bubble-time" style={{ marginRight: mine ? "0.25rem" : 0, marginLeft: mine ? 0 : "0.25rem" }}>{formatTime(m.createdAt)}</span>
+                    </div>
+                  );
+                  return (
+                    <div className={`msgs-bubble ${mine ? "msgs-bubble-mine" : "msgs-bubble-theirs"}`}>
+                      {m.replyTo && <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />}
+                      <span className="msgs-bubble-text">{m.body}</span>
+                      <span className="msgs-bubble-time">{formatTime(m.createdAt)}</span>
+                    </div>
+                  );
+                })()}
               </div>
 
               {/* Message status — only for sent messages */}
@@ -428,10 +569,32 @@ export default function MessageThread({
         <div style={{ height: 4 }} />
       </div>
 
-      {/* Warnings */}
-      {socialWarning && (
-        <div className="msgs-warn-bar">
-          Social handles, emails, and links are not allowed. Keep all contact on Crewboard.
+      {/* Payment safety popup */}
+      {showPaymentPopup && (
+        <div style={{
+          position: "absolute", bottom: 90, left: "50%", transform: "translateX(-50%)",
+          zIndex: 100, width: "calc(100% - 32px)", maxWidth: 420,
+          background: "#1a1a1a", borderRadius: 14,
+          padding: "14px 16px", boxShadow: "0 8px 32px rgba(0,0,0,0.25)",
+          display: "flex", alignItems: "flex-start", gap: 12,
+          animation: "fadeSlideUp 0.25s ease",
+        }}>
+          <style>{`@keyframes fadeSlideUp { from { opacity:0; transform:translateX(-50%) translateY(10px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }`}</style>
+          <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(245,158,11,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+              <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+          </div>
+          <div style={{ flex: 1 }}>
+            <div style={{ fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 3 }}>Stay safe on Crewboard</div>
+            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.6)", lineHeight: 1.5 }}>Use our payment system for secure transactions and avoid scammers.</div>
+          </div>
+          <button onClick={() => setShowPaymentPopup(false)} style={{ background: "none", border: "none", cursor: "pointer", color: "rgba(255,255,255,0.4)", padding: 2, flexShrink: 0, lineHeight: 1 }}>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
         </div>
       )}
       {sendError && (
@@ -477,31 +640,80 @@ export default function MessageThread({
         </div>
       )}
 
+      {/* File preview bar */}
+      {attachedFile && (
+        <div style={{
+          padding: "10px 14px 6px",
+          borderTop: "1px solid var(--card-border)",
+          background: "var(--dropdown-bg)",
+        }}>
+          <div style={{
+            display: "flex", alignItems: "center", gap: 10,
+            background: "var(--background)",
+            border: "1px solid var(--card-border)",
+            borderRadius: 12,
+            padding: "8px 10px",
+            boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+          }}>
+            {attachedFile.type.startsWith("image/") ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img src={attachedFile.data} alt={attachedFile.name}
+                style={{ width: 52, height: 52, borderRadius: 8, objectFit: "cover", flexShrink: 0, border: "1px solid var(--card-border)" }} />
+            ) : (
+              <div style={{ width: 52, height: 52, borderRadius: 8, background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
+                </svg>
+              </div>
+            )}
+            <div style={{ flex: 1, minWidth: 0 }}>
+              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{attachedFile.name}</div>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>
+                {attachedFile.size > 1024 * 1024 ? `${(attachedFile.size / 1024 / 1024).toFixed(1)} MB` : `${Math.round(attachedFile.size / 1024)} KB`}
+                {uploading && <span style={{ marginLeft: 6, color: "#14B8A6" }}> · Preparing…</span>}
+              </div>
+              {/* Progress bar */}
+              {uploading && (
+                <div style={{ height: 3, borderRadius: 99, background: "var(--card-border)", marginTop: 6, overflow: "hidden" }}>
+                  <div style={{
+                    height: "100%", borderRadius: 99,
+                    background: "linear-gradient(90deg, #14B8A6, #0d9488)",
+                    width: `${uploadProgress}%`,
+                    transition: "width 0.1s ease",
+                  }} />
+                </div>
+              )}
+            </div>
+            <button
+              onClick={() => { setAttachedFile(null); setUploading(false); setUploadProgress(0); }}
+              style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)", padding: 4, display: "flex", flexShrink: 0, borderRadius: 6 }}
+              aria-label="Remove file"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Input bar */}
       <div className="msgs-input-row">
-        {/* Emoji button — hidden until properly implemented */}
-        <button className="msgs-input-icon-btn" type="button" aria-label="Emoji" style={{ display: "none" }}>
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
-            <line x1="9" y1="9" x2="9.01" y2="9"/>
-            <line x1="15" y1="9" x2="15.01" y2="9"/>
-          </svg>
-        </button>
-        {/* Attachment button */}
+        {/* Hidden file input */}
         <input
+          ref={fileInputRef}
           type="file"
-          id="file-attach"
-          className="msgs-input-icon-btn"
           style={{ display: "none" }}
           onChange={handleFileAttach}
-          accept="image/*,.pdf,.doc,.docx"
+          accept="image/*,.pdf,.doc,.docx,.zip,.txt"
         />
+        {/* Attachment button */}
         <button
           className="msgs-input-icon-btn"
           type="button"
           aria-label="Attachment"
-          onClick={() => document.getElementById("file-attach")?.click()}
+          onClick={() => fileInputRef.current?.click()}
+          style={attachedFile ? { color: "#14B8A6" } : {}}
         >
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
             <path d="m21.44 11.05-9.19 9.19a6 6 0 0 1-8.49-8.49l8.57-8.57A4 4 0 1 1 18 8.84l-8.59 8.57a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
@@ -510,17 +722,17 @@ export default function MessageThread({
         <textarea
           ref={inputRef}
           className="msgs-input"
-          placeholder="Write a message... (Enter to send)"
+          placeholder={attachedFile ? "Add a caption… (optional)" : "Write a message… (Enter to send)"}
           value={body}
-          onChange={(e) => { setBody(e.target.value); if (socialWarning) setSocialWarning(false); }}
+          onChange={(e) => { setBody(e.target.value); }}
           onKeyDown={handleKey}
           rows={1}
-          style={socialWarning ? { borderColor: "#ef4444" } : {}}
+          style={{}}
         />
         <button
           className="msgs-send-btn"
           onClick={send}
-          disabled={!body.trim() || sending}
+          disabled={(!body.trim() && !attachedFile) || sending || uploading}
           aria-label="Send"
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">

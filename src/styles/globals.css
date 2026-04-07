@@ -2506,7 +2506,8 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 
 .msgs-shell {
   display: flex;
-  height: calc(100vh - 64px);
+  /* main-content padding-top = 104px (64px nav + 40px category strip) */
+  height: calc(100vh - 104px);
   overflow: hidden;
   font-family: Inter, sans-serif;
   background: var(--background);
@@ -3078,7 +3079,7 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 
 /* ── MOBILE ── */
 @media (max-width: 767px) {
-  .msgs-shell { height: calc(100vh - 56px); flex-direction: column; background: var(--background); }
+  .msgs-shell { height: calc(100vh - 92px - var(--btab-h, 64px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
   .msgs-sidebar { width: 100%; height: 100%; border-right: none; }
   .msgs-empty-panel { display: none; }
   .msgs-thread-panel {
@@ -5004,10 +5005,6 @@ img { max-width: 100%; }
   .talent-grid { grid-template-columns: 1fr; }
 }
 
-/* ── Messages mobile height override ── */
-@media (max-width: 767px) {
-  .msgs-shell { height: calc(100vh - 70px); }
-}
 
 /* ── Onboarding: inputs need 16px to prevent iOS zoom ── */
 @media (max-width: 700px) {
@@ -6732,4 +6729,41 @@ html, body { max-width: 100vw; overflow-x: hidden; }
 
 .dual-range-input::-moz-range-track {
   background: transparent !important;
+}
+
+/* ── Admin pages: responsive inner padding ──────────────────────── */
+.admin-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 8rem 1.5rem 6rem;
+}
+@media (max-width: 767px) {
+  .admin-content {
+    padding: 1.5rem 1rem 4rem;
+  }
+  /* Make admin tables scroll horizontally on mobile */
+  .admin-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+}
+
+/* ── Mobile UX: global overflow guard ─────────────────────────── */
+* { box-sizing: border-box; }
+img, video, iframe, table { max-width: 100%; }
+
+/* ── Mobile: tighten card/section padding ──────────────────────── */
+@media (max-width: 640px) {
+  .card { padding: 1rem !important; }
+  h1 { font-size: clamp(1.5rem, 6vw, 2.5rem) !important; }
+  h2 { font-size: clamp(1.2rem, 5vw, 2rem) !important; }
+}
+
+/* ── Messages: ensure input always stays above bottom tab bar ─── */
+@media (max-width: 767px) {
+  .msgs-thread-panel {
+    /* Ensure it renders below the fixed navbar (56px) and above bottom tab bar */
+    inset: 56px 0 calc(var(--btab-h, 56px) + env(safe-area-inset-bottom, 0px)) 0 !important;
+  }
+  .msgs-input-row {
+    /* Extra bottom padding on iOS notch devices */
+    padding-bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
+  }
 }

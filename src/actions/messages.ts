@@ -1,9 +1,24 @@
 "use server";
 
 import { auth } from "@/auth";
+
+function msgBodyPreview(body: string, maxLen = 100): string {
+  if (body.startsWith("__GIGREQUEST__:")) {
+    try { return "Gig Request: " + JSON.parse(body.slice("__GIGREQUEST__:".length)).title; }
+    catch { return "Gig Request"; }
+  }
+  if (body.startsWith("__FILE__:")) {
+    try {
+      const f = JSON.parse(body.slice("__FILE__:".length));
+      if (f.type?.startsWith("image/")) return "Sent an image";
+      if (f.type?.startsWith("video/")) return "Sent a video";
+      return "Sent a file: " + f.name;
+    } catch { return "Sent a file"; }
+  }
+  return body.slice(0, maxLen) + (body.length > maxLen ? "…" : "");
+}
 import db from "@/lib/db";
 import { pusher } from "@/lib/pusher";
-import { containsSocial } from "@/lib/filterSocials";
 import { revalidatePath } from "next/cache";
 import { sendMessageNotification, sendHireNotification, sendServiceRequestNotification } from "@/lib/email";
 
@@ -38,10 +53,6 @@ async function _sendMessage(conversationId: string, body: string, replyToId?: st
     throw new Error("Conversation not found");
   }
 
-  if (containsSocial(body)) {
-    throw new Error("Messages cannot contain social handles, emails, phone numbers, or links. Keep all contact on Crewboard.");
-  }
-
   let message;
   try {
     message = await db.message.create({
@@ -72,7 +83,7 @@ async function _sendMessage(conversationId: string, body: string, replyToId?: st
         db.user.findUnique({ where: { id: recipientId }, select: { email: true } }),
       ]);
       const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
-      const preview = body.trim().slice(0, 100);
+      const preview = msgBodyPreview(body.trim(), 100);
       await db.notification.create({
         data: {
           userId: recipientId,

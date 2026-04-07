@@ -3,6 +3,22 @@
 import { useState } from "react";
 import Link from "next/link";
 
+function msgPreview(body: string, maxLen = 50): string {
+  if (body.startsWith("__GIGREQUEST__:")) {
+    try { return "Gig Request: " + JSON.parse(body.slice("__GIGREQUEST__:".length)).title; }
+    catch { return "Gig Request"; }
+  }
+  if (body.startsWith("__FILE__:")) {
+    try {
+      const f = JSON.parse(body.slice("__FILE__:".length));
+      if (f.type?.startsWith("image/")) return "📷 Image";
+      if (f.type?.startsWith("video/")) return "🎥 Video";
+      return "📄 " + f.name;
+    } catch { return "📎 File"; }
+  }
+  return body.slice(0, maxLen) + (body.length > maxLen ? "…" : "");
+}
+
 function convTimestamp(iso: string): string {
   const date = new Date(iso);
   const now = new Date();
@@ -105,14 +121,7 @@ export default function ConversationListUI({
           let preview = "No messages yet";
           if (item.lastMessage !== null) {
             const prefix = item.lastSenderId === currentUserId ? "You: " : "";
-            if (item.lastMessage.startsWith("__GIGREQUEST__:")) {
-              try {
-                const gig = JSON.parse(item.lastMessage.slice("__GIGREQUEST__:".length));
-                preview = prefix + `Gig Request: ${gig.title}`;
-              } catch { preview = prefix + "Gig Request"; }
-            } else {
-              preview = prefix + item.lastMessage.slice(0, 50) + (item.lastMessage.length > 50 ? "…" : "");
-            }
+            preview = prefix + msgPreview(item.lastMessage, 50);
           }
 
           const displayName = item.user?.name ?? (item.user?.twitterHandle ? `@${item.user.twitterHandle}` : "Unknown User");
