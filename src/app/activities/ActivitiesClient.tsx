@@ -65,7 +65,24 @@ function getDateGroup(iso: string): string {
   return 'EARLIER'
 }
 
-type SidebarTab = 'all' | 'messages' | 'orders' | 'notifications' | 'reviews'
+type SidebarTab = 'all' | 'messages' | 'orders' | 'reviews'
+
+function previewLastMessage(body: string | null): string {
+  if (!body) return 'No messages yet'
+  if (body.startsWith('__GIGREQUEST__:')) {
+    try { return 'Service request: ' + JSON.parse(body.slice('__GIGREQUEST__:'.length)).title }
+    catch { return 'Service Request' }
+  }
+  if (body.startsWith('__FILE__:')) {
+    try {
+      const f = JSON.parse(body.slice('__FILE__:'.length))
+      if (f.type?.startsWith('image/')) return '📷 Image'
+      if (f.type?.startsWith('video/')) return '🎥 Video'
+      return `📎 ${f.name}`
+    } catch { return '📎 File' }
+  }
+  return body
+}
 type FeedItem =
   | { kind: 'message';      data: NavConv;  ts: number }
   | { kind: 'notification'; data: NavNotif; ts: number }
@@ -143,16 +160,14 @@ export default function ActivitiesClient({
     const msgItems   = convs.map(c => ({ kind: 'message'      as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
     const orderItems = orders.map(o => ({ kind: 'order'        as const, data: o, ts: new Date(o.createdAt).getTime() }))
 
-    let notifSrc = notifs
-    if (activeTab === 'reviews')       notifSrc = reviewNotifs
-    else if (activeTab === 'notifications') notifSrc = sysNotifs
+    const notifSrc = activeTab === 'reviews' ? reviewNotifs : notifs
     const notifItems = notifSrc.map(n => ({ kind: 'notification' as const, data: n, ts: new Date(n.createdAt).getTime() }))
 
     let items: FeedItem[] =
-      activeTab === 'all'           ? [...msgItems, ...notifItems, ...orderItems] :
-      activeTab === 'messages'      ? msgItems :
-      activeTab === 'orders'        ? orderItems :
-                                      notifItems
+      activeTab === 'all'      ? [...msgItems, ...notifItems, ...orderItems] :
+      activeTab === 'messages' ? msgItems :
+      activeTab === 'orders'   ? orderItems :
+                                 notifItems
 
     const q = search.toLowerCase().trim()
     if (q) {
@@ -190,11 +205,10 @@ export default function ActivitiesClient({
 
   // ── Sidebar categories ────────────────────────────────────────────────────
   const sidebarCats: { key: SidebarTab; label: string; count: number }[] = [
-    { key: 'all',           label: 'All Activities',  count: totalUnread + activeOrderCount },
-    { key: 'messages',      label: 'Messages',         count: unreadMsgs },
-    { key: 'orders',        label: 'Orders',           count: activeOrderCount },
-    { key: 'notifications', label: 'Notifications',    count: sysUnread },
-    { key: 'reviews',       label: 'Reviews',          count: reviewUnread },
+    { key: 'all',      label: 'All Activities', count: totalUnread + activeOrderCount },
+    { key: 'messages', label: 'Messages',        count: unreadMsgs },
+    { key: 'orders',   label: 'Orders',          count: activeOrderCount },
+    { key: 'reviews',  label: 'Reviews',         count: reviewUnread },
   ]
 
   // ── Sub-components ────────────────────────────────────────────────────────
@@ -274,7 +288,7 @@ export default function ActivitiesClient({
             <span suppressHydrationWarning className="act-time">{fmtTime(c.lastMessageTime)}</span>
           </div>
           <p className="act-body">
-            {c.lastMessage ?? 'No messages yet'}
+            {previewLastMessage(c.lastMessage)}
           </p>
           <div className="act-chip-mobile"><TypeChip type="message" small /></div>
         </div>
