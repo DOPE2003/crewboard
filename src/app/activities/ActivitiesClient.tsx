@@ -83,6 +83,38 @@ function previewLastMessage(body: string | null): string {
   }
   return body
 }
+
+function parseGigRequest(body: string | null): { title: string; price?: number; days?: number } | null {
+  if (!body?.startsWith('__GIGREQUEST__:')) return null
+  try { return JSON.parse(body.slice('__GIGREQUEST__:'.length)) }
+  catch { return null }
+}
+
+function GigRequestMiniCard({ gig }: { gig: { title: string; price?: number; days?: number } }) {
+  return (
+    <div style={{
+      display: 'inline-flex', alignItems: 'center', gap: 8,
+      marginTop: 5,
+      padding: '5px 10px 5px 8px',
+      borderRadius: 8,
+      background: 'linear-gradient(135deg, rgba(20,184,166,0.08), rgba(20,184,166,0.04))',
+      border: '1px solid rgba(20,184,166,0.22)',
+      maxWidth: '100%',
+    }}>
+      <div style={{ width: 22, height: 22, borderRadius: 6, background: 'rgba(20,184,166,0.15)', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+        </svg>
+      </div>
+      <div style={{ minWidth: 0 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, color: '#0f766e', lineHeight: 1, marginBottom: 2 }}>New Service Request</div>
+        <div style={{ fontSize: 11, color: 'var(--text-muted)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: 180 }}>
+          {gig.title}{gig.price != null ? ` · $${gig.price}` : ''}
+        </div>
+      </div>
+    </div>
+  )
+}
 type FeedItem =
   | { kind: 'message';      data: NavConv;  ts: number }
   | { kind: 'notification'; data: NavNotif; ts: number }
@@ -287,9 +319,10 @@ export default function ActivitiesClient({
             </div>
             <span suppressHydrationWarning className="act-time">{fmtTime(c.lastMessageTime)}</span>
           </div>
-          <p className="act-body">
-            {previewLastMessage(c.lastMessage)}
-          </p>
+          {parseGigRequest(c.lastMessage)
+            ? <GigRequestMiniCard gig={parseGigRequest(c.lastMessage)!} />
+            : <p className="act-body">{previewLastMessage(c.lastMessage)}</p>
+          }
           <div className="act-chip-mobile"><TypeChip type="message" small /></div>
         </div>
       </ActivityCard>
