@@ -254,7 +254,7 @@ export default function NavProfileDropdown({
             <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
               {role && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>{role.toUpperCase()}</span>}
               {extra?.isOG && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>★ OG</span>}
-              {extra?.twitterHandle === "saad190914"
+              {twitterHandle === "saad190914"
                 ? <span style={{ background: "linear-gradient(135deg,rgba(20,184,166,0.6),rgba(15,118,110,0.6))", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>OWNER</span>
                 : extra?.role === "ADMIN" && <span style={{ background: "rgba(239,68,68,0.35)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>ADMIN</span>
               }
