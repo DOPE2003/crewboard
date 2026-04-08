@@ -1,11 +1,17 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import ProfileModal from './ProfileModal'
 
 interface Props {
   twitterHandle?: string | null
   unreadActivities?: number
+  image?: string | null
+  name?: string | null
+  userTitle?: string | null
+  availability?: string | null
 }
 
 const BRAND = '#14B8A6'
@@ -59,24 +65,25 @@ function ProfileIcon({ active }: { active: boolean }) {
   )
 }
 
-
-
-export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Props) {
+export default function BottomTabBar({
+  twitterHandle,
+  unreadActivities = 0,
+  image = null,
+  name = null,
+  userTitle = null,
+  availability = null,
+}: Props) {
   const pathname = usePathname()
+  const [profileOpen, setProfileOpen] = useState(false)
 
   const isProfileActive = pathname.startsWith('/u/') || pathname === '/dashboard'
 
-  function openProfileMenu() {
-    window.dispatchEvent(new CustomEvent('cb:open-profile-menu'))
-  }
-
   const tabsLeft = [
-    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,      match: (p: string) => p === '/',                  activeColor: BRAND  },
-    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,  match: (p: string) => p.startsWith('/talent'),    activeColor: BRAND  },
-    { href: '/gigs',       label: 'Services',   icon: (a: boolean) => <ServicesIcon active={a} />,  match: (p: string) => p.startsWith('/gigs'),      activeColor: YELLOW },
-    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,      match: (p: string) => p.startsWith('/activities'), activeColor: YELLOW },
+    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,       match: (p: string) => p === '/',                   activeColor: BRAND  },
+    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,   match: (p: string) => p.startsWith('/talent'),     activeColor: BRAND  },
+    { href: '/gigs',       label: 'Services',   icon: (a: boolean) => <ServicesIcon active={a} />,   match: (p: string) => p.startsWith('/gigs'),       activeColor: YELLOW },
+    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,       match: (p: string) => p.startsWith('/activities'), activeColor: YELLOW },
   ]
-
 
   return (
     <>
@@ -145,9 +152,9 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
           )
         })}
 
-        {/* Profile tab — opens NavProfileDropdown bottom sheet via custom event */}
+        {/* Profile tab — opens bottom sheet modal */}
         <button
-          onClick={openProfileMenu}
+          onClick={() => setProfileOpen(true)}
           style={{
             flex: 1,
             display: 'flex',
@@ -177,6 +184,17 @@ export default function BottomTabBar({ twitterHandle, unreadActivities = 0 }: Pr
         </button>
       </nav>
 
+      <ProfileModal
+        isOpen={profileOpen}
+        onClose={() => setProfileOpen(false)}
+        image={image}
+        name={name}
+        twitterHandle={twitterHandle ?? null}
+        userTitle={userTitle}
+        availability={availability}
+        unreadCount={unreadActivities}
+        gigsCount={0}
+      />
     </>
   )
 }
