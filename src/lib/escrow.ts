@@ -22,7 +22,7 @@ const IDL: Idl = {
         { name: "mint" },
         { name: "buyer_token_account", writable: true },
         { name: "escrow_state", writable: true, signer: false, pda: { seeds: [{ kind: "const", value: [101,115,99,114,111,119] }, { kind: "account", path: "buyer" }, { kind: "account", path: "seller" }, { kind: "arg", path: "gig_id" }] } },
-        { name: "escrow_token_account", writable: true },
+        { name: "escrow_token_account", writable: true, signer: true },
         { name: "system_program", address: "11111111111111111111111111111111" },
         { name: "token_program", address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" },
         { name: "rent", address: "SysvarRent111111111111111111111111111111111" },
@@ -133,8 +133,12 @@ export async function fundEscrow(
     );
   }
 
-  // Build transaction object without sending
-  const tx = await program.methods
+  // Use .signers([escrowTokenAccountKeypair]).rpc() so Anchor:
+  //   1. marks escrow_token_account as isSigner=true in the message
+  //   2. signs with the keypair first
+  //   3. passes to provider.wallet.signTransaction (Phantom) for buyer sig
+  //   4. broadcasts and confirms
+  const txHash = await program.methods
     .initializeEscrow(orderId, amount)
     .accounts({
       buyer,
@@ -148,27 +152,8 @@ export async function fundEscrow(
       rent: SYSVAR_RENT_PUBKEY,
     })
     .preInstructions(preInstructions)
-    .transaction();
-
-  // Attach blockhash and fee payer
-  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
-  tx.recentBlockhash = blockhash;
-  tx.feePayer = buyer;
-
-  // Let Phantom sign first — it only sees buyer as signer, no unknown keys yet.
-  const signedTx = await wallet.signTransaction(tx);
-
-  // AFTER Phantom has signed, add the escrow token account keypair signature.
-  // This avoids the "unknown signer" rejection from Phantom.
-  signedTx.partialSign(escrowTokenAccountKeypair);
-
-  // Broadcast
-  const txHash = await connection.sendRawTransaction(signedTx.serialize(), {
-    skipPreflight: false,
-    preflightCommitment: "confirmed",
-  });
-
-  await connection.confirmTransaction({ blockhash, lastValidBlockHeight, signature: txHash }, "confirmed");
+    .signers([escrowTokenAccountKeypair])
+    .rpc({ commitment: "confirmed" });
 
   return txHash;
 }
