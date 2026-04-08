@@ -14,10 +14,11 @@ function hexAlpha(hex: string, alpha: number) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-const STATUS_STEPS = ["pending", "accepted", "delivered", "completed"];
+const STATUS_STEPS = ["pending", "funded", "accepted", "delivered", "completed"];
 
 const STATUS_COLORS: Record<string, string> = {
   pending:   "#f59e0b",
+  funded:    "#14B8A6",
   accepted:  "#3b82f6",
   delivered: "#8b5cf6",
   completed: "#22c55e",
@@ -27,6 +28,7 @@ const STATUS_COLORS: Record<string, string> = {
 
 const STATUS_LABELS: Record<string, string> = {
   pending:   "Pending acceptance",
+  funded:    "Escrow funded — awaiting acceptance",
   accepted:  "In Progress",
   delivered: "Delivered — awaiting confirmation",
   completed: "Completed",
@@ -132,7 +134,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
               {STATUS_STEPS.map((step, i) => {
                 const done = i <= stepIndex;
-                const label = { pending: "Placed", accepted: "Accepted", delivered: "Delivered", completed: "Done" }[step];
+                const label = { pending: "Placed", funded: "Funded", accepted: "Accepted", delivered: "Delivered", completed: "Done" }[step];
                 return (
                   <div key={step} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
                     {i > 0 && (
