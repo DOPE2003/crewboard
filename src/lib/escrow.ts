@@ -158,6 +158,51 @@ export async function fundEscrow(
   return txHash;
 }
 
+export async function resolveDispute(
+  adminWallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  buyerPubkey: PublicKey,
+  sellerPubkey: PublicKey,
+  routeToBuyer: boolean,
+) {
+  const program = getProgram(adminWallet, connection);
+  const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+
+  const state = await (program.account as any).escrowState.fetch(escrowState);
+  const escrowTokenAccount = state.escrowTokenAccount as PublicKey;
+
+  const buyerTokenAccount  = await getAssociatedTokenAddress(USDC_MINT, buyerPubkey);
+  const sellerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, sellerPubkey);
+
+  const preInstructions = [];
+  const targetAta = routeToBuyer ? buyerTokenAccount : sellerTokenAccount;
+  const targetOwner = routeToBuyer ? buyerPubkey : sellerPubkey;
+  const ataInfo = await connection.getAccountInfo(targetAta);
+  if (!ataInfo) {
+    preInstructions.push(
+      createAssociatedTokenAccountInstruction(adminWallet.publicKey, targetAta, targetOwner, USDC_MINT)
+    );
+  }
+
+  const txHash = await program.methods
+    .resolveDispute(routeToBuyer)
+    .accounts({
+      admin: adminWallet.publicKey,
+      buyer: buyerPubkey,
+      seller: sellerPubkey,
+      escrowState,
+      escrowTokenAccount,
+      buyerTokenAccount,
+      sellerTokenAccount,
+      tokenProgram: TOKEN_PROGRAM_ID,
+    })
+    .preInstructions(preInstructions)
+    .rpc({ commitment: "confirmed" });
+
+  return txHash;
+}
+
 export async function releaseFunds(
   wallet: AnchorWallet,
   connection: Connection,

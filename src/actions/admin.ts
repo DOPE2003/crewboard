@@ -64,6 +64,55 @@ export async function adminUpdateOrderStatus(orderId: string, status: string) {
   return { ok: true };
 }
 
+export async function syncDisputeResolved(
+  orderId: string,
+  txHash: string,
+  routeToBuyer: boolean,
+) {
+  await requireAdmin();
+
+  const order = await db.order.findUnique({
+    where: { id: orderId },
+    select: { buyerId: true, sellerId: true, gig: { select: { title: true } } },
+  });
+  if (!order) throw new Error("Order not found");
+
+  await db.order.update({
+    where: { id: orderId },
+    data: { status: "cancelled", txHash },
+  });
+
+  const winnerId  = routeToBuyer ? order.buyerId  : order.sellerId;
+  const loserId   = routeToBuyer ? order.sellerId : order.buyerId;
+  const winLabel  = routeToBuyer ? "refunded to buyer" : "released to seller";
+
+  await Promise.all([
+    db.notification.create({
+      data: {
+        userId: winnerId,
+        type: "order",
+        title: "Dispute Resolved — You Won",
+        body: `Admin resolved the dispute for "${order.gig.title}". Funds have been ${winLabel}.`,
+        link: `/orders/${orderId}`,
+      },
+    }),
+    db.notification.create({
+      data: {
+        userId: loserId,
+        type: "order",
+        title: "Dispute Resolved",
+        body: `Admin resolved the dispute for "${order.gig.title}". Funds were ${winLabel}.`,
+        link: `/orders/${orderId}`,
+      },
+    }),
+  ]);
+
+  revalidatePath(`/orders/${orderId}`);
+  revalidatePath("/admin/disputes");
+  revalidatePath("/admin/orders");
+  return { ok: true };
+}
+
 export async function deleteShowcasePost(postId: string) {
   await requireAdmin();
   await db.showcasePost.delete({ where: { id: postId } });
