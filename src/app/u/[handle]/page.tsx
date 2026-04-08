@@ -1,6 +1,6 @@
 import db from "@/lib/db";
 import { auth } from "@/auth";
-import { notFound, redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import Link from "next/link";
 import { Check, Shield, Clock, Star } from "lucide-react";
 import BannerUpload from "@/components/ui/BannerUpload";
@@ -55,14 +55,14 @@ function SectionCard({ children, style }: { children: React.ReactNode; style?: R
 
 export default async function PublicProfilePage({ params }: { params: Promise<{ handle: string }> }) {
   const { handle } = await params;
-  const normalizedHandle = handle.toLowerCase();
+  const normalizedHandle = handle.replace(/^@/, "").toLowerCase();
 
   let user: any = null;
   let session: any = null;
 
   try {
     [user, session] = await Promise.all([
-      db.user.findUnique({
+      db.user.findFirst({
         where: { twitterHandle: normalizedHandle },
         include: { gigs: { where: { status: "active" }, orderBy: { createdAt: "desc" } } },
       }),
@@ -70,12 +70,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     ]);
   } catch (e) { console.error(e); }
 
-  if (!user) notFound();
+  if (!user) {
+    return <div style={{ padding: "2rem", color: "var(--text-muted)" }}>Profile not found.</div>;
+  }
   if (!user.profileComplete) {
-    // Own profile not yet complete — send them to dashboard instead of 404
     const viewerIdEarly = (session?.user as any)?.userId as string | undefined;
     if (viewerIdEarly && viewerIdEarly === user.id) redirect("/dashboard");
-    notFound();
+    return <div style={{ padding: "2rem", color: "var(--text-muted)" }}>Profile not found.</div>;
   }
 
   const [reviews, completedOrdersCount, totalEarnedAgg] = await Promise.all([
