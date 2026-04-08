@@ -460,10 +460,29 @@ export default function NavProfileDropdown({
           }}
           onClick={(e) => e.stopPropagation()}
         >
-          {/* Drag handle */}
-          <div style={{ display: "flex", justifyContent: "center", padding: "12px 0 4px" }}>
+          {/* Handle + close row */}
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", padding: "10px 16px 0", position: "relative" }}>
             <div style={{ width: 36, height: 4, borderRadius: 99, background: "var(--card-border, #d1d5db)" }} />
+            <span style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", top: 18, fontSize: 13, fontWeight: 700, letterSpacing: "0.04em", color: "var(--foreground, #111)", whiteSpace: "nowrap" }}>
+              My Account
+            </span>
+            <button
+              onClick={onClose}
+              aria-label="Close"
+              style={{
+                position: "absolute", right: 16, top: 6,
+                width: 32, height: 32, borderRadius: "50%",
+                background: "var(--card-bg, #f3f4f6)",
+                border: "1px solid var(--card-border, #e5e7eb)",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                cursor: "pointer", color: "var(--text-muted, #6b7280)",
+                fontSize: 16, lineHeight: 1,
+              }}
+            >
+              ✕
+            </button>
           </div>
+          <div style={{ height: 28 }} />
           {content}
           {/* Bottom safe area spacing */}
           <div style={{ height: "env(safe-area-inset-bottom, 16px)", minHeight: 16 }} />
