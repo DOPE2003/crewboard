@@ -9,9 +9,10 @@ interface Props {
   userId: string;
   role: string;
   isOG: boolean;
+  canManage: boolean;
 }
 
-export function AdminUserActions({ userId, role, isOG }: Props) {
+export function AdminUserActions({ userId, role, isOG, canManage }: Props) {
   const [loading, setLoading]         = useState(false);
   const [pendingRole, setPendingRole] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -48,6 +49,12 @@ export function AdminUserActions({ userId, role, isOG }: Props) {
     USER:      { bg: "rgba(0,0,0,0.03)",        color: "var(--text-muted)", border: "var(--card-border)" },
   };
   const rc = roleColors[role] ?? roleColors.USER;
+
+  if (!canManage) {
+    return (
+      <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontStyle: "italic" }}>View only</span>
+    );
+  }
 
   return (
     <>

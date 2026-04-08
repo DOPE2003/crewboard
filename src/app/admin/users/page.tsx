@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireAdmin, isOwner, OWNER_HANDLE } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 import { AdminUserActions } from "./AdminUserActions";
@@ -10,6 +10,7 @@ export default async function AdminUsersPage({
 }) {
   await requireAdmin();
   const { q = "" } = await searchParams;
+  const owner = await isOwner();
 
   const users = await db.user.findMany({
     where: {
@@ -86,14 +87,16 @@ export default async function AdminUsersPage({
                     )}
                   </td>
                   <td style={{ padding: "1.25rem 1.5rem" }}>
-                    {user.role === "ADMIN" ? (
+                    {user.twitterHandle === OWNER_HANDLE ? (
+                      <span style={{ background: "linear-gradient(135deg,#14b8a6,#0f766e)", color: "#fff", padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 800 }}>OWNER</span>
+                    ) : user.role === "ADMIN" ? (
                       <span style={{ background: "#fef2f2", color: "#ef4444", padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 800, border: "1px solid rgba(239,68,68,0.2)" }}>ADMIN</span>
                     ) : (
                       <span style={{ background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--text-muted)", padding: "3px 10px", borderRadius: 6, fontSize: "0.65rem", fontWeight: 600 }}>USER</span>
                     )}
                   </td>
                   <td style={{ padding: "1.25rem 1.5rem", textAlign: "right" }}>
-                    <AdminUserActions userId={user.id} role={user.role} isOG={user.isOG} />
+                    <AdminUserActions userId={user.id} role={user.role} isOG={user.isOG} canManage={owner} />
                   </td>
                 </tr>
               ))}

@@ -1,16 +1,16 @@
 "use server";
 
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireAdmin, requireOwner, OWNER_HANDLE } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Role } from "@/lib/generated/prisma/client";
 
 export async function setUserRole(userId: string, newRole: Role) {
-  const admin = await requireAdmin();
-  if (admin.userId === userId && newRole !== Role.ADMIN)
-    throw new Error("You cannot revoke your own admin status.");
-  const user = await db.user.findUnique({ where: { id: userId }, select: { id: true } });
+  await requireOwner();
+  const user = await db.user.findUnique({ where: { id: userId }, select: { id: true, twitterHandle: true } });
   if (!user) throw new Error("User not found.");
+  // Cannot change the owner's own role
+  if (user.twitterHandle === OWNER_HANDLE) throw new Error("Cannot change the owner's role.");
   await db.user.update({ where: { id: userId }, data: { role: newRole } });
   revalidatePath("/admin/users");
   revalidatePath("/admin");
@@ -18,7 +18,7 @@ export async function setUserRole(userId: string, newRole: Role) {
 }
 
 export async function toggleOGBadge(userId: string, grant: boolean) {
-  await requireAdmin();
+  await requireOwner();
   await db.user.update({ where: { id: userId }, data: { isOG: grant } });
   if (grant) {
     await db.notification.create({
@@ -35,8 +35,9 @@ export async function toggleOGBadge(userId: string, grant: boolean) {
 }
 
 export async function deleteUser(userId: string) {
-  const admin = await requireAdmin();
-  if (admin.userId === userId) throw new Error("You cannot delete your own account.");
+  await requireOwner();
+  const target = await db.user.findUnique({ where: { id: userId }, select: { twitterHandle: true } });
+  if (target?.twitterHandle === OWNER_HANDLE) throw new Error("Cannot delete the owner account.");
   await db.user.delete({ where: { id: userId } });
   revalidatePath("/admin/users");
   revalidatePath("/admin");
