@@ -48,20 +48,37 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const rawImage = user.image ?? "";
         const image = rawImage ? rawImage.replace("_normal", "_400x400") : undefined;
 
-        await db.user.upsert({
-          where: { twitterId: account.providerAccountId },
-          update: {
-            name: user.name ?? undefined,
-            image: image ?? undefined,
-            ...(handle ? { twitterHandle: handle } : {}),
-          },
-          create: {
-            twitterId: account.providerAccountId,
-            twitterHandle: handle,
-            name: user.name,
-            image,
-          },
-        });
+        try {
+          await db.user.upsert({
+            where: { twitterId: account.providerAccountId },
+            update: {
+              name: user.name ?? undefined,
+              image: image ?? undefined,
+              ...(handle ? { twitterHandle: handle } : {}),
+            },
+            create: {
+              twitterId: account.providerAccountId,
+              twitterHandle: handle,
+              name: user.name,
+              image,
+            },
+          });
+        } catch (e: any) {
+          // P2002: twitterHandle already exists under a different/null twitterId.
+          // Link the twitterId to the existing user instead.
+          if (e?.code === "P2002" && handle) {
+            await db.user.update({
+              where: { twitterHandle: handle },
+              data: {
+                twitterId: account.providerAccountId,
+                name: user.name ?? undefined,
+                image: image ?? undefined,
+              },
+            });
+          } else {
+            throw e;
+          }
+        }
       }
       return true;
     },
