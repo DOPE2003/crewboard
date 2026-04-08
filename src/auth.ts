@@ -64,23 +64,17 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
           });
         } catch (e: any) {
-          console.error("[signIn] upsert failed — code:", e?.code, "meta:", JSON.stringify(e?.meta), "msg:", e?.message);
           // P2002: twitterHandle already exists under a different/null twitterId.
           // Link the twitterId to the existing user instead.
           if (e?.code === "P2002" && handle) {
-            try {
-              await db.user.update({
-                where: { twitterHandle: handle },
-                data: {
-                  twitterId: account.providerAccountId,
-                  name: user.name ?? undefined,
-                  image: image ?? undefined,
-                },
-              });
-            } catch (e2: any) {
-              console.error("[signIn] fallback update failed — code:", e2?.code, "msg:", e2?.message);
-              throw e2;
-            }
+            await db.user.update({
+              where: { twitterHandle: handle },
+              data: {
+                twitterId: account.providerAccountId,
+                name: user.name ?? undefined,
+                image: image ?? undefined,
+              },
+            });
           } else {
             throw e;
           }
