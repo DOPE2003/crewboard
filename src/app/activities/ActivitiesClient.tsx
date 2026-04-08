@@ -390,10 +390,10 @@ export default function ActivitiesClient({
 
   // ── Render ────────────────────────────────────────────────────────────────
   const tabLabel =
-    activeTab === 'all'           ? 'All Activities' :
-    activeTab === 'messages'      ? 'Messages' :
-    activeTab === 'orders'        ? 'Orders' :
-    activeTab === 'notifications' ? 'Notifications' : 'Reviews'
+    activeTab === 'all'      ? 'All Activities' :
+    activeTab === 'messages' ? 'Messages' :
+    activeTab === 'orders'   ? 'Orders' :
+                               'Reviews'
 
   return (
     <div style={{ minHeight: '100vh', background: 'var(--background)' }}>
@@ -521,8 +521,7 @@ export default function ActivitiesClient({
               search              ? 'No results match your search.' :
               activeTab === 'messages'      ? 'Your conversations will appear here.' :
               activeTab === 'orders'        ? 'Your orders will appear here.' :
-              activeTab === 'reviews'       ? 'Reviews you receive will appear here.' :
-              activeTab === 'notifications' ? 'Notifications will appear here.' :
+              activeTab === 'reviews' ? 'Reviews you receive will appear here.' :
               'No activity yet.'
             } />
           ) : (
