@@ -347,8 +347,13 @@ export default function MessageThread({
         prev.map((m) => (m.id === optimisticMsg.id ? { ...confirmed, replyTo: confirmed.replyTo ?? null } : m))
       );
       setSendError(null);
-      setShowPaymentPopup(true);
-      setTimeout(() => setShowPaymentPopup(false), 5000);
+      // Show safety banner only for image attachments or wallet addresses
+      const isImage = text.startsWith(FILE_PREFIX) && (() => { try { return JSON.parse(text.slice(FILE_PREFIX.length)).type?.startsWith("image/"); } catch { return false; } })();
+      const hasWalletAddress = /\b[1-9A-HJ-NP-Za-km-z]{32,44}\b/.test(text) || /\b0x[a-fA-F0-9]{40}\b/.test(text);
+      if (isImage || hasWalletAddress) {
+        setShowPaymentPopup(true);
+        setTimeout(() => setShowPaymentPopup(false), 5000);
+      }
       router.refresh();
     } catch (err: any) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));
