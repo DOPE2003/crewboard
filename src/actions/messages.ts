@@ -242,7 +242,19 @@ async function sendAutoMessage(
         userId: recipientId,
         type: "message",
         title: emailType === "gig" ? "Your service is wanted" : "New hire request",
-        body: `${senderName}: ${body.slice(0, 60)}`,
+        body: (() => {
+          let preview = body
+          if (preview.startsWith("__GIGREQUEST__:")) {
+            try { preview = "Service request: " + JSON.parse(preview.slice("__GIGREQUEST__:".length)).title }
+            catch { preview = "Service Request" }
+          } else if (preview.startsWith("__FILE__:")) {
+            try {
+              const f = JSON.parse(preview.slice("__FILE__:".length))
+              preview = f.type?.startsWith("image/") ? "📷 Image" : f.type?.startsWith("video/") ? "🎥 Video" : `📎 ${f.name}`
+            } catch { preview = "📎 File" }
+          }
+          return `${senderName}: ${preview.slice(0, 80)}`
+        })(),
         link: `/messages/${conversationId}`,
       },
     });

@@ -322,7 +322,7 @@ export default function ActivitiesClient({
             </div>
             <span className="act-time">{fmtTime(n.createdAt)}</span>
           </div>
-          <p className="act-body" style={{ lineHeight: 1.55 }}>{n.body}</p>
+          <p className="act-body" style={{ lineHeight: 1.55 }}>{previewLastMessage(n.body)}</p>
           <div className="act-chip-mobile"><TypeChip type={n.type} small /></div>
         </div>
       </ActivityCard>
