@@ -13,9 +13,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const { role, skills, bio, availability } = await req.json();
+  const { role, userTitle: rawUserTitle, skills, bio, availability } = await req.json();
+  // Accept either `userTitle` (new) or `role` (legacy field name from the form)
+  const userTitle = rawUserTitle ?? role;
 
-  if (!role) {
+  if (!userTitle) {
     return NextResponse.json({ error: "Role is required." }, { status: 400 });
   }
   if (bio && bio.length > 200) {
@@ -35,7 +37,7 @@ export async function POST(req: NextRequest) {
   await db.user.update({
     where: { id: userId },
     data: {
-      role,
+      userTitle,
       skills: Array.isArray(skills) ? skills : [],
       bio: bio ?? "",
       availability: availability ?? "available",
