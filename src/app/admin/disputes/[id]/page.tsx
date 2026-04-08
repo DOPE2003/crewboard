@@ -25,12 +25,12 @@ export default async function AdminDisputeDetailPage({ params }: { params: Promi
     select: { id: true },
   });
 
-  const messages = conversation ? await db.message.findMany({
+  const messages = conversation ? (await db.message.findMany({
     where: { conversationId: conversation.id },
     orderBy: { createdAt: "asc" },
-    take: 30,
+    take: 100,
     include: { sender: { select: { twitterHandle: true, name: true } } },
-  }) : [];
+  })).filter((m) => !m.body.startsWith("__GIGREQUEST__")) : [];
 
   const CARD = {
     background: "var(--card-bg)",
