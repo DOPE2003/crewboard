@@ -138,7 +138,7 @@ export default async function AdminDisputeDetailPage({ params }: { params: Promi
                       border: `1px solid ${isBuyer ? "rgba(20,184,166,0.2)" : "var(--card-border)"}`,
                       color: "var(--foreground)",
                     }}>
-                      {msg.content}
+                      {msg.body}
                     </div>
                   </div>
                 );
