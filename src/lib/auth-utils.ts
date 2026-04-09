@@ -10,18 +10,21 @@ export type StaffRole = "owner" | "admin" | "moderator";
 
 export async function getStaffRole(): Promise<StaffRole | null> {
   const session = await auth();
-  const handle = (session?.user as any)?.twitterHandle as string | undefined;
+  const jwtHandle = (session?.user as any)?.twitterHandle as string | undefined;
   const userId = (session?.user as any)?.userId as string | undefined;
 
-  // Owner check uses JWT handle directly (same source as isOwner())
-  if (handle?.toLowerCase() === OWNER_HANDLE.toLowerCase()) return "owner";
+  // Fast path: JWT already has twitterHandle
+  if (jwtHandle?.toLowerCase() === OWNER_HANDLE.toLowerCase()) return "owner";
 
   if (!userId) return null;
+
+  // DB lookup — also checks twitterHandle to handle old JWTs that don't carry it
   const dbUser = await db.user.findUnique({
     where: { id: userId },
-    select: { role: true },
+    select: { role: true, twitterHandle: true },
   });
   if (!dbUser) return null;
+  if (dbUser.twitterHandle?.toLowerCase() === OWNER_HANDLE.toLowerCase()) return "owner";
   if (dbUser.role === "ADMIN") return "admin";
   if (dbUser.role === "MODERATOR") return "moderator";
   return null;
@@ -43,11 +46,18 @@ export async function requireAdmin() {
 
 export async function requireOwner() {
   const session = await auth();
-  const handle = (session?.user as any)?.twitterHandle as string | undefined;
-  if (!handle || handle.toLowerCase() !== OWNER_HANDLE.toLowerCase()) {
-    throw new Error("Only the platform owner can perform this action.");
+  const jwtHandle = (session?.user as any)?.twitterHandle as string | undefined;
+
+  // Fast path via JWT
+  if (jwtHandle?.toLowerCase() === OWNER_HANDLE.toLowerCase()) return session!.user;
+
+  // Fallback: check DB for stale JWTs
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (userId) {
+    const dbUser = await db.user.findUnique({ where: { id: userId }, select: { twitterHandle: true } });
+    if (dbUser?.twitterHandle?.toLowerCase() === OWNER_HANDLE.toLowerCase()) return session!.user;
   }
-  return session!.user;
+  throw new Error("Only the platform owner can perform this action.");
 }
 
 export async function isOwner(): Promise<boolean> {
