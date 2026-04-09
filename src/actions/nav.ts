@@ -61,6 +61,7 @@ export async function getNavDropdownData() {
     walletAddress: user.walletAddress,
     isOG: user.isOG,
     role: user.role,
+    twitterHandle: user.twitterHandle,
     createdAt: user.createdAt.toISOString(),
     profileComplete: user.profileComplete,
     profileCompletion,

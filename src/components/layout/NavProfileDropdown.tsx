@@ -252,11 +252,14 @@ export default function NavProfileDropdown({
               {twitterHandle ? `@${twitterHandle}` : ""}{memberSince ? ` · ${memberSince}` : ""}
             </div>
             <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
-              {role && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>{role.toUpperCase()}</span>}
               {extra?.isOG && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>★ OG</span>}
-              {twitterHandle === "saad190914"
+              {extra?.twitterHandle === "saad190914"
                 ? <span style={{ background: "linear-gradient(135deg,rgba(20,184,166,0.6),rgba(15,118,110,0.6))", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>OWNER</span>
-                : extra?.role === "ADMIN" && <span style={{ background: "rgba(239,68,68,0.35)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>ADMIN</span>
+                : extra?.role === "ADMIN"
+                  ? <span style={{ background: "rgba(239,68,68,0.35)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>ADMIN</span>
+                  : extra?.role === "MODERATOR"
+                    ? <span style={{ background: "rgba(139,92,246,0.45)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>MOD</span>
+                    : null
               }
               {twitterHandle && (
                 <Link href={`/u/${twitterHandle}`} onClick={onClose} style={{ background: "rgba(255,255,255,0.18)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700, textDecoration: "none", marginLeft: "auto" }}>
@@ -301,20 +304,27 @@ export default function NavProfileDropdown({
       {/* ── BODY ── */}
       <div style={{ padding: "10px 0 12px" }}>
 
-        {/* Admin shortcut */}
-        {extra?.role === "ADMIN" && (
-          <div style={{ margin: "0 12px 8px" }}>
-            <Link href="/admin" onClick={onClose} style={{
-              display: "flex", alignItems: "center", gap: 10, textDecoration: "none",
-              background: "linear-gradient(135deg, rgba(239,68,68,0.1), rgba(239,68,68,0.05))",
-              border: "1px solid rgba(239,68,68,0.25)", borderRadius: 12, padding: "10px 14px",
-            }}>
-              <span style={{ color: "#ef4444" }}>{I.admin}</span>
-              <span style={{ flex: 1, fontSize: 14, fontWeight: 700, color: "#ef4444" }}>Admin Dashboard</span>
-              <span style={{ fontSize: 9, fontWeight: 700, background: "#ef4444", color: "white", padding: "2px 7px", borderRadius: 99 }}>STAFF</span>
-            </Link>
-          </div>
-        )}
+        {/* Staff dashboard shortcut */}
+        {(extra?.twitterHandle === "saad190914" || extra?.role === "ADMIN" || extra?.role === "MODERATOR") && (() => {
+          const isOwner = extra?.twitterHandle === "saad190914";
+          const isMod   = !isOwner && extra?.role === "MODERATOR";
+          const label = isOwner ? "Owner Dashboard" : isMod ? "Moderator Dashboard" : "Admin Dashboard";
+          const color = isOwner ? "#0f766e" : isMod ? "#7c3aed" : "#ef4444";
+          const bg    = isOwner ? "linear-gradient(135deg,rgba(20,184,166,0.12),rgba(20,184,166,0.06))" : isMod ? "linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.05))" : "linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.05))";
+          const badge = isOwner ? "OWNER" : isMod ? "MOD" : "STAFF";
+          return (
+            <div style={{ margin: "0 12px 8px" }}>
+              <Link href="/admin" onClick={onClose} style={{
+                display: "flex", alignItems: "center", gap: 10, textDecoration: "none",
+                background: bg, border: `1px solid ${color}40`, borderRadius: 12, padding: "10px 14px",
+              }}>
+                <span style={{ color }}>{I.admin}</span>
+                <span style={{ flex: 1, fontSize: 14, fontWeight: 700, color }}>{label}</span>
+                <span style={{ fontSize: 9, fontWeight: 700, background: color, color: "white", padding: "2px 7px", borderRadius: 99 }}>{badge}</span>
+              </Link>
+            </div>
+          );
+        })()}
 
         {/* WALLET & PAYMENTS */}
         <SectionLabel icon={I.wallet}>Wallet & Payments</SectionLabel>
