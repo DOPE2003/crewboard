@@ -166,31 +166,68 @@ export default function BillingClient({
       setTransferError("Wallet not connected. Connect via Dashboard first.");
       return;
     }
-    if (!transferAddress.trim() || !transferAmount) return;
+    const addr = transferAddress.trim();
+    const amt  = parseFloat(transferAmount);
+    if (!addr || isNaN(amt) || amt <= 0) return;
+
     setIsTransferring(true);
     setTransferError(null);
     setTransferSuccess(false);
     try {
-      const { PublicKey, Transaction } = await import("@solana/web3.js");
-      const { createTransferInstruction, getAssociatedTokenAddress, TOKEN_PROGRAM_ID } = await import("@solana/spl-token");
-      const USDC_MINT = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
-      const recipient = new PublicKey(transferAddress.trim());
+      const { PublicKey, Transaction }                 = await import("@solana/web3.js");
+      const {
+        createTransferInstruction,
+        createAssociatedTokenAccountInstruction,
+        getAssociatedTokenAddress,
+        getAccount,
+        TOKEN_PROGRAM_ID,
+        ASSOCIATED_TOKEN_PROGRAM_ID,
+      } = await import("@solana/spl-token");
+
+      // Validate recipient address
+      let recipient: InstanceType<typeof PublicKey>;
+      try { recipient = new PublicKey(addr); }
+      catch { setTransferError("Invalid Solana wallet address."); return; }
+
+      const USDC_MINT    = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
       const senderATA    = await getAssociatedTokenAddress(USDC_MINT, publicKey);
       const recipientATA = await getAssociatedTokenAddress(USDC_MINT, recipient);
-      const amount = Math.round(parseFloat(transferAmount) * 1_000_000);
-      const ix = createTransferInstruction(senderATA, recipientATA, publicKey, amount, [], TOKEN_PROGRAM_ID);
-      const tx = new Transaction().add(ix);
+      const amount       = Math.round(amt * 1_000_000); // USDC has 6 decimals
+
+      const tx = new Transaction();
+
+      // Create recipient ATA if it doesn't exist yet
+      try {
+        await getAccount(connection, recipientATA);
+      } catch {
+        tx.add(createAssociatedTokenAccountInstruction(
+          publicKey, recipientATA, recipient, USDC_MINT,
+          TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID,
+        ));
+      }
+
+      tx.add(createTransferInstruction(senderATA, recipientATA, publicKey, amount, [], TOKEN_PROGRAM_ID));
+
       const { blockhash } = await connection.getLatestBlockhash();
       tx.recentBlockhash = blockhash;
       tx.feePayer = publicKey;
+
       const signed = await signTransaction(tx);
       const sig    = await connection.sendRawTransaction(signed.serialize());
-      await connection.confirmTransaction(sig);
+      await connection.confirmTransaction(sig, "confirmed");
+
       setTransferSuccess(true);
       setTransferAmount("");
       setTransferAddress("");
     } catch (err: unknown) {
-      setTransferError((err as Error)?.message ?? "Transfer failed. Check address and balance.");
+      const msg = (err as Error)?.message ?? "";
+      if (msg.includes("User rejected")) {
+        setTransferError("Transaction cancelled.");
+      } else if (msg.includes("insufficient")) {
+        setTransferError("Insufficient USDC balance.");
+      } else {
+        setTransferError(msg || "Transfer failed. Check address and balance.");
+      }
     } finally {
       setIsTransferring(false);
     }
@@ -495,8 +532,18 @@ export default function BillingClient({
                           </p>
                           <span style={{
                             fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99,
-                            background: order.status === "completed" ? "#dcfce7" : "#fef3c7",
-                            color: order.status === "completed" ? "#16a34a" : "#d97706",
+                            background:
+                              order.status === "completed"  ? "#dcfce7" :
+                              order.status === "disputed"   ? "#fef2f2" :
+                              order.status === "cancelled"  ? "#f3f4f6" :
+                              order.status === "funded"     ? "#f0fdfa" :
+                              "#fef3c7",
+                            color:
+                              order.status === "completed"  ? "#16a34a" :
+                              order.status === "disputed"   ? "#ef4444" :
+                              order.status === "cancelled"  ? "#6b7280" :
+                              order.status === "funded"     ? "#0d9488" :
+                              "#d97706",
                           }}>
                             {order.status.toUpperCase()}
                           </span>

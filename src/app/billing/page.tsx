@@ -21,7 +21,7 @@ export default async function BillingPage() {
       select: { amount: true },
     }).catch(() => []),
     db.order.findMany({
-      where: { sellerId: userId, status: { in: ["pending", "accepted", "funded", "delivered"] } },
+      where: { sellerId: userId, status: { in: ["pending", "accepted", "funded", "in_progress", "delivered"] } },
       select: { amount: true },
     }).catch(() => []),
     db.order.findMany({
