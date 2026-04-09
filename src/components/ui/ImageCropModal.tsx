@@ -11,15 +11,16 @@ interface Props {
   outputW: number;
   outputH: number;
   label: string;
+  noZoom?: boolean;
   onConfirm: (dataUrl: string) => void;
   onCancel: () => void;
 }
 
 export default function ImageCropModal({
-  src, circular, previewW, previewH, outputW, outputH, label, onConfirm, onCancel,
+  src, circular, previewW, previewH, outputW, outputH, label, noZoom = false, onConfirm, onCancel,
 }: Props) {
   const { containerRef, state, loadImage, setZoom, onMouseDown, getCrop } =
-    useImageCrop(previewW, previewH);
+    useImageCrop(previewW, previewH, noZoom);
 
   // Load image when src changes
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,35 +96,35 @@ export default function ImageCropModal({
           )}
         </div>
 
-        {/* Zoom slider */}
-        <div className="flex items-center gap-2.5">
-          {/* minus icon */}
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            <line x1="8" y1="11" x2="14" y2="11"/>
-          </svg>
-          <input
-            type="range"
-            min={state.minZoom}
-            max={state.minZoom * 4}
-            step={state.minZoom * 0.005}
-            value={state.zoom}
-            onChange={e => setZoom(parseFloat(e.target.value))}
-            disabled={!state.ready}
-            className="flex-1 h-1 accent-teal-400"
-          />
-          {/* plus icon */}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round">
-            <circle cx="11" cy="11" r="8"/>
-            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            <line x1="11" y1="8" x2="11" y2="14"/>
-            <line x1="8" y1="11" x2="14" y2="11"/>
-          </svg>
-        </div>
+        {/* Zoom slider — hidden for banner (noZoom) */}
+        {!noZoom && (
+          <div className="flex items-center gap-2.5">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+            <input
+              type="range"
+              min={state.minZoom}
+              max={state.minZoom * 4}
+              step={state.minZoom * 0.005}
+              value={state.zoom}
+              onChange={e => setZoom(parseFloat(e.target.value))}
+              disabled={!state.ready}
+              className="flex-1 h-1 accent-teal-400"
+            />
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="2.5" strokeLinecap="round">
+              <circle cx="11" cy="11" r="8"/>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+              <line x1="11" y1="8" x2="11" y2="14"/>
+              <line x1="8" y1="11" x2="14" y2="11"/>
+            </svg>
+          </div>
+        )}
 
         <p className="text-[11px] text-slate-400 text-center -mt-2 m-0">
-          Drag to reposition · Scroll or slide to zoom
+          {noZoom ? "Drag to reposition" : "Drag to reposition · Scroll or slide to zoom"}
         </p>
 
         {/* Buttons */}

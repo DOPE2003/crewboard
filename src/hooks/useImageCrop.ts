@@ -22,7 +22,7 @@ const INITIAL: CropState = {
   naturalH: 0,
 };
 
-export function useImageCrop(previewW: number, previewH: number) {
+export function useImageCrop(previewW: number, previewH: number, noZoom = false) {
   const [state, setState] = useState<CropState>(INITIAL);
 
   // Mirror of state for use inside event handlers (avoids stale closures)
@@ -186,6 +186,7 @@ export function useImageCrop(previewW: number, previewH: number) {
 
     function onWheel(e: WheelEvent) {
       e.preventDefault();
+      if (noZoom) return; // banner: drag-only, no zoom
       const { zoom, minZoom, offset } = S.current;
       const newZ = Math.max(minZoom, Math.min(minZoom * 5, zoom * (1 - e.deltaY * 0.001)));
       const next = clamp(offset.x, offset.y, newZ);
@@ -204,11 +205,12 @@ export function useImageCrop(previewW: number, previewH: number) {
       el.removeEventListener("wheel", onWheel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state.ready, clamp]);
+  }, [state.ready, clamp, noZoom]);
 
   // ── Zoom via slider ───────────────────────────────────────────────────────
 
   function setZoom(newZ: number) {
+    if (noZoom) return;
     const next = clamp(S.current.offset.x, S.current.offset.y, newZ);
     setState(prev => ({ ...prev, zoom: newZ, offset: next }));
   }

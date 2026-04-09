@@ -1,53 +1,27 @@
 "use client";
 
-import { useRef, useState, useEffect } from "react";
-import { Camera, X, GripHorizontal } from "lucide-react";
-import { saveBannerImage, removeBannerImage, saveBannerHeight } from "@/actions/profile";
+import { useRef, useState } from "react";
+import { Camera, X } from "lucide-react";
+import { saveBannerImage, removeBannerImage } from "@/actions/profile";
 import ImageCropModal from "./ImageCropModal";
+
+// Twitter-style banner: 3:1 aspect ratio, 1500×500 output
+const BANNER_ASPECT = 3; // width / height
+const OUTPUT_W = 1500;
+const OUTPUT_H = 500;
+// Crop modal preview: fits inside the modal nicely
+const PREVIEW_W = 450;
+const PREVIEW_H = 150; // 450 / 3
 
 interface Props {
   currentBanner: string | null;
-  currentHeight?: number;
 }
 
-export default function BannerUpload({ currentBanner, currentHeight = 140 }: Props) {
+export default function BannerUpload({ currentBanner }: Props) {
   const [preview, setPreview] = useState(currentBanner);
   const [uploading, setUploading] = useState(false);
-  const [height, setHeight] = useState(currentHeight);
-  const [isResizing, setIsBResizing] = useState(false);
   const [cropSrc, setCropSrc] = useState<string | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
-  const resizeRef = useRef<HTMLDivElement>(null);
-
-  // Drag-to-resize logic
-  useEffect(() => {
-    if (!isResizing) return;
-
-    function handleMouseMove(e: MouseEvent) {
-      const bannerWrap = document.querySelector(".banner-upload-wrap") as HTMLElement;
-      if (!bannerWrap) return;
-      
-      const rect = bannerWrap.getBoundingClientRect();
-      const newHeight = Math.min(Math.max(e.clientY - rect.top, 100), 400);
-      setHeight(newHeight);
-    }
-
-    async function handleMouseUp() {
-      setIsBResizing(false);
-      try {
-        await saveBannerHeight(Math.round(height));
-      } catch (err) {
-        console.error("Failed to save height:", err);
-      }
-    }
-
-    window.addEventListener("mousemove", handleMouseMove);
-    window.addEventListener("mouseup", handleMouseUp);
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mouseup", handleMouseUp);
-    };
-  }, [isResizing, height]);
 
   function handleFileSelect(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -83,11 +57,12 @@ export default function BannerUpload({ currentBanner, currentHeight = 140 }: Pro
 
   return (
     <>
+      {/* Fixed 3:1 aspect ratio banner — same as Twitter/X */}
       <div
         className="profile-cover-banner banner-upload-wrap"
         style={{
-          width: "100%", 
-          height: height,
+          width: "100%",
+          aspectRatio: `${BANNER_ASPECT} / 1`,
           position: "relative",
           borderRadius: "16px 16px 0 0",
           overflow: "hidden",
@@ -96,8 +71,7 @@ export default function BannerUpload({ currentBanner, currentHeight = 140 }: Pro
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           opacity: uploading ? 0.7 : 1,
-          transition: isResizing ? "none" : "opacity 0.2s, height 0.1s",
-          cursor: isResizing ? "row-resize" : "default"
+          transition: "opacity 0.2s",
         }}
       >
         {uploading && (
@@ -107,7 +81,7 @@ export default function BannerUpload({ currentBanner, currentHeight = 140 }: Pro
         )}
 
         {/* Remove button */}
-        {preview && !isResizing && (
+        {preview && (
           <button
             type="button"
             onClick={async () => {
@@ -121,7 +95,6 @@ export default function BannerUpload({ currentBanner, currentHeight = 140 }: Pro
             }}
             disabled={uploading}
             title="Remove banner"
-            className="banner-remove-btn"
             style={{
               position: "absolute", bottom: 12, right: 58,
               width: 34, height: 34, borderRadius: "50%",
@@ -135,56 +108,36 @@ export default function BannerUpload({ currentBanner, currentHeight = 140 }: Pro
         )}
 
         {/* Camera button */}
-        {!isResizing && (
-          <button
-            type="button"
-            onClick={() => fileRef.current?.click()}
-            disabled={uploading}
-            title="Change banner"
-            style={{
-              position: "absolute", bottom: 12, right: 16,
-              width: 34, height: 34, borderRadius: "50%",
-              background: "#fff", border: "1px solid #e5e7eb",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              cursor: uploading ? "wait" : "pointer", zIndex: 10,
-            }}
-          >
-            <Camera size={16} color="#6b7280" />
-          </button>
-        )}
-
-        {/* Resize Handle */}
-        <div 
-          onMouseDown={() => setIsBResizing(true)}
+        <button
+          type="button"
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          title="Change banner"
           style={{
-            position: "absolute",
-            bottom: 0, left: 0, right: 0,
-            height: "8px",
-            background: isResizing ? "#14B8A6" : "rgba(0,0,0,0.1)",
-            cursor: "row-resize",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            zIndex: 15,
-            transition: "background 0.2s"
+            position: "absolute", bottom: 12, right: 16,
+            width: 34, height: 34, borderRadius: "50%",
+            background: "#fff", border: "1px solid #e5e7eb",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: uploading ? "wait" : "pointer", zIndex: 10,
           }}
         >
-          <div style={{ width: "40px", height: "3px", borderRadius: "2px", background: "rgba(255,255,255,0.5)" }} />
-        </div>
+          <Camera size={16} color="#6b7280" />
+        </button>
 
         <input ref={fileRef} type="file" accept="image/*" onChange={handleFileSelect} style={{ display: "none" }} />
       </div>
 
-      {/* Crop modal */}
+      {/* Crop modal — noZoom: drag-to-reposition only, fixed 3:1 */}
       {cropSrc && (
         <ImageCropModal
           src={cropSrc}
           circular={false}
-          previewW={400}
-          previewH={125}
-          outputW={1200}
-          outputH={375}
+          previewW={PREVIEW_W}
+          previewH={PREVIEW_H}
+          outputW={OUTPUT_W}
+          outputH={OUTPUT_H}
           label="banner"
+          noZoom={true}
           onConfirm={handleCropConfirm}
           onCancel={handleCropCancel}
         />
