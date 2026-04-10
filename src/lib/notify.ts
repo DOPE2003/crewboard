@@ -1,7 +1,7 @@
 import db from "@/lib/db";
 import { sendNotificationEmail } from "@/lib/email";
 
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.xyz";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
 
 /**
  * Creates a DB notification AND fires an email to the user (if they have one).

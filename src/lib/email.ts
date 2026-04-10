@@ -1,7 +1,7 @@
 import { Resend } from "resend";
 
 const FROM = process.env.EMAIL_FROM ?? "Crewboard <onboarding@resend.dev>";
-const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.xyz";
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
 
 function getResend() {
   if (!process.env.RESEND_API_KEY) return null;
@@ -16,7 +16,7 @@ function shell(content: string) {
   </div>
   <div style="padding:32px 28px;">${content}</div>
   <div style="padding:16px 28px;border-top:1px solid #e2e8f0;font-size:12px;color:#94a3b8;">
-    You're receiving this because you have an account on <a href="${BASE_URL}" style="color:#2dd4bf;text-decoration:none;">crewboard.xyz</a>
+    You're receiving this because you have an account on <a href="${BASE_URL}" style="color:#2dd4bf;text-decoration:none;">crewboard.fun</a>
   </div>
 </div></body></html>`;
 }
