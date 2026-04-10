@@ -156,10 +156,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     <main style={{ minHeight: "100vh", background: "var(--background)", paddingTop: "5rem", paddingBottom: "4rem" }}>
       <div style={{ maxWidth: 1020, margin: "0 auto", padding: "0 1.25rem" }}>
 
-        {/* Email notification banner */}
-        {isOwnProfile && !user.email && (
+        {/* Email section — always shown to profile owner */}
+        {isOwnProfile && (
           <div style={{ marginBottom: "1rem" }}>
-            <AddEmailForm />
+            <AddEmailForm currentEmail={user.email ?? null} />
           </div>
         )}
 
