@@ -177,12 +177,13 @@ export default async function Navbar() {
         <Link href="/" className="flex items-center gap-3 shrink-0 no-underline">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="shrink-0" style={{ width: 36, height: 36 }}>
             <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--text-1)" strokeWidth="2.5" strokeLinejoin="round" />
-            <line x1="24" y1="15" x2="16" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
-            <line x1="24" y1="15" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
-            <line x1="16" y1="32" x2="32" y2="32" stroke="var(--text-1)" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="24" cy="15" r="3.5" fill="var(--text-1)"/>
-            <circle cx="16" cy="32" r="3.5" fill="var(--text-1)"/>
-            <circle cx="32" cy="32" r="3.5" fill="var(--text-1)"/>
+            {/* Equilateral triangle — circumradius 11, centered at (24,22) */}
+            <line x1="24" y1="11" x2="14.5" y2="27.5" stroke="var(--text-1)" strokeWidth="2.2" strokeLinecap="round"/>
+            <line x1="24" y1="11" x2="33.5" y2="27.5" stroke="var(--text-1)" strokeWidth="2.2" strokeLinecap="round"/>
+            <line x1="14.5" y1="27.5" x2="33.5" y2="27.5" stroke="var(--text-1)" strokeWidth="2.2" strokeLinecap="round"/>
+            <circle cx="24" cy="11" r="3.8" fill="var(--text-1)"/>
+            <circle cx="14.5" cy="27.5" r="3.8" fill="var(--text-1)"/>
+            <circle cx="33.5" cy="27.5" r="3.8" fill="var(--text-1)"/>
           </svg>
           <div className="flex flex-col leading-none gap-[3px]">
             <span className="nav-wordmark" style={{ lineHeight: 1 }}>

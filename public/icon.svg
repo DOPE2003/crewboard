@@ -2,12 +2,12 @@
   <!-- Hexagon -->
   <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
     fill="none" stroke="#2DD4BF" stroke-width="6" stroke-linejoin="round"/>
-  <!-- Triangle edges -->
-  <line x1="72" y1="54" x2="52" y2="94" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round"/>
-  <line x1="72" y1="54" x2="92" y2="94" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round"/>
-  <line x1="52" y1="94" x2="92" y2="94" stroke="#2DD4BF" stroke-width="5" stroke-linecap="round"/>
+  <!-- Equilateral triangle — circumradius 30, centered at (72,80) -->
+  <line x1="72" y1="50" x2="46" y2="95" stroke="#2DD4BF" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="72" y1="50" x2="98" y2="95" stroke="#2DD4BF" stroke-width="5.5" stroke-linecap="round"/>
+  <line x1="46" y1="95" x2="98" y2="95" stroke="#2DD4BF" stroke-width="5.5" stroke-linecap="round"/>
   <!-- Nodes -->
-  <circle cx="72" cy="54" r="8" fill="#2DD4BF"/>
-  <circle cx="52" cy="94" r="8" fill="#2DD4BF"/>
-  <circle cx="92" cy="94" r="8" fill="#2DD4BF"/>
+  <circle cx="72" cy="50" r="10" fill="#2DD4BF"/>
+  <circle cx="46" cy="95" r="10" fill="#2DD4BF"/>
+  <circle cx="98" cy="95" r="10" fill="#2DD4BF"/>
 </svg>
