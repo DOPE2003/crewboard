@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 
-const FROM = "Crewboard <noreply@crewboard.xyz>";
+const FROM = process.env.EMAIL_FROM ?? "Crewboard <onboarding@resend.dev>";
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.xyz";
 
 function getResend() {
