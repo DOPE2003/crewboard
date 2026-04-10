@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth-utils";
+import { notifyUser } from "@/lib/notify";
 
 export async function submitReview(orderId: string, revieweeId: string, rating: number, body: string) {
   const reviewerId = await requireUserId();
@@ -27,14 +28,12 @@ export async function submitReview(orderId: string, revieweeId: string, rating: 
   const reviewer = await db.user.findUnique({ where: { id: reviewerId }, select: { name: true, twitterHandle: true } });
   const reviewerName = reviewer?.name ?? reviewer?.twitterHandle ?? "Someone";
   const stars = "★".repeat(rating) + "☆".repeat(5 - rating);
-  await db.notification.create({
-    data: {
-      userId: revieweeId,
-      type: "review",
-      title: "New Review",
-      body: `${reviewerName} left you a ${stars} review for "${order.gig.title}"`,
-      link: `/orders/${orderId}`,
-    },
+  await notifyUser({
+    userId: revieweeId,
+    type: "review",
+    title: "New Review",
+    body: `${reviewerName} left you a ${stars} review for "${order.gig.title}"`,
+    link: `/orders/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);

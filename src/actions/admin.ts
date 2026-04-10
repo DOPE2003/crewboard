@@ -4,6 +4,7 @@ import { requireAdmin, requireOwner, OWNER_HANDLE } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Role } from "@/lib/generated/prisma/client";
+import { notifyUser } from "@/lib/notify";
 
 export async function setUserRole(userId: string, newRole: Role) {
   await requireOwner();
@@ -21,13 +22,11 @@ export async function toggleOGBadge(userId: string, grant: boolean) {
   await requireOwner();
   await db.user.update({ where: { id: userId }, data: { isOG: grant } });
   if (grant) {
-    await db.notification.create({
-      data: {
-        userId,
-        type: "og_badge",
-        title: "You earned the OG Badge",
-        body: "You're one of the founding builders on Crewboard. Your OG badge is now live on your profile.",
-      },
+    await notifyUser({
+      userId,
+      type: "og_badge",
+      title: "You earned the OG Badge",
+      body: "You're one of the founding builders on Crewboard. Your OG badge is now live on your profile.",
     });
   }
   revalidatePath("/admin/users");
@@ -88,23 +87,19 @@ export async function syncDisputeResolved(
   const winLabel  = routeToBuyer ? "refunded to buyer" : "released to seller";
 
   await Promise.all([
-    db.notification.create({
-      data: {
-        userId: winnerId,
-        type: "order",
-        title: "Dispute Resolved — You Won",
-        body: `Admin resolved the dispute for "${order.gig.title}". Funds have been ${winLabel}.`,
-        link: `/orders/${orderId}`,
-      },
+    notifyUser({
+      userId: winnerId,
+      type: "order",
+      title: "Dispute Resolved — You Won",
+      body: `Admin resolved the dispute for "${order.gig.title}". Funds have been ${winLabel}.`,
+      link: `/orders/${orderId}`,
     }),
-    db.notification.create({
-      data: {
-        userId: loserId,
-        type: "order",
-        title: "Dispute Resolved",
-        body: `Admin resolved the dispute for "${order.gig.title}". Funds were ${winLabel}.`,
-        link: `/orders/${orderId}`,
-      },
+    notifyUser({
+      userId: loserId,
+      type: "order",
+      title: "Dispute Resolved",
+      body: `Admin resolved the dispute for "${order.gig.title}". Funds were ${winLabel}.`,
+      link: `/orders/${orderId}`,
     }),
   ]);
 

@@ -4,6 +4,7 @@ import { auth } from "@/auth";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth-utils";
+import { notifyUser } from "@/lib/notify";
 
 export async function createOrder(gigId: string, sellerId: string) {
   const buyerId = await requireUserId();
@@ -20,14 +21,12 @@ export async function createOrder(gigId: string, sellerId: string) {
   // Notify seller
   const buyer = await db.user.findUnique({ where: { id: buyerId }, select: { name: true, twitterHandle: true } });
   const buyerName = buyer?.name ?? buyer?.twitterHandle ?? "Someone";
-  await db.notification.create({
-    data: {
-      userId: sellerId,
-      type: "order",
-      title: "New Order",
-      body: `${buyerName} placed an order for "${gig.title}"`,
-      link: `/orders/${order.id}`,
-    },
+  await notifyUser({
+    userId: sellerId,
+    type: "order",
+    title: "New Order",
+    body: `${buyerName} placed an order for "${gig.title}"`,
+    link: `/orders/${order.id}`,
   });
 
   revalidatePath("/orders");
@@ -77,14 +76,12 @@ export async function updateOrderStatus(orderId: string, status: string) {
     disputed: "opened a dispute",
   };
 
-  await db.notification.create({
-    data: {
-      userId: notifyId,
-      type: "order",
-      title: "Order Update",
-      body: `${actorName} ${statusLabels[status]} — ${order.gig.title}`,
-      link: `/orders/${orderId}`,
-    },
+  await notifyUser({
+    userId: notifyId,
+    type: "order",
+    title: "Order Update",
+    body: `${actorName} ${statusLabels[status]} — ${order.gig.title}`,
+    link: `/orders/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);
@@ -112,14 +109,12 @@ export async function reRequestOrder(orderId: string): Promise<{ redirectTo: str
 
   const buyer = await db.user.findUnique({ where: { id: buyerId }, select: { name: true, twitterHandle: true } });
   const buyerName = buyer?.name ?? buyer?.twitterHandle ?? "Someone";
-  await db.notification.create({
-    data: {
-      userId: original.sellerId,
-      type: "order",
-      title: "New Order",
-      body: `${buyerName} re-requested "${original.gig.title}"`,
-      link: `/orders/${newOrder.id}`,
-    },
+  await notifyUser({
+    userId: original.sellerId,
+    type: "order",
+    title: "New Order",
+    body: `${buyerName} re-requested "${original.gig.title}"`,
+    link: `/orders/${newOrder.id}`,
   });
 
   return { redirectTo: `/orders/${newOrder.id}` };
@@ -142,14 +137,12 @@ export async function syncEscrowFunded(orderId: string, txHash: string, escrowAd
     data: { status: "funded", txHash, escrowAddress },
   });
 
-  await db.notification.create({
-    data: {
-      userId: order.sellerId,
-      type: "order",
-      title: "Order Funded",
-      body: `Payment for "${order.gig.title}" is locked in escrow — start working!`,
-      link: `/orders/${orderId}`,
-    },
+  await notifyUser({
+    userId: order.sellerId,
+    type: "order",
+    title: "Order Funded",
+    body: `Payment for "${order.gig.title}" is locked in escrow — start working!`,
+    link: `/orders/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);
@@ -173,14 +166,12 @@ export async function syncEscrowReleased(orderId: string, txHash: string) {
     data: { status: "completed", txHash },
   });
 
-  await db.notification.create({
-    data: {
-      userId: order.sellerId,
-      type: "order",
-      title: "Payment Released!",
-      body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
-      link: `/orders/${orderId}`,
-    },
+  await notifyUser({
+    userId: order.sellerId,
+    type: "order",
+    title: "Payment Released!",
+    body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
+    link: `/orders/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);
