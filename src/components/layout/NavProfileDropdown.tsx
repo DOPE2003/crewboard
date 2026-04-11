@@ -220,6 +220,9 @@ export default function NavProfileDropdown({
       // 4. Remove address from DB
       await unlinkWallet();
       setExtra((prev) => prev ? { ...prev, walletAddress: null } : prev);
+      onClose();
+      // Redirect to dashboard — billing page would show a connected wallet still
+      window.location.href = "/dashboard";
     } catch { /* ignore */ }
     finally { setDisconnecting(false); }
   }
@@ -340,11 +343,8 @@ export default function NavProfileDropdown({
         <SectionLabel icon={I.wallet}>Wallet & Payments</SectionLabel>
         <Card>
           <Row icon={I.wallet} label="Wallet Overview" onClick={() => {
-            const phantomConnected =
-              (connected && publicKey) ||
-              (window as any).phantom?.solana?.isConnected ||
-              (window as any).solana?.isConnected;
-            if (!phantomConnected) { setWalletMsg(true); setTimeout(() => setWalletMsg(false), 3000); }
+            // DB is source of truth — no Phantom check needed to view the page
+            if (!extra?.walletAddress) { setWalletMsg(true); setTimeout(() => setWalletMsg(false), 3000); }
             else { onClose(); window.location.href = "/billing"; }
           }} />
           {walletMsg && (

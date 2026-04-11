@@ -3,7 +3,8 @@
 import { useState, useEffect } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import type { WalletName } from "@solana/wallet-adapter-base";
-import { linkWallet } from "@/actions/wallet";
+import { useRouter } from "next/navigation";
+import { linkWallet, unlinkWallet } from "@/actions/wallet";
 import Link from "next/link";
 
 type Order = {
@@ -63,14 +64,6 @@ function detectMobile(): boolean {
   return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
 }
 
-/** True when Phantom has injected window.solana */
-function detectPhantom(): boolean {
-  return !!(
-    (window as any).phantom?.solana ??
-    ((window as any).solana?.isPhantom ? (window as any).solana : null)
-  );
-}
-
 function phantomDeepLink(url: string): string {
   return (
     "https://phantom.app/ul/browse/" +
@@ -84,6 +77,8 @@ export default function BillingClient({
   walletAddress, totalEarned, inEscrow, pendingRelease,
   userId, orders, earningsByCategory, monthlyEarnings,
 }: Props) {
+  const router = useRouter();
+
   const [copied, setCopied]                   = useState(false);
   const [filter, setFilter]                   = useState<HistoryFilter>("all");
   const [showTransfer, setShowTransfer]       = useState(false);
@@ -94,18 +89,36 @@ export default function BillingClient({
   const [transferSuccess, setTransferSuccess] = useState(false);
   const [transferConfirm, setTransferConfirm] = useState(false);
   const [isMobile, setIsMobile]               = useState(false);
-  const [hasPhantom, setHasPhantom]           = useState(false);
+  // Tracks whether Phantom is available + connected (for signing only)
+  const [isPhantomConnected, setIsPhantomConnected] = useState(false);
+  const [disconnecting, setDisconnecting]     = useState(false);
 
-  const { publicKey, connected, signTransaction, select } = useWallet();
+  const { publicKey, connected, signTransaction, select, disconnect } = useWallet();
   const { connection } = useConnection();
 
   useEffect(() => {
     setIsMobile(detectMobile());
-    setHasPhantom(detectPhantom());
   }, []);
 
+  // Keep isPhantomConnected in sync after mount (window not available SSR)
   useEffect(() => {
-    if (walletAddress) return;
+    const provider =
+      (window as any).phantom?.solana ??
+      ((window as any).solana?.isPhantom ? (window as any).solana : null);
+    const check = () =>
+      setIsPhantomConnected(!!(provider?.isConnected || (connected && publicKey)));
+    check();
+    provider?.on?.("connect",    check);
+    provider?.on?.("disconnect", check);
+    return () => {
+      provider?.off?.("connect",    check);
+      provider?.off?.("disconnect", check);
+    };
+  }, [connected, publicKey]);
+
+  // Auto-save wallet to DB when Phantom connects and no address is stored yet
+  useEffect(() => {
+    if (walletAddress) return; // DB already has an address — don't overwrite
     const provider =
       (window as any).phantom?.solana ??
       ((window as any).solana?.isPhantom ? (window as any).solana : null);
@@ -118,15 +131,67 @@ export default function BillingClient({
     return () => provider?.off?.("connect", onConnect);
   }, [connected, publicKey, walletAddress]);
 
+  // ── DB is source of truth for wallet ownership ─────────────────────────────
+  const hasWallet = !!walletAddress;
+  // Display address: prefer what's stored in DB; fall back to live adapter key
+  const addr = walletAddress ?? ((connected && publicKey) ? publicKey.toBase58() : null);
+
   function copyAddress() {
-    const addr = publicKey?.toBase58() ?? walletAddress;
     if (!addr) return;
     navigator.clipboard.writeText(addr).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
   }
 
+  async function handleConnectWallet() {
+    // On mobile without Phantom injected → deep-link into Phantom browser
+    if (isMobile) {
+      const provider =
+        (window as any).phantom?.solana ??
+        ((window as any).solana?.isPhantom ? (window as any).solana : null);
+      if (!provider) {
+        window.location.href = phantomDeepLink(window.location.href);
+        return;
+      }
+    }
+    const provider =
+      (window as any).phantom?.solana ??
+      ((window as any).solana?.isPhantom ? (window as any).solana : null);
+    if (!provider) {
+      window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
+      return;
+    }
+    try {
+      await provider.connect();
+      select("Phantom" as WalletName);
+    } catch (e: any) {
+      if (e?.code !== 4001) console.error("connect error", e);
+    }
+  }
+
+  async function handleDisconnectWallet() {
+    if (!confirm("Disconnect your wallet?")) return;
+    setDisconnecting(true);
+    try {
+      // 1. Disconnect adapter
+      await disconnect();
+      // 2. Disconnect raw Phantom provider
+      const provider =
+        (window as any).phantom?.solana ??
+        ((window as any).solana?.isPhantom ? (window as any).solana : null);
+      try { await provider?.disconnect(); } catch { /* ignore */ }
+      // 3. Clear wallet-adapter localStorage key
+      try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
+      // 4. Remove address from DB
+      await unlinkWallet();
+      // 5. Go to dashboard — NOT back to billing (wallet is now gone)
+      router.push("/dashboard");
+    } catch {
+      setDisconnecting(false);
+    }
+  }
+
   async function handleTransfer() {
     if (!publicKey || !signTransaction || !connection) {
-      setTransferError("Wallet not connected."); return;
+      setTransferError("Connect Phantom to send funds."); return;
     }
     const addr = transferAddress.trim();
     const amt  = parseFloat(transferAmount);
@@ -157,8 +222,6 @@ export default function BillingClient({
     } finally { setIsTransferring(false); }
   }
 
-  const addr = (connected && publicKey) ? publicKey.toBase58() : walletAddress;
-
   const filteredOrders = filter === "all"
     ? orders
     : orders.filter((o) => STATUS_GROUPS[filter].includes(o.status));
@@ -166,24 +229,64 @@ export default function BillingClient({
   const FILTERS: HistoryFilter[] = ["all", "completed", "pending", "cancelled"];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--background)", fontFamily: "Inter, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "var(--background)", fontFamily: "Inter, sans-serif", overflowX: "hidden" }}>
       <style>{`
-        .wallet-layout { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; align-items: start; }
-        .wallet-sidebar { position: sticky; top: 110px; display: flex; flex-direction: column; gap: 1rem; }
+        .wallet-layout {
+          display: grid;
+          grid-template-columns: 1fr 300px;
+          gap: 1.5rem;
+          align-items: start;
+        }
+        .wallet-sidebar {
+          position: sticky;
+          top: 110px;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        /* Mobile: stack sidebar above history */
         @media (max-width: 860px) {
-          .wallet-layout { grid-template-columns: 1fr !important; }
+          .wallet-layout {
+            grid-template-columns: 1fr !important;
+            display: flex !important;
+            flex-direction: column-reverse !important;
+          }
           .wallet-sidebar { position: static !important; }
+        }
+        /* Payment row: stack vertically on small screens */
+        .pay-row {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 0.9rem 1.25rem;
+        }
+        .pay-row-body { flex: 1; min-width: 0; }
+        .pay-row-right { text-align: right; flex-shrink: 0; }
+        @media (max-width: 540px) {
+          .pay-row {
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 0.9rem 1rem;
+          }
+          .pay-row-right {
+            text-align: left;
+            order: 3;
+            flex-basis: 100%;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+          }
         }
       `}</style>
 
-      <div style={{ maxWidth: 1060, margin: "0 auto", padding: "clamp(2rem,6vw,5rem) 1.5rem 5rem" }}>
+      <div style={{ maxWidth: 1060, margin: "0 auto", padding: "clamp(1.5rem,5vw,4rem) clamp(1rem,4vw,1.5rem) 5rem" }}>
 
         {/* Page title */}
         <div style={{ marginBottom: "1.75rem" }}>
           <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#14b8a6", marginBottom: "0.4rem" }}>
             Wallet & Payments
           </div>
-          <h1 style={{ fontSize: "clamp(1.4rem,3vw,1.85rem)", fontWeight: 800, color: "var(--foreground)", margin: 0 }}>
+          <h1 style={{ fontSize: "clamp(1.3rem,3vw,1.85rem)", fontWeight: 800, color: "var(--foreground)", margin: 0 }}>
             My Wallet
           </h1>
         </div>
@@ -191,20 +294,20 @@ export default function BillingClient({
         <div className="wallet-layout">
 
           {/* ── LEFT: Payment history ── */}
-          <div>
+          <div style={{ minWidth: 0 }}>
             <div style={{ borderRadius: 16, background: "var(--card-bg)", border: "1px solid var(--card-border)", overflow: "hidden" }}>
 
               {/* Header + filters */}
-              <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+              <div style={{ padding: "0.9rem 1.25rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.6rem" }}>
                 <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "var(--foreground)" }}>
                   Payment History
                 </div>
-                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
                   {FILTERS.map((f) => (
                     <button key={f} onClick={() => setFilter(f)} style={{
-                      padding: "4px 12px", borderRadius: 99,
+                      padding: "4px 11px", borderRadius: 99,
                       border: "1px solid var(--card-border)",
-                      fontSize: "0.68rem", fontWeight: 600, cursor: "pointer",
+                      fontSize: "0.65rem", fontWeight: 600, cursor: "pointer",
                       background: filter === f ? "#14b8a6" : "transparent",
                       color: filter === f ? "#fff" : "var(--text-muted)",
                       textTransform: "capitalize" as const, fontFamily: "inherit",
@@ -218,7 +321,7 @@ export default function BillingClient({
 
               {/* Rows */}
               {filteredOrders.length === 0 ? (
-                <div style={{ padding: "3.5rem", textAlign: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                <div style={{ padding: "3.5rem 1.5rem", textAlign: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>
                   No {filter === "all" ? "" : filter} transactions yet.
                 </div>
               ) : (
@@ -226,49 +329,52 @@ export default function BillingClient({
                   {filteredOrders.map((order, i) => {
                     const isOut = order.buyerId === userId;
                     const sc = STATUS_COLOR[order.status] ?? { bg: "rgba(0,0,0,0.05)", text: "#6b7280" };
+                    const amtColor = order.status === "pending" || order.status === "funded"
+                      ? "#f59e0b"
+                      : isOut ? "#ef4444" : "#22c55e";
                     return (
-                      <div key={order.id} style={{
-                        display: "flex", alignItems: "center", gap: 12,
-                        padding: "0.9rem 1.25rem",
-                        borderBottom: i < filteredOrders.length - 1 ? "1px solid var(--card-border)" : "none",
-                      }}>
-                        {/* Direction */}
+                      <div
+                        key={order.id}
+                        className="pay-row"
+                        style={{ borderBottom: i < filteredOrders.length - 1 ? "1px solid var(--card-border)" : "none" }}
+                      >
+                        {/* Direction icon */}
                         <div style={{
-                          width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                          width: 38, height: 38, borderRadius: 11, flexShrink: 0,
                           background: isOut ? "rgba(239,68,68,0.08)" : "rgba(34,197,94,0.08)",
                           display: "flex", alignItems: "center", justifyContent: "center",
-                          fontSize: 14, color: isOut ? "#ef4444" : "#22c55e", fontWeight: 700,
+                          fontSize: 15, color: isOut ? "#ef4444" : "#22c55e", fontWeight: 700,
                         }}>
                           {isOut ? "↑" : "↓"}
                         </div>
 
-                        {/* Details */}
-                        <div style={{ flex: 1, minWidth: 0 }}>
-                          <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                        {/* Title + meta */}
+                        <div className="pay-row-body">
+                          <div style={{ fontSize: "0.83rem", fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                             {order.gig?.title ?? "Order"}
                           </div>
-                          <div style={{ fontSize: "0.67rem", color: "var(--text-muted)", marginTop: 2 }}>
-                            {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                            {order.gig?.category && <> · {order.gig.category}</>}
+                          <div style={{ fontSize: "0.8rem", fontWeight: 800, color: amtColor, fontFamily: "Space Mono, monospace", marginTop: "0.15rem" }}>
+                            {isOut ? "−" : "+"}${order.amount}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "0.25rem", flexWrap: "wrap" }}>
+                            <span style={{ fontSize: "0.58rem", fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: sc.bg, color: sc.text, textTransform: "capitalize" as const }}>
+                              {order.status}
+                            </span>
+                            <span style={{ fontSize: "0.63rem", color: "var(--text-muted)" }}>
+                              {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                              {order.gig?.category && <> · {order.gig.category}</>}
+                            </span>
                           </div>
                         </div>
 
-                        {/* Amount + status */}
-                        <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <div style={{ fontSize: "0.9rem", fontWeight: 800, color: isOut ? "#ef4444" : "#22c55e", fontFamily: "Space Mono, monospace" }}>
-                            {isOut ? "-" : "+"}${order.amount}
-                          </div>
-                          <span style={{ fontSize: "0.58rem", fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: sc.bg, color: sc.text, textTransform: "capitalize" as const }}>
-                            {order.status}
-                          </span>
-                        </div>
-
+                        {/* View link */}
                         <Link href={`/orders/${order.id}`} style={{
-                          flexShrink: 0, padding: "5px 10px", borderRadius: 8,
-                          fontSize: "0.65rem", fontWeight: 600, textDecoration: "none",
+                          flexShrink: 0, padding: "6px 12px", borderRadius: 8,
+                          fontSize: "0.66rem", fontWeight: 600, textDecoration: "none",
                           border: "1px solid var(--card-border)", color: "var(--text-muted)",
+                          whiteSpace: "nowrap",
                         }}>
-                          View
+                          View →
                         </Link>
                       </div>
                     );
@@ -283,12 +389,12 @@ export default function BillingClient({
 
             {/* Balance cards */}
             {[
-              { label: "Total Earned",    value: fmt(totalEarned),    color: "#22c55e", bg: "rgba(34,197,94,0.07)",   border: "rgba(34,197,94,0.2)",   note: "From completed orders",     icon: <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/> },
-              { label: "In Escrow",       value: fmt(inEscrow),       color: "#f59e0b", bg: "rgba(245,158,11,0.07)",  border: "rgba(245,158,11,0.2)",  note: "Locked in smart contract",  icon: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></> },
-              { label: "Pending Release", value: fmt(pendingRelease), color: "#6366f1", bg: "rgba(99,102,241,0.07)",  border: "rgba(99,102,241,0.2)",  note: "Awaiting client approval",  icon: <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></> },
+              { label: "Total Earned",    value: fmt(totalEarned),    color: "#22c55e", bg: "rgba(34,197,94,0.07)",   border: "rgba(34,197,94,0.2)",   note: "From completed orders",    icon: <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/> },
+              { label: "In Escrow",       value: fmt(inEscrow),       color: "#f59e0b", bg: "rgba(245,158,11,0.07)",  border: "rgba(245,158,11,0.2)",  note: "Locked in smart contract", icon: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></> },
+              { label: "Pending Release", value: fmt(pendingRelease), color: "#6366f1", bg: "rgba(99,102,241,0.07)",  border: "rgba(99,102,241,0.2)",  note: "Awaiting client approval", icon: <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></> },
             ].map((s) => (
               <div key={s.label} style={{ borderRadius: 14, padding: "1.1rem 1.15rem", background: s.bg, border: `1px solid ${s.border}` }}>
-                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.6rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.5rem" }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={s.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     {s.icon}
                   </svg>
@@ -309,55 +415,28 @@ export default function BillingClient({
               boxShadow: "0 6px 24px rgba(20,184,166,0.22)",
             }}>
               <div style={{ position: "absolute", top: -30, right: -30, width: 110, height: 110, borderRadius: "50%", background: "rgba(255,255,255,0.07)", pointerEvents: "none" }} />
+
               <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.14em", textTransform: "uppercase" as const, marginBottom: "0.4rem" }}>
                 Solana Wallet
               </div>
+
+              {/* Address or placeholder */}
               <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff", fontFamily: "Space Mono, monospace", marginBottom: "0.3rem", wordBreak: "break-all" }}>
                 {addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : "Not connected"}
               </div>
+
+              {/* Status dot — DB is source of truth */}
               <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: "0.9rem" }}>
-                <span style={{ width: 6, height: 6, borderRadius: "50%", background: addr ? "#4ade80" : "#6b7280", display: "inline-block" }} />
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: hasWallet ? "#4ade80" : "#6b7280", display: "inline-block" }} />
                 <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.65)" }}>
-                  {addr ? "Connected" : isMobile && !hasPhantom ? "Not connected" : "Use wallet button in navbar"}
+                  {hasWallet ? "Wallet Connected" : "No wallet linked"}
                 </span>
               </div>
 
-              {/* Mobile without Phantom: deep link CTA */}
-              {!addr && isMobile && !hasPhantom && (
-                <a
-                  href={phantomDeepLink(typeof window !== "undefined" ? window.location.href : "")}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 7,
-                    padding: "9px 16px", borderRadius: 10,
-                    background: "rgba(255,255,255,0.15)",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    color: "#fff", fontSize: "0.78rem", fontWeight: 700,
-                    textDecoration: "none", cursor: "pointer",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  <svg width="14" height="14" viewBox="0 0 128 128" fill="currentColor">
-                    <path d="M64 4C31.3 4 4 31.3 4 64s27.3 60 60 60 60-27.3 60-60S96.7 4 64 4zm28.5 68.2c-3.8 10.6-13.8 17.5-25 17.5-7 0-12.9-2.7-17.2-7.7l-3.8 7.7H34.4l7.8-15.8-5.3-10.5h10.5l1.5 3.1c.4-3.2 1.4-6.1 3.1-8.7 2.5-4.1 6.3-6.9 10.8-8.4v-.1c7.7-2.4 15.9-.1 21.1 5.8l4.1-8.2H99l-11.7 23.5 5.2 2.8z"/>
-                  </svg>
-                  Open in Phantom
-                </a>
-              )}
-
-              {/* Mobile inside Phantom browser OR desktop: connect button */}
-              {!addr && (!isMobile || hasPhantom) && (
+              {/* ── No wallet linked → show connect CTA ── */}
+              {!hasWallet && (
                 <button
-                  onClick={async () => {
-                    const provider =
-                      (window as any).phantom?.solana ??
-                      ((window as any).solana?.isPhantom ? (window as any).solana : null);
-                    if (!provider) return;
-                    try {
-                      await provider.connect();
-                      select("Phantom" as WalletName);
-                    } catch (e: any) {
-                      if (e?.code !== 4001) console.error("connect error", e);
-                    }
-                  }}
+                  onClick={handleConnectWallet}
                   style={{
                     display: "inline-flex", alignItems: "center", gap: 7,
                     padding: "9px 16px", borderRadius: 10,
@@ -372,14 +451,49 @@ export default function BillingClient({
                 </button>
               )}
 
-              {addr && (
+              {/* ── Wallet linked but Phantom not connected → secondary CTA for signing ── */}
+              {hasWallet && !isPhantomConnected && (
+                <button
+                  onClick={handleConnectWallet}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 6,
+                    padding: "7px 14px", borderRadius: 9,
+                    background: "rgba(255,255,255,0.1)",
+                    border: "1px solid rgba(255,255,255,0.2)",
+                    color: "rgba(255,255,255,0.8)", fontSize: "0.7rem", fontWeight: 600,
+                    cursor: "pointer", fontFamily: "inherit",
+                    marginBottom: "0.75rem",
+                  }}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                  </svg>
+                  Connect Phantom to send funds
+                </button>
+              )}
+
+              {/* ── Wallet linked actions ── */}
+              {hasWallet && addr && (
                 <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
                   <button onClick={copyAddress} style={walletBtn}>{copied ? "✓ Copied" : "Copy"}</button>
                   <a href={`https://solscan.io/account/${addr}`} target="_blank" rel="noopener noreferrer" style={{ ...walletBtn, textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
                     Solscan ↗
                   </a>
-                  <button onClick={() => { setShowTransfer(v => !v); setTransferError(null); setTransferConfirm(false); }} style={{ ...walletBtn, background: "rgba(255,255,255,0.1)" }}>
-                    Send ↗
+                  {isPhantomConnected && (
+                    <button
+                      onClick={() => { setShowTransfer(v => !v); setTransferError(null); setTransferConfirm(false); }}
+                      style={{ ...walletBtn, background: "rgba(255,255,255,0.1)" }}
+                    >
+                      Send ↗
+                    </button>
+                  )}
+                  <button
+                    onClick={handleDisconnectWallet}
+                    disabled={disconnecting}
+                    style={{ ...walletBtn, background: "rgba(239,68,68,0.25)", border: "1px solid rgba(239,68,68,0.4)" }}
+                  >
+                    {disconnecting ? "Disconnecting…" : "Disconnect"}
                   </button>
                 </div>
               )}
