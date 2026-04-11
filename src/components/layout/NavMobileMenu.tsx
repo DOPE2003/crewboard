@@ -242,23 +242,7 @@ export default function NavMobileMenu({ isOpen, onOpen, onClose, loggedIn = fals
 
   return (
     <>
-      {/* Hamburger — mobile only */}
-      <button
-        onClick={() => isOpen ? onClose() : onOpen()}
-        aria-label={isOpen ? 'Close menu' : 'Open menu'}
-        className="md:hidden flex items-center justify-center"
-        style={{
-          minWidth: 44, minHeight: 44,
-          background: 'transparent', border: 'none', cursor: 'pointer',
-          color: 'var(--foreground)',
-        }}
-      >
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-          <line x1="3" y1="6"  x2="21" y2="6" />
-          <line x1="3" y1="12" x2="21" y2="12" />
-          <line x1="3" y1="18" x2="21" y2="18" />
-        </svg>
-      </button>
+      {/* Hamburger removed — bottom tab bar is the primary mobile nav */}
 
       {mounted && createPortal(drawer, document.body)}
     </>

@@ -177,23 +177,80 @@ export async function startConversation(recipientId: string): Promise<{ redirect
           { participants: { has: recipientId } },
         ],
       },
-      select: { id: true },
+      // Only redirect to existing conv if it has at least one message
+      include: { messages: { take: 1, select: { id: true } } },
     });
 
-    if (existing) {
+    if (existing && existing.messages.length > 0) {
       return { redirectTo: `/messages/${existing.id}` };
-    } else {
-      const conv = await db.conversation.create({
-        data: { participants: [senderId, recipientId] },
-        select: { id: true },
-      });
-      return { redirectTo: `/messages/${conv.id}` };
     }
+
+    // No conversation yet (or existing empty one) — go to new-conversation flow
+    // This prevents creating empty threads in the DB
+    return { redirectTo: `/messages/new?with=${recipientId}` };
   } catch (err: any) {
     if (err?.digest) throw err;
     console.error("[startConversation]", err?.constructor?.name, err?.message);
     throw new Error(err?.message ?? "Failed to start conversation");
   }
+}
+
+// Creates conversation + sends first message atomically (no empty threads)
+export async function sendFirstMessage(
+  recipientId: string,
+  body: string,
+): Promise<{ conversationId: string }> {
+  try {
+    const session = await auth();
+    const senderId = (session?.user as any)?.userId as string | undefined;
+    if (!senderId) throw new Error("Unauthorized");
+    if (!body.trim()) throw new Error("Message cannot be empty");
+
+    // Find or create conversation (re-use if exists — even if empty)
+    const existing = await db.conversation.findFirst({
+      where: {
+        AND: [{ participants: { has: senderId } }, { participants: { has: recipientId } }],
+      },
+      select: { id: true },
+    });
+
+    const conversationId = existing?.id ?? (await db.conversation.create({
+      data: { participants: [senderId, recipientId] },
+      select: { id: true },
+    })).id;
+
+    await _sendMessage(conversationId, body.trim());
+    return { conversationId };
+  } catch (err: any) {
+    if (err?.digest) throw err;
+    console.error("[sendFirstMessage]", err?.constructor?.name, err?.message);
+    throw new Error(err?.message ?? "Failed to send");
+  }
+}
+
+// Deletes empty conversations (no messages) older than 1h for the current user
+export async function cleanupEmptyConversations(): Promise<void> {
+  try {
+    const session = await auth();
+    const userId = (session?.user as any)?.userId as string | undefined;
+    if (!userId) return;
+
+    const hourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const empty = await db.conversation.findMany({
+      where: {
+        participants: { has: userId },
+        messages: { none: {} },
+        createdAt: { lt: hourAgo },
+      },
+      select: { id: true },
+    });
+
+    if (empty.length > 0) {
+      await db.conversation.deleteMany({
+        where: { id: { in: empty.map((c) => c.id) } },
+      });
+    }
+  } catch {}
 }
 
 // Shared helper — find or create conversation and optionally send an opening message

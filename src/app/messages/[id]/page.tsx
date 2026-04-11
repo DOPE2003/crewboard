@@ -79,9 +79,24 @@ export default async function ConversationPage({
       ? Math.round(other.gigs.reduce((a, g) => a + g.deliveryDays, 0) / other.gigs.length)
       : null;
 
-  // Sidebar conversations
+  // Active order between these two users (for chat actions)
+  const activeOrder = otherId
+    ? await db.order.findFirst({
+        where: {
+          OR: [
+            { buyerId: userId, sellerId: otherId },
+            { buyerId: otherId, sellerId: userId },
+          ],
+          status: { not: "cancelled" },
+        },
+        orderBy: { updatedAt: "desc" },
+        select: { id: true, status: true, amount: true, gig: { select: { id: true, title: true } } },
+      }).catch(() => null)
+    : null;
+
+  // Sidebar conversations — only those with messages
   const conversations = await db.conversation.findMany({
-    where: { participants: { has: userId } },
+    where: { participants: { has: userId }, messages: { some: {} } },
     orderBy: { updatedAt: "desc" },
     include: {
       messages: { orderBy: { createdAt: "desc" }, take: 1 },
@@ -107,24 +122,37 @@ export default async function ConversationPage({
     )
   );
 
+  // Order context for sidebar items
+  const userOrders = await db.order.findMany({
+    where: { OR: [{ buyerId: userId }, { sellerId: userId }], status: { not: "cancelled" } },
+    orderBy: { updatedAt: "desc" },
+    select: { id: true, buyerId: true, sellerId: true, amount: true, status: true, gig: { select: { title: true } } },
+  }).catch(() => [] as any[]);
+  const orderByPartner: Record<string, { id: string; amount: number; gigTitle: string; status: string }> = {};
+  for (const o of userOrders) {
+    const partnerId = o.buyerId === userId ? o.sellerId : o.buyerId;
+    if (!orderByPartner[partnerId]) {
+      orderByPartner[partnerId] = { id: o.id, amount: o.amount, gigTitle: o.gig?.title ?? "", status: o.status };
+    }
+  }
+
   const convItems: ConvItem[] = conversations.map((c, i) => {
     const oid = c.participants.find((p) => p !== userId) ?? "";
     const u = userMap[oid] ?? null;
     const lastMsg = c.messages[0];
+    const order = orderByPartner[oid];
     return {
       id: c.id,
       updatedAt: c.updatedAt.toISOString(),
       lastMessage: lastMsg?.body ?? null,
       lastSenderId: lastMsg?.senderId ?? null,
       unread: unreadCounts[i],
+      gigTitle: order?.gigTitle ?? null,
+      orderId: order?.id ?? null,
+      orderAmount: order?.amount ?? null,
+      orderStatus: order?.status ?? null,
       user: u
-        ? {
-            id: u.id,
-            name: u.name,
-            twitterHandle: u.twitterHandle,
-            image: u.image,
-            lastSeenAt: u.lastSeenAt?.toISOString() ?? null,
-          }
+        ? { id: u.id, name: u.name, twitterHandle: u.twitterHandle, image: u.image, lastSeenAt: u.lastSeenAt?.toISOString() ?? null }
         : null,
     };
   });
@@ -218,10 +246,46 @@ export default async function ConversationPage({
               </Link>
             )}
 
-            {/* Verification badges */}
+            {/* Chat action buttons */}
             <div style={{ display: "flex", gap: "0.4rem", marginLeft: "auto", flexShrink: 0, alignItems: "center" }}>
               {other?.walletAddress && <WalletVerifiedBadge />}
               {other?.humanVerified && <HumanVerifiedBadge level={other.worldIdLevel} />}
+
+              {/* View Order — shown if active order exists */}
+              {activeOrder && (
+                <Link
+                  href={`/orders/${activeOrder.id}`}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    padding: "5px 12px", borderRadius: 8, fontSize: "11px", fontWeight: 700,
+                    background: "rgba(59,130,246,0.08)", color: "#3b82f6",
+                    border: "1px solid rgba(59,130,246,0.2)", textDecoration: "none", flexShrink: 0,
+                  }}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h5l3 5v3h-8V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
+                  </svg>
+                  Order
+                </Link>
+              )}
+
+              {/* Send Offer — always shown to initiate a gig request */}
+              {other && (
+                <Link
+                  href={`/u/${other.twitterHandle}`}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    padding: "5px 12px", borderRadius: 8, fontSize: "11px", fontWeight: 700,
+                    background: "rgba(20,184,166,0.08)", color: "#0d9488",
+                    border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none", flexShrink: 0,
+                  }}
+                >
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+                  </svg>
+                  Send Offer
+                </Link>
+              )}
             </div>
 
             {/* Mobile: View Profile button (opens bottom sheet) */}

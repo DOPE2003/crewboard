@@ -3,34 +3,29 @@ import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import BillingClient from "./BillingClient";
 
-export const metadata = { title: "Billing & Wallet — Crewboard" };
+export const metadata = { title: "Wallet — Crewboard" };
 
 export default async function BillingPage() {
   const session = await auth();
-  if (!session?.user?.userId) redirect("/login");
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) redirect("/login");
 
-  const userId = session.user.userId;
-
-  const [dbUser, completedOrders, pendingOrders, allOrders, categoryOrders] = await Promise.all([
+  const [dbUser, allOrders, categoryOrders] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
       select: { walletAddress: true, name: true },
     }),
     db.order.findMany({
-      where: { sellerId: userId, status: "completed" },
-      select: { amount: true },
-    }).catch(() => []),
-    db.order.findMany({
-      where: { sellerId: userId, status: { in: ["pending", "accepted", "funded", "in_progress", "delivered"] } },
-      select: { amount: true },
-    }).catch(() => []),
-    db.order.findMany({
       where: { OR: [{ buyerId: userId }, { sellerId: userId }] },
-      select: { id: true, amount: true, status: true, buyerId: true, createdAt: true, gig: { select: { title: true } } },
+      select: {
+        id: true, amount: true, status: true,
+        buyerId: true, sellerId: true,
+        createdAt: true,
+        gig: { select: { title: true, category: true } },
+      },
       orderBy: { createdAt: "desc" },
-      take: 20,
+      take: 100,
     }).catch(() => []),
-    // earnings by gig category
     db.order.findMany({
       where: { sellerId: userId, status: "completed" },
       select: { amount: true, createdAt: true, gig: { select: { category: true } } },
@@ -39,44 +34,42 @@ export default async function BillingPage() {
 
   if (!dbUser) redirect("/login");
 
-  const totalEarned = completedOrders.reduce((s: number, o: { amount: number }) => s + o.amount, 0);
-  const totalPending = pendingOrders.reduce((s: number, o: { amount: number }) => s + o.amount, 0);
+  // Balance breakdown
+  const totalEarned     = allOrders.filter((o) => o.sellerId === userId && o.status === "completed").reduce((s, o) => s + o.amount, 0);
+  const inEscrow        = allOrders.filter((o) => o.status === "funded").reduce((s, o) => s + o.amount, 0);
+  const pendingRelease  = allOrders.filter((o) => o.sellerId === userId && o.status === "delivered").reduce((s, o) => s + o.amount, 0);
 
-  // Build category breakdown
-  const categoryMap: Record<string, number> = {};
-  for (const o of categoryOrders) {
-    const cat = o.gig?.category ?? "Other";
-    categoryMap[cat] = (categoryMap[cat] ?? 0) + o.amount;
-  }
-  const earningsByCategory = Object.entries(categoryMap)
-    .map(([category, total]) => ({ category, total }))
-    .sort((a, b) => b.total - a.total);
-
-  // Build monthly earnings (last 6 months)
+  // Monthly chart
   const now = new Date();
   const monthlyMap: Record<string, number> = {};
   for (let i = 5; i >= 0; i--) {
     const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
-    const key = d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
-    monthlyMap[key] = 0;
+    monthlyMap[d.toLocaleDateString("en-US", { month: "short", year: "2-digit" })] = 0;
   }
   for (const o of categoryOrders) {
-    const d = new Date(o.createdAt);
-    const key = d.toLocaleDateString("en-US", { month: "short", year: "2-digit" });
+    const key = new Date(o.createdAt).toLocaleDateString("en-US", { month: "short", year: "2-digit" });
     if (key in monthlyMap) monthlyMap[key] += o.amount;
   }
   const monthlyEarnings = Object.entries(monthlyMap).map(([month, total]) => ({ month, total }));
+
+  // Category breakdown
+  const catMap: Record<string, number> = {};
+  for (const o of categoryOrders) {
+    const cat = o.gig?.category ?? "Other";
+    catMap[cat] = (catMap[cat] ?? 0) + o.amount;
+  }
+  const earningsByCategory = Object.entries(catMap)
+    .map(([category, total]) => ({ category, total }))
+    .sort((a, b) => b.total - a.total);
 
   return (
     <BillingClient
       walletAddress={dbUser.walletAddress}
       totalEarned={totalEarned}
-      totalPending={totalPending}
+      inEscrow={inEscrow}
+      pendingRelease={pendingRelease}
       userId={userId}
-      orders={allOrders.map((o) => ({
-        ...o,
-        createdAt: o.createdAt.toISOString(),
-      }))}
+      orders={allOrders.map((o) => ({ ...o, createdAt: o.createdAt.toISOString() }))}
       earningsByCategory={earningsByCategory}
       monthlyEarnings={monthlyEarnings}
     />

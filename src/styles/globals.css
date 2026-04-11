@@ -206,10 +206,20 @@ nav {
   z-index: 100;
   display: flex;
   flex-direction: column;
-  background: rgba(255,255,255,0.88);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border);
+  background: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+  box-shadow: none;
+  transition: box-shadow 0.25s ease;
+}
+nav[data-scrolled="true"] {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.06);
+}
+nav[data-transparent="true"] {
+  background: rgba(255, 255, 255, 0.55) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: none !important;
 }
 .nav-logo {
   font-family: 'Inter', sans-serif;
@@ -330,6 +340,22 @@ nav {
 
 .nav-icon-btn:hover { color: var(--foreground) !important; background: rgba(0,0,0,0.06) !important; border-radius: 8px; }
 .nav-orders-link:hover { background: rgba(0,0,0,0.06) !important; }
+
+/* ── Unified nav center links ── */
+.nav-center-links { display: flex; align-items: center; gap: 2px; }
+.nav-center-btn {
+  background: none; border: none; cursor: pointer;
+  padding: 6px 12px; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 500;
+  color: var(--text-muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.15s, background 0.15s;
+  display: inline-flex; align-items: center;
+  font-family: inherit;
+}
+.nav-center-btn:hover { color: var(--foreground); background: rgba(0,0,0,0.05); }
+body.dark .nav-center-btn:hover { background: rgba(255,255,255,0.07); }
 
 /* Nav search input placeholder */
 .nav-search-input::placeholder { color: var(--text-muted); }
@@ -4248,8 +4274,17 @@ body.dark {
 }
 
 body.dark nav {
-  background: rgba(10,15,26,0.9);
-  border-bottom-color: rgba(255,255,255,0.07);
+  background: #0a0f1a;
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+}
+body.dark nav[data-scrolled="true"] {
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+}
+body.dark nav[data-transparent="true"] {
+  background: rgba(10, 15, 26, 0.55) !important;
+  backdrop-filter: blur(14px) !important;
+  -webkit-backdrop-filter: blur(14px) !important;
+  border-bottom-color: transparent !important;
 }
 
 body.dark .nav-links-row {
@@ -4792,6 +4827,12 @@ body:not(.dark) .verify-page-wrap p { color: #475569 !important; }
   font-size: 0.6em;
 }
 
+/* ── Availability pulse ── */
+@keyframes availPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(1.6); }
+}
+
 /* ── Profile page grid ── */
 .profile-page-grid {
   grid-template-columns: 1fr 300px;
@@ -5118,15 +5159,10 @@ img { max-width: 100%; }
   }
 }
 
-/* ── Nav hamburger: ensure visible on mobile ── */
-@media (max-width: 700px) {
-  .nav-hamburger-btn {
-    display: flex !important;
-    min-width: 44px;
-    min-height: 44px;
-    align-items: center;
-    justify-content: center;
-  }
+/* ── Nav hamburger: removed — bottom tab bar is primary mobile nav ── */
+.nav-hamburger,
+.nav-hamburger-btn {
+  display: none !important;
 }
 
 /* ── Logo: scale down on mobile for compact 56px header ── */
@@ -6766,4 +6802,569 @@ img, video, iframe, table { max-width: 100%; }
     /* Extra bottom padding on iOS notch devices */
     padding-bottom: max(12px, env(safe-area-inset-bottom, 12px)) !important;
   }
+}
+
+/* ==============================================
+   UI POLISH + MOBILE-FIRST  (final layer)
+   ============================================== */
+
+/* ── Skeleton loading shimmer ── */
+@keyframes skeleton-shimmer {
+  0%   { background-position: -600px 0; }
+  100% { background-position:  600px 0; }
+}
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--bg-secondary, #f3f4f6) 25%,
+    var(--bg-tertiary,  #e9ecef) 50%,
+    var(--bg-secondary, #f3f4f6) 75%
+  );
+  background-size: 1200px 100%;
+  animation: skeleton-shimmer 1.5s ease-in-out infinite;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+body.dark .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #2a3549 50%, #1e293b 75%);
+  background-size: 1200px 100%;
+}
+
+/* ── Empty state utility ── */
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  gap: 0.6rem;
+}
+.empty-state-icon {
+  width: 64px; height: 64px; border-radius: 18px;
+  background: rgba(20,184,166,0.08);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; margin-bottom: 0.25rem;
+}
+.empty-state-title {
+  font-size: 1rem; font-weight: 700;
+  color: var(--foreground); margin: 0;
+}
+.empty-state-body {
+  font-size: 0.8rem; color: var(--text-muted);
+  margin: 0; max-width: 280px; line-height: 1.65;
+}
+.empty-state-cta {
+  display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+  padding: 10px 22px; border-radius: 10px;
+  font-size: 13px; font-weight: 700;
+  background: #14B8A6; color: #fff;
+  text-decoration: none; min-height: 44px;
+  margin-top: 0.5rem;
+  transition: opacity 0.2s, transform 0.2s;
+  border: none; cursor: pointer;
+}
+.empty-state-cta:hover { opacity: 0.88; transform: translateY(-1px); }
+
+/* ── Card hover upgrade — lift + sharper shadow ── */
+.cb-card {
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.2s !important;
+}
+.cb-card:hover {
+  box-shadow: 0 6px 24px rgba(0,0,0,0.09) !important;
+  transform: translateY(-1px) !important;
+}
+/* Gig cards already have a good hover; reinforce transition speed */
+.gig-card {
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s !important;
+}
+
+/* ── Button minimum touch targets ── */
+.btn-primary,
+.btn-secondary,
+.btn-outline {
+  min-height: 44px;
+}
+/* Hero CTA buttons */
+.btn-hero-primary,
+.btn-hero-secondary {
+  min-height: 48px;
+}
+
+/* ── Orders page mobile ── */
+@media (max-width: 640px) {
+  .ord-wrap {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    padding-top: 1.25rem !important;
+  }
+  .ord-footer {
+    flex-direction: column-reverse !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    padding: 0.75rem 1rem !important;
+  }
+  .ord-cta-btn {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 46px !important;
+    padding: 10px 16px !important;
+    font-size: 14px !important;
+    border-radius: 10px !important;
+    text-align: center !important;
+  }
+}
+
+/* ── Dashboard mobile ── */
+@media (max-width: 640px) {
+  .dash-main-wrap {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+  /* Balance grid: 2 col instead of 3 */
+  .balance-grid { grid-template-columns: repeat(2,1fr) !important; }
+  /* Stats grid: already 1fr 1fr from earlier rule — reinforce */
+  .dash-stats-grid { grid-template-columns: repeat(2,1fr) !important; }
+  /* Messages + notifications: stack */
+  .dash-two-col  { grid-template-columns: 1fr !important; }
+  /* Header action buttons: stack */
+  .dash-header-actions {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  .dash-header-actions a {
+    width: 100% !important;
+    justify-content: center !important;
+    text-align: center !important;
+    min-height: 44px !important;
+    display: flex !important;
+    align-items: center !important;
+  }
+}
+
+/* ── Profile page mobile ── */
+@media (max-width: 640px) {
+  /* Avatar block centered */
+  .prof-hero-row {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+  }
+  /* Action buttons full-width stack */
+  .prof-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+  .prof-actions a,
+  .prof-actions button {
+    width: 100% !important;
+    justify-content: center !important;
+    min-height: 46px !important;
+  }
+  /* Two-col layout collapses */
+  .prof-layout {
+    flex-direction: column !important;
+  }
+  .prof-layout > aside {
+    width: 100% !important;
+    max-width: 100% !important;
+    position: static !important;
+  }
+}
+
+/* ── Global: enforce 44px touch target on all interactive inline-styled elements ── */
+@media (max-width: 767px) {
+  /* Tab bar links on orders/activities pages */
+  .ord-tabs a {
+    min-height: 40px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+  /* Larger send button in messages */
+  .msgs-send-btn {
+    width: 44px !important;
+    height: 44px !important;
+    border-radius: 10px !important;
+  }
+  /* Message input: larger font prevents iOS zoom */
+  .msgs-input { font-size: 16px !important; }
+}
+
+/* ── Wallet page mobile ── */
+@media (max-width: 640px) {
+  /* Hide secondary/decorative chart areas */
+  .wallet-chart-secondary { display: none !important; }
+  /* Stack wallet action buttons */
+  .wallet-actions {
+    flex-direction: column !important;
+    width: 100%;
+  }
+  .wallet-actions a,
+  .wallet-actions button {
+    width: 100% !important;
+    min-height: 48px !important;
+    justify-content: center !important;
+  }
+  /* Balance card: larger, prominent */
+  .wallet-balance-val {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+  }
+}
+
+/* ── Micro-interaction: scale on tap for mobile buttons ── */
+@media (hover: none) {
+  .btn-primary:active,
+  .btn-secondary:active,
+  .btn-outline:active,
+  .btn-hero-primary:active,
+  .empty-state-cta:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.08s !important;
+  }
+  .cb-card:active {
+    transform: scale(0.99) !important;
+    transition: transform 0.08s !important;
+  }
+  .gig-card:active { transform: scale(0.98) !important; }
+}
+
+/* ── Smooth transition standard — 0.2s on all interactive surfaces ── */
+a, button { transition-duration: 0.2s; }
+
+/* ── Hero: compact on mobile ── */
+@media (max-width: 767px) {
+  .hero-compact-mobile {
+    min-height: 100svh !important;
+    padding-bottom: clamp(3rem, 8vw, 5rem) !important;
+    justify-content: center !important;
+  }
+  /* Hide beta badge on mobile to save space */
+  .hero-beta-badge { display: none !important; }
+  /* Tighten subtitle max-width */
+  .hero-subtitle { max-width: 88% !important; margin-left: auto !important; margin-right: auto !important; }
+  /* Search form: full width */
+  .hero-search-form { max-width: 100% !important; border-radius: 12px !important; }
+}
+
+/* ── Trending freelancer cards ── */
+.trending-card:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1) !important;
+  transform: translateY(-2px) !important;
+}
+/* Hide horizontal scrollbar on trending row */
+.trending-card::-webkit-scrollbar { display: none; }
+
+/* ── Dark mode: hero + search + buttons + trending ── */
+body.dark .hero-h1 {
+  color: #ffffff !important;
+}
+body.dark .hero-subtitle {
+  color: #9DA7B3 !important;
+}
+
+/* Hero section background: deep dark with faint teal gradient */
+body.dark .landing-hero {
+  background: radial-gradient(ellipse 120% 70% at 50% 0%, rgba(20,184,166,0.08) 0%, rgba(20,184,166,0.03) 45%, transparent 75%) !important;
+}
+
+/* Search bar in dark mode */
+body.dark .hero-search-form {
+  background: #151B23 !important;
+  border-color: rgba(255,255,255,0.1) !important;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.4) !important;
+}
+body.dark .hero-search-form input {
+  background: transparent !important;
+  color: #f1f5f9 !important;
+}
+body.dark .hero-search-form input::placeholder {
+  color: #6b7280 !important;
+}
+body.dark .hero-search-form svg {
+  color: #6b7280 !important;
+}
+
+/* Primary CTA: keep green */
+body.dark .btn-hero-primary {
+  background: #14B8A6 !important;
+  color: #ffffff !important;
+  border-color: #14B8A6 !important;
+}
+body.dark .btn-hero-primary:hover {
+  background: #0d9488 !important;
+  border-color: #0d9488 !important;
+}
+
+/* Secondary CTA: visible outlined style */
+body.dark .btn-hero-secondary {
+  background: transparent !important;
+  border: 1.5px solid rgba(255,255,255,0.3) !important;
+  color: #f1f5f9 !important;
+}
+body.dark .btn-hero-secondary:hover {
+  border-color: rgba(255,255,255,0.55) !important;
+  background: rgba(255,255,255,0.05) !important;
+}
+
+/* Trending cards in dark mode */
+body.dark .trending-card {
+  background: #111827 !important;
+  border-color: rgba(255,255,255,0.08) !important;
+}
+body.dark .trending-card:hover {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5) !important;
+  border-color: rgba(20,184,166,0.25) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   MOBILE-FIRST DESIGN SYSTEM — Layout, Spacing, Typography, Controls
+   Applied globally across all app pages
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Page containers ───────────────────────────────────────────── */
+.mf-page {
+  width: 100%;
+  max-width: 768px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+.mf-page-wide {
+  width: 100%;
+  max-width: 1100px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+@media (min-width: 640px) {
+  .mf-page       { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .mf-page-wide  { padding-left: 1.5rem; padding-right: 1.5rem; }
+}
+@media (min-width: 1024px) {
+  .mf-page       { max-width: 900px; }
+}
+
+/* ── Section spacing ───────────────────────────────────────────── */
+.mf-section { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+@media (min-width: 768px) {
+  .mf-section { padding-top: 2.5rem; padding-bottom: 2.5rem; }
+}
+
+/* ── Grid system (mobile-first) ────────────────────────────────── */
+.mf-grid-2 { display: grid; grid-template-columns: 1fr;          gap: 1rem; }
+.mf-grid-3 { display: grid; grid-template-columns: 1fr;          gap: 1rem; }
+.mf-grid-4 { display: grid; grid-template-columns: 1fr 1fr;      gap: 0.75rem; }
+@media (min-width: 560px) {
+  .mf-grid-2 { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 640px) {
+  .mf-grid-3 { grid-template-columns: 1fr 1fr;        gap: 1.25rem; }
+  .mf-grid-4 { grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+}
+@media (min-width: 900px) {
+  .mf-grid-3 { grid-template-columns: 1fr 1fr 1fr; }
+}
+
+/* Card grid: single column → auto-fill on larger screens */
+.mf-card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 420px) {
+  .mf-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+/* ── Flex helpers ──────────────────────────────────────────────── */
+.mf-stack    { display: flex; flex-direction: column; gap: 1rem; }
+.mf-stack-sm { display: flex; flex-direction: column; gap: 0.5rem; }
+.mf-row      { display: flex; align-items: center; gap: 0.75rem; }
+.mf-row-wrap { display: flex; align-items: center; flex-wrap: wrap; gap: 0.75rem; }
+.mf-between  { display: flex; align-items: center; justify-content: space-between; }
+
+/* ── Typography ────────────────────────────────────────────────── */
+.mf-h1      { font-size: 1.5rem;   font-weight: 700; line-height: 1.2;  color: var(--foreground); margin: 0; }
+.mf-h2      { font-size: 1.25rem;  font-weight: 700; line-height: 1.25; color: var(--foreground); margin: 0; }
+.mf-h3      { font-size: 1.1rem;   font-weight: 600; line-height: 1.3;  color: var(--foreground); margin: 0; }
+.mf-body    { font-size: 0.875rem; line-height: 1.6; }
+.mf-caption { font-size: 0.75rem;  line-height: 1.5; color: var(--text-muted); }
+@media (min-width: 768px) {
+  .mf-h1 { font-size: 2rem; }
+  .mf-h2 { font-size: 1.5rem; }
+  .mf-h3 { font-size: 1.25rem; }
+}
+
+/* ── Buttons ───────────────────────────────────────────────────── */
+.mf-btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  height: 48px; padding: 0 1.25rem; border-radius: 10px;
+  font-size: 0.875rem; font-weight: 600; font-family: 'Inter', sans-serif;
+  cursor: pointer; text-decoration: none; transition: all 0.2s;
+  border: none; white-space: nowrap;
+}
+.mf-btn-primary   { background: var(--brand);      color: #fff; }
+.mf-btn-primary:hover  { background: var(--teal-hover); }
+.mf-btn-secondary { background: transparent; color: var(--foreground); border: 1px solid var(--border); }
+.mf-btn-secondary:hover { background: var(--hover); }
+
+/* ── Inputs ────────────────────────────────────────────────────── */
+.mf-input {
+  display: block; width: 100%; min-height: 48px; padding: 0 1rem;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface); color: var(--foreground);
+  font-size: 16px; font-family: 'Inter', sans-serif;
+  outline: none; transition: border-color 0.15s;
+}
+.mf-input:focus { border-color: var(--brand); }
+.mf-input::placeholder { color: var(--text-muted); }
+
+.mf-select {
+  display: block; width: 100%; min-height: 48px; padding: 0 1rem;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface); color: var(--foreground);
+  font-size: 16px; font-family: 'Inter', sans-serif;
+  outline: none; cursor: pointer; appearance: auto;
+  transition: border-color 0.15s;
+}
+.mf-select:focus { border-color: var(--brand); }
+
+.mf-textarea {
+  display: block; width: 100%; min-height: 100px; padding: 0.875rem 1rem;
+  border: 1px solid var(--border); border-radius: 10px;
+  background: var(--surface); color: var(--foreground);
+  font-size: 16px; font-family: 'Inter', sans-serif;
+  outline: none; resize: vertical; line-height: 1.6;
+  transition: border-color 0.15s;
+}
+.mf-textarea:focus { border-color: var(--brand); }
+
+/* ── Card ──────────────────────────────────────────────────────── */
+.mf-card {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 1.25rem; box-shadow: var(--shadow-sm);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   GLOBAL MOBILE OVERRIDES — enforce touch targets, iOS zoom fix,
+   proper stacking, horizontal-scroll tab bars
+   ══════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 767px) {
+
+  /* Prevent iOS auto-zoom on input focus (must be ≥16px) */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="url"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+
+  /* Named input classes: 48px min-height */
+  .auth-split-input,
+  .auth-input,
+  .talent-search-input,
+  .msgs-search,
+  .gigs-filter-input,
+  .gigs-filter-select {
+    min-height: 48px !important;
+    font-size: 16px !important;
+  }
+
+  /* Primary button height */
+  .btn-primary, .auth-btn-primary, .auth-submit {
+    min-height: 48px !important;
+  }
+
+  /* Availability chips: taller */
+  .talent-avail-chip {
+    min-height: 44px !important;
+    height: auto !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* Balance grid → 1 column on narrow mobile */
+  .balance-grid { grid-template-columns: 1fr !important; }
+
+  /* Dashboard quick-action links: stack vertically */
+  .dash-balance-actions {
+    flex-direction: column !important;
+    gap: 0.5rem !important;
+  }
+  .dash-balance-actions a {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-height: 44px !important;
+    text-align: center !important;
+    border-radius: 10px !important;
+  }
+
+  /* Orders tab bar: horizontal scroll instead of wrapping */
+  .ord-tabs {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    padding-bottom: 2px !important;
+  }
+  .ord-tabs::-webkit-scrollbar { display: none !important; }
+
+  /* Gig filter bar: stack fields on mobile */
+  .gigs-filter-bar > div:first-child {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+  }
+  .gigs-filter-input,
+  .gigs-filter-select {
+    width: 100% !important;
+    min-width: unset !important;
+  }
+  /* Filter actions: full-width */
+  .gigs-filter-bar .btn-primary,
+  .gigs-filter-bar .btn-secondary {
+    flex: 1 !important;
+    justify-content: center !important;
+    min-height: 48px !important;
+  }
+
+  /* Talent page heading */
+  .talent-wrap h1 { font-size: 1.5rem !important; }
+  .talent-wrap > div > p:first-of-type { font-size: 0.8125rem !important; }
+
+  /* Gig page header heading */
+  .talent-header h1.auth-title  { font-size: 1.5rem !important; }
+
+  /* Dashboard heading */
+  .dash-main-wrap h1 { font-size: 1.25rem !important; }
+
+  /* Order cards: tighter side padding */
+  .ord-card { border-radius: 12px !important; }
+  .ord-card > div[style] { padding-left: 0.875rem !important; padding-right: 0.875rem !important; }
+
+  /* Messages list items: guaranteed touch target */
+  .msgs-conv-item { min-height: 68px !important; }
+
+  /* Talent filters: wrap nicely */
+  .talent-filters { gap: 0.5rem !important; }
+  .talent-search-input { flex: 1 1 160px !important; }
+}
+
+/* Very small phones (< 360px): single-col everywhere */
+@media (max-width: 359px) {
+  .mf-grid-4   { grid-template-columns: 1fr !important; }
+  .mf-grid-2   { grid-template-columns: 1fr !important; }
+  .balance-grid { grid-template-columns: 1fr !important; }
+  .dash-stats-grid { grid-template-columns: 1fr !important; }
 }

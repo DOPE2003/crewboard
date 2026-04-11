@@ -2,7 +2,6 @@ import db from "@/lib/db";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Check, Shield, Clock, Star } from "lucide-react";
 import BannerUpload from "@/components/ui/BannerUpload";
 import ContactButtons from "@/components/ui/ContactButtons";
 import LogoutButton from "@/components/ui/LogoutButton";
@@ -23,7 +22,7 @@ const AVAIL_COLOR: Record<string, string> = {
   available: "#22c55e", open: "#f59e0b", busy: "#ef4444",
 };
 const AVAIL_LABEL: Record<string, string> = {
-  available: "Available", open: "Open to offers", busy: "Not available",
+  available: "Available now", open: "Open to offers", busy: "Currently busy",
 };
 
 function Stars({ rating }: { rating: number }) {
@@ -75,7 +74,11 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   }
   if (!user.profileComplete) {
     const viewerIdEarly = (session?.user as any)?.userId as string | undefined;
-    if (viewerIdEarly && viewerIdEarly === user.id) redirect("/dashboard");
+    const viewerHandleEarly = (session?.user as any)?.twitterHandle as string | undefined;
+    const isOwner =
+      (viewerIdEarly && viewerIdEarly === user.id) ||
+      (viewerHandleEarly && viewerHandleEarly.toLowerCase() === normalizedHandle);
+    if (isOwner) redirect("/dashboard");
     return <div style={{ padding: "2rem", color: "var(--text-muted)" }}>Profile not found.</div>;
   }
 
@@ -151,6 +154,40 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const nextItem = completionItems.find(i => !i.done);
 
   const displayName = user.name ?? (user.twitterId ? "Anonymous" : user.twitterHandle);
+  const firstName = displayName.split(" ")[0];
+
+  // Lowest active gig price
+  const minGigPrice = user.gigs?.length > 0
+    ? Math.min(...(user.gigs as any[]).map((g: any) => g.price ?? Infinity))
+    : null;
+
+  // Last active label
+  let lastActiveLabel = "";
+  if (user.lastSeenAt) {
+    const diffMin = Math.floor((Date.now() - new Date(user.lastSeenAt).getTime()) / 60000);
+    const diffHr  = Math.floor(diffMin / 60);
+    const diffDay = Math.floor(diffHr / 24);
+    if (diffMin < 5)       lastActiveLabel = "Active now";
+    else if (diffMin < 60) lastActiveLabel = `Active ${diffMin}m ago`;
+    else if (diffHr < 24)  lastActiveLabel = `Active ${diffHr}h ago`;
+    else if (diffDay < 7)  lastActiveLabel = `Active ${diffDay}d ago`;
+  }
+
+  // "Why hire me" bullets derived from existing data
+  const whyChooseBullets: string[] = [
+    completedOrdersCount > 0
+      ? `${completedOrdersCount} completed order${completedOrdersCount > 1 ? "s" : ""} on Crewboard`
+      : null,
+    avgRating
+      ? `${avgRating}-star rating across ${reviews.length} client review${reviews.length > 1 ? "s" : ""}`
+      : null,
+    user.walletAddress
+      ? "Wallet verified — payments settled on-chain, no chargebacks"
+      : null,
+    (user.skills?.length ?? 0) > 0
+      ? `Skilled in ${(user.skills as string[]).slice(0, 3).join(", ")}`
+      : null,
+  ].filter(Boolean) as string[];
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--background)", paddingTop: "5rem", paddingBottom: "4rem" }}>
@@ -219,51 +256,69 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
             {/* Name + badges */}
             <div style={{ marginTop: "0.65rem", padding: "0 24px" }}>
-              {/* Row 1: Name + OG + Wallet */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <h1 style={{ fontSize: "20px", fontWeight: 500, margin: 0, color: "var(--foreground)" }}>
-                  {displayName}
-                </h1>
-                {user.isOG && <OGBadge size="lg" />}
-                {user.walletAddress && <WalletVerifiedBadge />}
+              {/* Row 1: Name + OG + Wallet + CTA buttons (visitor) */}
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <h1 style={{ fontSize: "22px", fontWeight: 700, margin: 0, color: "var(--foreground)" }}>
+                      {displayName}
+                    </h1>
+                    {user.isOG && <OGBadge size="lg" />}
+                    {user.walletAddress && <WalletVerifiedBadge />}
+                    {avgRating && (
+                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "13px", fontWeight: 700, color: "#92400e", background: "#fef3c7", border: "1px solid #fde68a", padding: "2px 9px", borderRadius: 99, flexShrink: 0 }}>
+                        ★ {avgRating}
+                        <span style={{ fontWeight: 400, fontSize: "11px", color: "#a16207" }}>({reviews.length})</span>
+                      </span>
+                    )}
+                  </div>
+                  {/* Role title + starting price */}
+                  <div style={{ marginTop: 5, display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                    {user.userTitle && (
+                      <span style={{ fontSize: "15px", fontWeight: 600, color: "var(--foreground)" }}>
+                        {user.userTitle}
+                      </span>
+                    )}
+                    {minGigPrice !== null && (
+                      <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>
+                        · Starting from <span style={{ fontWeight: 700, color: "#14B8A6" }}>${minGigPrice}</span>
+                      </span>
+                    )}
+                  </div>
+                </div>
+
+                {/* Primary CTAs — visitors only, top right */}
+                {canMessage && (
+                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                    <ContactButtons recipientId={user.id} />
+                  </div>
+                )}
               </div>
 
-              {/* Row 2: Role + Availability pills */}
-              <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 8, marginBottom: 6, flexWrap: "wrap" }}>
-                {user.userTitle && (
-                  <span style={{ fontSize: "12px", fontWeight: 500, padding: "3px 12px", borderRadius: 99, background: "#E1F5EE", color: "#0F6E56" }}>
-                    {user.userTitle}
-                  </span>
-                )}
+              {/* Row 2: Availability + last active + handle + member since */}
+              <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, marginBottom: 6, flexWrap: "wrap" }}>
                 <span style={{
                   display: "flex", alignItems: "center", gap: 5,
-                  fontSize: "12px", fontWeight: 500, padding: "3px 12px", borderRadius: 99,
-                  background: avail === "available" ? "#dcfce7" : "var(--background)",
-                  color: avail === "available" ? "#166534" : "var(--text-muted)",
+                  fontSize: "12px", fontWeight: 600, padding: "3px 10px", borderRadius: 99,
+                  background: avail === "available" ? "#dcfce7" : avail === "busy" ? "#fee2e2" : "var(--card-bg)",
+                  color: avail === "available" ? "#166534" : avail === "busy" ? "#991b1b" : "var(--text-muted)",
+                  border: "1px solid " + (avail === "available" ? "rgba(34,197,94,0.25)" : avail === "busy" ? "rgba(239,68,68,0.2)" : "var(--card-border)"),
                 }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", flexShrink: 0, background: AVAIL_COLOR[avail] }} />
+                  <span style={{ width: 6, height: 6, borderRadius: "50%", flexShrink: 0, background: AVAIL_COLOR[avail], animation: avail === "available" ? "availPulse 2s ease-in-out infinite" : undefined }} />
                   {AVAIL_LABEL[avail]}
                 </span>
+                {lastActiveLabel && (
+                  <span style={{ fontSize: "12px", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: lastActiveLabel === "Active now" ? "#22c55e" : "#d1d5db", display: "inline-block" }} />
+                    {lastActiveLabel}
+                  </span>
+                )}
+                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>@{user.twitterHandle}</span>
+                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Member since {joinMonthYear}</span>
               </div>
 
-              {/* Row 3: @handle · rating · member since */}
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0", display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                <span>@{user.twitterHandle}</span>
-                {avgRating && (
-                  <>
-                    <span style={{ opacity: 0.3 }}>·</span>
-                    <span style={{ display: "flex", alignItems: "center", gap: 3, color: "#f59e0b" }}>
-                      <Star size={11} fill="#f59e0b" />
-                      {avgRating}
-                    </span>
-                  </>
-                )}
-                <span style={{ opacity: 0.3 }}>·</span>
-                <span>Member since {joinMonthYear}</span>
-              </p>
-
-              {/* Social links — editable on own profile */}
-              <div style={{ marginTop: "0.65rem" }}>
+              {/* Social links */}
+              <div style={{ marginTop: "0.5rem" }}>
                 <SocialLinksEditor
                   twitterHandle={user.twitterHandle}
                   telegramHandle={user.telegramHandle ?? null}
@@ -275,7 +330,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
               {/* Bio */}
               {user.bio ? (
-                <p style={{ fontSize: "14px", lineHeight: 1.7, color: "var(--text-muted)", margin: "0.75rem 0 0" }}>
+                <p style={{ fontSize: "14px", lineHeight: 1.75, color: "var(--text-muted)", margin: "0.75rem 0 0", maxWidth: "60ch" }}>
                   {user.bio}
                 </p>
               ) : isOwnProfile ? (
@@ -283,6 +338,40 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   Add a bio to tell clients about yourself.
                 </p>
               ) : null}
+
+              {/* Escrow trust banner — visitor view */}
+              {!isOwnProfile && (
+                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "1rem", padding: "8px 12px", background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)", borderRadius: 8 }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span style={{ fontSize: "12px", fontWeight: 600, color: "#0f766e" }}>
+                    Payments secured via Solana escrow — funds are only released when you approve the work
+                  </span>
+                  {user.walletAddress && (
+                    <span style={{ marginLeft: "auto", flexShrink: 0, fontSize: "10px", fontWeight: 700, color: "#16a34a", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 8px", borderRadius: 99 }}>
+                      Wallet verified
+                    </span>
+                  )}
+                </div>
+              )}
+
+              {/* "Why hire" bullets — visitor view */}
+              {!isOwnProfile && whyChooseBullets.length > 0 && (
+                <div style={{ marginTop: "0.85rem", padding: "0.85rem 1rem", background: "var(--card-bg)", borderRadius: 10, border: "1px solid var(--card-border)" }}>
+                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#14b8a6", marginBottom: "0.6rem" }}>
+                    Why hire {firstName}?
+                  </div>
+                  <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 5 }}>
+                    {whyChooseBullets.map(b => (
+                      <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 7, fontSize: "13px", color: "var(--foreground)", lineHeight: 1.5 }}>
+                        <span style={{ color: "#14b8a6", fontWeight: 700, flexShrink: 0 }}>✓</span>
+                        {b}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
 
               {/* Profile completion bar (own profile only) */}
               {isOwnProfile && (
@@ -312,6 +401,58 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           {/* ── LEFT COLUMN ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
+            {/* Services — moved to top of left column for conversion */}
+            {(isOwnProfile || (user.gigs?.length > 0)) && (
+              <SectionCard>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+                  <SectionLabel>Services</SectionLabel>
+                  {isOwnProfile && (
+                    <Link href="/gigs/new" style={{ fontSize: "11px", fontWeight: 700, padding: "4px 12px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
+                      + Add service
+                    </Link>
+                  )}
+                </div>
+                {user.gigs?.length > 0 ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))", gap: "0.75rem" }}>
+                    {user.gigs.map((gig: any) => (
+                      <Link key={gig.id} href={`/gigs/${gig.id}`} style={{ display: "flex", flexDirection: "column", gap: 6, padding: "0.9rem", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--background)", textDecoration: "none" }}>
+                        {gig.category && (
+                          <span style={{ fontSize: "10px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#14B8A6" }}>{gig.category}</span>
+                        )}
+                        <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--foreground)", lineHeight: 1.45 }}>
+                          {gig.title}
+                        </div>
+                        {gig.description && (
+                          <div style={{ fontSize: "12px", color: "var(--text-muted)", lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as React.CSSProperties}>
+                            {gig.description}
+                          </div>
+                        )}
+                        <div style={{ marginTop: "auto", paddingTop: 6, borderTop: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 4 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                            <span style={{ fontWeight: 700, color: "#14B8A6", fontSize: "15px" }}>${gig.price}</span>
+                            {(gig.deliveryDays ?? gig.deliverInDays) && (
+                              <span style={{ fontSize: "11px", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 3 }}>
+                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                                {gig.deliveryDays ?? gig.deliverInDays}d delivery
+                              </span>
+                            )}
+                          </div>
+                          <span style={{ fontSize: "11px", color: "#14B8A6", fontWeight: 700 }}>Hire →</span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                ) : isOwnProfile ? (
+                  <div style={{ padding: "1.5rem", textAlign: "center", background: "rgba(20,184,166,0.03)", borderRadius: 10, border: "1px dashed rgba(20,184,166,0.25)" }}>
+                    <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>Post your first service to start getting hired.</p>
+                    <Link href="/gigs/new" style={{ display: "inline-block", fontSize: "12px", fontWeight: 700, padding: "7px 18px", borderRadius: 8, background: "#14B8A6", color: "#fff", textDecoration: "none" }}>
+                      Post a service
+                    </Link>
+                  </div>
+                ) : null}
+              </SectionCard>
+            )}
+
             {/* Skills */}
             <SectionCard>
               <SectionLabel>Skills</SectionLabel>
@@ -319,9 +460,9 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
                   {user.skills.map((s: string) => (
                     <span key={s} style={{
-                      fontSize: "12px", fontWeight: 500, padding: "5px 14px", borderRadius: 99,
-                      background: "rgba(var(--foreground-rgb), 0.05)", color: "var(--foreground)",
-                      border: "1px solid var(--card-border)",
+                      fontSize: "13px", fontWeight: 600, padding: "6px 16px", borderRadius: 99,
+                      background: "rgba(20,184,166,0.07)", color: "var(--foreground)",
+                      border: "1px solid rgba(20,184,166,0.2)",
                     }}>
                       {s}
                     </span>
@@ -341,7 +482,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 {isOwnProfile ? (
                   <PortfolioEditor initialItems={portfolioItems} handle={user.twitterHandle} />
                 ) : portfolioItems.length > 0 ? (
-                  <div className="portfolio-grid-3" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "0.75rem" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "1rem" }}>
                     {portfolioItems.map((item: any) => {
                       const colors = ["#E8FAF7", "#EEF2FF", "#FFF7ED", "#F0FDF4", "#FDF4FF"];
                       const idx = (item.id ?? "0").charCodeAt(0) % colors.length;
@@ -357,7 +498,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       );
                       const proxiedUrl = rawMediaUrl ? blobUrl(rawMediaUrl) : undefined;
                       return (
-                        <div key={item.id} style={{ borderRadius: 10, overflow: "hidden", border: "1px solid var(--card-border)" }}>
+                        <div key={item.id} style={{ borderRadius: 10, overflow: "hidden", border: "1px solid var(--card-border)", background: "var(--background)" }}>
                           {/* Media preview */}
                           {rawMediaType === "video" && proxiedUrl ? (
                             <div style={{ background: "#000", aspectRatio: "16/9" }}>
@@ -367,36 +508,35 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                             </div>
                           ) : rawMediaType === "image" && proxiedUrl ? (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img src={proxiedUrl} alt={item.title} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block", background: "#f3f4f6" }}
-                              onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} />
+                            <img src={proxiedUrl} alt={item.title} style={{ width: "100%", aspectRatio: "16/9", objectFit: "cover", display: "block", background: "#f3f4f6" }} />
                           ) : rawMediaType === "pdf" && proxiedUrl ? (
-                            <a href={proxiedUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#fef2f2", padding: "16px", textDecoration: "none", gap: 4, aspectRatio: "16/9" }}>
-                              <span style={{ fontSize: 28 }}>📄</span>
-                              <span style={{ fontSize: 10, fontWeight: 600, color: "#dc2626" }}>PDF</span>
+                            <a href={proxiedUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#fef2f2", padding: "24px", textDecoration: "none", gap: 6, aspectRatio: "16/9" }}>
+                              <span style={{ fontSize: 36 }}>📄</span>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: "#dc2626" }}>PDF</span>
                             </a>
                           ) : proxiedUrl ? (
-                            <a href={proxiedUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#eff6ff", padding: "16px", textDecoration: "none", gap: 4, aspectRatio: "16/9" }}>
-                              <span style={{ fontSize: 28 }}>📋</span>
-                              <span style={{ fontSize: 10, fontWeight: 600, color: "#2563eb" }}>File</span>
+                            <a href={proxiedUrl} target="_blank" rel="noopener noreferrer" style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "#eff6ff", padding: "24px", textDecoration: "none", gap: 6, aspectRatio: "16/9" }}>
+                              <span style={{ fontSize: 36 }}>📋</span>
+                              <span style={{ fontSize: 11, fontWeight: 600, color: "#2563eb" }}>File</span>
                             </a>
                           ) : (
-                            <a href={item.url ?? "#"} target={item.url ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", height: 80, background: colors[idx], alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
-                              <span style={{ fontSize: "24px", opacity: 0.3 }}>◆</span>
+                            <a href={item.url ?? "#"} target={item.url ? "_blank" : undefined} rel="noopener noreferrer" style={{ display: "flex", aspectRatio: "16/9", background: colors[idx], alignItems: "center", justifyContent: "center", textDecoration: "none" }}>
+                              <span style={{ fontSize: "32px", opacity: 0.3 }}>◆</span>
                             </a>
                           )}
                           {/* Info */}
-                          <div style={{ padding: "0.6rem 0.75rem", background: "var(--background)" }}>
-                            <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          <div style={{ padding: "0.75rem 0.9rem", borderTop: "1px solid var(--card-border)" }}>
+                            <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--foreground)", marginBottom: 4 }}>
                               {item.title}
                             </div>
                             {item.description && (
-                              <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              <div style={{ fontSize: "12px", color: "var(--text-muted)", lineHeight: 1.6, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" } as React.CSSProperties}>
                                 {item.description}
                               </div>
                             )}
                             {item.url && !item.mediaUrl && (
-                              <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "11px", color: "#14B8A6", textDecoration: "none", display: "inline-block", marginTop: 2 }}>
-                                View →
+                              <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "#14B8A6", fontWeight: 600, textDecoration: "none", display: "inline-block", marginTop: 6 }}>
+                                View project →
                               </a>
                             )}
                           </div>
@@ -494,25 +634,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           {/* ── RIGHT SIDEBAR ── */}
           <div className="profile-sidebar-col" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
-            {/* Hire + Message (visitor only) */}
-            {canMessage && (
-              <SectionCard style={{ padding: "1.25rem" }}>
-                <ContactButtons recipientId={user.id} />
-                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
-                  {[
-                    { icon: <Clock size={12} />, text: "Usually responds within 2h" },
-                    { icon: <Shield size={12} />, text: "Vetted Web3 professional" },
-                    { icon: <Check size={12} />, text: "Solana escrow protected" },
-                  ].map(({ icon, text }) => (
-                    <div key={text} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "11px", color: "var(--text-muted)" }}>
-                      <span style={{ color: "#14B8A6", flexShrink: 0, display: "flex" }}>{icon}</span>
-                      {text}
-                    </div>
-                  ))}
-                </div>
-              </SectionCard>
-            )}
-
             {/* Stats 2×2 */}
             <SectionCard>
               <SectionLabel>Stats</SectionLabel>
@@ -533,21 +654,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   </div>
                 ))}
               </div>
-
-              {!isOwnProfile && (
-                <div style={{ display: "flex", flexDirection: "column", gap: 6, marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
-                  {[
-                    { icon: <Clock size={12} />, text: "Usually responds within 2h" },
-                    { icon: <Shield size={12} />, text: "Vetted Web3 professional" },
-                    { icon: <Check size={12} />, text: "Solana escrow protected" },
-                  ].map(({ icon, text }) => (
-                    <div key={text} style={{ display: "flex", alignItems: "center", gap: 7, fontSize: "11px", color: "var(--text-muted)" }}>
-                      <span style={{ color: "#14B8A6", flexShrink: 0, display: "flex" }}>{icon}</span>
-                      {text}
-                    </div>
-                  ))}
-                </div>
-              )}
             </SectionCard>
 
             {/* Wallet */}
@@ -579,34 +685,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               )}
             </SectionCard>
 
-            {/* Active gigs */}
-            <SectionCard>
-              <SectionLabel>Active services</SectionLabel>
-              {user.gigs?.length > 0 ? (
-                <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-                  {user.gigs.slice(0, 3).map((gig: any) => (
-                    <Link key={gig.id} href={`/gigs/${gig.id}`} style={{ display: "block", padding: "0.75rem", borderRadius: 8, border: "1px solid var(--card-border)", textDecoration: "none", background: "var(--background)" }}>
-                      <div style={{ fontSize: "12px", fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", marginBottom: 3 }}>
-                        {gig.title}
-                      </div>
-                      <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-                        Starting at <span style={{ color: "#14B8A6", fontWeight: 600 }}>${gig.price}</span>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-              ) : (
-                <div>
-                  <p style={{ fontSize: "13px", color: "var(--text-muted)", margin: "0 0 0.75rem" }}>No active services yet.</p>
-                  {isOwnProfile && (
-                    <Link href="/gigs/new" style={{ display: "inline-block", fontSize: "12px", fontWeight: 600, padding: "6px 14px", borderRadius: 8, background: "rgba(20,184,166,0.08)", color: "#0d9488", border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none" }}>
-                      Post a service
-                    </Link>
-                  )}
-                </div>
-              )}
-            </SectionCard>
-
             {/* CV */}
             {isOwnProfile ? (
               <SectionCard>
@@ -627,13 +705,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 </a>
               </SectionCard>
             ) : null}
-
-            {/* Post a Gig (own profile) */}
-            {isOwnProfile && (
-              <Link href="/gigs/new" style={{ display: "block", textAlign: "center", padding: "0.75rem", background: "#14B8A6", color: "#fff", borderRadius: 10, fontWeight: 700, fontSize: "0.82rem", textDecoration: "none", letterSpacing: "0.04em" }}>
-                + Post a Service
-              </Link>
-            )}
 
             {/* Sign out + Delete account (own profile) */}
             {isOwnProfile && (

@@ -101,8 +101,8 @@ export default function BottomTabBar({
           alignItems: 'center',
           justifyContent: 'space-around',
           height: '56px',
-          backgroundColor: '#ffffff',
-          borderTop: '1px solid #e5e7eb',
+          backgroundColor: 'var(--nav-bg, #ffffff)',
+          borderTop: '1px solid var(--nav-border, #e5e7eb)',
           paddingBottom: 'env(safe-area-inset-bottom, 0px)',
         }}
       >
@@ -119,7 +119,7 @@ export default function BottomTabBar({
                 flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: 2,
+                gap: 3,
                 padding: '6px 0',
                 textDecoration: 'none',
                 color,
@@ -128,11 +128,18 @@ export default function BottomTabBar({
                 WebkitTapHighlightColor: 'transparent',
               }}
             >
-              <span style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28 }}>
+              {/* Icon pill — filled background when active */}
+              <span style={{
+                position: 'relative',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                width: 40, height: 28, borderRadius: 10,
+                background: active ? `${tab.activeColor}18` : 'transparent',
+                transition: 'background 0.2s',
+              }}>
                 {tab.icon(active)}
                 {tab.href === '/activities' && unreadActivities > 0 && (
                   <span style={{
-                    position: 'absolute', top: -4, right: -6,
+                    position: 'absolute', top: -4, right: -4,
                     minWidth: 16, height: 16, padding: '0 3px', borderRadius: 99,
                     background: '#ef4444', color: 'white',
                     fontSize: 9, fontWeight: 700,
@@ -142,12 +149,9 @@ export default function BottomTabBar({
                   </span>
                 )}
               </span>
-              <span style={{ fontSize: 10, fontWeight: active ? 700 : 500, letterSpacing: '0.04em', lineHeight: 1, color }}>
+              <span style={{ fontSize: 10, fontWeight: active ? 700 : 400, letterSpacing: '0.03em', lineHeight: 1, color }}>
                 {tab.label}
               </span>
-              {active && (
-                <span style={{ position: 'absolute', bottom: 1, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: tab.activeColor }} />
-              )}
             </Link>
           )
         })}
@@ -161,7 +165,7 @@ export default function BottomTabBar({
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: 2,
+            gap: 3,
             padding: '6px 0',
             background: 'none',
             border: 'none',
@@ -172,15 +176,17 @@ export default function BottomTabBar({
             WebkitTapHighlightColor: 'transparent',
           }}
         >
-          <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 28, height: 28 }}>
+          <span style={{
+            display: 'flex', alignItems: 'center', justifyContent: 'center',
+            width: 40, height: 28, borderRadius: 10,
+            background: isProfileActive ? `${BRAND}18` : 'transparent',
+            transition: 'background 0.2s',
+          }}>
             <ProfileIcon active={isProfileActive} />
           </span>
-          <span style={{ fontSize: 10, fontWeight: isProfileActive ? 700 : 500, letterSpacing: '0.04em', lineHeight: 1 }}>
+          <span style={{ fontSize: 10, fontWeight: isProfileActive ? 700 : 400, letterSpacing: '0.03em', lineHeight: 1 }}>
             Profile
           </span>
-          {isProfileActive && (
-            <span style={{ position: 'absolute', bottom: 1, left: '50%', transform: 'translateX(-50%)', width: 4, height: 4, borderRadius: '50%', background: BRAND }} />
-          )}
         </button>
       </nav>
 

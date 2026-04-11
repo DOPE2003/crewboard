@@ -247,8 +247,8 @@ export default function NavControlsClient({
         <div className="hidden md:block" style={{ width: 1, height: 20, background: 'var(--card-border, #e5e7eb)', margin: '0 2px' }} />
       )}
 
-      {/* Profile menu: shown on all screen sizes — NavProfileDropdown handles desktop dropdown vs mobile bottom sheet */}
-      <span>{children}</span>
+      {/* Profile menu: desktop only — bottom tab bar handles Profile on mobile */}
+      <span className="hidden md:block">{children}</span>
       {!loggedIn && (
         <Link
           href="/login"

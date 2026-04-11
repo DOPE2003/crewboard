@@ -1,5 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 interface OrderGig {
   id: string;
   title: string;
@@ -30,6 +32,7 @@ export interface CompletedOrder {
 }
 
 export default function ProofOfWorkFeed({ orders }: { orders: CompletedOrder[] }) {
+  const router = useRouter();
   if (orders.length === 0) return null;
 
   return (
@@ -299,7 +302,7 @@ export default function ProofOfWorkFeed({ orders }: { orders: CompletedOrder[] }
             const sellerInitial = (order.seller.name ?? order.seller.twitterHandle ?? "U")[0].toUpperCase();
 
             return (
-              <a key={order.id} href={`/gigs/${order.gig.id}`} className="pow-card">
+              <div key={order.id} role="link" tabIndex={0} onClick={() => router.push(`/gigs/${order.gig.id}`)} onKeyDown={(e) => e.key === "Enter" && router.push(`/gigs/${order.gig.id}`)} className="pow-card">
 
                 {/* Top gradient band */}
                 <div style={{
@@ -453,7 +456,7 @@ export default function ProofOfWorkFeed({ orders }: { orders: CompletedOrder[] }
                   )}
 
                 </div>
-              </a>
+              </div>
             );
           })}
         </div>

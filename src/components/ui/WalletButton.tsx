@@ -8,11 +8,41 @@ function shortAddr(addr: string) {
   return addr.slice(0, 4) + "..." + addr.slice(-4);
 }
 
-// Connects Phantom directly via window.phantom.solana within a click handler
-// (preserves user-gesture context so the extension popup fires).
-// CRITICAL ORDER: await provider.connect() FIRST so Phantom is connected before
-// select() initialises the adapter — otherwise adapter.connected is false on init
-// and publicKey never propagates.
+/** True when running on a phone/tablet (userAgent-based). */
+function detectMobile(): boolean {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(
+    navigator.userAgent
+  );
+}
+
+/** True when Phantom has injected window.solana (desktop ext OR Phantom in-app browser). */
+function detectPhantom(): boolean {
+  return !!(
+    (window as any).phantom?.solana ??
+    ((window as any).solana?.isPhantom ? (window as any).solana : null)
+  );
+}
+
+/**
+ * Phantom deep link — opens the given URL inside Phantom's in-app browser.
+ * Format: https://phantom.app/ul/browse/{encodedUrl}?ref={encodedOrigin}
+ */
+function phantomDeepLink(url: string): string {
+  return (
+    "https://phantom.app/ul/browse/" +
+    encodeURIComponent(url) +
+    "?ref=" +
+    encodeURIComponent(window.location.origin)
+  );
+}
+
+/**
+ * Connects Phantom directly via window.phantom.solana within a click handler
+ * (preserves user-gesture context so the extension popup fires).
+ * CRITICAL ORDER: await provider.connect() FIRST so Phantom is connected before
+ * select() initialises the adapter — otherwise adapter.connected is false on init
+ * and publicKey never propagates.
+ */
 async function connectPhantomDirect(select: (name: any) => void): Promise<boolean> {
   const provider =
     (window as any).phantom?.solana ??
@@ -43,6 +73,10 @@ function WalletButtonInner() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
+  // Evaluate once on mount — neither changes after page load
+  const [isMobile]  = useState(() => detectMobile());
+  const [hasPhantom] = useState(() => detectPhantom());
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
@@ -51,10 +85,34 @@ function WalletButtonInner() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // ── Mobile, no Phantom injected → "Open in Phantom" deep link ──────────────
+  // Once inside Phantom's browser, window.solana is available → normal connect
+  if (isMobile && !hasPhantom && !connected) {
+    return (
+      <a
+        href={phantomDeepLink(window.location.href)}
+        style={{
+          display: "flex", alignItems: "center", gap: "0.4rem",
+          padding: "0.35rem 0.75rem", borderRadius: "999px",
+          fontFamily: "Inter, sans-serif", fontSize: "0.68rem", fontWeight: 700,
+          border: "1.5px solid #ab9ff2",
+          background: "rgba(171,159,242,0.1)",
+          color: "#ab9ff2",
+          cursor: "pointer", transition: "all 0.15s",
+          letterSpacing: "0.03em", textDecoration: "none",
+        }}
+      >
+        <PhantomIcon size={11} />
+        Open in Phantom
+      </a>
+    );
+  }
+
+  // ── Normal connect (desktop ext, or already inside Phantom browser) ─────────
   const handleConnect = async () => {
     const ok = await connectPhantomDirect(select);
     if (!ok) {
-      // Phantom not detected — prompt install
+      // Desktop fallback: send to Phantom install page
       window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
     }
   };
@@ -121,5 +179,20 @@ function WalletButtonInner() {
         </div>
       )}
     </div>
+  );
+}
+
+/** Phantom ghost logo icon */
+function PhantomIcon({ size = 12 }: { size?: number }) {
+  return (
+    <svg
+      width={size} height={size}
+      viewBox="0 0 128 128"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      {/* Simplified Phantom ghost silhouette */}
+      <path d="M64 4C31.3 4 4 31.3 4 64s27.3 60 60 60 60-27.3 60-60S96.7 4 64 4zm28.5 68.2c-3.8 10.6-13.8 17.5-25 17.5-7 0-12.9-2.7-17.2-7.7l-3.8 7.7H34.4l7.8-15.8-5.3-10.5h10.5l1.5 3.1c.4-3.2 1.4-6.1 3.1-8.7 2.5-4.1 6.3-6.9 10.8-8.4v-.1c7.7-2.4 15.9-.1 21.1 5.8l4.1-8.2H99l-11.7 23.5 5.2 2.8z"/>
+    </svg>
   );
 }

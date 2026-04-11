@@ -122,10 +122,10 @@ export default function GigsFilters({
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "0.75rem" }}>
+        <div style={{ display: "flex", gap: "0.75rem", flexWrap: "wrap" }}>
           <button
             className="btn-primary"
-            style={{ padding: "0.75rem 1.5rem", fontSize: "0.82rem", borderRadius: "10px" }}
+            style={{ padding: "0.75rem 1.5rem", fontSize: "0.82rem", borderRadius: "10px", flex: "1 1 auto" }}
             onClick={apply}
           >
             Apply Filters
@@ -134,12 +134,12 @@ export default function GigsFilters({
           {(q || category || minPrice !== "0" || maxPrice !== "5000" || sort !== "newest") && (
             <button
               className="btn-secondary"
-              style={{ padding: "0.75rem 1.25rem", fontSize: "0.82rem", borderRadius: "10px", background: "rgba(var(--foreground-rgb), 0.05)", border: "1px solid var(--card-border)" }}
-              onClick={() => { 
-                setQ(""); 
-                setCategory(""); 
+              style={{ padding: "0.75rem 1.25rem", fontSize: "0.82rem", borderRadius: "10px", background: "rgba(var(--foreground-rgb), 0.05)", border: "1px solid var(--card-border)", flex: "1 1 auto" }}
+              onClick={() => {
+                setQ("");
+                setCategory("");
                 setMinPrice("0");
-                setMaxPrice("5000"); 
+                setMaxPrice("5000");
                 setSort("newest");
                 // Direct navigation for clear
                 router.push(pathname);

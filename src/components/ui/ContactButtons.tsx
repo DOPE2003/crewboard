@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTransition } from "react";
 import { startConversation, hireFromProfile } from "@/actions/messages";
 
@@ -10,6 +10,7 @@ interface Props {
 
 export default function ContactButtons({ recipientId }: Props) {
   const router = useRouter();
+  const pathname = usePathname();
   const [msgPending, startMsg] = useTransition();
   const [hirePending, startHire] = useTransition();
 
@@ -17,7 +18,11 @@ export default function ContactButtons({ recipientId }: Props) {
     startMsg(async () => {
       try {
         const { redirectTo } = await startConversation(recipientId);
-        router.push(redirectTo);
+        if (redirectTo === "/login") {
+          router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+        } else {
+          router.push(redirectTo);
+        }
       } catch (err: any) {
         alert(err?.message ?? "Something went wrong");
       }
@@ -28,7 +33,11 @@ export default function ContactButtons({ recipientId }: Props) {
     startHire(async () => {
       try {
         const { redirectTo } = await hireFromProfile(recipientId);
-        router.push(redirectTo);
+        if (redirectTo === "/login") {
+          router.push(`/login?callbackUrl=${encodeURIComponent(pathname)}`);
+        } else {
+          router.push(redirectTo);
+        }
       } catch (err: any) {
         alert(err?.message ?? "Something went wrong");
       }

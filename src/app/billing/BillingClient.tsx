@@ -3,14 +3,16 @@
 import { useState, useEffect } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { linkWallet } from "@/actions/wallet";
+import Link from "next/link";
 
 type Order = {
   id: string;
   amount: number;
   status: string;
   buyerId: string;
+  sellerId: string;
   createdAt: string;
-  gig: { title: string } | null;
+  gig: { title: string; category: string | null } | null;
 };
 
 type CategoryStat = { category: string; total: number };
@@ -19,7 +21,8 @@ type MonthlyStat  = { month: string; total: number };
 type Props = {
   walletAddress: string | null;
   totalEarned: number;
-  totalPending: number;
+  inEscrow: number;
+  pendingRelease: number;
   userId: string;
   orders: Order[];
   earningsByCategory: CategoryStat[];
@@ -33,531 +36,432 @@ function fmt(n: number) {
   return `$${n}`;
 }
 
-/* ── Simple SVG bar chart ── */
-function BarChart({ data, color = "#14B8A6" }: { data: { label: string; value: number }[]; color?: string }) {
-  const max = Math.max(...data.map((d) => d.value), 1);
-  const W = 100 / data.length;
+type HistoryFilter = "all" | "completed" | "pending" | "cancelled";
 
-  return (
-    <div style={{ width: "100%", height: "100%", display: "flex", flexDirection: "column" }}>
-      {/* Bars */}
-      <div style={{ flex: 1, display: "flex", alignItems: "flex-end", gap: 6, padding: "0 4px" }}>
-        {data.map((d, i) => {
-          const pct = (d.value / max) * 100;
-          return (
-            <div key={i} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 4, height: "100%" }}>
-              <div style={{ flex: 1, width: "100%", display: "flex", alignItems: "flex-end" }}>
-                <div
-                  title={`${d.label}: ${fmt(d.value)}`}
-                  style={{
-                    width: "100%",
-                    height: `${Math.max(pct, 2)}%`,
-                    background: d.value > 0
-                      ? `linear-gradient(180deg, ${color} 0%, ${color}99 100%)`
-                      : "rgba(0,0,0,0.06)",
-                    borderRadius: "6px 6px 3px 3px",
-                    transition: "height 0.4s ease",
-                    cursor: "default",
-                    position: "relative",
-                  }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
-      {/* Labels */}
-      <div style={{ display: "flex", gap: 6, padding: "6px 4px 0" }}>
-        {data.map((d, i) => (
-          <div key={i} style={{
-            flex: 1, textAlign: "center",
-            fontSize: 10, color: "#9ca3af", fontWeight: 500,
-            overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
-          }}>
-            {d.label}
-          </div>
-        ))}
-      </div>
-    </div>
+const STATUS_GROUPS: Record<HistoryFilter, string[]> = {
+  all:       [],
+  completed: ["completed"],
+  pending:   ["pending", "accepted", "funded", "delivered", "in_progress"],
+  cancelled: ["cancelled", "disputed", "refunded"],
+};
+
+const STATUS_COLOR: Record<string, { bg: string; text: string }> = {
+  completed:   { bg: "rgba(34,197,94,0.1)",   text: "#16a34a" },
+  funded:      { bg: "rgba(20,184,166,0.1)",   text: "#0d9488" },
+  delivered:   { bg: "rgba(99,102,241,0.1)",   text: "#6366f1" },
+  accepted:    { bg: "rgba(99,102,241,0.1)",   text: "#6366f1" },
+  pending:     { bg: "rgba(245,158,11,0.1)",   text: "#d97706" },
+  in_progress: { bg: "rgba(245,158,11,0.1)",   text: "#d97706" },
+  cancelled:   { bg: "rgba(107,114,128,0.1)",  text: "#6b7280" },
+  disputed:    { bg: "rgba(239,68,68,0.1)",    text: "#ef4444" },
+  refunded:    { bg: "rgba(239,68,68,0.1)",    text: "#ef4444" },
+};
+
+/** True on phones/tablets */
+function detectMobile(): boolean {
+  return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(navigator.userAgent);
+}
+
+/** True when Phantom has injected window.solana */
+function detectPhantom(): boolean {
+  return !!(
+    (window as any).phantom?.solana ??
+    ((window as any).solana?.isPhantom ? (window as any).solana : null)
   );
 }
 
-/* ── Horizontal bar (category breakdown) ── */
-function HorizBar({ label, value, max, color }: { label: string; value: number; max: number; color: string }) {
-  const pct = max > 0 ? (value / max) * 100 : 0;
+function phantomDeepLink(url: string): string {
   return (
-    <div style={{ marginBottom: 10 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-        <span style={{ fontSize: 12, color: "#374151", fontWeight: 500 }}>{label}</span>
-        <span style={{ fontSize: 12, color: "#14B8A6", fontWeight: 700 }}>{fmt(value)}</span>
-      </div>
-      <div style={{ height: 6, background: "#f3f4f6", borderRadius: 99, overflow: "hidden" }}>
-        <div style={{
-          height: "100%", width: `${pct}%`,
-          background: `linear-gradient(90deg, ${color}, ${color}bb)`,
-          borderRadius: 99,
-          transition: "width 0.5s ease",
-        }} />
-      </div>
-    </div>
+    "https://phantom.app/ul/browse/" +
+    encodeURIComponent(url) +
+    "?ref=" +
+    encodeURIComponent(typeof window !== "undefined" ? window.location.origin : "")
   );
 }
-
-const CAT_COLORS = [
-  "#14B8A6", "#6366f1", "#f59e0b", "#ec4899",
-  "#3b82f6", "#10b981", "#8b5cf6", "#f97316",
-];
 
 export default function BillingClient({
-  walletAddress, totalEarned, totalPending, userId, orders,
-  earningsByCategory, monthlyEarnings,
+  walletAddress, totalEarned, inEscrow, pendingRelease,
+  userId, orders, earningsByCategory, monthlyEarnings,
 }: Props) {
-  const [copied, setCopied]               = useState(false);
+  const [copied, setCopied]                   = useState(false);
+  const [filter, setFilter]                   = useState<HistoryFilter>("all");
+  const [showTransfer, setShowTransfer]       = useState(false);
   const [transferAddress, setTransferAddress] = useState("");
   const [transferAmount, setTransferAmount]   = useState("");
   const [isTransferring, setIsTransferring]   = useState(false);
   const [transferError, setTransferError]     = useState<string | null>(null);
   const [transferSuccess, setTransferSuccess] = useState(false);
+  const [transferConfirm, setTransferConfirm] = useState(false);
+  const [isMobile, setIsMobile]               = useState(false);
+  const [hasPhantom, setHasPhantom]           = useState(false);
 
-  const { publicKey, signTransaction } = useWallet();
+  const { publicKey, signTransaction, select } = useWallet();
   const { connection } = useConnection();
 
-  // Auto-link to DB as soon as any Phantom public key is available
   useEffect(() => {
-    if (walletAddress) return; // already saved
+    setIsMobile(detectMobile());
+    setHasPhantom(detectPhantom());
+  }, []);
 
+  useEffect(() => {
+    if (walletAddress) return;
     const provider =
       (window as any).phantom?.solana ??
       ((window as any).solana?.isPhantom ? (window as any).solana : null);
-
-    const save = (pk: string) => {
-      linkWallet({ publicKey: pk })
-        .then(() => window.location.reload())
-        .catch(console.error);
-    };
-
-    // 1. adapter already synced
+    const save = (pk: string) =>
+      linkWallet({ publicKey: pk }).then(() => window.location.reload()).catch(console.error);
     if (publicKey) { save(publicKey.toBase58()); return; }
-
-    // 2. Phantom connected but adapter not synced — read directly
-    if (provider?.isConnected && provider?.publicKey) {
-      save(provider.publicKey.toBase58()); return;
-    }
-
-    // 3. Wait for Phantom connect event
-    const onConnect = () => {
-      const pk = provider?.publicKey?.toBase58();
-      if (pk) save(pk);
-    };
+    if (provider?.isConnected && provider?.publicKey) { save(provider.publicKey.toBase58()); return; }
+    const onConnect = () => { const pk = provider?.publicKey?.toBase58(); if (pk) save(pk); };
     provider?.on?.("connect", onConnect);
     return () => provider?.off?.("connect", onConnect);
   }, [publicKey, walletAddress]);
 
   function copyAddress() {
-    if (!walletAddress) return;
-    navigator.clipboard.writeText(walletAddress).then(() => {
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    });
+    const addr = publicKey?.toBase58() ?? walletAddress;
+    if (!addr) return;
+    navigator.clipboard.writeText(addr).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
   }
 
   async function handleTransfer() {
     if (!publicKey || !signTransaction || !connection) {
-      setTransferError("Wallet not connected. Connect via Dashboard first.");
-      return;
+      setTransferError("Wallet not connected."); return;
     }
     const addr = transferAddress.trim();
     const amt  = parseFloat(transferAmount);
     if (!addr || isNaN(amt) || amt <= 0) return;
-
-    setIsTransferring(true);
-    setTransferError(null);
-    setTransferSuccess(false);
+    setIsTransferring(true); setTransferError(null); setTransferSuccess(false);
     try {
-      const { PublicKey, Transaction }                 = await import("@solana/web3.js");
-      const {
-        createTransferInstruction,
-        createAssociatedTokenAccountInstruction,
-        getAssociatedTokenAddress,
-        getAccount,
-        TOKEN_PROGRAM_ID,
-        ASSOCIATED_TOKEN_PROGRAM_ID,
-      } = await import("@solana/spl-token");
-
-      // Validate recipient address
+      const { PublicKey, Transaction } = await import("@solana/web3.js");
+      const { createTransferInstruction, createAssociatedTokenAccountInstruction, getAssociatedTokenAddress, getAccount, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID } = await import("@solana/spl-token");
       let recipient: InstanceType<typeof PublicKey>;
-      try { recipient = new PublicKey(addr); }
-      catch { setTransferError("Invalid Solana wallet address."); return; }
-
+      try { recipient = new PublicKey(addr); } catch { setTransferError("Invalid Solana address."); setIsTransferring(false); return; }
       const USDC_MINT    = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
       const senderATA    = await getAssociatedTokenAddress(USDC_MINT, publicKey);
       const recipientATA = await getAssociatedTokenAddress(USDC_MINT, recipient);
-      const amount       = Math.round(amt * 1_000_000); // USDC has 6 decimals
-
       const tx = new Transaction();
-
-      // Create recipient ATA if it doesn't exist yet
-      try {
-        await getAccount(connection, recipientATA);
-      } catch {
-        tx.add(createAssociatedTokenAccountInstruction(
-          publicKey, recipientATA, recipient, USDC_MINT,
-          TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID,
-        ));
+      try { await getAccount(connection, recipientATA); } catch {
+        tx.add(createAssociatedTokenAccountInstruction(publicKey, recipientATA, recipient, USDC_MINT, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID));
       }
-
-      tx.add(createTransferInstruction(senderATA, recipientATA, publicKey, amount, [], TOKEN_PROGRAM_ID));
-
+      tx.add(createTransferInstruction(senderATA, recipientATA, publicKey, Math.round(amt * 1_000_000), [], TOKEN_PROGRAM_ID));
       const { blockhash } = await connection.getLatestBlockhash();
-      tx.recentBlockhash = blockhash;
-      tx.feePayer = publicKey;
-
+      tx.recentBlockhash = blockhash; tx.feePayer = publicKey;
       const signed = await signTransaction(tx);
       const sig    = await connection.sendRawTransaction(signed.serialize());
       await connection.confirmTransaction(sig, "confirmed");
-
-      setTransferSuccess(true);
-      setTransferAmount("");
-      setTransferAddress("");
+      setTransferSuccess(true); setTransferAmount(""); setTransferAddress(""); setShowTransfer(false); setTransferConfirm(false);
     } catch (err: unknown) {
       const msg = (err as Error)?.message ?? "";
-      if (msg.includes("User rejected")) {
-        setTransferError("Transaction cancelled.");
-      } else if (msg.includes("insufficient")) {
-        setTransferError("Insufficient USDC balance.");
-      } else {
-        setTransferError(msg || "Transfer failed. Check address and balance.");
-      }
-    } finally {
-      setIsTransferring(false);
-    }
+      setTransferError(msg.includes("User rejected") ? "Cancelled." : msg.includes("insufficient") ? "Insufficient USDC balance." : msg || "Transfer failed.");
+    } finally { setIsTransferring(false); }
   }
 
-  const hasEarnings  = totalEarned > 0;
-  const hasMonthly   = monthlyEarnings.some((m) => m.total > 0);
-  const hasCategories = earningsByCategory.length > 0;
-  const maxCat = earningsByCategory[0]?.total ?? 1;
+  const addr = publicKey?.toBase58() ?? walletAddress;
 
-  const monthlyChartData = monthlyEarnings.map((m) => ({ label: m.month, value: m.total }));
+  const filteredOrders = filter === "all"
+    ? orders
+    : orders.filter((o) => STATUS_GROUPS[filter].includes(o.status));
+
+  const FILTERS: HistoryFilter[] = ["all", "completed", "pending", "cancelled"];
 
   return (
-    <div style={{ minHeight: "100vh", background: "var(--background, #f7f8fa)", fontFamily: "Inter, sans-serif" }}>
+    <div style={{ minHeight: "100vh", background: "var(--background)", fontFamily: "Inter, sans-serif" }}>
       <style>{`
-        .wallet-grid { grid-template-columns: 1fr 1fr; }
-        .wallet-stats { grid-template-columns: repeat(3, 1fr); }
-        @media (max-width: 900px) {
-          .wallet-grid { grid-template-columns: 1fr !important; }
-        }
-        @media (max-width: 768px) {
-          .billing-container { padding: 24px 16px 80px !important; }
-          .wallet-stats { grid-template-columns: repeat(3, 1fr) !important; }
-          .billing-stat-card { padding: 12px 8px !important; }
-          .billing-stat-value { font-size: 18px !important; }
-          .billing-wallet-card { padding: 20px 16px !important; border-radius: 16px !important; }
-          .billing-wallet-address { font-size: 17px !important; }
-          .billing-buttons { flex-wrap: wrap !important; gap: 8px !important; }
-          .billing-buttons button,
-          .billing-buttons a { flex: 1 !important; min-width: 120px !important; justify-content: center !important; min-height: 44px !important; }
-          .billing-history-row { padding: 14px 16px !important; }
-          .billing-history-title { font-size: 12px !important; }
-          .billing-icon-box { width: 32px !important; height: 32px !important; font-size: 12px !important; }
-        }
-        @media (max-width: 380px) {
-          .billing-stat-value { font-size: 15px !important; }
-          .billing-wallet-address { font-size: 15px !important; }
+        .wallet-layout { display: grid; grid-template-columns: 1fr 300px; gap: 1.5rem; align-items: start; }
+        .wallet-sidebar { position: sticky; top: 110px; display: flex; flex-direction: column; gap: 1rem; }
+        @media (max-width: 860px) {
+          .wallet-layout { grid-template-columns: 1fr !important; }
+          .wallet-sidebar { position: static !important; }
         }
       `}</style>
 
-      <div style={{ maxWidth: 1100, margin: "0 auto", width: "100%" }}>
-        <div className="billing-container" style={{ padding: "48px 24px 80px" }}>
+      <div style={{ maxWidth: 1060, margin: "0 auto", padding: "clamp(2rem,6vw,5rem) 1.5rem 5rem" }}>
 
-          {/* Header */}
-          <div style={{ marginBottom: 32 }}>
-            <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 6px" }}>
-              Account
-            </p>
-            <h1 style={{ fontSize: 32, fontWeight: 800, color: "var(--foreground, #111827)", margin: "0 0 6px" }}>My Wallet</h1>
-            <p style={{ fontSize: 13, color: "#6b7280", margin: 0 }}>
-              Manage your Solana wallet and payments
-            </p>
+        {/* Page title */}
+        <div style={{ marginBottom: "1.75rem" }}>
+          <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#14b8a6", marginBottom: "0.4rem" }}>
+            Wallet & Payments
           </div>
+          <h1 style={{ fontSize: "clamp(1.4rem,3vw,1.85rem)", fontWeight: 800, color: "var(--foreground)", margin: 0 }}>
+            My Wallet
+          </h1>
+        </div>
 
-          {/* Two-column grid */}
-          <div className="wallet-grid" style={{ display: "grid", gap: 24, alignItems: "start" }}>
+        <div className="wallet-layout">
 
-            {/* LEFT: wallet card + stats */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+          {/* ── LEFT: Payment history ── */}
+          <div>
+            <div style={{ borderRadius: 16, background: "var(--card-bg)", border: "1px solid var(--card-border)", overflow: "hidden" }}>
 
-              {/* Wallet card */}
-              <div className="billing-wallet-card" style={{
-                background: "linear-gradient(135deg, #0d9488 0%, #0f766e 50%, #065f46 100%)",
-                borderRadius: 20,
-                padding: "28px 24px",
-                position: "relative",
-                overflow: "hidden",
-                boxShadow: "0 8px 32px rgba(20, 184, 166, 0.3), 0 2px 8px rgba(0,0,0,0.2)",
-              }}>
-                <div style={{ position: "absolute", top: -40, right: -40, width: 160, height: 160, borderRadius: "50%", background: "rgba(255,255,255,0.08)", pointerEvents: "none" }} />
-                <div style={{ position: "absolute", bottom: -20, right: 40, width: 80, height: 80, borderRadius: "50%", background: "rgba(255,255,255,0.05)", pointerEvents: "none" }} />
-
-                <p style={{ fontSize: 11, fontWeight: 600, color: "rgba(255,255,255,0.6)", letterSpacing: "0.1em", textTransform: "uppercase", margin: "0 0 8px" }}>
-                  Connected Wallet
-                </p>
-                {(() => {
-                  const addr = publicKey?.toBase58() ?? walletAddress;
-                  return (
-                    <>
-                      <p className="billing-wallet-address" style={{ fontSize: 22, fontWeight: 800, color: "#ffffff", margin: "0 0 4px", letterSpacing: "0.02em" }}>
-                        {addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : "No wallet linked"}
-                      </p>
-                      <p style={{ fontSize: 12, color: "rgba(255,255,255,0.75)", margin: "0 0 20px", display: "flex", alignItems: "center", gap: 6 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: addr ? "#4ade80" : "#6b7280", display: "inline-block", flexShrink: 0 }} />
-                        {addr ? "Solana · Connected" : "Use the wallet button in the top navbar to connect"}
-                      </p>
-                      <div className="billing-buttons" style={{ display: "flex", gap: 10 }}>
-                        {addr && (
-                          <>
-                            <button onClick={copyAddress} style={{ background: "rgba(255,255,255,0.2)", border: "1px solid rgba(255,255,255,0.3)", borderRadius: 10, padding: "10px 16px", color: "#ffffff", fontSize: 12, fontWeight: 700, cursor: "pointer", fontFamily: "inherit", minHeight: 44 }}>
-                              {copied ? "✓ Copied" : "Copy Address"}
-                            </button>
-                            <a href={`https://solscan.io/account/${addr}`} target="_blank" rel="noopener noreferrer"
-                              style={{ background: "transparent", border: "1px solid rgba(255,255,255,0.25)", borderRadius: 10, padding: "10px 16px", color: "rgba(255,255,255,0.8)", fontSize: 12, fontWeight: 600, textDecoration: "none", display: "inline-flex", alignItems: "center", minHeight: 44 }}>
-                              Solscan ↗
-                            </a>
-                          </>
-                        )}
-                      </div>
-                    </>
-                  );
-                })()}
-              </div>
-
-              {/* Transfer Funds */}
-              {(publicKey || walletAddress) && (
-                <div style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 16, padding: 20 }}>
-                  <h3 style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground, #111827)", margin: "0 0 14px", display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ color: "#14B8A6" }}>↗</span> Transfer Funds
-                  </h3>
-
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {/* Recipient */}
-                    <div>
-                      <label style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                        Recipient Wallet Address
-                      </label>
-                      <input
-                        type="text"
-                        placeholder="Solana wallet address…"
-                        value={transferAddress}
-                        onChange={(e) => setTransferAddress(e.target.value)}
-                        style={{
-                          width: "100%", padding: "10px 12px", boxSizing: "border-box",
-                          border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 10,
-                          fontSize: 12, fontFamily: "Space Mono, monospace",
-                          background: "var(--background, #f7f8fa)", color: "var(--foreground, #111827)",
-                          outline: "none",
-                        }}
-                      />
-                    </div>
-
-                    {/* Amount + Send */}
-                    <div>
-                      <label style={{ fontSize: 11, fontWeight: 600, color: "#6b7280", display: "block", marginBottom: 5, textTransform: "uppercase", letterSpacing: "0.06em" }}>
-                        Amount (USDC)
-                      </label>
-                      <div style={{ display: "flex", gap: 8 }}>
-                        <input
-                          type="number"
-                          placeholder="0.00"
-                          value={transferAmount}
-                          onChange={(e) => setTransferAmount(e.target.value)}
-                          min="0"
-                          step="0.01"
-                          style={{
-                            flex: 1, padding: "10px 12px",
-                            border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 10,
-                            fontSize: 13, background: "var(--background, #f7f8fa)",
-                            color: "var(--foreground, #111827)", outline: "none",
-                          }}
-                        />
-                        <button
-                          onClick={handleTransfer}
-                          disabled={isTransferring || !transferAddress.trim() || !transferAmount}
-                          style={{
-                            background: isTransferring || !transferAddress.trim() || !transferAmount ? "#9ca3af" : "#14B8A6",
-                            color: "white", border: "none",
-                            padding: "10px 18px", borderRadius: 10,
-                            fontWeight: 700, fontSize: 13, cursor: isTransferring ? "not-allowed" : "pointer",
-                            flexShrink: 0, minHeight: 44, transition: "background 0.15s",
-                            fontFamily: "inherit",
-                          }}
-                        >
-                          {isTransferring ? "Sending…" : "Send →"}
-                        </button>
-                      </div>
-                    </div>
-
-                    {transferError && (
-                      <p style={{ fontSize: 12, color: "#ef4444", margin: 0 }}>{transferError}</p>
-                    )}
-                    {transferSuccess && (
-                      <p style={{ fontSize: 12, color: "#16a34a", margin: 0, fontWeight: 600 }}>Transfer sent successfully.</p>
-                    )}
-
-                    <p style={{ fontSize: 11, color: "#9ca3af", margin: 0, lineHeight: 1.5 }}>
-                      Transfers use your connected Solana wallet via Phantom. Make sure Phantom is unlocked before sending.
-                    </p>
-                  </div>
+              {/* Header + filters */}
+              <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+                <div style={{ fontSize: "0.7rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: "var(--foreground)" }}>
+                  Payment History
                 </div>
-              )}
-
-              {/* Stats */}
-              <div className="wallet-stats" style={{ display: "grid", gap: 12 }}>
-                {[
-                  { label: "Total Earned", value: fmt(totalEarned), color: "#14B8A6" },
-                  { label: "Pending",      value: fmt(totalPending), color: "#f59e0b" },
-                  { label: "Withdrawn",    value: "$0",              color: "#6b7280" },
-                ].map((stat) => (
-                  <div key={stat.label} className="billing-stat-card" style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 14, padding: "16px 14px", textAlign: "center" }}>
-                    <p className="billing-stat-value" style={{ fontSize: 24, fontWeight: 800, color: stat.color, margin: "0 0 4px" }}>
-                      {stat.value}
-                    </p>
-                    <p style={{ fontSize: 11, color: "#9ca3af", margin: 0, textTransform: "uppercase", letterSpacing: "0.08em", fontWeight: 600 }}>
-                      {stat.label}
-                    </p>
-                  </div>
-                ))}
-              </div>
-
-              {/* Monthly earnings chart */}
-              <div style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 16, padding: "20px" }}>
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
-                  <div>
-                    <p style={{ fontSize: 12, fontWeight: 700, color: "var(--foreground, #111827)", margin: "0 0 2px", letterSpacing: "0.04em" }}>
-                      Monthly Earnings
-                    </p>
-                    <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>Last 6 months</p>
-                  </div>
-                  {hasEarnings && (
-                    <span style={{ fontSize: 13, fontWeight: 800, color: "#14B8A6" }}>{fmt(totalEarned)}</span>
-                  )}
-                </div>
-                <div style={{ height: 120 }}>
-                  {hasMonthly ? (
-                    <BarChart data={monthlyChartData} color="#14B8A6" />
-                  ) : (
-                    <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                      <p style={{ fontSize: 12, color: "#d1d5db", margin: 0 }}>No earnings yet</p>
-                    </div>
-                  )}
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  {FILTERS.map((f) => (
+                    <button key={f} onClick={() => setFilter(f)} style={{
+                      padding: "4px 12px", borderRadius: 99,
+                      border: "1px solid var(--card-border)",
+                      fontSize: "0.68rem", fontWeight: 600, cursor: "pointer",
+                      background: filter === f ? "#14b8a6" : "transparent",
+                      color: filter === f ? "#fff" : "var(--text-muted)",
+                      textTransform: "capitalize" as const, fontFamily: "inherit",
+                      transition: "background 0.15s, color 0.15s",
+                    }}>
+                      {f}
+                    </button>
+                  ))}
                 </div>
               </div>
 
-            </div>
-
-            {/* RIGHT: category breakdown + payment history */}
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-
-              {/* Category breakdown */}
-              <div style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 16, padding: "20px" }}>
-                <div style={{ marginBottom: 16 }}>
-                  <p style={{ fontSize: 12, fontWeight: 700, color: "var(--foreground, #111827)", margin: "0 0 2px", letterSpacing: "0.04em" }}>
-                    Earnings by Field
-                  </p>
-                  <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>Your income per service category</p>
+              {/* Rows */}
+              {filteredOrders.length === 0 ? (
+                <div style={{ padding: "3.5rem", textAlign: "center", color: "var(--text-muted)", fontSize: "0.82rem" }}>
+                  No {filter === "all" ? "" : filter} transactions yet.
                 </div>
-
-                {hasCategories ? (
-                  <div>
-                    {earningsByCategory.map((cat, i) => (
-                      <HorizBar
-                        key={cat.category}
-                        label={cat.category}
-                        value={cat.total}
-                        max={maxCat}
-                        color={CAT_COLORS[i % CAT_COLORS.length]}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div style={{ padding: "24px 0", textAlign: "center" }}>
-                    <p style={{ fontSize: 13, color: "#d1d5db", margin: 0 }}>Complete orders to see your breakdown</p>
-                  </div>
-                )}
-              </div>
-
-              {/* Payment history */}
-              <div style={{ background: "var(--dropdown-bg, #ffffff)", border: "1px solid var(--card-border, #e5e7eb)", borderRadius: 16, overflow: "hidden" }}>
-                <div style={{ padding: "16px 20px", borderBottom: "1px solid var(--card-border, #f3f4f6)" }}>
-                  <h2 className="billing-history-title" style={{ fontSize: 12, fontWeight: 700, color: "var(--foreground, #111827)", margin: 0, letterSpacing: "0.08em", textTransform: "uppercase" }}>
-                    Payment History
-                  </h2>
-                </div>
-
-                {orders.length === 0 ? (
-                  <div style={{ padding: "48px 24px", textAlign: "center" }}>
-                    <p style={{ fontSize: 32, margin: "0 0 12px" }}>💳</p>
-                    <p style={{ fontSize: 14, color: "#9ca3af", margin: 0 }}>No transactions yet</p>
-                  </div>
-                ) : (
-                  orders.map((order, i) => {
-                    const isOutgoing = order.buyerId === userId;
+              ) : (
+                <div>
+                  {filteredOrders.map((order, i) => {
+                    const isOut = order.buyerId === userId;
+                    const sc = STATUS_COLOR[order.status] ?? { bg: "rgba(0,0,0,0.05)", text: "#6b7280" };
                     return (
-                      <div key={order.id} className="billing-history-row" style={{
-                        padding: "16px 20px",
-                        borderBottom: i < orders.length - 1 ? "1px solid var(--card-border, #f9fafb)" : "none",
-                        display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12,
+                      <div key={order.id} style={{
+                        display: "flex", alignItems: "center", gap: 12,
+                        padding: "0.9rem 1.25rem",
+                        borderBottom: i < filteredOrders.length - 1 ? "1px solid var(--card-border)" : "none",
                       }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 12, minWidth: 0 }}>
-                          <div className="billing-icon-box" style={{
-                            width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-                            background: isOutgoing ? "#fef2f2" : "#f0fdfa",
-                            display: "flex", alignItems: "center", justifyContent: "center",
-                            fontSize: 16, color: isOutgoing ? "#ef4444" : "#14B8A6",
-                          }}>
-                            {isOutgoing ? "↑" : "↓"}
+                        {/* Direction */}
+                        <div style={{
+                          width: 36, height: 36, borderRadius: 10, flexShrink: 0,
+                          background: isOut ? "rgba(239,68,68,0.08)" : "rgba(34,197,94,0.08)",
+                          display: "flex", alignItems: "center", justifyContent: "center",
+                          fontSize: 14, color: isOut ? "#ef4444" : "#22c55e", fontWeight: 700,
+                        }}>
+                          {isOut ? "↑" : "↓"}
+                        </div>
+
+                        {/* Details */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontSize: "0.82rem", fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {order.gig?.title ?? "Order"}
                           </div>
-                          <div style={{ minWidth: 0 }}>
-                            <p style={{ fontSize: 13, fontWeight: 600, color: "var(--foreground, #111827)", margin: "0 0 2px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                              {order.gig?.title ? (order.gig.title.length > 36 ? order.gig.title.slice(0, 36) + "…" : order.gig.title) : "Order"}
-                            </p>
-                            <p style={{ fontSize: 11, color: "#9ca3af", margin: 0 }}>
-                              {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                            </p>
+                          <div style={{ fontSize: "0.67rem", color: "var(--text-muted)", marginTop: 2 }}>
+                            {new Date(order.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                            {order.gig?.category && <> · {order.gig.category}</>}
                           </div>
                         </div>
+
+                        {/* Amount + status */}
                         <div style={{ textAlign: "right", flexShrink: 0 }}>
-                          <p style={{ fontSize: 14, fontWeight: 700, margin: "0 0 4px", color: isOutgoing ? "#ef4444" : "#14B8A6" }}>
-                            {isOutgoing ? "-" : "+"}${order.amount}
-                          </p>
-                          <span style={{
-                            fontSize: 10, fontWeight: 600, padding: "2px 8px", borderRadius: 99,
-                            background:
-                              order.status === "completed"  ? "#dcfce7" :
-                              order.status === "disputed"   ? "#fef2f2" :
-                              order.status === "cancelled"  ? "#f3f4f6" :
-                              order.status === "funded"     ? "#f0fdfa" :
-                              "#fef3c7",
-                            color:
-                              order.status === "completed"  ? "#16a34a" :
-                              order.status === "disputed"   ? "#ef4444" :
-                              order.status === "cancelled"  ? "#6b7280" :
-                              order.status === "funded"     ? "#0d9488" :
-                              "#d97706",
-                          }}>
-                            {order.status.toUpperCase()}
+                          <div style={{ fontSize: "0.9rem", fontWeight: 800, color: isOut ? "#ef4444" : "#22c55e", fontFamily: "Space Mono, monospace" }}>
+                            {isOut ? "-" : "+"}${order.amount}
+                          </div>
+                          <span style={{ fontSize: "0.58rem", fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: sc.bg, color: sc.text, textTransform: "capitalize" as const }}>
+                            {order.status}
                           </span>
                         </div>
+
+                        <Link href={`/orders/${order.id}`} style={{
+                          flexShrink: 0, padding: "5px 10px", borderRadius: 8,
+                          fontSize: "0.65rem", fontWeight: 600, textDecoration: "none",
+                          border: "1px solid var(--card-border)", color: "var(--text-muted)",
+                        }}>
+                          View
+                        </Link>
                       </div>
                     );
-                  })
-                )}
-              </div>
-
+                  })}
+                </div>
+              )}
             </div>
           </div>
+
+          {/* ── RIGHT: Sidebar ── */}
+          <div className="wallet-sidebar">
+
+            {/* Balance cards */}
+            {[
+              { label: "Total Earned",    value: fmt(totalEarned),    color: "#22c55e", bg: "rgba(34,197,94,0.07)",   border: "rgba(34,197,94,0.2)",   note: "From completed orders",     icon: <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/> },
+              { label: "In Escrow",       value: fmt(inEscrow),       color: "#f59e0b", bg: "rgba(245,158,11,0.07)",  border: "rgba(245,158,11,0.2)",  note: "Locked in smart contract",  icon: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></> },
+              { label: "Pending Release", value: fmt(pendingRelease), color: "#6366f1", bg: "rgba(99,102,241,0.07)",  border: "rgba(99,102,241,0.2)",  note: "Awaiting client approval",  icon: <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></> },
+            ].map((s) => (
+              <div key={s.label} style={{ borderRadius: 14, padding: "1.1rem 1.15rem", background: s.bg, border: `1px solid ${s.border}` }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: "0.6rem" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke={s.color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {s.icon}
+                  </svg>
+                  <span style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase" as const, color: s.color }}>{s.label}</span>
+                </div>
+                <div style={{ fontSize: "1.6rem", fontWeight: 800, color: "var(--foreground)", fontFamily: "Space Mono, monospace", lineHeight: 1, marginBottom: "0.3rem" }}>
+                  {s.value}
+                </div>
+                <div style={{ fontSize: "0.62rem", color: "var(--text-muted)" }}>{s.note}</div>
+              </div>
+            ))}
+
+            {/* Wallet card */}
+            <div style={{
+              borderRadius: 14, padding: "1.15rem",
+              background: "linear-gradient(135deg,#0d9488 0%,#0f766e 50%,#065f46 100%)",
+              position: "relative", overflow: "hidden",
+              boxShadow: "0 6px 24px rgba(20,184,166,0.22)",
+            }}>
+              <div style={{ position: "absolute", top: -30, right: -30, width: 110, height: 110, borderRadius: "50%", background: "rgba(255,255,255,0.07)", pointerEvents: "none" }} />
+              <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.14em", textTransform: "uppercase" as const, marginBottom: "0.4rem" }}>
+                Solana Wallet
+              </div>
+              <div style={{ fontSize: "0.95rem", fontWeight: 800, color: "#fff", fontFamily: "Space Mono, monospace", marginBottom: "0.3rem", wordBreak: "break-all" }}>
+                {addr ? `${addr.slice(0, 6)}...${addr.slice(-4)}` : "Not connected"}
+              </div>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: "0.9rem" }}>
+                <span style={{ width: 6, height: 6, borderRadius: "50%", background: addr ? "#4ade80" : "#6b7280", display: "inline-block" }} />
+                <span style={{ fontSize: "0.65rem", color: "rgba(255,255,255,0.65)" }}>
+                  {addr ? "Connected" : isMobile && !hasPhantom ? "Not connected" : "Use wallet button in navbar"}
+                </span>
+              </div>
+
+              {/* Mobile without Phantom: deep link CTA */}
+              {!addr && isMobile && !hasPhantom && (
+                <a
+                  href={phantomDeepLink(typeof window !== "undefined" ? window.location.href : "")}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 7,
+                    padding: "9px 16px", borderRadius: 10,
+                    background: "rgba(255,255,255,0.15)",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    color: "#fff", fontSize: "0.78rem", fontWeight: 700,
+                    textDecoration: "none", cursor: "pointer",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  <svg width="14" height="14" viewBox="0 0 128 128" fill="currentColor">
+                    <path d="M64 4C31.3 4 4 31.3 4 64s27.3 60 60 60 60-27.3 60-60S96.7 4 64 4zm28.5 68.2c-3.8 10.6-13.8 17.5-25 17.5-7 0-12.9-2.7-17.2-7.7l-3.8 7.7H34.4l7.8-15.8-5.3-10.5h10.5l1.5 3.1c.4-3.2 1.4-6.1 3.1-8.7 2.5-4.1 6.3-6.9 10.8-8.4v-.1c7.7-2.4 15.9-.1 21.1 5.8l4.1-8.2H99l-11.7 23.5 5.2 2.8z"/>
+                  </svg>
+                  Open in Phantom
+                </a>
+              )}
+
+              {/* Mobile inside Phantom browser OR desktop: connect button */}
+              {!addr && (!isMobile || hasPhantom) && (
+                <button
+                  onClick={async () => {
+                    const provider =
+                      (window as any).phantom?.solana ??
+                      ((window as any).solana?.isPhantom ? (window as any).solana : null);
+                    if (!provider) return;
+                    try {
+                      await provider.connect();
+                      select("Phantom");
+                    } catch (e: any) {
+                      if (e?.code !== 4001) console.error("connect error", e);
+                    }
+                  }}
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 7,
+                    padding: "9px 16px", borderRadius: 10,
+                    background: "rgba(255,255,255,0.15)",
+                    border: "1px solid rgba(255,255,255,0.3)",
+                    color: "#fff", fontSize: "0.78rem", fontWeight: 700,
+                    cursor: "pointer", fontFamily: "inherit",
+                    marginBottom: "0.5rem",
+                  }}
+                >
+                  Connect Wallet
+                </button>
+              )}
+
+              {addr && (
+                <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+                  <button onClick={copyAddress} style={walletBtn}>{copied ? "✓ Copied" : "Copy"}</button>
+                  <a href={`https://solscan.io/account/${addr}`} target="_blank" rel="noopener noreferrer" style={{ ...walletBtn, textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
+                    Solscan ↗
+                  </a>
+                  <button onClick={() => { setShowTransfer(v => !v); setTransferError(null); setTransferConfirm(false); }} style={{ ...walletBtn, background: "rgba(255,255,255,0.1)" }}>
+                    Send ↗
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Send via wallet (collapsible) */}
+            {showTransfer && (
+              <div style={{ borderRadius: 14, padding: "1.1rem", background: "var(--card-bg)", border: "1px solid rgba(239,68,68,0.3)" }}>
+                <div style={{ display: "flex", gap: 8, padding: "0.65rem 0.85rem", borderRadius: 9, background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.18)", marginBottom: "0.9rem" }}>
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                  </svg>
+                  <div style={{ fontSize: "0.68rem", color: "#ef4444", lineHeight: 1.6 }}>
+                    <strong>Irreversible.</strong> Bypasses escrow — cannot be recovered.
+                  </div>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 9 }}>
+                  <div>
+                    <label style={labelStyle}>Recipient Address</label>
+                    <input type="text" placeholder="Solana address…" value={transferAddress} onChange={(e) => setTransferAddress(e.target.value)} style={inputStyle} />
+                  </div>
+                  <div>
+                    <label style={labelStyle}>Amount (USDC)</label>
+                    <input type="number" placeholder="0.00" value={transferAmount} min="0" step="0.01" onChange={(e) => setTransferAmount(e.target.value)} style={inputStyle} />
+                  </div>
+                  <button
+                    onClick={() => { if (!transferConfirm) { setTransferConfirm(true); return; } handleTransfer(); }}
+                    disabled={isTransferring || !transferAddress.trim() || !transferAmount}
+                    style={{
+                      padding: "9px", borderRadius: 9, border: "none",
+                      fontWeight: 700, fontSize: "0.78rem", cursor: "pointer",
+                      background: transferConfirm ? "#ef4444" : "#14b8a6",
+                      color: "#fff", fontFamily: "inherit",
+                      opacity: (!transferAddress.trim() || !transferAmount) ? 0.45 : 1,
+                    }}
+                  >
+                    {isTransferring ? "Sending…" : transferConfirm ? "Confirm — cannot undo" : "Send →"}
+                  </button>
+                  {transferError   && <div style={{ fontSize: "0.68rem", color: "#ef4444" }}>{transferError}</div>}
+                  {transferSuccess && <div style={{ fontSize: "0.68rem", color: "#16a34a", fontWeight: 600 }}>Sent successfully.</div>}
+                </div>
+              </div>
+            )}
+
+            {/* Escrow info */}
+            <div style={{ borderRadius: 14, padding: "1.1rem", background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.18)" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: "0.6rem" }}>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span style={{ fontSize: "0.62rem", fontWeight: 700, color: "#14b8a6", letterSpacing: "0.1em", textTransform: "uppercase" as const }}>How Escrow Works</span>
+              </div>
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", lineHeight: 1.65, margin: 0 }}>
+                Payments are locked in a <strong style={{ color: "var(--foreground)" }}>Solana smart contract</strong> when an order starts. Funds release only when you approve delivery. Disputes freeze funds until resolved.
+              </p>
+              {inEscrow > 0 && (
+                <div style={{ marginTop: "0.6rem", fontSize: "0.7rem", fontWeight: 700, color: "#14b8a6" }}>
+                  {fmt(inEscrow)} currently protected
+                </div>
+              )}
+            </div>
+
+          </div>
+          {/* end sidebar */}
+
         </div>
       </div>
     </div>
   );
 }
+
+const walletBtn: React.CSSProperties = {
+  background: "rgba(255,255,255,0.18)", border: "1px solid rgba(255,255,255,0.25)",
+  borderRadius: 8, padding: "6px 12px", color: "#fff", fontSize: "0.7rem",
+  fontWeight: 600, cursor: "pointer", fontFamily: "inherit",
+};
+const labelStyle: React.CSSProperties = {
+  fontSize: "0.6rem", fontWeight: 600, color: "var(--text-muted)",
+  display: "block", marginBottom: 4, textTransform: "uppercase" as const, letterSpacing: "0.06em",
+};
+const inputStyle: React.CSSProperties = {
+  width: "100%", padding: "8px 10px", boxSizing: "border-box",
+  border: "1px solid var(--card-border)", borderRadius: 9,
+  fontSize: "0.78rem", background: "var(--background)", color: "var(--foreground)",
+  outline: "none", fontFamily: "inherit",
+};

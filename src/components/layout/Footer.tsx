@@ -2,35 +2,31 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useLanguage } from "@/contexts/LanguageContext";
 
 export default function Footer() {
-  const { t } = useLanguage();
   const pathname = usePathname();
   if (pathname !== "/") return null;
+
   return (
     <footer style={{
-      borderTop: "1px solid var(--border)",
-      background: "var(--bg)",
-      padding: "3rem 2.5rem 2rem",
-      position: "relative",
-      zIndex: 1,
+      borderTop: "1px solid var(--card-border)",
+      background: "var(--background)",
+      padding: "3rem 2rem 0",
     }}>
       <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-        {/* Top row */}
+        {/* Top row: 3 columns */}
         <div style={{
-          display: "flex",
-          alignItems: "flex-start",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "2rem",
+          display: "grid",
+          gridTemplateColumns: "2fr 1fr 1fr",
+          gap: "clamp(1.5rem, 4vw, 3rem)",
           marginBottom: "2.5rem",
-        }}>
+        }} className="footer-cols">
 
-          {/* Brand */}
-          <div style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" style={{ width: 150, height: 38, color: "var(--text)" }}>
+          {/* Left: Brand */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            {/* Logo */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" style={{ width: 140, height: 35, color: "var(--foreground)" }}>
               <polygon points="124,80 98,125 46,125 20,80 46,35 98,35" fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
               <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
               <line x1="72" y1="54" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
@@ -42,40 +38,43 @@ export default function Footer() {
                 <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
               </text>
             </svg>
-            <span style={{ fontSize: "0.62rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#2DD4BF", fontWeight: 500 }}>
-              {t("nav.tagline")}
+
+            <span style={{ fontSize: "0.65rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#14B8A6", fontWeight: 600 }}>
+              Web3 Freelancer Marketplace
             </span>
-            <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", color: "var(--muted)", marginTop: "0.15rem", lineHeight: 1.6 }}>
-              {t("footer.tagline")}
-            </span>
+
+            <p style={{ fontSize: "0.75rem", color: "var(--text-muted)", lineHeight: 1.7, margin: "0.25rem 0 0.75rem", maxWidth: 280 }}>
+              Hire and get paid in Web3. On-chain escrow powered by Solana keeps every deal secure and transparent.
+            </p>
 
             {/* Email */}
             <a
               href="mailto:info@crewboard.com"
               style={{
-                display: "inline-flex", alignItems: "center", gap: "0.45rem",
-                fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "0.62rem",
-                letterSpacing: "0.04em", color: "var(--muted)", textDecoration: "none",
-                marginTop: "0.25rem",
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: "0.72rem", fontWeight: 500, color: "var(--text-muted)",
+                textDecoration: "none",
               }}
             >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
               info@crewboard.com
             </a>
 
-            {/* X handle */}
+            {/* Twitter */}
             <a
               href="https://x.com/crewboard_"
               target="_blank"
               rel="noopener noreferrer"
               style={{
-                display: "inline-flex", alignItems: "center", gap: "0.45rem",
-                fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.65rem",
-                letterSpacing: "0.08em", textTransform: "uppercase",
-                color: "var(--text)", textDecoration: "none",
-                padding: "0.4rem 0.85rem", border: "1.5px solid var(--border)",
-                borderRadius: "999px", marginTop: "0.5rem",
-                width: "fit-content", transition: "border-color 0.2s",
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: "0.72rem", fontWeight: 600, color: "var(--text-muted)",
+                textDecoration: "none", width: "fit-content",
+                padding: "4px 12px", borderRadius: 99,
+                border: "1px solid var(--card-border)",
+                marginTop: "0.25rem",
               }}
             >
               <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
@@ -85,62 +84,57 @@ export default function Footer() {
             </a>
           </div>
 
-          {/* Links columns */}
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "3rem" }}>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
-                {t("footer.platform")}
-              </div>
-              <Link href="/talent" className="footer-link">{t("footer.browseTalent")}</Link>
-              <Link href="/gigs" className="footer-link">{t("footer.gigs")}</Link>
+          {/* Middle: Explore */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+            <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.35rem" }}>
+              Explore
             </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
-                {t("footer.resources")}
-              </div>
-              <Link href="/whitepaper" className="footer-link">{t("footer.whitepaper")}</Link>
-              <Link href="/help" className="footer-link">{t("footer.help")}</Link>
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.56rem", letterSpacing: "0.14em", textTransform: "uppercase", color: "#94a3b8", marginBottom: "0.2rem" }}>
-                {t("footer.legal")}
-              </div>
-              <Link href="/privacy" className="footer-link">{t("footer.privacy")}</Link>
-              <Link href="/terms" className="footer-link">{t("footer.terms")}</Link>
-            </div>
-
+            <Link href="/talent" className="footer-nav-link">Browse Talent</Link>
+            <a href="#categories" className="footer-nav-link">Categories</a>
+            <a href="#how-it-works" className="footer-nav-link">How It Works</a>
+            <Link href="/gigs/new" className="footer-nav-link">Post a Service</Link>
           </div>
+
+          {/* Right: Company */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.55rem" }}>
+            <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.35rem" }}>
+              Company
+            </div>
+            <a href="#trust" className="footer-nav-link">About</a>
+            <a href="mailto:info@crewboard.com" className="footer-nav-link">Contact</a>
+            <Link href="/privacy" className="footer-nav-link">Privacy Policy</Link>
+            <Link href="/terms" className="footer-nav-link">Terms of Service</Link>
+          </div>
+
         </div>
 
-        {/* Bottom row */}
+        {/* Bottom bar */}
         <div style={{
-          borderTop: "1px solid var(--border)",
-          paddingTop: "1.5rem",
+          borderTop: "1px solid var(--card-border)",
+          padding: "1.25rem 0 1.5rem",
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
-          flexWrap: "wrap",
-          gap: "1rem",
+          justifyContent: "center",
         }}>
-          <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.1em", color: "var(--muted)" }}>
-            © {new Date().getFullYear()} Crewboard ·{" "}
-            <Link href="/terms" style={{ color: "var(--muted)", textDecoration: "none" }}>Terms</Link>
-            {" "}·{" "}
-            <Link href="/privacy" style={{ color: "var(--muted)", textDecoration: "none" }}>Privacy</Link>
-          </span>
-          <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", letterSpacing: "0.08em", color: "var(--muted)" }}>
-            BUILT BY{" "}
-            <a href="https://x.com/SAAD190914" target="_blank" rel="noopener noreferrer"
-              style={{ color: "#2DD4BF", fontWeight: 700, textDecoration: "none" }}>
-              TEJO
-            </a>
+          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)", letterSpacing: "0.06em" }}>
+            © 2026 Crewboard · Built on Solana
           </span>
         </div>
 
       </div>
+
+      <style>{`
+        .footer-cols { grid-template-columns: 2fr 1fr 1fr; }
+        @media (max-width: 720px) { .footer-cols { grid-template-columns: 1fr 1fr; } }
+        @media (max-width: 480px) { .footer-cols { grid-template-columns: 1fr; } }
+        .footer-nav-link {
+          font-size: 0.78rem;
+          color: var(--text-muted);
+          text-decoration: none;
+          transition: color 0.15s;
+        }
+        .footer-nav-link:hover { color: var(--foreground); }
+      `}</style>
     </footer>
   );
 }

@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireModerator } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 import { GigActions } from "./GigActions";
@@ -8,7 +8,7 @@ export default async function AdminGigsPage({
 }: {
   searchParams: Promise<{ q?: string; status?: string }>;
 }) {
-  await requireAdmin();
+  await requireModerator();
   const { q = "", status = "all" } = await searchParams;
 
   const gigs = await db.gig.findMany({

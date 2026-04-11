@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { useRouter } from "next/navigation";
 import PusherClient from "pusher-js";
 import { sendMessage, markMessagesAsRead } from "@/actions/messages";
 
@@ -239,7 +238,6 @@ export default function MessageThread({
   otherUserName,
   initialMessages = [],
 }: Props) {
-  const router = useRouter();
   const [messages, setMessages] = useState<Msg[]>(initialMessages);
   const [body, setBody] = useState("");
   const [sending, setSending] = useState(false);
@@ -252,12 +250,15 @@ export default function MessageThread({
   const [uploadProgress, setUploadProgress] = useState(0);
   const [uploading, setUploading] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [otherIsTyping, setOtherIsTyping] = useState(false);
   const threadBodyRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dragCounter = useRef(0);
   const pusherRef = useRef<InstanceType<typeof PusherClient> | null>(null);
   const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typingTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typingClearRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const otherDisplayName = otherUserName ?? `@${otherUserHandle}`;
 
@@ -286,6 +287,15 @@ export default function MessageThread({
             if (prev.some((m) => m.id === msg.id)) return prev;
             return [...prev, { ...msg, replyTo: msg.replyTo ?? null }];
           });
+          // Clear typing indicator when message arrives
+          setOtherIsTyping(false);
+        }
+      });
+      channel.bind("typing", (data: { userId: string }) => {
+        if (data.userId !== currentUserId) {
+          setOtherIsTyping(true);
+          if (typingClearRef.current) clearTimeout(typingClearRef.current);
+          typingClearRef.current = setTimeout(() => setOtherIsTyping(false), 2500);
         }
       });
     } catch {}
@@ -354,7 +364,6 @@ export default function MessageThread({
         setShowPaymentPopup(true);
         setTimeout(() => setShowPaymentPopup(false), 5000);
       }
-      router.refresh();
     } catch (err: any) {
       setMessages((prev) => prev.filter((m) => m.id !== optimisticMsg.id));
       setBody(text);
@@ -571,6 +580,18 @@ export default function MessageThread({
             </div>
           );
         })}
+        {/* Typing indicator */}
+        {otherIsTyping && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, padding: "4px 16px 8px" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 3, background: "var(--card-bg)", border: "1px solid var(--card-border)", borderRadius: 12, padding: "6px 12px" }}>
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--text-muted)", animation: "typingDot 1.2s ease-in-out infinite" }} />
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--text-muted)", animation: "typingDot 1.2s ease-in-out 0.2s infinite" }} />
+              <span style={{ width: 6, height: 6, borderRadius: "50%", background: "var(--text-muted)", animation: "typingDot 1.2s ease-in-out 0.4s infinite" }} />
+            </div>
+            <span style={{ fontSize: 11, color: "var(--text-muted)" }}>{otherDisplayName} is typing…</span>
+            <style>{`@keyframes typingDot { 0%,60%,100%{transform:translateY(0);opacity:0.4} 30%{transform:translateY(-4px);opacity:1} }`}</style>
+          </div>
+        )}
         <div style={{ height: 4 }} />
       </div>
 
@@ -729,7 +750,15 @@ export default function MessageThread({
           className="msgs-input"
           placeholder={attachedFile ? "Add a caption… (optional)" : "Write a message… (Enter to send)"}
           value={body}
-          onChange={(e) => { setBody(e.target.value); }}
+          onChange={(e) => {
+            setBody(e.target.value);
+            // Debounce typing event (fire at most every 1s)
+            if (typingTimerRef.current) return;
+            typingTimerRef.current = setTimeout(() => {
+              typingTimerRef.current = null;
+              fetch("/api/typing", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ conversationId }) }).catch(() => {});
+            }, 800);
+          }}
           onKeyDown={handleKey}
           rows={1}
           style={{}}

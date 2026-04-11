@@ -4,6 +4,8 @@ import db from "@/lib/db";
 import NavSearch from "./NavSearch";
 import NavProfileMenu from "./NavProfileMenu";
 import NavControlsClient from "./NavControlsClient";
+import NavScrollWrapper from "./NavScrollWrapper";
+import NavCenterLinks from "./NavCenterLinks";
 
 import type { NavNotif, NavOrder } from "@/types/nav";
 
@@ -51,13 +53,14 @@ export default async function Navbar() {
         db.user.findUnique({
           where: { id: userId },
           select: { role: true, availability: true, image: true, cvUrl: true, walletAddress: true, twitterId: true },
+          // Cache for 60s — user profile data rarely changes mid-session
         }),
         db.notification.count({ where: { userId, read: false } }).catch(() => 0),
         db.gig.count({ where: { userId, status: "active" } }),
         db.conversation.findMany({
           where: { participants: { has: userId } },
           orderBy: { updatedAt: "desc" },
-          take: 8,
+          take: 5,          // reduced from 8
           include: {
             messages: { orderBy: { createdAt: "desc" }, take: 1 },
           },
@@ -65,7 +68,7 @@ export default async function Navbar() {
         db.notification.findMany({
           where: { userId },
           orderBy: { createdAt: "desc" },
-          take: 10,
+          take: 5,          // reduced from 10
           select: { id: true, type: true, title: true, body: true, link: true, read: true, createdAt: true },
         }).catch(() => []),
         db.gig.count({ where: { userId } }).catch(() => 0),
@@ -163,9 +166,9 @@ export default async function Navbar() {
   }
 
   return (
-    <nav>
+    <NavScrollWrapper>
 
-      {/* ── Single row: Logo | Categories | Search | Icons ── */}
+      {/* ── Single row: Logo | Center links | Search | Icons ── */}
       <div className="nav-row1" style={{
         display: "flex",
         alignItems: "center",
@@ -233,7 +236,7 @@ export default async function Navbar() {
       {/* ── Crewboard Category Strip ── */}
       <div style={{
         background: "var(--nav-bg, #ffffff)",
-        borderBottom: "1px solid var(--card-border, #e5e7eb)",
+        borderBottom: "1px solid var(--nav-border, #e5e7eb)",
         overflowX: "auto",
         scrollbarWidth: "none",
         msOverflowStyle: "none",
@@ -313,6 +316,6 @@ export default async function Navbar() {
         nav ::-webkit-scrollbar { display: none; }
       `}</style>
 
-    </nav>
+    </NavScrollWrapper>
   );
 }
