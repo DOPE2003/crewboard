@@ -96,7 +96,7 @@ export default function BillingClient({
   const [isMobile, setIsMobile]               = useState(false);
   const [hasPhantom, setHasPhantom]           = useState(false);
 
-  const { publicKey, signTransaction, select } = useWallet();
+  const { publicKey, connected, signTransaction, select } = useWallet();
   const { connection } = useConnection();
 
   useEffect(() => {
@@ -111,12 +111,12 @@ export default function BillingClient({
       ((window as any).solana?.isPhantom ? (window as any).solana : null);
     const save = (pk: string) =>
       linkWallet({ publicKey: pk }).then(() => window.location.reload()).catch(console.error);
-    if (publicKey) { save(publicKey.toBase58()); return; }
+    if (connected && publicKey) { save(publicKey.toBase58()); return; }
     if (provider?.isConnected && provider?.publicKey) { save(provider.publicKey.toBase58()); return; }
     const onConnect = () => { const pk = provider?.publicKey?.toBase58(); if (pk) save(pk); };
     provider?.on?.("connect", onConnect);
     return () => provider?.off?.("connect", onConnect);
-  }, [publicKey, walletAddress]);
+  }, [connected, publicKey, walletAddress]);
 
   function copyAddress() {
     const addr = publicKey?.toBase58() ?? walletAddress;
@@ -157,7 +157,7 @@ export default function BillingClient({
     } finally { setIsTransferring(false); }
   }
 
-  const addr = publicKey?.toBase58() ?? walletAddress;
+  const addr = (connected && publicKey) ? publicKey.toBase58() : walletAddress;
 
   const filteredOrders = filter === "all"
     ? orders

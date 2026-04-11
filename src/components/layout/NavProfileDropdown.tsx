@@ -140,7 +140,7 @@ export default function NavProfileDropdown({
   const [walletMsg, setWalletMsg] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
 
-  const { publicKey, select } = useWallet();
+  const { publicKey, connected, select, disconnect } = useWallet();
 
   // Detect mobile
   useEffect(() => {
@@ -208,6 +208,16 @@ export default function NavProfileDropdown({
     if (!confirm("Disconnect your wallet?")) return;
     setDisconnecting(true);
     try {
+      // 1. Disconnect adapter (clears connected + publicKey)
+      await disconnect();
+      // 2. Disconnect raw Phantom provider so extension shows disconnected
+      const provider =
+        (window as any).phantom?.solana ??
+        ((window as any).solana?.isPhantom ? (window as any).solana : null);
+      try { await provider?.disconnect(); } catch { /* ignore */ }
+      // 3. Clear wallet-adapter localStorage key so autoConnect won't re-connect
+      try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
+      // 4. Remove address from DB
       await unlinkWallet();
       setExtra((prev) => prev ? { ...prev, walletAddress: null } : prev);
     } catch { /* ignore */ }
@@ -331,7 +341,7 @@ export default function NavProfileDropdown({
         <Card>
           <Row icon={I.wallet} label="Wallet Overview" onClick={() => {
             const phantomConnected =
-              publicKey ||
+              (connected && publicKey) ||
               (window as any).phantom?.solana?.isConnected ||
               (window as any).solana?.isConnected;
             if (!phantomConnected) { setWalletMsg(true); setTimeout(() => setWalletMsg(false), 3000); }

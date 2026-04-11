@@ -118,8 +118,15 @@ function WalletButtonInner() {
   };
 
   const handleDisconnect = async () => {
-    await disconnect();
     setOpen(false);
+    await disconnect();
+    // Also disconnect the raw provider so Phantom extension reflects the state
+    const provider =
+      (window as any).phantom?.solana ??
+      ((window as any).solana?.isPhantom ? (window as any).solana : null);
+    try { await provider?.disconnect(); } catch { /* ignore */ }
+    // Clear wallet-adapter's localStorage key to prevent auto-reconnect
+    try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
   };
 
   return (
