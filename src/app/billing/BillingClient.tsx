@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import type { WalletName } from "@solana/wallet-adapter-base";
 import { linkWallet } from "@/actions/wallet";
 import Link from "next/link";
 
@@ -352,7 +353,7 @@ export default function BillingClient({
                     if (!provider) return;
                     try {
                       await provider.connect();
-                      select("Phantom");
+                      select("Phantom" as WalletName);
                     } catch (e: any) {
                       if (e?.code !== 4001) console.error("connect error", e);
                     }
