@@ -5,7 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/navigation";
-import { fundEscrow, releaseFunds, deriveEscrowPDA } from "@/lib/escrow";
+import { fundEscrow, releaseFunds, deriveEscrowPDA, calcFee } from "@/lib/escrow";
 import { syncEscrowFunded, syncEscrowReleased, updateOrderStatus } from "@/actions/orders";
 
 interface Props {
@@ -45,6 +45,8 @@ export default function EscrowActions({
   const { publicKey, signTransaction, signAllTransactions, connected } = useWallet();
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
+
+  const { sellerAmount, feeAmount } = calcFee(orderAmount);
 
   const anchorWallet = useMemo(() => {
     if (!publicKey || !signTransaction || !signAllTransactions) return null;
@@ -165,9 +167,25 @@ export default function EscrowActions({
         {/* ─── FUNDED ─── */}
         {orderStatus === "funded" && isSeller && (
           <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)" }}>
-            <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+            <p style={{ margin: "0 0 0.5rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
               Payment is locked in escrow. Accept to start working.
             </p>
+            <div style={{ display: "flex", gap: "1rem", marginBottom: "0.75rem", padding: "0.55rem 0.75rem", borderRadius: 8, background: "rgba(20,184,166,0.07)", border: "1px solid rgba(20,184,166,0.15)", fontSize: "0.7rem", fontFamily: "Inter, sans-serif" }}>
+              <div>
+                <span style={{ color: "var(--text-muted)" }}>Order total </span>
+                <span style={{ fontWeight: 700, color: "var(--foreground)" }}>${orderAmount} USDC</span>
+              </div>
+              <div style={{ color: "var(--card-border)" }}>·</div>
+              <div>
+                <span style={{ color: "var(--text-muted)" }}>Platform fee (10%) </span>
+                <span style={{ fontWeight: 700, color: "#ef4444" }}>−${feeAmount} USDC</span>
+              </div>
+              <div style={{ color: "var(--card-border)" }}>·</div>
+              <div>
+                <span style={{ color: "var(--text-muted)" }}>You receive </span>
+                <span style={{ fontWeight: 700, color: "#2DD4BF" }}>${sellerAmount} USDC</span>
+              </div>
+            </div>
             <button
               onClick={() => handleDbAction("accepted")}
               disabled={!!loading}
@@ -267,8 +285,15 @@ export default function EscrowActions({
 
         {orderStatus === "delivered" && isSeller && (
           <div style={{ display: "flex", gap: "0.6rem", alignItems: "center", flexWrap: "wrap" }}>
-            <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", flex: 1 }}>
-              Delivery submitted — waiting for the buyer to review and release payment.
+            <div style={{ flex: 1 }}>
+              <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", marginBottom: "0.45rem" }}>
+                Delivery submitted — waiting for the buyer to review and release payment.
+              </div>
+              <div style={{ display: "inline-flex", gap: "0.75rem", padding: "0.45rem 0.75rem", borderRadius: 8, background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.15)", fontSize: "0.68rem", fontFamily: "Inter, sans-serif" }}>
+                <span style={{ color: "var(--text-muted)" }}>Platform fee <strong style={{ color: "#ef4444" }}>−${feeAmount} USDC</strong></span>
+                <span style={{ color: "var(--card-border)" }}>·</span>
+                <span style={{ color: "var(--text-muted)" }}>Your payout <strong style={{ color: "#2DD4BF" }}>${sellerAmount} USDC</strong></span>
+              </div>
             </div>
             <button
               onClick={() => handleDbAction("disputed")}

@@ -115,8 +115,23 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               <h1 style={{ fontSize: "1.2rem", fontWeight: 800, color: "var(--foreground)", margin: 0, fontFamily: "Inter, sans-serif" }}>{order.gig.title}</h1>
             </div>
             <div style={{ textAlign: "right" }}>
-              <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "#2DD4BF" }}>${order.amount}</div>
-              <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", marginTop: 2 }}>{order.gig.deliveryDays} day{order.gig.deliveryDays !== 1 ? "s" : ""} delivery</div>
+              <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "#2DD4BF" }}>${order.amount} USDC</div>
+              {isSeller ? (
+                <div style={{ fontSize: "0.63rem", color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
+                  {(() => {
+                    const fee = Math.floor((order.amount * 1_000) / 10_000);
+                    const net = order.amount - fee;
+                    return (
+                      <>You receive <strong style={{ color: "#2DD4BF" }}>${net}</strong>{" "}
+                      <span>(10% fee: ${fee})</span></>
+                    );
+                  })()}
+                </div>
+              ) : (
+                <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", marginTop: 2 }}>
+                  {order.gig.deliveryDays} day{order.gig.deliveryDays !== 1 ? "s" : ""} delivery
+                </div>
+              )}
             </div>
           </div>
 
