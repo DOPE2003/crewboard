@@ -20,11 +20,22 @@ function EyeIcon({ open }: { open: boolean }) {
 
 function LoginForm() {
   const searchParams = useSearchParams();
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  // Sanitize callbackUrl — only allow relative paths to prevent open redirect
+  const rawCallback = searchParams.get("callbackUrl") || "/dashboard";
+  const callbackUrl = rawCallback.startsWith("/") ? rawCallback : "/dashboard";
+
+  const urlError = searchParams.get("error");
   const [form, setForm] = useState({ email: "", password: "" });
-  const [error, setError] = useState(
-    searchParams.get("error") === "CredentialsSignin" ? "Invalid email or password." : ""
-  );
+  const [error, setError] = useState(() => {
+    if (!urlError) return "";
+    if (urlError === "CredentialsSignin") return "Invalid email or password.";
+    if (urlError === "OAuthAccountNotLinked") return "This email is already registered. Sign in with email/password instead.";
+    if (urlError === "OAuthCallback" || urlError === "Callback") return "Sign-in with X failed. Please try again.";
+    if (urlError === "OAuthSignin") return "Could not connect to X. Please try again.";
+    if (urlError === "AccessDenied") return "Access denied. Please try again.";
+    if (urlError === "Verification") return "The sign-in link expired. Please request a new one.";
+    return "Sign-in error. Please try again.";
+  });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 

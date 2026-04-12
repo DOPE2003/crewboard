@@ -35,7 +35,20 @@ export default function RegisterPage() {
       });
       const data = await res.json();
       if (!res.ok) { setError(data.error || "Something went wrong."); setLoading(false); return; }
-      await signIn("credentials", { email: form.email, password: form.password, callbackUrl: "/onboarding" });
+
+      // Use redirect:false so we control the navigation and can catch sign-in errors
+      const result = await signIn("credentials", {
+        email: form.email,
+        password: form.password,
+        redirect: false,
+      });
+      if (result?.error) {
+        setError("Account created — please sign in.");
+        setLoading(false);
+        window.location.href = "/login";
+      } else {
+        window.location.href = "/onboarding";
+      }
     } catch {
       setError("Something went wrong.");
       setLoading(false);

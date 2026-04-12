@@ -17,14 +17,16 @@ import { linkWallet } from "@/actions/wallet";
 
 export default function WalletAutoSave() {
   const { connected, publicKey } = useWallet();
-  const { status } = useSession();
+  const { status, data: session } = useSession();
+  const userId = (session?.user as any)?.userId as string | undefined;
 
   useEffect(() => {
-    if (status !== "authenticated") return;
+    if (status !== "authenticated" || !userId) return;
 
     const save = (pk: string) => {
-      const cacheKey = `wallet_saved_${pk}`;
-      if (localStorage.getItem(cacheKey)) return; // already saved this session
+      // Cache key is scoped to both user AND wallet — prevents cross-user linking
+      const cacheKey = `wallet_saved_${userId}_${pk}`;
+      if (localStorage.getItem(cacheKey)) return;
       linkWallet({ publicKey: pk })
         .then(() => localStorage.setItem(cacheKey, "1"))
         .catch((err) => console.warn("[WalletAutoSave] non-fatal:", err));
@@ -52,7 +54,7 @@ export default function WalletAutoSave() {
     };
     provider?.on?.("connect", onConnect);
     return () => provider?.off?.("connect", onConnect);
-  }, [connected, publicKey, status]);
+  }, [connected, publicKey, status, userId]);
 
   return null;
 }

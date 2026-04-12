@@ -406,7 +406,13 @@ export default function NavProfileDropdown({
           <RowDivider />
           <Row icon={I.help}    label="Help & Support" href="mailto:support@crewboard.fun"  onClick={onClose} />
           <RowDivider />
-          <Row icon={I.signout} label="Sign Out" onClick={() => { onClose(); signOut({ callbackUrl: "/" }); }} danger />
+          <Row icon={I.signout} label="Sign Out" onClick={async () => {
+            onClose();
+            // Disconnect wallet so it doesn't auto-link to the next user
+            try { await disconnect(); } catch { /* ignore */ }
+            try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
+            signOut({ callbackUrl: "/login" });
+          }} danger />
         </Card>
 
       </div>
