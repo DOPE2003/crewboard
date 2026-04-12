@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
+import { createMessage } from "@/lib/sendMessage";
 
 // GET /api/mobile/messages?conversationId=<id>&limit=50
 export async function GET(req: NextRequest) {
@@ -8,7 +9,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Missing conversationId." }, { status: 400 });
   }
 
-  const limit = parseInt(req.nextUrl.searchParams.get("limit") || "50");
+  const limit = parseInt(req.nextUrl.searchParams.get("limit") ?? "50");
 
   const messages = await db.message.findMany({
     where: { conversationId },
@@ -32,33 +33,22 @@ export async function POST(req: NextRequest) {
   try {
     const { conversationId, senderId, body, replyToId } = await req.json();
 
-    if (!conversationId || !senderId || !body) {
+    if (!conversationId || !senderId || !body?.trim()) {
       return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
     }
 
-    const message = await db.message.create({
-      data: {
-        conversationId,
-        senderId,
-        body,
-        replyToId: replyToId || null,
-      },
-      include: {
-        sender: {
-          select: { id: true, name: true, twitterHandle: true, image: true },
-        },
-      },
+    // createMessage: saves to DB + fires Pusher + in-app notification + email
+    const message = await createMessage({ conversationId, senderId, body, replyToId });
+
+    // Fetch sender info so the mobile client gets the full shape it expects
+    const sender = await db.user.findUnique({
+      where: { id: senderId },
+      select: { id: true, name: true, twitterHandle: true, image: true },
     });
 
-    // Update conversation timestamp
-    await db.conversation.update({
-      where: { id: conversationId },
-      data: { updatedAt: new Date() },
-    });
-
-    return NextResponse.json(message);
+    return NextResponse.json({ ...message, sender });
   } catch (err) {
-    console.error("Send message error:", err);
+    console.error("[POST /api/mobile/messages] error:", err);
     return NextResponse.json({ error: "Failed to send message." }, { status: 500 });
   }
 }

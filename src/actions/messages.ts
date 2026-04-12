@@ -18,9 +18,9 @@ function msgBodyPreview(body: string, maxLen = 100): string {
   return body.slice(0, maxLen) + (body.length > maxLen ? "…" : "");
 }
 import db from "@/lib/db";
-import { pusher } from "@/lib/pusher";
 import { revalidatePath } from "next/cache";
-import { sendMessageNotification, sendHireNotification, sendServiceRequestNotification } from "@/lib/email";
+import { sendHireNotification, sendServiceRequestNotification } from "@/lib/email";
+import { createMessage } from "@/lib/sendMessage";
 
 export async function sendMessage(conversationId: string, body: string, replyToId?: string) {
   // Top-level catch ensures Next.js always gets a serialisable Error back
@@ -55,55 +55,13 @@ async function _sendMessage(conversationId: string, body: string, replyToId?: st
 
   let message;
   try {
-    message = await db.message.create({
-      data: { conversationId, senderId: userId, body: body.trim(), ...(replyToId ? { replyToId } : {}) },
-      select: {
-        id: true, senderId: true, body: true, createdAt: true, read: true,
-        replyTo: { select: { id: true, senderId: true, body: true } },
-      },
-    });
-    await db.conversation.update({
-      where: { id: conversationId },
-      data: { updatedAt: new Date() },
-    });
+    message = await createMessage({ conversationId, senderId: userId, body, replyToId });
   } catch (dbErr: any) {
     console.error("[sendMessage] DB error:", dbErr?.message, dbErr?.code);
     throw new Error(dbErr?.message ?? "Database error");
   }
 
   revalidatePath("/messages", "layout");
-
-  try { await pusher.trigger(`conversation-${conversationId}`, "new-message", message); } catch {}
-
-  const recipientId = conv.participants.find((p) => p !== userId);
-  if (recipientId) {
-    try {
-      const [sender, recipient] = await Promise.all([
-        db.user.findUnique({ where: { id: userId }, select: { name: true, twitterHandle: true } }),
-        db.user.findUnique({ where: { id: recipientId }, select: { email: true } }),
-      ]);
-      const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
-      const preview = msgBodyPreview(body.trim(), 100);
-      await db.notification.create({
-        data: {
-          userId: recipientId,
-          type: "message",
-          title: "New message",
-          body: `${senderName}: ${preview}`,
-          link: `/messages/${conversationId}`,
-        },
-      });
-      // Email notification (only if recipient has email)
-      if (recipient?.email) {
-        sendMessageNotification({
-          to: recipient.email,
-          senderName,
-          preview,
-          conversationId,
-        }).catch(() => {});
-      }
-    } catch {}
-  }
 
   return JSON.parse(JSON.stringify(message));
 }
@@ -280,12 +238,9 @@ async function sendAutoMessage(
   emailType: "hire" | "gig" = "hire",
   gigTitle?: string,
 ) {
-  const message = await db.message.create({
-    data: { conversationId, senderId, body },
-    select: { id: true, senderId: true, body: true, createdAt: true, read: true },
-  });
-  await db.conversation.update({ where: { id: conversationId }, data: { updatedAt: new Date() } });
-  try { await pusher.trigger(`conversation-${conversationId}`, "new-message", message); } catch {}
+  // createMessage handles DB save + Pusher + in-app notification + message email.
+  // sendAutoMessage adds the hire/gig-specific email on top.
+  await createMessage({ conversationId, senderId, body });
 
   try {
     const [sender, recipient] = await Promise.all([
@@ -293,28 +248,6 @@ async function sendAutoMessage(
       db.user.findUnique({ where: { id: recipientId }, select: { email: true } }),
     ]);
     const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
-
-    await db.notification.create({
-      data: {
-        userId: recipientId,
-        type: "message",
-        title: emailType === "gig" ? "Your service is wanted" : "New hire request",
-        body: (() => {
-          let preview = body
-          if (preview.startsWith("__GIGREQUEST__:")) {
-            try { preview = "Service request: " + JSON.parse(preview.slice("__GIGREQUEST__:".length)).title }
-            catch { preview = "Service Request" }
-          } else if (preview.startsWith("__FILE__:")) {
-            try {
-              const f = JSON.parse(preview.slice("__FILE__:".length))
-              preview = f.type?.startsWith("image/") ? "📷 Image" : f.type?.startsWith("video/") ? "🎥 Video" : `📎 ${f.name}`
-            } catch { preview = "📎 File" }
-          }
-          return `${senderName}: ${preview.slice(0, 80)}`
-        })(),
-        link: `/messages/${conversationId}`,
-      },
-    });
 
     if (recipient?.email) {
       if (emailType === "gig" && gigTitle) {
@@ -324,7 +257,7 @@ async function sendAutoMessage(
       }
     }
   } catch (err) {
-    console.error("[sendAutoMessage] notification/email failed (non-fatal):", err);
+    console.error("[sendAutoMessage] hire/gig email failed (non-fatal):", err);
   }
 }
 
