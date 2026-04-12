@@ -23,10 +23,23 @@ function shell(content: string) {
 
 async function send(to: string, subject: string, content: string) {
   const resend = getResend();
-  if (!resend) return;
+  if (!resend) {
+    console.warn("[email] RESEND_API_KEY not set — skipping email to", to);
+    return;
+  }
+  if (!process.env.EMAIL_FROM) {
+    console.warn("[email] EMAIL_FROM not set — using onboarding@resend.dev (test domain, only delivers to Resend account owner). Set EMAIL_FROM=notifications@crewboard.fun in Vercel env vars.");
+  }
   try {
-    await resend.emails.send({ from: FROM, to, subject, html: shell(content) });
-  } catch { /* never block on email failure */ }
+    const result = await resend.emails.send({ from: FROM, to, subject, html: shell(content) });
+    if ((result as any)?.error) {
+      console.error("[email] Resend API error sending to", to, "—", (result as any).error);
+    } else {
+      console.log("[email] Sent to", to, "subject:", subject);
+    }
+  } catch (err) {
+    console.error("[email] Failed to send to", to, "—", err);
+  }
 }
 
 export async function sendWelcomeEmail({ to, name, handle }: { to: string; name: string; handle: string }) {
