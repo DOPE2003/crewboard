@@ -4,6 +4,7 @@ import Link from "next/link";
 import db from "@/lib/db";
 import T from "@/components/ui/T";
 import OnboardingChecklist from "@/components/ui/OnboardingChecklist";
+import NotificationEmailForm from "@/components/ui/NotificationEmailForm";
 import { computeProfileScore, PROFILE_SCORE_THRESHOLD } from "@/lib/profileScore";
 
 function msgPreview(body: string, maxLen = 40): string {
@@ -131,6 +132,11 @@ export default async function DashboardPage() {
 
         {/* Onboarding checklist */}
         <OnboardingChecklist status={onboardingStatus} />
+
+        {/* Notification email — shown for Twitter users without an email */}
+        {!dbUser.email && (
+          <NotificationEmailForm currentEmail={dbUser.email ?? null} />
+        )}
 
         {/* Profile visibility banner */}
         {!profileScore.meetsThreshold && (

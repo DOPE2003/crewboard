@@ -55,12 +55,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
               name: user.name ?? undefined,
               image: image ?? undefined,
               ...(handle ? { twitterHandle: handle } : {}),
+              // Save email from Twitter if provided and not already set
+              ...(user.email ? { email: user.email } : {}),
             },
             create: {
               twitterId: account.providerAccountId,
               twitterHandle: handle,
               name: user.name,
               image,
+              ...(user.email ? { email: user.email } : {}),
             },
           });
         } catch (e: any) {
