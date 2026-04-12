@@ -43,6 +43,8 @@ export async function createMessage({
   body: string;
   replyToId?: string | null;
 }) {
+  console.error("CREATE MESSAGE CALLED", { conversationId, senderId, bodyLength: body.length });
+
   // ── 1. Save to DB (hard fail if this throws) ────────────────────────────────
   const message = await db.message.create({
     data: {

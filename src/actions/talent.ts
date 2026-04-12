@@ -3,6 +3,7 @@
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
+import { createMessage } from "@/lib/sendMessage";
 
 export async function toggleSaveTalent(targetUserId: string): Promise<{ saved: boolean }> {
   const session = await auth();
@@ -119,12 +120,10 @@ export async function sendHireMessage(targetUserId: string) {
     });
   }
 
-  await db.message.create({
-    data: {
-      conversationId: conversation.id,
-      senderId: userId,
-      body: "Hi, I want to hire you for a specific service. Let's chat.",
-    },
+  await createMessage({
+    conversationId: conversation.id,
+    senderId: userId,
+    body: "Hi, I want to hire you for a specific service. Let's chat.",
   });
 
   return { success: true, conversationId: conversation.id };
