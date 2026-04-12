@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import db from "@/lib/db";
+import { notifyUser } from "@/lib/notify";
 
 export async function joinProWaitlist() {
   const session = await auth();
@@ -13,14 +14,11 @@ export async function joinProWaitlist() {
 
   await db.proWaitlist.create({ data: { userId } });
 
-  await db.notification.create({
-    data: {
-      userId,
-      type: "system",
-      title: "You joined the Pro waitlist!",
-      body: "You're on the Crewboard Pro waitlist. We'll notify you the moment it launches. Thank you for your support! 🚀",
-      read: false,
-    },
+  await notifyUser({
+    userId,
+    type: "system",
+    title: "You joined the Pro waitlist!",
+    body: "You're on the Crewboard Pro waitlist. We'll notify you the moment it launches. Thank you for your support!",
   });
 
   return { success: true, alreadyJoined: false };
@@ -42,14 +40,11 @@ export async function notifyProWaitlist() {
   });
 
   for (const entry of waitlist) {
-    await db.notification.create({
-      data: {
-        userId: entry.userId,
-        type: "system",
-        title: "🎉 Crewboard Pro is live!",
-        body: "You were on the waitlist — get early access now. Click to learn more.",
-        read: false,
-      },
+    await notifyUser({
+      userId: entry.userId,
+      type: "system",
+      title: "Crewboard Pro is live!",
+      body: "You were on the waitlist — get early access now. Click to learn more.",
     });
     await db.proWaitlist.update({ where: { id: entry.id }, data: { notified: true } });
   }

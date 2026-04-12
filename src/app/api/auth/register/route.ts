@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import db from "@/lib/db";
 import { sendWelcomeEmail } from "@/lib/email";
+import { notifyUser } from "@/lib/notify";
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,7 +44,7 @@ export async function POST(req: NextRequest) {
       select: { id: true, isOG: true },
     });
 
-    // Welcome notification
+    // Welcome notification (email handled separately by sendWelcomeEmail below)
     await db.notification.create({
       data: {
         userId: user.id,
@@ -54,17 +55,16 @@ export async function POST(req: NextRequest) {
     });
 
     if (user.isOG) {
-      await db.notification.create({
-        data: {
-          userId: user.id,
-          type: "og_badge",
-          title: "You're an OG!",
-          body: "You joined Crewboard in the first 20 builders. You've been awarded the OG badge.",
-        },
-      });
+      // notifyUser sends in-app + email for OG badge
+      notifyUser({
+        userId: user.id,
+        type: "og_badge",
+        title: "You're an OG!",
+        body: "You joined Crewboard in the first 20 builders. You've been awarded the OG badge.",
+      }).catch(() => {});
     }
 
-    // Send welcome email
+    // Welcome email (richer template than generic notification email)
     await sendWelcomeEmail({ to: email.toLowerCase(), name: name || handle, handle: handle.toLowerCase() });
 
     return NextResponse.json({ ok: true });

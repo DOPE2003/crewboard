@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { auth } from "@/auth";
+import { notifyUser } from "@/lib/notify";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 import BannerUpload from "@/components/ui/BannerUpload";
@@ -112,9 +113,13 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
       select: { id: true },
     });
     if (!recentView) {
-      await db.notification.create({
-        data: { userId: user.id, type: "profile_view", title: "Someone viewed your profile", body: `${viewerName} visited your profile.` },
-      });
+      notifyUser({
+        userId: user.id,
+        type: "profile_view",
+        title: "Someone viewed your profile",
+        body: `${viewerName} visited your profile.`,
+        link: `/u/${user.twitterHandle ?? handle}`,
+      }).catch(() => {});
     }
   }
 

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import db from "@/lib/db";
+import { notifyUser } from "@/lib/notify";
 
 // One-time endpoint: grants OG badge to first 20 users and notifies them.
 // Protected by ADMIN_SECRET env var.
@@ -29,15 +30,18 @@ export async function POST(req: NextRequest) {
     data: { isOG: true },
   });
 
-  // Send notification to each
-  await db.notification.createMany({
-    data: toGrant.map((u) => ({
-      userId: u.id,
-      type: "og_badge",
-      title: "You earned the OG Badge",
-      body: "You're one of the first 20 builders on Crewboard. Your OG badge is now live on your profile.",
-    })),
-  });
+  // Notify each user — notifyUser sends in-app notification + email
+  await Promise.all(
+    toGrant.map((u) =>
+      notifyUser({
+        userId: u.id,
+        type: "og_badge",
+        title: "You earned the OG Badge",
+        body: "You're one of the first 20 builders on Crewboard. Your OG badge is now live on your profile.",
+        link: `/u/${u.twitterHandle}`,
+      }).catch(() => {})
+    )
+  );
 
   return NextResponse.json({
     message: `OG badge granted to ${toGrant.length} users.`,
