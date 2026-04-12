@@ -76,18 +76,37 @@ export default function EscrowActions({
     setError("");
     try {
       const sellerPubkey = new PublicKey(sellerWallet);
-      const txSig = await fundEscrow(anchorWallet, connection, orderId, sellerPubkey, orderAmount);
       const [escrowPDA] = deriveEscrowPDA(anchorWallet.publicKey, sellerPubkey, orderId);
+
+      let txSig: string;
+      try {
+        txSig = await fundEscrow(anchorWallet, connection, orderId, sellerPubkey, orderAmount);
+      } catch (e: any) {
+        const msg = e?.message ?? "";
+        // Transaction already landed on-chain but DB was never updated —
+        // recover gracefully by syncing the DB using the derived PDA.
+        const alreadyProcessed =
+          msg.includes("already been processed") ||
+          msg.includes("AlreadyInUse") ||
+          msg.includes("already in use");
+        if (alreadyProcessed) {
+          await syncEscrowFunded(orderId, "recovered", escrowPDA.toBase58());
+          router.refresh();
+          return;
+        }
+        const isInsufficientFunds =
+          msg.includes("no record of a prior credit") ||
+          msg.includes("insufficient funds") ||
+          msg.includes("Attempt to debit") ||
+          msg.includes("0x1");
+        setError(isInsufficientFunds ? "INSUFFICIENT_FUNDS" : (msg.slice(0, 120) || "Transaction failed. Please try again."));
+        return;
+      }
+
       await syncEscrowFunded(orderId, txSig, escrowPDA.toBase58());
       router.refresh();
     } catch (e: any) {
-      const raw = e?.message ?? "";
-      const isInsufficientFunds =
-        raw.includes("no record of a prior credit") ||
-        raw.includes("insufficient funds") ||
-        raw.includes("Attempt to debit") ||
-        raw.includes("0x1");
-      setError(isInsufficientFunds ? "INSUFFICIENT_FUNDS" : (raw.slice(0, 120) || "Transaction failed. Please try again."));
+      setError(e?.message?.slice(0, 120) || "Transaction failed. Please try again.");
     } finally {
       setLoading(null);
     }
