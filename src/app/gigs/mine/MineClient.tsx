@@ -59,8 +59,8 @@ function GigCard({ gig }: { gig: Gig }) {
 
   return (
     <div style={{
-      background: "#ffffff",
-      border: "1px solid #e5e7eb",
+      background: "var(--card-bg)",
+      border: "1px solid var(--card-border)",
       borderRadius: 16,
       padding: "1rem",
       boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
@@ -73,7 +73,9 @@ function GigCard({ gig }: { gig: Gig }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
         <span style={{
           fontSize: 11, fontWeight: 700, padding: "4px 12px",
-          borderRadius: 99, background: "#E1F5EE", color: "#0F6E56",
+          borderRadius: 99,
+          background: "rgba(20,184,166,0.12)",
+          color: "#14B8A6",
           whiteSpace: "nowrap",
         }}>
           {gig.category}
@@ -84,13 +86,13 @@ function GigCard({ gig }: { gig: Gig }) {
       </div>
 
       {/* Title */}
-      <p style={{ fontSize: 14, fontWeight: 700, color: "#111827", margin: 0, lineHeight: 1.4 }}>
+      <p style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", margin: 0, lineHeight: 1.4 }}>
         {gig.title}
       </p>
 
       {/* Description */}
       <p style={{
-        fontSize: 13, color: "#6b7280", margin: 0, lineHeight: 1.6,
+        fontSize: 13, color: "var(--text-muted)", margin: 0, lineHeight: 1.6,
         overflow: "hidden", display: "-webkit-box",
         WebkitLineClamp: 2, WebkitBoxOrient: "vertical",
       }}>
@@ -103,7 +105,9 @@ function GigCard({ gig }: { gig: Gig }) {
           {gig.tags.slice(0, 4).map((tag) => (
             <span key={tag} style={{
               fontSize: 11, padding: "3px 10px", borderRadius: 99,
-              background: "#f3f4f6", color: "#6b7280", fontWeight: 500,
+              background: "var(--avatar-bg)",
+              color: "var(--text-muted)",
+              fontWeight: 500,
             }}>
               {tag}
             </span>
@@ -114,27 +118,27 @@ function GigCard({ gig }: { gig: Gig }) {
       {/* Status row */}
       <div style={{
         display: "flex", alignItems: "center", gap: 8,
-        paddingTop: "0.65rem", borderTop: "1px solid #f3f4f6",
+        paddingTop: "0.65rem", borderTop: "1px solid var(--card-border)",
       }}>
         <span style={{
           fontSize: 11, fontWeight: 700, padding: "3px 10px", borderRadius: 99,
-          background: gig.status === "active" ? "#dcfce7" : "#f3f4f6",
-          color:      gig.status === "active" ? "#16a34a" : "#9ca3af",
+          background: gig.status === "active" ? "rgba(34,197,94,0.12)"  : "var(--avatar-bg)",
+          color:      gig.status === "active" ? "#16a34a"               : "var(--text-muted)",
         }}>
           {gig.status.toUpperCase()}
         </span>
-        <span style={{ fontSize: 12, color: "#9ca3af" }}>{gig.deliveryDays}d delivery</span>
+        <span style={{ fontSize: 12, color: "var(--text-muted)" }}>{gig.deliveryDays}d delivery</span>
       </div>
 
-      {/* Action buttons — side by side */}
+      {/* View + Edit — side by side */}
       <div style={{ display: "flex", gap: 8 }}>
         <a
           href={`/gigs/${gig.id}`}
           style={{
             flex: 1, textAlign: "center",
             padding: "9px 0", borderRadius: 10,
-            border: "1px solid #e5e7eb",
-            fontSize: 13, fontWeight: 600, color: "#6b7280",
+            border: "1px solid var(--card-border)",
+            fontSize: 13, fontWeight: 600, color: "var(--text-muted)",
             textDecoration: "none", minHeight: 40,
             display: "flex", alignItems: "center", justifyContent: "center",
           }}
@@ -156,14 +160,14 @@ function GigCard({ gig }: { gig: Gig }) {
         </a>
       </div>
 
-      {/* Delete — full width, easy tap */}
+      {/* Delete — full width */}
       <button
         onClick={handleDelete}
         disabled={deleting}
         style={{
           width: "100%", padding: "10px", borderRadius: 10,
-          border: "1px solid rgba(239,68,68,0.25)",
-          background: "rgba(239,68,68,0.04)",
+          border: "1px solid rgba(239,68,68,0.3)",
+          background: "rgba(239,68,68,0.06)",
           color: "#ef4444", fontSize: 13, fontWeight: 600,
           cursor: "pointer", fontFamily: "inherit",
           minHeight: 40,
@@ -178,16 +182,13 @@ function GigCard({ gig }: { gig: Gig }) {
 
 export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
   return (
-    <div style={{ minHeight: "100vh", background: "#f7f8fa", fontFamily: "Inter, sans-serif", overflowX: "hidden" }}>
+    <div style={{ minHeight: "100vh", background: "var(--background)", fontFamily: "Inter, sans-serif", overflowX: "hidden" }}>
       <style>{`
         /*
-         * Mobile-first grid:
-         * - Default (mobile): 1 column, sections stack vertically
-         * - ≥768px: 2 columns
-         * - ≥1100px: 3 columns
-         *
-         * NOTE: gridTemplateColumns is NOT set inline so these rules
-         * are the only source — no specificity conflict.
+         * Mobile-first grid (no inline gridTemplateColumns — only set here):
+         *   default  → 1 col
+         *   ≥768px   → 2 col
+         *   ≥1100px  → 3 col
          */
         .mine-grid {
           display: grid;
@@ -202,30 +203,30 @@ export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
           .mine-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* Section heading */
         .mine-section-label {
           font-size: 11px;
           font-weight: 700;
-          color: #9ca3af;
+          color: var(--text-muted);
           text-transform: uppercase;
           letter-spacing: 0.1em;
           margin: 0 0 14px;
           padding-bottom: 12px;
-          border-bottom: 1px solid #e5e7eb;
+          border-bottom: 1px solid var(--card-border);
         }
 
-        /* Header: stack on very small screens */
+        /* Header wraps cleanly on small screens */
         .mine-header {
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 12px;
-          margin-bottom: 32px;
+          margin-bottom: 2rem;
           flex-wrap: wrap;
         }
+
         .mine-post-btn {
           background: #14B8A6;
-          color: white;
+          color: #fff;
           padding: 11px 20px;
           border-radius: 12px;
           font-weight: 700;
@@ -244,10 +245,10 @@ export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
         {/* Header */}
         <div className="mine-header">
           <div>
-            <p style={{ fontSize: 11, fontWeight: 600, color: "#9ca3af", letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 6px" }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: "var(--text-muted)", letterSpacing: "0.12em", textTransform: "uppercase", margin: "0 0 6px" }}>
               Dashboard
             </p>
-            <h1 style={{ fontSize: "clamp(1.5rem,4vw,2rem)", fontWeight: 800, color: "#111827", margin: 0 }}>
+            <h1 style={{ fontSize: "clamp(1.5rem,4vw,2rem)", fontWeight: 800, color: "var(--foreground)", margin: 0 }}>
               My Services
             </h1>
           </div>
@@ -256,10 +257,9 @@ export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
           </a>
         </div>
 
-        {/* 3-section grid — 1 col mobile, 2 col tablet, 3 col desktop */}
+        {/* 3-section responsive grid */}
         <div className="mine-grid">
 
-          {/* Column 1: My Offered Services */}
           <div>
             <h2 className="mine-section-label">My Offered Services</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -271,7 +271,6 @@ export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
             </div>
           </div>
 
-          {/* Column 2: Services I'm Working On (seller orders) */}
           <div>
             <h2 className="mine-section-label">Services I&apos;m Working On</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -285,12 +284,11 @@ export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
             </div>
           </div>
 
-          {/* Column 3: Services I Requested (buyer orders) */}
           <div>
             <h2 className="mine-section-label">Services I Requested</h2>
             <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
               {buyerOrders.length === 0 ? (
-                <EmptyState label="You haven&apos;t hired anyone yet" />
+                <EmptyState label="You haven't hired anyone yet" />
               ) : (
                 buyerOrders.map((order) => (
                   <OrderCard key={order.id} order={order} other={order.seller} />
@@ -308,29 +306,30 @@ export default function MineClient({ gigs, sellerOrders, buyerOrders }: Props) {
 function EmptyState({ label }: { label: string }) {
   return (
     <div style={{
-      background: "#ffffff",
-      border: "1px dashed #e5e7eb",
+      background: "var(--card-bg)",
+      border: "1px dashed var(--card-border)",
       borderRadius: 16,
       padding: "3rem 1.5rem",
       display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center",
     }}>
       <span style={{ fontSize: 36, marginBottom: 10 }}>📭</span>
-      <p style={{ fontSize: 13, color: "#9ca3af", margin: 0, fontWeight: 500 }}>{label}</p>
+      <p style={{ fontSize: 13, color: "var(--text-muted)", margin: 0, fontWeight: 500 }}>{label}</p>
     </div>
   );
 }
 
 function OrderCard({ order, other }: { order: Order; other?: OrderUser }) {
   const statusBg =
-    order.status === "completed" ? "#dcfce7" :
-    order.status === "pending"   ? "#fef3c7" :
-    order.status === "cancelled" ? "#f3f4f6" :
-    order.status === "disputed"  ? "#fee2e2" : "#ccfbf1";
+    order.status === "completed" ? "rgba(34,197,94,0.12)"  :
+    order.status === "pending"   ? "rgba(245,158,11,0.12)" :
+    order.status === "cancelled" ? "var(--avatar-bg)"      :
+    order.status === "disputed"  ? "rgba(239,68,68,0.12)"  :
+                                   "rgba(20,184,166,0.12)";
 
   const statusColor =
     order.status === "completed" ? "#16a34a" :
     order.status === "pending"   ? "#d97706" :
-    order.status === "cancelled" ? "#9ca3af" :
+    order.status === "cancelled" ? "var(--text-muted)" :
     order.status === "disputed"  ? "#dc2626" : "#0f766e";
 
   return (
@@ -338,8 +337,8 @@ function OrderCard({ order, other }: { order: Order; other?: OrderUser }) {
       href={`/orders/${order.id}`}
       style={{
         display: "block",
-        background: "#ffffff",
-        border: "1px solid #e5e7eb",
+        background: "var(--card-bg)",
+        border: "1px solid var(--card-border)",
         borderRadius: 14,
         padding: "1rem",
         boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
@@ -353,13 +352,14 @@ function OrderCard({ order, other }: { order: Order; other?: OrderUser }) {
           <img
             src={other.image}
             alt=""
-            style={{ width: 42, height: 42, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "2px solid #f3f4f6" }}
+            style={{ width: 42, height: 42, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "2px solid var(--card-border)" }}
           />
         ) : (
           <div style={{
             width: 42, height: 42, borderRadius: "50%", flexShrink: 0,
-            background: "#f3f4f6", display: "flex", alignItems: "center", justifyContent: "center",
-            border: "2px solid #e5e7eb",
+            background: "var(--avatar-bg)",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            border: "2px solid var(--card-border)",
           }}>
             <span style={{ fontSize: 14, fontWeight: 700, color: "#14B8A6" }}>
               {(other?.name ?? other?.twitterHandle ?? "?")[0].toUpperCase()}
@@ -369,10 +369,10 @@ function OrderCard({ order, other }: { order: Order; other?: OrderUser }) {
 
         {/* Content */}
         <div style={{ flex: 1, minWidth: 0 }}>
-          <p style={{ fontSize: 13, fontWeight: 700, color: "#111827", margin: "0 0 3px", lineHeight: 1.4 }}>
+          <p style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", margin: "0 0 3px", lineHeight: 1.4 }}>
             {order.gig.title}
           </p>
-          <p style={{ fontSize: 12, color: "#9ca3af", margin: "0 0 10px" }}>
+          <p style={{ fontSize: 12, color: "var(--text-muted)", margin: "0 0 10px" }}>
             with {other?.name ?? (other?.twitterHandle ? `@${other.twitterHandle}` : "Unknown")}
           </p>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
