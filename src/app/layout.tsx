@@ -10,6 +10,7 @@ import { LanguageProvider } from "@/contexts/LanguageContext";
 import HeartbeatPing from "@/components/ui/HeartbeatPing";
 import BottomTabBarServer from "@/components/mobile/BottomTabBarServer";
 import { SolanaProvider } from "@/components/ui/SolanaProvider";
+import WalletAutoSave from "@/components/ui/WalletAutoSave";
 import { Analytics } from "@vercel/analytics/next";
 
 const inter = Inter({
@@ -48,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <ThemeProvider />
               <ThemeRouteClass />
               <HeartbeatPing />
+              <WalletAutoSave />
               <Navbar />
               <div className="main-content">
                 {children}
