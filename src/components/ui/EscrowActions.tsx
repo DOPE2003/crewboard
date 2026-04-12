@@ -120,8 +120,24 @@ export default function EscrowActions({
     setError("");
     try {
       const sellerPubkey = new PublicKey(sellerWallet);
-      const txSig = await releaseFunds(anchorWallet, connection, orderId, sellerPubkey);
-      await syncEscrowReleased(orderId, txSig);
+      let txSig: string;
+      try {
+        txSig = await releaseFunds(anchorWallet, connection, orderId, sellerPubkey);
+      } catch (e: any) {
+        setError(friendlyError(e));
+        return;
+      }
+      // Tx confirmed on-chain — sync DB (non-fatal if DB already updated)
+      try {
+        await syncEscrowReleased(orderId, txSig);
+      } catch (dbErr: any) {
+        // If DB already shows completed, ignore — on-chain is source of truth
+        const msg = dbErr?.message ?? "";
+        if (!msg.includes("not delivered") && !msg.includes("completed")) {
+          setError("Payment released on-chain but failed to update order status. Contact support with tx: " + txSig);
+          return;
+        }
+      }
       router.refresh();
     } catch (e: any) {
       setError(friendlyError(e));
