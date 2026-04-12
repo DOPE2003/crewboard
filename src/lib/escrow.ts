@@ -1,6 +1,6 @@
 import { Program, AnchorProvider, Idl, BN } from "@coral-xyz/anchor";
-import { Connection, Keypair, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+import { Connection, Keypair, PublicKey } from "@solana/web3.js";
+import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
 
 // ─── Constants ───────────────────────────────────────────────────────────────
@@ -211,14 +211,12 @@ export async function fundEscrow(
     .initializeEscrow(orderId, amount)
     .accounts({
       buyer,
-      seller:              sellerPubkey,
-      mint:                USDC_MINT,
+      seller:           sellerPubkey,
+      mint:             USDC_MINT,
       buyerTokenAccount,
       escrowState,
       escrowTokenAccount,
-      systemProgram:       SystemProgram.programId,
-      tokenProgram:        TOKEN_PROGRAM_ID,
-      rent:                SYSVAR_RENT_PUBKEY,
+      // systemProgram, tokenProgram, rent — fixed addresses, auto-resolved by Anchor 0.30
     })
     .preInstructions(preInstructions)
     .signers([escrowTokenAccountKeypair])
@@ -260,12 +258,12 @@ export async function releaseFunds(
     .releaseFunds()
     .accounts({
       buyer,
-      seller:               sellerPubkey,
+      seller: sellerPubkey,
       escrowState,
       escrowTokenAccount,
       sellerTokenAccount,
       treasuryTokenAccount,
-      tokenProgram:         TOKEN_PROGRAM_ID,
+      // tokenProgram — fixed address, auto-resolved by Anchor 0.30
     })
     .preInstructions(preInstructions)
     .rpc({ commitment: "confirmed" });
@@ -305,15 +303,15 @@ export async function resolveDispute(
   const txHash = await program.methods
     .resolveDispute(routeToBuyer)
     .accounts({
-      admin:                adminWallet.publicKey,
-      buyer:                buyerPubkey,
-      seller:               sellerPubkey,
+      admin: adminWallet.publicKey,
+      buyer: buyerPubkey,
+      seller: sellerPubkey,
       escrowState,
       escrowTokenAccount,
       buyerTokenAccount,
       sellerTokenAccount,
       treasuryTokenAccount,
-      tokenProgram:         TOKEN_PROGRAM_ID,
+      // tokenProgram — fixed address, auto-resolved by Anchor 0.30
     })
     .preInstructions(preInstructions)
     .rpc({ commitment: "confirmed" });
