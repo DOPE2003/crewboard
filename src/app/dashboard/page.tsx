@@ -131,7 +131,7 @@ export default async function DashboardPage() {
       <div style={{ maxWidth: 900, margin: "0 auto" }}>
 
         {/* Onboarding checklist */}
-        <OnboardingChecklist status={onboardingStatus} />
+        <OnboardingChecklist status={onboardingStatus} handle={dbUser.twitterHandle ?? ""} />
 
         {/* Notification email — shown for Twitter users without an email */}
         {!dbUser.email && (

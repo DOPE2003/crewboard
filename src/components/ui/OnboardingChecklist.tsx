@@ -7,34 +7,36 @@ import type { OnboardingStatus } from "@/actions/dashboard";
 const DISMISS_KEY = "onboarding_dismissed_at";
 const DISMISS_HOURS = 24;
 
-const ITEMS = [
-  {
-    key: "needsAvatar" as keyof OnboardingStatus,
-    label: "Upload a profile photo",
-    href: "/dashboard",
-    action: "Upload",
-  },
-  {
-    key: "needsCv" as keyof OnboardingStatus,
-    label: "Upload your CV",
-    href: "/dashboard",
-    action: "Upload",
-  },
-  {
-    key: "needsWallet" as keyof OnboardingStatus,
-    label: "Connect your wallet",
-    href: "/billing",
-    action: "Connect",
-  },
-  {
-    key: "needsGig" as keyof OnboardingStatus,
-    label: "Post your first service",
-    href: "/gigs/new",
-    action: "Post service",
-  },
-];
+function getItems(handle: string) {
+  return [
+    {
+      key: "needsAvatar" as keyof OnboardingStatus,
+      label: "Upload a profile photo",
+      href: `/u/${handle}`,
+      action: "Upload",
+    },
+    {
+      key: "needsCv" as keyof OnboardingStatus,
+      label: "Upload your CV",
+      href: `/u/${handle}`,
+      action: "Upload",
+    },
+    {
+      key: "needsWallet" as keyof OnboardingStatus,
+      label: "Connect your wallet",
+      href: "/billing",
+      action: "Connect",
+    },
+    {
+      key: "needsGig" as keyof OnboardingStatus,
+      label: "Post your first service",
+      href: "/gigs/new",
+      action: "Post service",
+    },
+  ];
+}
 
-export default function OnboardingChecklist({ status }: { status: OnboardingStatus }) {
+export default function OnboardingChecklist({ status, handle }: { status: OnboardingStatus; handle: string }) {
   // Start hidden until we check localStorage (avoids flash)
   const [visible, setVisible] = useState(false);
 
@@ -51,6 +53,7 @@ export default function OnboardingChecklist({ status }: { status: OnboardingStat
   const allDone = !Object.values(status).some(Boolean);
   if (allDone || !visible) return null;
 
+  const ITEMS = getItems(handle);
   const doneCount = ITEMS.filter((i) => !status[i.key]).length;
   const pct = Math.round((doneCount / ITEMS.length) * 100);
 

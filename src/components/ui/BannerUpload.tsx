@@ -39,7 +39,21 @@ export default function BannerUpload({ currentBanner }: Props) {
     setUploading(true);
 
     try {
-      await saveBannerImage(dataUrl);
+      // Convert canvas dataUrl → Blob → File → upload to Vercel Blob
+      const fetchRes = await fetch(dataUrl);
+      const blob = await fetchRes.blob();
+      const file = new File([blob], "banner.jpg", { type: "image/jpeg" });
+      const form = new FormData();
+      form.append("file", file);
+
+      const uploadRes = await fetch("/api/upload?type=banner", { method: "POST", body: form });
+      if (!uploadRes.ok) {
+        const err = await uploadRes.json();
+        throw new Error(err.error ?? "Upload failed");
+      }
+      const { url } = await uploadRes.json();
+
+      await saveBannerImage(url);
       window.location.reload();
     } catch (err) {
       console.error("Banner save failed:", err);

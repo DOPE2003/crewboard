@@ -15,9 +15,11 @@ export async function POST(req: NextRequest) {
     if (!file.type.startsWith("image/")) return NextResponse.json({ error: "File must be an image." }, { status: 400 });
 
     const ext = file.name.split(".").pop() ?? "jpg";
-    const folder = file.size > 512 * 1024 ? "banners" : "avatars";
+    const isBanner = req.nextUrl.searchParams.get("type") === "banner" || file.size > 512 * 1024;
+    const folder = isBanner ? "banners" : "avatars";
     const filename = `${folder}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-    const blob = await put(filename, file, { access: "private" });
+    // Banners and avatars are public profile images — they must be publicly accessible
+    const blob = await put(filename, file, { access: "public" });
 
     return NextResponse.json({ url: blob.url });
   } catch (err: any) {

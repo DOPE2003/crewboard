@@ -256,13 +256,24 @@ export async function releaseFunds(
   const { address: treasuryTokenAccount, ix: treasuryAtaIx } = await ensureAta(connection, buyer, TREASURY_WALLET);
   if (treasuryAtaIx) preInstructions.push(treasuryAtaIx);
 
+  const escrowTokenAccountPubkey = new PublicKey(escrowTokenAccount);
+  console.error("[releaseFunds] accounts:", {
+    buyer:                buyer.toBase58(),
+    seller:               sellerPubkey.toBase58(),
+    escrowState:          escrowState.toBase58(),
+    escrowTokenAccount:   escrowTokenAccountPubkey.toBase58(),
+    sellerTokenAccount:   sellerTokenAccount.toBase58(),
+    treasuryTokenAccount: treasuryTokenAccount.toBase58(),
+    tokenProgram:         TOKEN_PROGRAM_ID.toBase58(),
+  });
+
   const txHash = await program.methods
     .releaseFunds()
     .accountsStrict({
       buyer,
       seller:               sellerPubkey,
       escrowState,
-      escrowTokenAccount:   new PublicKey(escrowTokenAccount),
+      escrowTokenAccount:   escrowTokenAccountPubkey,
       sellerTokenAccount,
       treasuryTokenAccount,
       tokenProgram:         TOKEN_PROGRAM_ID,

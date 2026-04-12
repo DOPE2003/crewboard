@@ -8,7 +8,7 @@ export async function getNavDropdownData() {
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) return null;
 
-  const [user, completedOrders, inProgressOrders, reviews] = await Promise.all([
+  const [user, completedOrders, inProgressOrders, reviews, gigCount] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
       select: {
@@ -24,6 +24,8 @@ export async function getNavDropdownData() {
         availability: true,
         twitterHandle: true,
         bannerImage: true,
+        cvUrl: true,
+        twitterId: true,
       },
     }),
     db.order.findMany({
@@ -38,6 +40,7 @@ export async function getNavDropdownData() {
       where: { revieweeId: userId },
       select: { rating: true },
     }),
+    db.gig.count({ where: { userId } }),
   ]);
 
   if (!user) return null;
@@ -52,10 +55,13 @@ export async function getNavDropdownData() {
       ? reviews.reduce((s, r) => s + r.rating, 0) / reviewCount
       : null;
 
-  // Profile completion
-  const fields = [user.name, user.image, user.bio, user.role, user.walletAddress, user.twitterHandle];
-  const filled = fields.filter(Boolean).length + (user.skills?.length > 0 ? 1 : 0);
-  const profileCompletion = Math.round((filled / 7) * 100);
+  // Profile completion — same 4-item logic as the dashboard onboarding checklist
+  const hasAvatar = !!user.twitterId || !!user.image;
+  const hasCv = !!user.cvUrl;
+  const hasWallet = !!user.walletAddress;
+  const hasGig = gigCount > 0;
+  const doneCount = [hasAvatar, hasCv, hasWallet, hasGig].filter(Boolean).length;
+  const profileCompletion = Math.round((doneCount / 4) * 100);
 
   return {
     walletAddress: user.walletAddress,

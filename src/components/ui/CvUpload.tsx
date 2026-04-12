@@ -14,6 +14,7 @@ export default function CvUpload({ currentCvUrl }: Props) {
 
   async function handleFile(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
+    if (inputRef.current) inputRef.current.value = "";
     if (!file) return;
     if (file.type !== "application/pdf") { setError("Only PDF files are allowed."); return; }
     if (file.size > 5 * 1024 * 1024) { setError("File too large (max 5 MB)."); return; }
@@ -29,10 +30,9 @@ export default function CvUpload({ currentCvUrl }: Props) {
       if (!res.ok) throw new Error(json.error ?? "Upload failed");
       setCvUrl(json.url);
     } catch (e: any) {
-      setError(e.message);
+      setError(e.message ?? "Upload failed. Please try again.");
     } finally {
       setUploading(false);
-      if (inputRef.current) inputRef.current.value = "";
     }
   }
 
