@@ -3,8 +3,11 @@ import { Resend } from "resend";
 const FROM = process.env.EMAIL_FROM ?? "Crewboard <onboarding@resend.dev>";
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
 
-function getResend() {
-  if (!process.env.RESEND_API_KEY) return null;
+function getResend(): Resend | null {
+  if (!process.env.RESEND_API_KEY) {
+    console.error("[email] RESEND_API_KEY is not set — all emails disabled");
+    return null;
+  }
   return new Resend(process.env.RESEND_API_KEY);
 }
 
@@ -21,28 +24,42 @@ function shell(content: string) {
 </div></body></html>`;
 }
 
-async function send(to: string, subject: string, content: string) {
+async function send(to: string, subject: string, content: string): Promise<void> {
   const resend = getResend();
-  if (!resend) {
-    console.warn("[email] RESEND_API_KEY not set — skipping email to", to);
-    return;
-  }
+  if (!resend) return;
+
   if (!process.env.EMAIL_FROM) {
-    console.warn("[email] EMAIL_FROM not set — using onboarding@resend.dev (test domain, only delivers to Resend account owner). Set EMAIL_FROM=notifications@crewboard.fun in Vercel env vars.");
+    console.warn(
+      "[email] EMAIL_FROM not set — falling back to onboarding@resend.dev." +
+      " This test domain only delivers to the Resend account owner." +
+      " Set EMAIL_FROM=Crewboard <notifications@crewboard.fun> in Vercel env vars."
+    );
   }
+
+  console.log(`[email] Sending "${subject}" → ${to} (from: ${FROM})`);
+
   try {
-    const result = await resend.emails.send({ from: FROM, to, subject, html: shell(content) });
-    if ((result as any)?.error) {
-      console.error("[email] Resend API error sending to", to, "—", (result as any).error);
-    } else {
-      console.log("[email] Sent to", to, "subject:", subject);
+    const { data, error } = await resend.emails.send({
+      from: FROM,
+      to,
+      subject,
+      html: shell(content),
+    });
+
+    if (error) {
+      console.error("[email] Resend rejected the request →", JSON.stringify(error));
+      return;
     }
+
+    console.log("[email] Delivered — Resend id:", data?.id);
   } catch (err) {
-    console.error("[email] Failed to send to", to, "—", err);
+    console.error("[email] Unexpected error sending to", to, "→", err);
   }
 }
 
-export async function sendWelcomeEmail({ to, name, handle }: { to: string; name: string; handle: string }) {
+export async function sendWelcomeEmail({
+  to, name, handle,
+}: { to: string; name: string; handle: string }) {
   return send(to, "Welcome to Crewboard", `
     <h2 style="margin:0 0 10px;color:#0f172a;">Welcome, ${name}!</h2>
     <p style="color:#475569;line-height:1.7;">Your Crewboard ID is <strong>@${handle}</strong>.</p>

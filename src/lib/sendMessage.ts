@@ -1,15 +1,15 @@
 /**
- * sendMessage — single source of truth for all message creation.
+ * createMessage — single source of truth for all message creation.
  *
  * Used by:
  *   - src/actions/messages.ts  (server actions / web UI)
  *   - src/app/api/mobile/messages/route.ts  (mobile REST API)
  *
  * Guarantees:
- *   1. Message is always saved to DB (throws if DB fails).
- *   2. Pusher real-time event fired (failure is silenced).
- *   3. In-app notification created for recipient (failure is silenced).
- *   4. Email notification sent if recipient has an email (failure is silenced).
+ *   1. Message is always saved to DB (hard fail if this throws).
+ *   2. Pusher real-time event fired (failure is logged, non-fatal).
+ *   3. In-app notification created for recipient (failure is logged, non-fatal).
+ *   4. Email notification sent if recipient has an email (failure is logged, non-fatal).
  */
 
 import db from "@/lib/db";
@@ -62,9 +62,12 @@ export async function createMessage({
     data: { updatedAt: new Date() },
   });
 
+  console.log(`[createMessage] message ${message.id} saved (conv: ${conversationId}, sender: ${senderId})`);
+
   // ── 2. Real-time event (non-fatal) ───────────────────────────────────────────
   try {
     await pusher.trigger(`conversation-${conversationId}`, "new-message", message);
+    console.log(`[createMessage] Pusher triggered for conv: ${conversationId}`);
   } catch (err) {
     console.warn("[createMessage] Pusher trigger failed (non-fatal):", err);
   }
@@ -77,7 +80,12 @@ export async function createMessage({
     });
 
     const recipientId = conv?.participants.find((p) => p !== senderId);
-    if (!recipientId) return message;
+    if (!recipientId) {
+      console.warn("[createMessage] No recipient found in conversation participants — skipping notification");
+      return message;
+    }
+
+    console.log(`[createMessage] Recipient id: ${recipientId}`);
 
     const [sender, recipient] = await Promise.all([
       db.user.findUnique({ where: { id: senderId }, select: { name: true, twitterHandle: true } }),
@@ -97,16 +105,21 @@ export async function createMessage({
         link: `/messages/${conversationId}`,
       },
     });
+    console.log(`[createMessage] In-app notification created for ${recipientId}`);
 
-    // Email — fire-and-forget so it never blocks the response
-    if (recipient?.email) {
+    // Email
+    const recipientEmail = recipient?.email ?? null;
+    if (!recipientEmail) {
+      console.warn(`[createMessage] NO EMAIL FOR USER ${recipientId} — skipping email notification`);
+    } else {
+      console.log(`[createMessage] Sending email notification to ${recipientEmail}`);
       sendMessageNotification({
-        to: recipient.email,
+        to: recipientEmail,
         senderName,
         preview,
         conversationId,
       }).catch((err) => {
-        console.error("[createMessage] Email notification failed (non-fatal):", err);
+        console.error("[createMessage] sendMessageNotification threw (non-fatal):", err);
       });
     }
   } catch (err) {
