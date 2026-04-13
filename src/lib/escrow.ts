@@ -1,10 +1,25 @@
+/**
+ * Crewboard Escrow SMART CONTRACT
+ * -----------------------------------------
+ * Author: SAAD AIT HAMMOU CTO of Crewboard
+ * Project: Crewboard
+ * Year: 2026
+ *
+ * Program ID: 9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp
+ * Treasury Wallet: Fn95Cx5iUhwVTUB6ZL3B8CmBYpbFYB2MSepa1xdeT68q
+ *
+ * All rights reserved.
+ */
 import { Program, AnchorProvider, Idl, BN } from "@coral-xyz/anchor";
 import {
   Connection, Keypair, PublicKey, SystemProgram, SYSVAR_RENT_PUBKEY,
-  Transaction, TransactionInstruction,
+  Transaction, TransactionInstruction, ComputeBudgetProgram,
 } from "@solana/web3.js";
-import { TOKEN_PROGRAM_ID, getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
+import { getAssociatedTokenAddress, createAssociatedTokenAccountInstruction } from "@solana/spl-token";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
+
+// Hardcoded to avoid any import resolution issues with @solana/spl-token versions
+const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
 
 // ─── Constants ───────────────────────────────────────────────────────────────
 
