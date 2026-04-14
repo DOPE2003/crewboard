@@ -416,6 +416,24 @@ export async function adminForceRelease(
  *
  * NOTE: Replace DISCRIMINATORS.admin_refund after `anchor build`.
  */
+/**
+ * Admin resolves a dispute — either refunds buyer or releases to seller.
+ * Used by the admin dispute resolution UI.
+ */
+export async function resolveDispute(
+  adminWallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  buyerPubkey: PublicKey,
+  sellerPubkey: PublicKey,
+  routeToBuyer: boolean,
+): Promise<string> {
+  if (routeToBuyer) {
+    return adminRefund(adminWallet, connection, orderId, buyerPubkey, sellerPubkey);
+  }
+  return adminForceRelease(adminWallet, connection, orderId, buyerPubkey, sellerPubkey);
+}
+
 export async function adminRefund(
   adminWallet: AnchorWallet,
   connection: Connection,
