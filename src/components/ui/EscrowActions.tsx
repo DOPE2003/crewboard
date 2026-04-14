@@ -21,6 +21,8 @@ interface Props {
 
 function friendlyError(e: any): string {
   const msg: string = e?.message ?? String(e);
+  if (msg.includes("no record of a prior credit") || msg.includes("Attempt to debit"))
+    return "Your wallet has no SOL to pay the transaction fee. Get free devnet SOL at faucet.solana.com";
   if (msg.includes("insufficient funds") || msg.includes("0x1")) return "Insufficient USDC balance in your wallet";
   if (msg.toLowerCase().includes("rejected") || msg.includes("4001")) return "Transaction rejected by wallet";
   if (msg.includes("already in use") || msg.includes("already exists")) return "Escrow already funded for this order";
@@ -287,16 +289,23 @@ export default function EscrowActions({
                     await updateOrderStatus(orderId, "delivered");
                     router.refresh();
                   } catch (e: any) {
+                    const msg: string = e?.message ?? String(e);
+
+                    // Tx already landed on-chain (first attempt succeeded despite simulation error) —
+                    // just sync the DB.
+                    if (msg.includes("already been processed")) {
+                      try { await updateOrderStatus(orderId, "delivered"); router.refresh(); } catch {}
+                      return;
+                    }
+
                     // If the on-chain call has a placeholder discriminator (not yet rebuilt),
                     // fall through to DB-only update so the UI doesn't get stuck.
-                    const msg: string = e?.message ?? String(e);
                     const isDiscriminatorPlaceholder =
                       msg.includes("custom program error: 0x") ||
                       msg.includes("Invalid instruction") ||
                       msg.includes("unknown instruction");
                     if (isDiscriminatorPlaceholder) {
-                      // Discriminator not updated yet — update DB only until rebuilt
-                      console.warn("[EscrowActions] mark_delivered discriminator not set — falling back to DB-only. Run anchor build and update DISCRIMINATORS in escrow.ts.");
+                      console.warn("[EscrowActions] mark_delivered discriminator not set — falling back to DB-only.");
                       try { await updateOrderStatus(orderId, "delivered"); router.refresh(); } catch {}
                     } else {
                       setError(friendlyError(e));
