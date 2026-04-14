@@ -53,8 +53,10 @@ export default function EscrowActions({
     return { publicKey, signTransaction, signAllTransactions };
   }, [publicKey, signTransaction, signAllTransactions]);
 
-  // Whether this status requires an on-chain wallet tx from the buyer
-  const needsWallet = isBuyer && (orderStatus === "pending" || orderStatus === "delivered");
+  // Whether this status requires an on-chain wallet tx
+  const needsWallet =
+    (isBuyer && (orderStatus === "pending" || orderStatus === "delivered")) ||
+    (isSeller && orderStatus === "accepted");
 
   async function handleDbAction(status: string) {
     setLoading(status);
@@ -263,6 +265,14 @@ export default function EscrowActions({
         {orderStatus === "accepted" && (
           <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
             {isSeller && (
+              needsWallet && !connected ? (
+                <div>
+                  <p style={{ margin: "0 0 0.5rem", fontSize: "0.73rem", color: "var(--text-muted)" }}>
+                    Connect your wallet to mark the order as delivered on-chain.
+                  </p>
+                  <WalletMultiButton style={{ fontSize: "0.75rem", height: 36, borderRadius: 99 }} />
+                </div>
+              ) : (
               <button
                 onClick={async () => {
                   // Call mark_delivered on-chain (stamps delivered_at, starts AFK clock),
@@ -302,6 +312,7 @@ export default function EscrowActions({
                 {loading === "delivered" && <Spinner />}
                 {loading === "delivered" ? "Marking…" : "Mark as Delivered"}
               </button>
+              )
             )}
             {isBuyer && (
               <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", flex: 1 }}>
