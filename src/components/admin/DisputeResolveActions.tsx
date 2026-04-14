@@ -5,7 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/navigation";
-import { resolveDispute } from "@/lib/escrow";
+import { resolveDispute, deriveEscrowPDA } from "@/lib/escrow";
 import { syncDisputeResolved } from "@/actions/admin";
 
 interface Props {
@@ -49,6 +49,19 @@ export default function DisputeResolveActions({ orderId, buyerWallet, sellerWall
     try {
       const buyerPubkey  = new PublicKey(buyerWallet);
       const sellerPubkey = new PublicKey(sellerWallet);
+
+      // Check if escrow account exists on-chain before attempting the transaction
+      const [escrowPDA] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+      const escrowAccount = await connection.getAccountInfo(escrowPDA);
+
+      if (!escrowAccount) {
+        // No on-chain escrow — resolve in DB only (order was never funded or already closed)
+        await syncDisputeResolved(orderId, "no-escrow-on-chain", routeToBuyer);
+        setConfirmed(true);
+        setTimeout(() => router.refresh(), 800);
+        return;
+      }
+
       const txHash = await resolveDispute(anchorWallet, connection, orderId, buyerPubkey, sellerPubkey, routeToBuyer);
       await syncDisputeResolved(orderId, txHash, routeToBuyer);
       setConfirmed(true);
