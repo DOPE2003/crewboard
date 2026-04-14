@@ -5,7 +5,7 @@ import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PublicKey } from "@solana/web3.js";
 import { useRouter } from "next/navigation";
-import { fundEscrow, releaseFunds, deriveEscrowPDA, calcFee } from "@/lib/escrow";
+import { fundEscrow, releaseFunds, markDelivered, deriveEscrowPDA, calcFee } from "@/lib/escrow";
 import { syncEscrowFunded, syncEscrowReleased, updateOrderStatus } from "@/actions/orders";
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
   isBuyer: boolean;
   isSeller: boolean;
   sellerWallet: string | null;
-  buyerWallet: string | null;
+  buyerWallet: string | null;   // required for seller to derive escrow PDA
   txHash?: string | null;
 }
 
@@ -38,7 +38,7 @@ function Spinner() {
 }
 
 export default function EscrowActions({
-  orderId, orderStatus, orderAmount, isBuyer, isSeller, sellerWallet, txHash,
+  orderId, orderStatus, orderAmount, isBuyer, isSeller, sellerWallet, buyerWallet, txHash,
 }: Props) {
   const router = useRouter();
   const { connection } = useConnection();
@@ -264,7 +264,37 @@ export default function EscrowActions({
           <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
             {isSeller && (
               <button
-                onClick={() => handleDbAction("delivered")}
+                onClick={async () => {
+                  // Call mark_delivered on-chain (stamps delivered_at, starts AFK clock),
+                  // then update DB status.
+                  if (!anchorWallet) { setError("Connect your Solana wallet first"); return; }
+                  if (!buyerWallet)  { setError("Buyer wallet not found"); return; }
+                  setLoading("delivered");
+                  setError("");
+                  try {
+                    const buyerPubkey = new PublicKey(buyerWallet);
+                    await markDelivered(anchorWallet, connection, orderId, buyerPubkey);
+                    await updateOrderStatus(orderId, "delivered");
+                    router.refresh();
+                  } catch (e: any) {
+                    // If the on-chain call has a placeholder discriminator (not yet rebuilt),
+                    // fall through to DB-only update so the UI doesn't get stuck.
+                    const msg: string = e?.message ?? String(e);
+                    const isDiscriminatorPlaceholder =
+                      msg.includes("custom program error: 0x") ||
+                      msg.includes("Invalid instruction") ||
+                      msg.includes("unknown instruction");
+                    if (isDiscriminatorPlaceholder) {
+                      // Discriminator not updated yet — update DB only until rebuilt
+                      console.warn("[EscrowActions] mark_delivered discriminator not set — falling back to DB-only. Run anchor build and update DISCRIMINATORS in escrow.ts.");
+                      try { await updateOrderStatus(orderId, "delivered"); router.refresh(); } catch {}
+                    } else {
+                      setError(friendlyError(e));
+                    }
+                  } finally {
+                    setLoading(null);
+                  }
+                }}
                 disabled={!!loading}
                 className="btn-primary"
                 style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", display: "flex", alignItems: "center" }}

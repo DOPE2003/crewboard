@@ -15,13 +15,14 @@ pub const BPS_DENOMINATOR: u64 = 10_000;
 /// 14 days in seconds — AFK timeout for both buyer and seller.
 pub const AFK_TIMEOUT_SECS: i64 = 14 * 24 * 60 * 60;
 
-/// TODO: replace with your actual admin wallet pubkey before deploying.
-/// This key is the ONLY signer allowed to call admin_force_release / admin_refund.
-pub const ADMIN_PUBKEY: Pubkey = pubkey!("11111111111111111111111111111111");
+/// Admin wallet — the ONLY signer allowed to call admin_force_release / admin_refund.
+/// Run `solana address` to get your local keypair pubkey, then paste it here.
+/// TODO: replace with your actual admin wallet before mainnet deploy.
+pub const ADMIN_PUBKEY: Pubkey = pubkey!("At2aPsAKct5PCiDCtZcartfDxU2SmbGDKYoJfpRV46vg");
 
-/// TODO: replace with your actual treasury wallet pubkey before deploying.
-/// The treasury ATA (for the escrow mint) receives the 10 % platform fee.
-pub const TREASURY_PUBKEY: Pubkey = pubkey!("11111111111111111111111111111111");
+/// Platform treasury wallet — receives 10 % on every release.
+/// Matches TREASURY_WALLET in lib/escrow.ts.
+pub const TREASURY_PUBKEY: Pubkey = pubkey!("Fn95Cx5iUhwVTUB6ZL3B8CmBYpbFYB2MSepa1xdeT68q");
 
 // ─── Program ─────────────────────────────────────────────────────────────────
 
