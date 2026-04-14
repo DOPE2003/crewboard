@@ -1,25 +1,44 @@
 use anchor_lang::prelude::*;
-use anchor_spl::token::{self, Mint, Token, TokenAccount, Transfer};
+use anchor_spl::{
+    associated_token::AssociatedToken,
+    token::{self, CloseAccount, Mint, Token, TokenAccount, Transfer},
+};
 
 declare_id!("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
 
-/// Platform fee rate: 10% deducted from seller payout at release.
-/// Client pays full price; seller receives 90%.
-pub const FEE_BPS: u64 = 1_000; // 1000 / 10000 = 10%
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+/// Platform fee: 10 % (1000 / 10000).
+pub const FEE_BPS: u64 = 1_000;
 pub const BPS_DENOMINATOR: u64 = 10_000;
+
+/// 14 days in seconds — AFK timeout for both buyer and seller.
+pub const AFK_TIMEOUT_SECS: i64 = 14 * 24 * 60 * 60;
+
+/// TODO: replace with your actual admin wallet pubkey before deploying.
+/// This key is the ONLY signer allowed to call admin_force_release / admin_refund.
+pub const ADMIN_PUBKEY: Pubkey = pubkey!("11111111111111111111111111111111");
+
+/// TODO: replace with your actual treasury wallet pubkey before deploying.
+/// The treasury ATA (for the escrow mint) receives the 10 % platform fee.
+pub const TREASURY_PUBKEY: Pubkey = pubkey!("11111111111111111111111111111111");
+
+// ─── Program ─────────────────────────────────────────────────────────────────
 
 #[program]
 pub mod crewboard_escrow {
     use super::*;
 
     /// Lock buyer's USDC into escrow.
-    /// Buyer pays the full gig price; no extra fee at this stage.
+    /// Creates a PDA-owned ATA as the escrow vault — deterministic, no extra keypair.
     pub fn initialize_escrow(
         ctx: Context<InitializeEscrow>,
         gig_id: String,
         amount: u64,
     ) -> Result<()> {
+        let clock = Clock::get()?;
         let escrow = &mut ctx.accounts.escrow_state;
+
         escrow.buyer = ctx.accounts.buyer.key();
         escrow.seller = ctx.accounts.seller.key();
         escrow.mint = ctx.accounts.mint.key();
@@ -27,6 +46,9 @@ pub mod crewboard_escrow {
         escrow.gig_id = gig_id;
         escrow.amount = amount;
         escrow.bump = ctx.bumps.escrow_state;
+        escrow.created_at = clock.unix_timestamp;
+        escrow.delivered_at = 0;
+        escrow.is_delivered = false;
 
         token::transfer(
             CpiContext::new(
@@ -43,15 +65,27 @@ pub mod crewboard_escrow {
         Ok(())
     }
 
-    /// Release escrow to seller (buyer approves delivery).
-    /// Splits payout: 90% → seller, 10% → treasury.
-    /// Uses integer arithmetic to avoid floating-point errors.
+    /// Seller marks the gig as delivered.
+    /// Starts the 14-day AFK clock for the buyer.
+    pub fn mark_delivered(ctx: Context<MarkDelivered>) -> Result<()> {
+        let escrow = &mut ctx.accounts.escrow_state;
+
+        require!(!escrow.is_delivered, EscrowError::AlreadyDelivered);
+
+        let clock = Clock::get()?;
+        escrow.is_delivered = true;
+        escrow.delivered_at = clock.unix_timestamp;
+
+        Ok(())
+    }
+
+    /// Buyer approves delivery and releases funds.
+    /// 90 % → seller ATA, 10 % → treasury ATA.
+    /// Closes escrow_token_account and escrow_state — returns rent to buyer.
     pub fn release_funds(ctx: Context<ReleaseFunds>) -> Result<()> {
         let escrow = &ctx.accounts.escrow_state;
         let total = escrow.amount;
 
-        // Fee = floor(total * FEE_BPS / BPS_DENOMINATOR)
-        // Seller receives the remainder — avoids rounding dust in escrow
         let fee_amount = total
             .checked_mul(FEE_BPS)
             .unwrap()
@@ -68,7 +102,7 @@ pub mod crewboard_escrow {
         ];
         let signer_seeds = &[&seeds[..]];
 
-        // 90% → seller
+        // 90 % → seller
         token::transfer(
             CpiContext::new_with_signer(
                 ctx.accounts.token_program.to_account_info(),
@@ -82,7 +116,7 @@ pub mod crewboard_escrow {
             seller_amount,
         )?;
 
-        // 10% → treasury
+        // 10 % → treasury
         token::transfer(
             CpiContext::new_with_signer(
                 ctx.accounts.token_program.to_account_info(),
@@ -96,17 +130,106 @@ pub mod crewboard_escrow {
             fee_amount,
         )?;
 
+        // Close the vault — return rent lamports to buyer
+        token::close_account(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                CloseAccount {
+                    account: ctx.accounts.escrow_token_account.to_account_info(),
+                    destination: ctx.accounts.buyer.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+        )?;
+
         Ok(())
     }
 
-    /// Admin-only dispute resolution.
-    /// route_to_buyer=true  → 100% refund to buyer (no fee on refunds).
-    /// route_to_buyer=false → 90% to seller, 10% to treasury.
-    pub fn resolve_dispute(
-        ctx: Context<ResolveDispute>,
-        route_to_buyer: bool,
-    ) -> Result<()> {
+    /// Admin forces fund release when buyer goes AFK.
+    /// Conditions: is_delivered == true AND now > delivered_at + 14 days.
+    /// Same split: 90 % → seller, 10 % → treasury.
+    pub fn admin_force_release(ctx: Context<AdminForceRelease>) -> Result<()> {
         let escrow = &ctx.accounts.escrow_state;
+        let clock = Clock::get()?;
+
+        require!(escrow.is_delivered, EscrowError::NotDelivered);
+        require!(
+            clock.unix_timestamp > escrow.delivered_at + AFK_TIMEOUT_SECS,
+            EscrowError::TooEarly
+        );
+
+        let total = escrow.amount;
+        let fee_amount = total
+            .checked_mul(FEE_BPS)
+            .unwrap()
+            .checked_div(BPS_DENOMINATOR)
+            .unwrap();
+        let seller_amount = total.checked_sub(fee_amount).unwrap();
+
+        let seeds = &[
+            b"escrow",
+            escrow.buyer.as_ref(),
+            escrow.seller.as_ref(),
+            escrow.gig_id.as_bytes(),
+            &[escrow.bump],
+        ];
+        let signer_seeds = &[&seeds[..]];
+
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.escrow_token_account.to_account_info(),
+                    to: ctx.accounts.seller_token_account.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            seller_amount,
+        )?;
+
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.escrow_token_account.to_account_info(),
+                    to: ctx.accounts.treasury_token_account.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            fee_amount,
+        )?;
+
+        token::close_account(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                CloseAccount {
+                    account: ctx.accounts.escrow_token_account.to_account_info(),
+                    destination: ctx.accounts.buyer.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+        )?;
+
+        Ok(())
+    }
+
+    /// Admin refunds the buyer when seller goes AFK (never delivers).
+    /// Conditions: is_delivered == false AND now > created_at + 14 days.
+    /// Full refund — no platform fee on seller-fault refunds.
+    pub fn admin_refund(ctx: Context<AdminRefund>) -> Result<()> {
+        let escrow = &ctx.accounts.escrow_state;
+        let clock = Clock::get()?;
+
+        require!(!escrow.is_delivered, EscrowError::AlreadyDelivered);
+        require!(
+            clock.unix_timestamp > escrow.created_at + AFK_TIMEOUT_SECS,
+            EscrowError::TooEarly
+        );
+
         let total = escrow.amount;
 
         let seeds = &[
@@ -118,72 +241,54 @@ pub mod crewboard_escrow {
         ];
         let signer_seeds = &[&seeds[..]];
 
-        if route_to_buyer {
-            // Full refund — no platform fee on buyer refunds
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.escrow_token_account.to_account_info(),
-                        to: ctx.accounts.buyer_token_account.to_account_info(),
-                        authority: ctx.accounts.escrow_state.to_account_info(),
-                    },
-                    signer_seeds,
-                ),
-                total,
-            )?;
-        } else {
-            // Seller wins: apply same 10% fee as normal release
-            let fee_amount = total
-                .checked_mul(FEE_BPS)
-                .unwrap()
-                .checked_div(BPS_DENOMINATOR)
-                .unwrap();
-            let seller_amount = total.checked_sub(fee_amount).unwrap();
+        // Full refund — no fee when seller is at fault
+        token::transfer(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                Transfer {
+                    from: ctx.accounts.escrow_token_account.to_account_info(),
+                    to: ctx.accounts.buyer_token_account.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+            total,
+        )?;
 
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.escrow_token_account.to_account_info(),
-                        to: ctx.accounts.seller_token_account.to_account_info(),
-                        authority: ctx.accounts.escrow_state.to_account_info(),
-                    },
-                    signer_seeds,
-                ),
-                seller_amount,
-            )?;
-
-            token::transfer(
-                CpiContext::new_with_signer(
-                    ctx.accounts.token_program.to_account_info(),
-                    Transfer {
-                        from: ctx.accounts.escrow_token_account.to_account_info(),
-                        to: ctx.accounts.treasury_token_account.to_account_info(),
-                        authority: ctx.accounts.escrow_state.to_account_info(),
-                    },
-                    signer_seeds,
-                ),
-                fee_amount,
-            )?;
-        }
+        token::close_account(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                CloseAccount {
+                    account: ctx.accounts.escrow_token_account.to_account_info(),
+                    destination: ctx.accounts.buyer.to_account_info(),
+                    authority: ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+        )?;
 
         Ok(())
     }
 }
 
-// ─── Account Structs ────────────────────────────────────────────────────────
+// ─── Account Structs ─────────────────────────────────────────────────────────
 
 #[derive(Accounts)]
 #[instruction(gig_id: String)]
 pub struct InitializeEscrow<'info> {
     #[account(mut)]
     pub buyer: Signer<'info>,
-    /// CHECK: seller is a recipient only
+
+    /// CHECK: seller is a recipient — not a signer at init time
     pub seller: AccountInfo<'info>,
+
     pub mint: Account<'info, Mint>,
+
+    /// Buyer's token account — debited at init
     #[account(mut)]
     pub buyer_token_account: Account<'info, TokenAccount>,
+
+    /// PDA storing escrow metadata. Seeds: ["escrow", buyer, seller, gig_id]
     #[account(
         init,
         payer = buyer,
@@ -197,22 +302,50 @@ pub struct InitializeEscrow<'info> {
         bump,
     )]
     pub escrow_state: Account<'info, EscrowState>,
-    /// Fresh keypair account created by the buyer — stores escrowed tokens.
-    /// Address saved in EscrowState.escrow_token_account for later retrieval.
-    #[account(mut)]
-    pub escrow_token_account: Signer<'info>,
+
+    /// ATA owned by escrow_state PDA — vault for locked tokens.
+    /// Deterministic: no extra keypair needed from the client.
+    #[account(
+        init,
+        payer = buyer,
+        associated_token::mint = mint,
+        associated_token::authority = escrow_state,
+    )]
+    pub escrow_token_account: Account<'info, TokenAccount>,
+
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
-    pub rent: Sysvar<'info, Rent>,
+    pub associated_token_program: Program<'info, AssociatedToken>,
+}
+
+#[derive(Accounts)]
+pub struct MarkDelivered<'info> {
+    /// Only the seller can mark delivery
+    pub seller: Signer<'info>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"escrow",
+            escrow_state.buyer.as_ref(),
+            escrow_state.seller.as_ref(),
+            escrow_state.gig_id.as_bytes(),
+        ],
+        bump = escrow_state.bump,
+        has_one = seller @ EscrowError::Unauthorized,
+    )]
+    pub escrow_state: Account<'info, EscrowState>,
 }
 
 #[derive(Accounts)]
 pub struct ReleaseFunds<'info> {
+    /// Only the buyer can release funds voluntarily
     #[account(mut)]
     pub buyer: Signer<'info>,
-    /// CHECK: seller receives funds
-    #[account(mut)]
+
+    /// CHECK: seller receives funds — validated by has_one
     pub seller: AccountInfo<'info>,
+
     #[account(
         mut,
         seeds = [
@@ -222,31 +355,56 @@ pub struct ReleaseFunds<'info> {
             escrow_state.gig_id.as_bytes(),
         ],
         bump = escrow_state.bump,
+        has_one = buyer  @ EscrowError::Unauthorized,
+        has_one = seller @ EscrowError::Unauthorized,
         close = buyer,
     )]
     pub escrow_state: Account<'info, EscrowState>,
-    /// Token account holding the locked USDC (address stored in EscrowState).
-    #[account(mut)]
+
+    /// Vault ATA — must match what was stored at init time
+    #[account(
+        mut,
+        address = escrow_state.escrow_token_account @ EscrowError::Unauthorized,
+    )]
     pub escrow_token_account: Account<'info, TokenAccount>,
-    /// Seller's USDC ATA — receives 90%.
-    #[account(mut)]
+
+    /// Seller's ATA — receives 90 %
+    #[account(
+        mut,
+        token::authority = seller,
+    )]
     pub seller_token_account: Account<'info, TokenAccount>,
-    /// Treasury USDC ATA — receives 10% platform fee.
-    #[account(mut)]
+
+    /// CHECK: validated against TREASURY_PUBKEY constant
+    #[account(address = TREASURY_PUBKEY @ EscrowError::Unauthorized)]
+    pub treasury: AccountInfo<'info>,
+
+    /// Treasury ATA — receives 10 %
+    #[account(
+        mut,
+        token::authority = treasury,
+    )]
     pub treasury_token_account: Account<'info, TokenAccount>,
+
     pub token_program: Program<'info, Token>,
 }
 
 #[derive(Accounts)]
-pub struct ResolveDispute<'info> {
-    #[account(mut)]
+pub struct AdminForceRelease<'info> {
+    /// Must be ADMIN_PUBKEY — address constraint enforces this
+    #[account(
+        mut,
+        address = ADMIN_PUBKEY @ EscrowError::Unauthorized,
+    )]
     pub admin: Signer<'info>,
-    /// CHECK: buyer may receive refund
+
+    /// CHECK: buyer receives rent from closed escrow_state
     #[account(mut)]
     pub buyer: AccountInfo<'info>,
-    /// CHECK: seller may receive payout
-    #[account(mut)]
+
+    /// CHECK: seller receives funds — validated by has_one
     pub seller: AccountInfo<'info>,
+
     #[account(
         mut,
         seeds = [
@@ -256,34 +414,123 @@ pub struct ResolveDispute<'info> {
             escrow_state.gig_id.as_bytes(),
         ],
         bump = escrow_state.bump,
-        close = admin,
+        has_one = buyer  @ EscrowError::Unauthorized,
+        has_one = seller @ EscrowError::Unauthorized,
+        close = buyer,
     )]
     pub escrow_state: Account<'info, EscrowState>,
-    #[account(mut)]
+
+    #[account(
+        mut,
+        address = escrow_state.escrow_token_account @ EscrowError::Unauthorized,
+    )]
     pub escrow_token_account: Account<'info, TokenAccount>,
-    #[account(mut)]
-    pub buyer_token_account: Account<'info, TokenAccount>,
-    #[account(mut)]
+
+    /// Seller's ATA — receives 90 %
+    #[account(
+        mut,
+        token::authority = seller,
+    )]
     pub seller_token_account: Account<'info, TokenAccount>,
-    /// Treasury USDC ATA — receives 10% fee when seller wins dispute.
-    #[account(mut)]
+
+    /// CHECK: validated against TREASURY_PUBKEY constant
+    #[account(address = TREASURY_PUBKEY @ EscrowError::Unauthorized)]
+    pub treasury: AccountInfo<'info>,
+
+    /// Treasury ATA — receives 10 %
+    #[account(
+        mut,
+        token::authority = treasury,
+    )]
     pub treasury_token_account: Account<'info, TokenAccount>,
+
     pub token_program: Program<'info, Token>,
 }
 
-// ─── State ──────────────────────────────────────────────────────────────────
+#[derive(Accounts)]
+pub struct AdminRefund<'info> {
+    /// Must be ADMIN_PUBKEY — address constraint enforces this
+    #[account(
+        mut,
+        address = ADMIN_PUBKEY @ EscrowError::Unauthorized,
+    )]
+    pub admin: Signer<'info>,
+
+    /// CHECK: buyer receives refund and rent — validated by has_one
+    #[account(mut)]
+    pub buyer: AccountInfo<'info>,
+
+    /// CHECK: seller is needed for PDA seed reconstruction — validated by has_one
+    pub seller: AccountInfo<'info>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"escrow",
+            escrow_state.buyer.as_ref(),
+            escrow_state.seller.as_ref(),
+            escrow_state.gig_id.as_bytes(),
+        ],
+        bump = escrow_state.bump,
+        has_one = buyer  @ EscrowError::Unauthorized,
+        has_one = seller @ EscrowError::Unauthorized,
+        close = buyer,
+    )]
+    pub escrow_state: Account<'info, EscrowState>,
+
+    #[account(
+        mut,
+        address = escrow_state.escrow_token_account @ EscrowError::Unauthorized,
+    )]
+    pub escrow_token_account: Account<'info, TokenAccount>,
+
+    /// Buyer's ATA — receives full refund
+    #[account(
+        mut,
+        token::authority = buyer,
+    )]
+    pub buyer_token_account: Account<'info, TokenAccount>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+// ─── State ───────────────────────────────────────────────────────────────────
 
 #[account]
 pub struct EscrowState {
-    pub buyer: Pubkey,               // 32
-    pub seller: Pubkey,              // 32
-    pub mint: Pubkey,                // 32
-    pub escrow_token_account: Pubkey,// 32
-    pub gig_id: String,              // 4 + max 64
-    pub amount: u64,                 // 8
-    pub bump: u8,                    // 1
+    pub buyer: Pubkey,                 // 32
+    pub seller: Pubkey,                // 32
+    pub mint: Pubkey,                  // 32
+    pub escrow_token_account: Pubkey,  // 32
+    pub gig_id: String,                // 4 + max 64
+    pub amount: u64,                   // 8
+    pub bump: u8,                      // 1
+    pub created_at: i64,               // 8
+    pub delivered_at: i64,             // 8
+    pub is_delivered: bool,            // 1
 }
 
 impl EscrowState {
-    pub const LEN: usize = 8 + 32 + 32 + 32 + 32 + (4 + 64) + 8 + 1;
+    pub const LEN: usize = 8      // discriminator
+        + 32 + 32 + 32 + 32       // buyer, seller, mint, escrow_token_account
+        + (4 + 64)                // gig_id (String prefix + max 64 bytes)
+        + 8                       // amount
+        + 1                       // bump
+        + 8                       // created_at
+        + 8                       // delivered_at
+        + 1;                      // is_delivered
+}
+
+// ─── Errors ──────────────────────────────────────────────────────────────────
+
+#[error_code]
+pub enum EscrowError {
+    #[msg("Action not yet permitted — the required time period has not elapsed")]
+    TooEarly,
+    #[msg("Work has not been marked as delivered by the seller yet")]
+    NotDelivered,
+    #[msg("Caller is not authorized to perform this action")]
+    Unauthorized,
+    #[msg("Work has already been marked as delivered")]
+    AlreadyDelivered,
 }
