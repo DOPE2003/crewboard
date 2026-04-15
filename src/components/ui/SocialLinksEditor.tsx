@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { Twitter, Send, Globe, Plus, Github, Linkedin } from "lucide-react";
+import { Twitter, Send, Globe, Plus, Github, Linkedin, X } from "lucide-react";
 import { updateSocialLinks } from "@/actions/profile";
 import { useRouter } from "next/navigation";
 
@@ -125,16 +125,34 @@ export default function SocialLinksEditor({
     }
     if (value) {
       return (
-        <a
-          href={hrefFn(value)}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={isOwnProfile ? (e) => { e.preventDefault(); setEditing(true); } : undefined}
-          style={pill}
-        >
-          {icon}
-          {wide ? value.replace(/^https?:\/\//, "").replace(/\/$/, "") : value}
-        </a>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: 0 }}>
+          <a
+            href={hrefFn(value)}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={isOwnProfile ? (e) => { e.preventDefault(); setEditing(true); } : undefined}
+            style={pill}
+          >
+            {icon}
+            {wide ? value.replace(/^https?:\/\//, "").replace(/\/$/, "") : value}
+          </a>
+          {isOwnProfile && (
+            <button
+              onClick={() => { setEditVal(""); save(fieldKey, "", setEditing); }}
+              title={`Remove ${label}`}
+              style={{
+                display: "inline-flex", alignItems: "center", justifyContent: "center",
+                width: 20, height: 20, borderRadius: "50%", border: "none",
+                background: "transparent", color: "var(--text-muted)", cursor: "pointer",
+                marginLeft: -4, padding: 0, transition: "color 0.15s",
+              }}
+              onMouseEnter={e => (e.currentTarget.style.color = "#ef4444")}
+              onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}
+            >
+              <X size={10} strokeWidth={2.5} />
+            </button>
+          )}
+        </span>
       );
     }
     if (isOwnProfile) {

@@ -27,15 +27,15 @@ export async function updateSocialLinks({
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) throw new Error("Not authenticated");
 
-  const data: Record<string, string> = {};
-  if (twitterHandle2 !== undefined) data.twitterHandle2 = twitterHandle2.replace(/^@/, "").trim();
-  if (telegramHandle !== undefined) data.telegramHandle = telegramHandle.replace(/^@/, "").trim();
-  if (website !== undefined) data.website = website.trim();
-  if (website2 !== undefined) data.website2 = website2.trim();
-  if (website3 !== undefined) data.website3 = website3.trim();
-  if (githubHandle !== undefined) data.githubHandle = githubHandle.replace(/^@/, "").trim();
-  if (discordHandle !== undefined) data.discordHandle = discordHandle.replace(/^@/, "").trim();
-  if (linkedinHandle !== undefined) data.linkedinHandle = linkedinHandle.replace(/^@/, "").trim();
+  const data: Record<string, string | null> = {};
+  if (twitterHandle2 !== undefined) { const v = twitterHandle2.replace(/^@/, "").trim(); data.twitterHandle2 = v || null; }
+  if (telegramHandle !== undefined) { const v = telegramHandle.replace(/^@/, "").trim(); data.telegramHandle = v || null; }
+  if (website !== undefined) { const v = website.trim(); data.website = v || null; }
+  if (website2 !== undefined) { const v = website2.trim(); data.website2 = v || null; }
+  if (website3 !== undefined) { const v = website3.trim(); data.website3 = v || null; }
+  if (githubHandle !== undefined) { const v = githubHandle.replace(/^@/, "").trim(); data.githubHandle = v || null; }
+  if (discordHandle !== undefined) { const v = discordHandle.replace(/^@/, "").trim(); data.discordHandle = v || null; }
+  if (linkedinHandle !== undefined) { const v = linkedinHandle.replace(/^@/, "").trim(); data.linkedinHandle = v || null; }
 
   await db.user.update({ where: { id: userId }, data });
 }
