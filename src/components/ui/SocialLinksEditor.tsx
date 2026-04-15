@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 
 interface Props {
   twitterHandle: string;
+  twitterHandle2: string | null;
   telegramHandle: string | null;
   website: string | null;
   website2: string | null;
@@ -26,10 +27,11 @@ function DiscordIcon({ size = 12 }: { size?: number }) {
 }
 
 export default function SocialLinksEditor({
-  twitterHandle, telegramHandle, website, website2, website3,
+  twitterHandle, twitterHandle2, telegramHandle, website, website2, website3,
   githubHandle, discordHandle, linkedinHandle, isOwnProfile,
 }: Props) {
   const router = useRouter();
+  const [editingTw2, setEditingTw2] = useState(false);
   const [editingTg, setEditingTg] = useState(false);
   const [editingWeb, setEditingWeb] = useState(false);
   const [editingWeb2, setEditingWeb2] = useState(false);
@@ -37,6 +39,7 @@ export default function SocialLinksEditor({
   const [editingGh, setEditingGh] = useState(false);
   const [editingDiscord, setEditingDiscord] = useState(false);
   const [editingLinkedin, setEditingLinkedin] = useState(false);
+  const [tw2Val, setTw2Val] = useState(twitterHandle2 ?? "");
   const [tgVal, setTgVal] = useState(telegramHandle ?? "");
   const [webVal, setWebVal] = useState(website ?? "");
   const [web2Val, setWeb2Val] = useState(website2 ?? "");
@@ -45,6 +48,7 @@ export default function SocialLinksEditor({
   const [discordVal, setDiscordVal] = useState(discordHandle ?? "");
   const [linkedinVal, setLinkedinVal] = useState(linkedinHandle ?? "");
   const [saving, setSaving] = useState(false);
+  const tw2Ref = useRef<HTMLInputElement>(null);
   const tgRef = useRef<HTMLInputElement>(null);
   const webRef = useRef<HTMLInputElement>(null);
   const web2Ref = useRef<HTMLInputElement>(null);
@@ -156,6 +160,14 @@ export default function SocialLinksEditor({
         <Twitter size={12} />
         @{twitterHandle}
       </a>
+
+      {/* Second X account */}
+      {renderHandlePill(
+        "X Account",
+        <Twitter size={12} style={{ flexShrink: 0 }} />,
+        twitterHandle2, tw2Val, setTw2Val, editingTw2, setEditingTw2,
+        "twitterHandle2", v => `https://twitter.com/${v}`, "@handle", tw2Ref,
+      )}
 
       {/* Telegram */}
       {renderHandlePill(

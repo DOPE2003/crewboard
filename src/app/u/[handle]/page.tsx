@@ -326,6 +326,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               <div style={{ marginTop: "0.5rem" }}>
                 <SocialLinksEditor
                   twitterHandle={user.twitterHandle}
+                  twitterHandle2={user.twitterHandle2 ?? null}
                   telegramHandle={user.telegramHandle ?? null}
                   website={user.website ?? null}
                   website2={user.website2 ?? null}

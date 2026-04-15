@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 
 export async function updateSocialLinks({
+  twitterHandle2,
   telegramHandle,
   website,
   website2,
@@ -13,6 +14,7 @@ export async function updateSocialLinks({
   discordHandle,
   linkedinHandle,
 }: {
+  twitterHandle2?: string;
   telegramHandle?: string;
   website?: string;
   website2?: string;
@@ -26,6 +28,7 @@ export async function updateSocialLinks({
   if (!userId) throw new Error("Not authenticated");
 
   const data: Record<string, string> = {};
+  if (twitterHandle2 !== undefined) data.twitterHandle2 = twitterHandle2.replace(/^@/, "").trim();
   if (telegramHandle !== undefined) data.telegramHandle = telegramHandle.replace(/^@/, "").trim();
   if (website !== undefined) data.website = website.trim();
   if (website2 !== undefined) data.website2 = website2.trim();

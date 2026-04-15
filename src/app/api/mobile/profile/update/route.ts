@@ -10,6 +10,7 @@ const ALLOWED_FIELDS = [
   "skills",
   "walletAddress",
   "availability",
+  "twitterHandle2",
   "telegramHandle",
   "githubHandle",
   "discordHandle",
@@ -17,6 +18,7 @@ const ALLOWED_FIELDS = [
   "website",
   "website2",
   "website3",
+  "email",
 ] as const;
 
 type AllowedField = (typeof ALLOWED_FIELDS)[number];
@@ -37,12 +39,16 @@ export async function POST(req: NextRequest) {
     if (fields.displayName !== undefined && fields.name === undefined) {
       fields.name = fields.displayName;
     }
+    if (fields.contactEmail !== undefined && fields.email === undefined) {
+      fields.email = fields.contactEmail;
+    }
 
     // Only pick allowed fields that were actually sent
     const updates: Record<string, unknown> = {};
     for (const key of ALLOWED_FIELDS) {
       if (fields[key] !== undefined) {
-        updates[key] = fields[key];
+        // null or empty string clears the column
+        updates[key] = fields[key] === null || fields[key] === "" ? null : fields[key];
       }
     }
 

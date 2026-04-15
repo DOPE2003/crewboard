@@ -56,6 +56,7 @@ export type UserMinAggregateOutputType = {
   passwordHash: string | null
   lastSeenAt: Date | null
   cvUrl: string | null
+  twitterHandle2: string | null
   telegramHandle: string | null
   githubHandle: string | null
   discordHandle: string | null
@@ -90,6 +91,7 @@ export type UserMaxAggregateOutputType = {
   passwordHash: string | null
   lastSeenAt: Date | null
   cvUrl: string | null
+  twitterHandle2: string | null
   telegramHandle: string | null
   githubHandle: string | null
   discordHandle: string | null
@@ -126,6 +128,7 @@ export type UserCountAggregateOutputType = {
   lastSeenAt: number
   portfolioItems: number
   cvUrl: number
+  twitterHandle2: number
   telegramHandle: number
   githubHandle: number
   discordHandle: number
@@ -170,6 +173,7 @@ export type UserMinAggregateInputType = {
   passwordHash?: true
   lastSeenAt?: true
   cvUrl?: true
+  twitterHandle2?: true
   telegramHandle?: true
   githubHandle?: true
   discordHandle?: true
@@ -204,6 +208,7 @@ export type UserMaxAggregateInputType = {
   passwordHash?: true
   lastSeenAt?: true
   cvUrl?: true
+  twitterHandle2?: true
   telegramHandle?: true
   githubHandle?: true
   discordHandle?: true
@@ -240,6 +245,7 @@ export type UserCountAggregateInputType = {
   lastSeenAt?: true
   portfolioItems?: true
   cvUrl?: true
+  twitterHandle2?: true
   telegramHandle?: true
   githubHandle?: true
   discordHandle?: true
@@ -363,6 +369,7 @@ export type UserGroupByOutputType = {
   lastSeenAt: Date | null
   portfolioItems: runtime.JsonValue
   cvUrl: string | null
+  twitterHandle2: string | null
   telegramHandle: string | null
   githubHandle: string | null
   discordHandle: string | null
@@ -422,6 +429,7 @@ export type UserWhereInput = {
   lastSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   portfolioItems?: Prisma.JsonFilter<"User">
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  twitterHandle2?: Prisma.StringNullableFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
@@ -471,6 +479,7 @@ export type UserOrderByWithRelationInput = {
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   portfolioItems?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  twitterHandle2?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -523,6 +532,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   lastSeenAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   portfolioItems?: Prisma.JsonFilter<"User">
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
+  twitterHandle2?: Prisma.StringNullableFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
@@ -572,6 +582,7 @@ export type UserOrderByWithAggregationInput = {
   lastSeenAt?: Prisma.SortOrderInput | Prisma.SortOrder
   portfolioItems?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  twitterHandle2?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -616,6 +627,7 @@ export type UserScalarWhereWithAggregatesInput = {
   lastSeenAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   portfolioItems?: Prisma.JsonWithAggregatesFilter<"User">
   cvUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  twitterHandle2?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   githubHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   discordHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -652,6 +664,7 @@ export type UserCreateInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -701,6 +714,7 @@ export type UserUncheckedCreateInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -750,6 +764,7 @@ export type UserUpdateInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -799,6 +814,7 @@ export type UserUncheckedUpdateInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -848,6 +864,7 @@ export type UserCreateManyInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -884,6 +901,7 @@ export type UserUpdateManyMutationInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -920,6 +938,7 @@ export type UserUncheckedUpdateManyInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -964,6 +983,7 @@ export type UserCountOrderByAggregateInput = {
   lastSeenAt?: Prisma.SortOrder
   portfolioItems?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrder
+  twitterHandle2?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   githubHandle?: Prisma.SortOrder
   discordHandle?: Prisma.SortOrder
@@ -1002,6 +1022,7 @@ export type UserMaxOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrder
+  twitterHandle2?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   githubHandle?: Prisma.SortOrder
   discordHandle?: Prisma.SortOrder
@@ -1036,6 +1057,7 @@ export type UserMinOrderByAggregateInput = {
   passwordHash?: Prisma.SortOrder
   lastSeenAt?: Prisma.SortOrder
   cvUrl?: Prisma.SortOrder
+  twitterHandle2?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   githubHandle?: Prisma.SortOrder
   discordHandle?: Prisma.SortOrder
@@ -1304,6 +1326,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1352,6 +1375,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1405,6 +1429,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1453,6 +1478,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1517,6 +1543,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1565,6 +1592,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1624,6 +1652,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1672,6 +1701,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1720,6 +1750,7 @@ export type UserCreateWithoutNotificationsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1768,6 +1799,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1832,6 +1864,7 @@ export type UserUpdateWithoutNotificationsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1880,6 +1913,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1928,6 +1962,7 @@ export type UserCreateWithoutSentMessagesInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -1976,6 +2011,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2040,6 +2076,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2088,6 +2125,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2136,6 +2174,7 @@ export type UserCreateWithoutGigsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2184,6 +2223,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2248,6 +2288,7 @@ export type UserUpdateWithoutGigsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2296,6 +2337,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2344,6 +2386,7 @@ export type UserCreateWithoutSavedGigsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2392,6 +2435,7 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2456,6 +2500,7 @@ export type UserUpdateWithoutSavedGigsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2504,6 +2549,7 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2552,6 +2598,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2600,6 +2647,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2653,6 +2701,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2701,6 +2750,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -2765,6 +2815,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2813,6 +2864,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2872,6 +2924,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2920,6 +2973,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2968,6 +3022,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3016,6 +3071,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3069,6 +3125,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3117,6 +3174,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3181,6 +3239,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3229,6 +3288,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3288,6 +3348,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3336,6 +3397,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3384,6 +3446,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3432,6 +3495,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3496,6 +3560,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3544,6 +3609,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3592,6 +3658,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3640,6 +3707,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3704,6 +3772,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3752,6 +3821,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3800,6 +3870,7 @@ export type UserCreateWithoutProWaitlistInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3848,6 +3919,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   lastSeenAt?: Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: string | null
+  twitterHandle2?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
   discordHandle?: string | null
@@ -3912,6 +3984,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3960,6 +4033,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4138,6 +4212,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
+  twitterHandle2?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
   discordHandle?: boolean
@@ -4188,6 +4263,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
+  twitterHandle2?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
   discordHandle?: boolean
@@ -4224,6 +4300,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
+  twitterHandle2?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
   discordHandle?: boolean
@@ -4260,6 +4337,7 @@ export type UserSelectScalar = {
   lastSeenAt?: boolean
   portfolioItems?: boolean
   cvUrl?: boolean
+  twitterHandle2?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
   discordHandle?: boolean
@@ -4272,7 +4350,7 @@ export type UserSelectScalar = {
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -4333,6 +4411,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     lastSeenAt: Date | null
     portfolioItems: runtime.JsonValue
     cvUrl: string | null
+    twitterHandle2: string | null
     telegramHandle: string | null
     githubHandle: string | null
     discordHandle: string | null
@@ -4802,6 +4881,7 @@ export interface UserFieldRefs {
   readonly lastSeenAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly portfolioItems: Prisma.FieldRef<"User", 'Json'>
   readonly cvUrl: Prisma.FieldRef<"User", 'String'>
+  readonly twitterHandle2: Prisma.FieldRef<"User", 'String'>
   readonly telegramHandle: Prisma.FieldRef<"User", 'String'>
   readonly githubHandle: Prisma.FieldRef<"User", 'String'>
   readonly discordHandle: Prisma.FieldRef<"User", 'String'>

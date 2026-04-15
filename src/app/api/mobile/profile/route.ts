@@ -25,6 +25,7 @@ export async function GET(req: NextRequest) {
       humanVerified: true,
       bannerImage: true,
       portfolioItems: true,
+      twitterHandle2: true,
       telegramHandle: true,
       githubHandle: true,
       discordHandle: true,
@@ -32,6 +33,7 @@ export async function GET(req: NextRequest) {
       website: true,
       website2: true,
       website3: true,
+      email: true,
       createdAt: true,
       gigs: {
         where: { status: "active" },

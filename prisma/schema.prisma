@@ -37,6 +37,7 @@ model User {
   lastSeenAt           DateTime?
   portfolioItems       Json                  @default("[]")
   cvUrl                String?
+  twitterHandle2       String?
   telegramHandle       String?
   githubHandle         String?
   discordHandle        String?

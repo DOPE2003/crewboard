@@ -1441,6 +1441,7 @@ export const UserScalarFieldEnum = {
   lastSeenAt: 'lastSeenAt',
   portfolioItems: 'portfolioItems',
   cvUrl: 'cvUrl',
+  twitterHandle2: 'twitterHandle2',
   telegramHandle: 'telegramHandle',
   githubHandle: 'githubHandle',
   discordHandle: 'discordHandle',

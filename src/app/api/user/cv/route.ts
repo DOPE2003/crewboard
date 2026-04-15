@@ -22,12 +22,13 @@ export async function POST(req: Request) {
     if (file.size > 5 * 1024 * 1024) return NextResponse.json({ error: "File too large (max 5 MB)" }, { status: 400 });
 
     const filename = `cvs/${userId}-${Date.now()}.pdf`;
-    const blob = await put(filename, file, { access: "public", contentType: "application/pdf" });
+    const blob = await put(filename, file, { access: "private", contentType: "application/pdf", token: process.env.BLOB_READ_WRITE_TOKEN });
 
-    const updated = await db.user.update({ where: { id: userId }, data: { cvUrl: blob.url }, select: { twitterHandle: true } });
+    const proxyUrl = `/api/blob/serve?url=${encodeURIComponent(blob.url)}`;
+    const updated = await db.user.update({ where: { id: userId }, data: { cvUrl: proxyUrl }, select: { twitterHandle: true } });
     revalidatePath("/dashboard");
     if (updated.twitterHandle) revalidatePath(`/u/${updated.twitterHandle}`);
-    return NextResponse.json({ url: blob.url });
+    return NextResponse.json({ url: proxyUrl });
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? "Upload failed" }, { status: 500 });
   }
