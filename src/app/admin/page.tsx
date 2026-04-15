@@ -1,6 +1,7 @@
 import { requireStaff, getStaffRole, OWNER_HANDLE } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
+import SystemNotifyForm from "@/components/admin/SystemNotifyForm";
 
 export default async function AdminDashboardPage() {
   await requireStaff();
@@ -157,6 +158,19 @@ export default async function AdminDashboardPage() {
             </Link>
           ))}
         </div>
+
+        {/* System Notifications — owner only */}
+        {isOwner && (
+          <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1.5rem" }}>
+            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", gap: 10 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+              <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Send System Notification</h2>
+            </div>
+            <div style={{ padding: "1.5rem" }}>
+              <SystemNotifyForm />
+            </div>
+          </div>
+        )}
 
         {/* Recent signups — owner only */}
         {isOwner && latestUsers.length > 0 && (
