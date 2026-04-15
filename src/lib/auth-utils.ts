@@ -6,7 +6,7 @@ import db from "@/lib/db";
 // Cannot be changed via the UI, only here in code.
 export const OWNER_HANDLE = "saad190914";
 
-export type StaffRole = "owner" | "admin" | "moderator";
+export type StaffRole = "owner" | "admin" | "support";
 
 export async function getStaffRole(): Promise<StaffRole | null> {
   const session = await auth();
@@ -26,12 +26,12 @@ export async function getStaffRole(): Promise<StaffRole | null> {
   if (!dbUser) return null;
   if (dbUser.twitterHandle?.toLowerCase() === OWNER_HANDLE.toLowerCase()) return "owner";
   if (dbUser.role === "ADMIN") return "admin";
-  if (dbUser.role === "MODERATOR") return "moderator";
+  if (dbUser.role === "SUPPORT") return "support";
   return null;
 }
 
-// Allows owner, admin, moderator
-export async function requireModerator() {
+// Allows any staff role (owner, admin, support)
+export async function requireStaff() {
   const role = await getStaffRole();
   if (!role) redirect("/");
   return role;
@@ -40,7 +40,7 @@ export async function requireModerator() {
 // Allows owner + admin only
 export async function requireAdmin() {
   const role = await getStaffRole();
-  if (!role || role === "moderator") redirect("/");
+  if (!role || role === "support") redirect("/");
   return role;
 }
 

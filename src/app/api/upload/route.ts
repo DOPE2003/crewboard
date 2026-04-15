@@ -147,12 +147,14 @@ export async function POST(req: NextRequest) {
     logUpload("uploading", { filename, folder, size: fmt(file.size) });
 
     const blob = await put(filename, file, {
-      access: "public",
+      access: "private",
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
-    logUpload("success", { url: blob.url, size: fmt(file.size) });
-    return NextResponse.json({ url: blob.url });
+    // Private blob URLs aren't directly accessible — proxy through /api/blob/serve
+    const proxyUrl = `/api/blob/serve?url=${encodeURIComponent(blob.url)}`;
+    logUpload("success", { blobUrl: blob.url, proxyUrl, size: fmt(file.size) });
+    return NextResponse.json({ url: proxyUrl });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : String(err);
     const stack = err instanceof Error ? err.stack : undefined;

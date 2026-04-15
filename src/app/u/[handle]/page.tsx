@@ -328,7 +328,11 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   twitterHandle={user.twitterHandle}
                   telegramHandle={user.telegramHandle ?? null}
                   website={user.website ?? null}
+                  website2={user.website2 ?? null}
+                  website3={user.website3 ?? null}
                   githubHandle={user.githubHandle ?? null}
+                  discordHandle={user.discordHandle ?? null}
+                  linkedinHandle={user.linkedinHandle ?? null}
                   isOwnProfile={isOwnProfile}
                 />
               </div>

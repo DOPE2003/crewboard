@@ -7,11 +7,19 @@ import { revalidatePath } from "next/cache";
 export async function updateSocialLinks({
   telegramHandle,
   website,
+  website2,
+  website3,
   githubHandle,
+  discordHandle,
+  linkedinHandle,
 }: {
   telegramHandle?: string;
   website?: string;
+  website2?: string;
+  website3?: string;
   githubHandle?: string;
+  discordHandle?: string;
+  linkedinHandle?: string;
 }) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
@@ -20,7 +28,11 @@ export async function updateSocialLinks({
   const data: Record<string, string> = {};
   if (telegramHandle !== undefined) data.telegramHandle = telegramHandle.replace(/^@/, "").trim();
   if (website !== undefined) data.website = website.trim();
+  if (website2 !== undefined) data.website2 = website2.trim();
+  if (website3 !== undefined) data.website3 = website3.trim();
   if (githubHandle !== undefined) data.githubHandle = githubHandle.replace(/^@/, "").trim();
+  if (discordHandle !== undefined) data.discordHandle = discordHandle.replace(/^@/, "").trim();
+  if (linkedinHandle !== undefined) data.linkedinHandle = linkedinHandle.replace(/^@/, "").trim();
 
   await db.user.update({ where: { id: userId }, data });
 }

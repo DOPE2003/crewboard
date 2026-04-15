@@ -77,13 +77,13 @@ export default async function DashboardPage() {
 
   const dbUser = JSON.parse(JSON.stringify(dbUserRaw));
 
-  // Balance calculations (amounts stored in cents/smallest unit)
+  // Balance calculations (amounts stored as whole dollars)
   const escrowAmount = activeOrders
     .filter((o) => o.status === "funded" && (o.buyerId === userId || o.sellerId === userId))
     .reduce((sum, o) => sum + o.amount, 0);
   const totalEarned = completedOrders.reduce((sum, o) => sum + o.amount, 0);
-  const formatUSD = (cents: number) =>
-    cents === 0 ? "$0" : `$${(cents / 100).toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`;
+  const formatUSD = (amount: number) =>
+    amount === 0 ? "$0" : `$${amount.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 
   const pendingPaymentOrders = activeOrders.filter(
     (o) => o.status === "delivered" && o.sellerId === userId

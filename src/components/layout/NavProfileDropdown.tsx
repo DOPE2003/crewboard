@@ -270,8 +270,8 @@ export default function NavProfileDropdown({
                 ? <span style={{ background: "linear-gradient(135deg,rgba(20,184,166,0.6),rgba(15,118,110,0.6))", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>OWNER</span>
                 : extra?.role === "ADMIN"
                   ? <span style={{ background: "rgba(239,68,68,0.35)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>ADMIN</span>
-                  : extra?.role === "MODERATOR"
-                    ? <span style={{ background: "rgba(139,92,246,0.45)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>MOD</span>
+                  : extra?.role === "SUPPORT"
+                    ? <span style={{ background: "rgba(99,102,241,0.45)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>SUPPORT</span>
                     : null
               }
               {twitterHandle && (
@@ -318,13 +318,13 @@ export default function NavProfileDropdown({
       <div style={{ padding: "10px 0 12px" }}>
 
         {/* Staff dashboard shortcut */}
-        {(extra?.twitterHandle === "saad190914" || extra?.role === "ADMIN" || extra?.role === "MODERATOR") && (() => {
-          const isOwner = extra?.twitterHandle === "saad190914";
-          const isMod   = !isOwner && extra?.role === "MODERATOR";
-          const label = isOwner ? "Owner Dashboard" : isMod ? "Moderator Dashboard" : "Admin Dashboard";
-          const color = isOwner ? "#0f766e" : isMod ? "#7c3aed" : "#ef4444";
-          const bg    = isOwner ? "linear-gradient(135deg,rgba(20,184,166,0.12),rgba(20,184,166,0.06))" : isMod ? "linear-gradient(135deg,rgba(139,92,246,0.1),rgba(139,92,246,0.05))" : "linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.05))";
-          const badge = isOwner ? "OWNER" : isMod ? "MOD" : "STAFF";
+        {(extra?.twitterHandle === "saad190914" || extra?.role === "ADMIN" || extra?.role === "SUPPORT") && (() => {
+          const isOwner   = extra?.twitterHandle === "saad190914";
+          const isSupport = !isOwner && extra?.role === "SUPPORT";
+          const label = isOwner ? "Owner Dashboard" : isSupport ? "Support Dashboard" : "Admin Dashboard";
+          const color = isOwner ? "#0f766e" : isSupport ? "#6366f1" : "#ef4444";
+          const bg    = isOwner ? "linear-gradient(135deg,rgba(20,184,166,0.12),rgba(20,184,166,0.06))" : isSupport ? "linear-gradient(135deg,rgba(99,102,241,0.1),rgba(99,102,241,0.05))" : "linear-gradient(135deg,rgba(239,68,68,0.1),rgba(239,68,68,0.05))";
+          const badge = isOwner ? "OWNER" : isSupport ? "SUPPORT" : "STAFF";
           return (
             <div style={{ margin: "0 12px 8px" }}>
               <Link href="/admin" onClick={onClose} style={{

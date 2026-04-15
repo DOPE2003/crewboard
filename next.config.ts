@@ -21,7 +21,7 @@ const nextConfig: NextConfig = {
       // Vercel Blob — allows next/image to optimize banner/avatar URLs
       {
         protocol: "https",
-        hostname: "*.public.blob.vercel-storage.com",
+        hostname: "*.private.blob.vercel-storage.com",
       },
     ],
   },

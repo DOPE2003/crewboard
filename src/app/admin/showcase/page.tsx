@@ -1,4 +1,4 @@
-import { requireModerator } from "@/lib/auth-utils";
+import { requireAdmin } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 import { ShowcaseDeleteButton } from "./ShowcaseActions";
@@ -8,7 +8,7 @@ export default async function AdminShowcasePage({
 }: {
   searchParams: Promise<{ category?: string }>;
 }) {
-  await requireModerator();
+  await requireAdmin();
   const { category = "all" } = await searchParams;
 
   const posts = await db.showcasePost.findMany({

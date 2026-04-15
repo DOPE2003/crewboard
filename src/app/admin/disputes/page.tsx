@@ -1,9 +1,9 @@
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireStaff } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 
 export default async function AdminDisputesPage() {
-  await requireAdmin();
+  await requireStaff();
 
   const disputes = await db.order.findMany({
     where: { status: "disputed" },

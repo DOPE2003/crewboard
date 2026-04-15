@@ -27,7 +27,11 @@ export async function GET(req: NextRequest) {
       portfolioItems: true,
       telegramHandle: true,
       githubHandle: true,
+      discordHandle: true,
+      linkedinHandle: true,
       website: true,
+      website2: true,
+      website3: true,
       createdAt: true,
       gigs: {
         where: { status: "active" },

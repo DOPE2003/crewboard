@@ -58,7 +58,11 @@ export type UserMinAggregateOutputType = {
   cvUrl: string | null
   telegramHandle: string | null
   githubHandle: string | null
+  discordHandle: string | null
+  linkedinHandle: string | null
   website: string | null
+  website2: string | null
+  website3: string | null
   bannerImage: string | null
   bannerHeight: number | null
   humanVerified: boolean | null
@@ -88,7 +92,11 @@ export type UserMaxAggregateOutputType = {
   cvUrl: string | null
   telegramHandle: string | null
   githubHandle: string | null
+  discordHandle: string | null
+  linkedinHandle: string | null
   website: string | null
+  website2: string | null
+  website3: string | null
   bannerImage: string | null
   bannerHeight: number | null
   humanVerified: boolean | null
@@ -120,7 +128,11 @@ export type UserCountAggregateOutputType = {
   cvUrl: number
   telegramHandle: number
   githubHandle: number
+  discordHandle: number
+  linkedinHandle: number
   website: number
+  website2: number
+  website3: number
   bannerImage: number
   bannerHeight: number
   humanVerified: number
@@ -160,7 +172,11 @@ export type UserMinAggregateInputType = {
   cvUrl?: true
   telegramHandle?: true
   githubHandle?: true
+  discordHandle?: true
+  linkedinHandle?: true
   website?: true
+  website2?: true
+  website3?: true
   bannerImage?: true
   bannerHeight?: true
   humanVerified?: true
@@ -190,7 +206,11 @@ export type UserMaxAggregateInputType = {
   cvUrl?: true
   telegramHandle?: true
   githubHandle?: true
+  discordHandle?: true
+  linkedinHandle?: true
   website?: true
+  website2?: true
+  website3?: true
   bannerImage?: true
   bannerHeight?: true
   humanVerified?: true
@@ -222,7 +242,11 @@ export type UserCountAggregateInputType = {
   cvUrl?: true
   telegramHandle?: true
   githubHandle?: true
+  discordHandle?: true
+  linkedinHandle?: true
   website?: true
+  website2?: true
+  website3?: true
   bannerImage?: true
   bannerHeight?: true
   humanVerified?: true
@@ -341,7 +365,11 @@ export type UserGroupByOutputType = {
   cvUrl: string | null
   telegramHandle: string | null
   githubHandle: string | null
+  discordHandle: string | null
+  linkedinHandle: string | null
   website: string | null
+  website2: string | null
+  website3: string | null
   bannerImage: string | null
   bannerHeight: number
   humanVerified: boolean
@@ -352,7 +380,7 @@ export type UserGroupByOutputType = {
   _max: UserMaxAggregateOutputType | null
 }
 
-type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
+export type GetUserGroupByPayload<T extends UserGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<UserGroupByOutputType, T['by']> &
       {
@@ -396,7 +424,11 @@ export type UserWhereInput = {
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  linkedinHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
+  website2?: Prisma.StringNullableFilter<"User"> | string | null
+  website3?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
   bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
@@ -441,7 +473,11 @@ export type UserOrderByWithRelationInput = {
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  linkedinHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  website2?: Prisma.SortOrderInput | Prisma.SortOrder
+  website3?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
@@ -489,7 +525,11 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   cvUrl?: Prisma.StringNullableFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  linkedinHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
+  website2?: Prisma.StringNullableFilter<"User"> | string | null
+  website3?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
   bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
@@ -534,7 +574,11 @@ export type UserOrderByWithAggregationInput = {
   cvUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   telegramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  linkedinHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
+  website2?: Prisma.SortOrderInput | Prisma.SortOrder
+  website3?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
@@ -574,7 +618,11 @@ export type UserScalarWhereWithAggregatesInput = {
   cvUrl?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   telegramHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   githubHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  discordHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  linkedinHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  website2?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  website3?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bannerHeight?: Prisma.IntWithAggregatesFilter<"User"> | number
   humanVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
@@ -606,7 +654,11 @@ export type UserCreateInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -651,7 +703,11 @@ export type UserUncheckedCreateInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -696,7 +752,11 @@ export type UserUpdateInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -741,7 +801,11 @@ export type UserUncheckedUpdateInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -786,7 +850,11 @@ export type UserCreateManyInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -818,7 +886,11 @@ export type UserUpdateManyMutationInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -850,7 +922,11 @@ export type UserUncheckedUpdateManyInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -890,7 +966,11 @@ export type UserCountOrderByAggregateInput = {
   cvUrl?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   githubHandle?: Prisma.SortOrder
+  discordHandle?: Prisma.SortOrder
+  linkedinHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  website2?: Prisma.SortOrder
+  website3?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
@@ -924,7 +1004,11 @@ export type UserMaxOrderByAggregateInput = {
   cvUrl?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   githubHandle?: Prisma.SortOrder
+  discordHandle?: Prisma.SortOrder
+  linkedinHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  website2?: Prisma.SortOrder
+  website3?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
@@ -954,7 +1038,11 @@ export type UserMinOrderByAggregateInput = {
   cvUrl?: Prisma.SortOrder
   telegramHandle?: Prisma.SortOrder
   githubHandle?: Prisma.SortOrder
+  discordHandle?: Prisma.SortOrder
+  linkedinHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
+  website2?: Prisma.SortOrder
+  website3?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
@@ -1218,7 +1306,11 @@ export type UserCreateWithoutSavedByTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1262,7 +1354,11 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1311,7 +1407,11 @@ export type UserCreateWithoutSavedTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1355,7 +1455,11 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1415,7 +1519,11 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1459,7 +1567,11 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1514,7 +1626,11 @@ export type UserUpdateWithoutSavedTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1558,7 +1674,11 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1602,7 +1722,11 @@ export type UserCreateWithoutNotificationsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1646,7 +1770,11 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1706,7 +1834,11 @@ export type UserUpdateWithoutNotificationsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1750,7 +1882,11 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1794,7 +1930,11 @@ export type UserCreateWithoutSentMessagesInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1838,7 +1978,11 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -1898,7 +2042,11 @@ export type UserUpdateWithoutSentMessagesInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1942,7 +2090,11 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -1986,7 +2138,11 @@ export type UserCreateWithoutGigsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2030,7 +2186,11 @@ export type UserUncheckedCreateWithoutGigsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2090,7 +2250,11 @@ export type UserUpdateWithoutGigsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2134,7 +2298,11 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2178,8 +2346,13 @@ export type UserCreateWithoutSavedGigsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2221,8 +2394,13 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
+  bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2280,8 +2458,13 @@ export type UserUpdateWithoutSavedGigsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2323,8 +2506,13 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2366,7 +2554,11 @@ export type UserCreateWithoutBuyerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2410,7 +2602,11 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2459,7 +2655,11 @@ export type UserCreateWithoutSellerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2503,7 +2703,11 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2563,7 +2767,11 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2607,7 +2815,11 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2662,7 +2874,11 @@ export type UserUpdateWithoutSellerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2706,7 +2922,11 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2750,7 +2970,11 @@ export type UserCreateWithoutReviewsReceivedInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2794,7 +3018,11 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2843,7 +3071,11 @@ export type UserCreateWithoutReviewsGivenInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2887,7 +3119,11 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -2947,7 +3183,11 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -2991,7 +3231,11 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3046,7 +3290,11 @@ export type UserUpdateWithoutReviewsGivenInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3090,7 +3338,11 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3134,7 +3386,11 @@ export type UserCreateWithoutShowcasePostsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -3178,7 +3434,11 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -3238,7 +3498,11 @@ export type UserUpdateWithoutShowcasePostsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3282,7 +3546,11 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3326,7 +3594,11 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -3370,7 +3642,11 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -3430,7 +3706,11 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3474,7 +3754,11 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3518,7 +3802,11 @@ export type UserCreateWithoutProWaitlistInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -3562,7 +3850,11 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   cvUrl?: string | null
   telegramHandle?: string | null
   githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
   website?: string | null
+  website2?: string | null
+  website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
@@ -3622,7 +3914,11 @@ export type UserUpdateWithoutProWaitlistInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3666,7 +3962,11 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
@@ -3840,7 +4140,11 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   cvUrl?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
+  discordHandle?: boolean
+  linkedinHandle?: boolean
   website?: boolean
+  website2?: boolean
+  website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
@@ -3886,7 +4190,11 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   cvUrl?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
+  discordHandle?: boolean
+  linkedinHandle?: boolean
   website?: boolean
+  website2?: boolean
+  website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
@@ -3918,7 +4226,11 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   cvUrl?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
+  discordHandle?: boolean
+  linkedinHandle?: boolean
   website?: boolean
+  website2?: boolean
+  website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
@@ -3950,13 +4262,17 @@ export type UserSelectScalar = {
   cvUrl?: boolean
   telegramHandle?: boolean
   githubHandle?: boolean
+  discordHandle?: boolean
+  linkedinHandle?: boolean
   website?: boolean
+  website2?: boolean
+  website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "githubHandle" | "website" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
@@ -4019,7 +4335,11 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     cvUrl: string | null
     telegramHandle: string | null
     githubHandle: string | null
+    discordHandle: string | null
+    linkedinHandle: string | null
     website: string | null
+    website2: string | null
+    website3: string | null
     bannerImage: string | null
     bannerHeight: number
     humanVerified: boolean
@@ -4484,7 +4804,11 @@ export interface UserFieldRefs {
   readonly cvUrl: Prisma.FieldRef<"User", 'String'>
   readonly telegramHandle: Prisma.FieldRef<"User", 'String'>
   readonly githubHandle: Prisma.FieldRef<"User", 'String'>
+  readonly discordHandle: Prisma.FieldRef<"User", 'String'>
+  readonly linkedinHandle: Prisma.FieldRef<"User", 'String'>
   readonly website: Prisma.FieldRef<"User", 'String'>
+  readonly website2: Prisma.FieldRef<"User", 'String'>
+  readonly website3: Prisma.FieldRef<"User", 'String'>
   readonly bannerImage: Prisma.FieldRef<"User", 'String'>
   readonly bannerHeight: Prisma.FieldRef<"User", 'Int'>
   readonly humanVerified: Prisma.FieldRef<"User", 'Boolean'>

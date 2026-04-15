@@ -1,11 +1,11 @@
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireStaff } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import DisputeResolveActions from "@/components/admin/DisputeResolveActions";
 
 export default async function AdminDisputeDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireAdmin();
+  await requireStaff();
   const { id } = await params;
 
   const order = await db.order.findUnique({
@@ -78,7 +78,7 @@ export default async function AdminDisputeDetailPage({ params }: { params: Promi
             <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
               <span style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>Escrow TX: </span>
               <a
-                href={`https://explorer.solana.com/tx/${order.txHash}?cluster=devnet`}
+                href={`https://explorer.solana.com/tx/${order.txHash}`}
                 target="_blank" rel="noopener noreferrer"
                 style={{ fontSize: "0.65rem", color: "#14b8a6", fontFamily: "monospace" }}
               >

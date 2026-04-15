@@ -45,7 +45,7 @@ export function AdminUserActions({ userId, role, isOG, canManage }: Props) {
 
   const roleColors: Record<string, any> = {
     ADMIN:     { bg: "rgba(239,68,68,0.05)",    color: "#ef4444",         border: "rgba(239,68,68,0.2)" },
-    MODERATOR: { bg: "rgba(245,158,11,0.05)",   color: "#f59e0b",         border: "rgba(245,158,11,0.2)" },
+    SUPPORT:   { bg: "rgba(99,102,241,0.05)",    color: "#6366f1",         border: "rgba(99,102,241,0.2)" },
     USER:      { bg: "rgba(0,0,0,0.03)",        color: "var(--text-muted)", border: "var(--card-border)" },
   };
   const rc = roleColors[role] ?? roleColors.USER;
@@ -91,7 +91,7 @@ export function AdminUserActions({ userId, role, isOG, canManage }: Props) {
           }}
         >
           <option value="USER">User</option>
-          <option value="MODERATOR">Moderator</option>
+          <option value="SUPPORT">Support</option>
           <option value="ADMIN">Admin</option>
         </select>
 

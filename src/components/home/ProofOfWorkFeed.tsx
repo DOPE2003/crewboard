@@ -440,7 +440,7 @@ export default function ProofOfWorkFeed({ orders }: { orders: CompletedOrder[] }
                   {/* TX hash */}
                   {order.txHash && (
                     <a
-                      href={`https://explorer.solana.com/tx/${order.txHash}?cluster=devnet`}
+                      href={`https://explorer.solana.com/tx/${order.txHash}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => e.stopPropagation()}

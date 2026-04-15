@@ -11,11 +11,14 @@ crewboard_escrow = "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp"
 [programs.devnet]
 crewboard_escrow = "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp"
 
+[programs.mainnet]
+crewboard_escrow = "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp"
+
 [registry]
 url = "https://api.apr.dev"
 
 [provider]
-cluster = "https://devnet.helius-rpc.com/?api-key=3a32eb83-58a1-441d-89c2-15b7c7564a97"
+cluster = "https://mainnet.helius-rpc.com/?api-key=3a32eb83-58a1-441d-89c2-15b7c7564a97"
 wallet = "~/.config/solana/id.json"
 
 [scripts]

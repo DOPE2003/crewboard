@@ -19,7 +19,7 @@ import {
   getAssociatedTokenAddress,
   getAssociatedTokenAddressSync,
   createAssociatedTokenAccountInstruction,
-  ASSOCIATED_TOKEN_PROGRAM_ID,
+  createAssociatedTokenAccountIdempotentInstruction,
 } from "@solana/spl-token";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
 
@@ -30,8 +30,8 @@ const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ
 
 export const PROGRAM_ID = new PublicKey("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
 
-// Devnet USDC mint
-export const USDC_MINT     = new PublicKey("4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU");
+// Mainnet USDC mint (Circle)
+export const USDC_MINT     = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
 export const USDC_DECIMALS = 6;
 
 /** Platform treasury wallet — receives 10% fee on every release.
@@ -81,12 +81,10 @@ const IDL: Idl = {
             ],
           },
         },
-        // escrow_token_account is now an ATA (init, associated_token::*) — NOT a signer
+        // escrow_token_account — created by client pre-instruction (createAssociatedTokenAccountIdempotent)
         { name: "escrow_token_account",    writable: true },
         { name: "system_program",          address: "11111111111111111111111111111111" },
         { name: "token_program",           address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" },
-        { name: "associated_token_program",address: "ATokenGPvbdGVxr1b2NG6aJZVSyMuVe5MxBfKF5SbFDPc" },
-        // rent sysvar removed — no longer in the InitializeEscrow struct
       ],
       args: [
         { name: "gig_id", type: "string" },
@@ -244,12 +242,27 @@ export async function fundEscrow(
   const buyerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, buyer);
 
   const preInstructions: TransactionInstruction[] = [];
+
+  // Ensure buyer ATA exists
   const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
   if (!buyerAtaInfo) {
     preInstructions.push(
       createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT)
     );
   }
+
+  // Create escrow vault ATA as a pre-instruction (idempotent).
+  // This fixes the Phantom simulation false-positive revert — the simulator
+  // now sees the ATA created by the Associated Token Program BEFORE
+  // InitializeEscrow tries to transfer into it.
+  preInstructions.push(
+    createAssociatedTokenAccountIdempotentInstruction(
+      buyer,              // payer
+      escrowTokenAccount, // ATA address
+      escrowState,        // owner (PDA — off-curve)
+      USDC_MINT,          // mint
+    )
+  );
 
   const txHash = await program.methods
     .initializeEscrow(orderId, amount)
@@ -259,14 +272,12 @@ export async function fundEscrow(
       mint:                   USDC_MINT,
       buyerTokenAccount,
       escrowState,
-      escrowTokenAccount,                          // ATA — not a signer
+      escrowTokenAccount,
       systemProgram:          SystemProgram.programId,
       tokenProgram:           TOKEN_PROGRAM_ID,
-      associatedTokenProgram: ASSOCIATED_TOKEN_PROGRAM_ID, // NEW
-      // rent removed — no longer in the Rust struct
     })
     .preInstructions(preInstructions)
-    .signers([])                                   // no keypair signer needed
+    .signers([])
     .rpc({ commitment: "confirmed" });
 
   return txHash;

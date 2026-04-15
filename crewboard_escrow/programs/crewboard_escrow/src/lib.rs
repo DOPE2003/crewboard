@@ -1,8 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{
-    associated_token::AssociatedToken,
-    token::{self, CloseAccount, Mint, Token, TokenAccount, Transfer},
-};
+use anchor_spl::token::{self, CloseAccount, Mint, Token, TokenAccount, Transfer};
 
 declare_id!("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
 
@@ -305,18 +302,17 @@ pub struct InitializeEscrow<'info> {
     pub escrow_state: Account<'info, EscrowState>,
 
     /// ATA owned by escrow_state PDA — vault for locked tokens.
-    /// Deterministic: no extra keypair needed from the client.
+    /// Created by client via createAssociatedTokenAccountIdempotent pre-instruction
+    /// to avoid Phantom simulation false-positive revert.
     #[account(
-        init,
-        payer = buyer,
-        associated_token::mint = mint,
-        associated_token::authority = escrow_state,
+        mut,
+        token::mint = mint,
+        token::authority = escrow_state,
     )]
     pub escrow_token_account: Account<'info, TokenAccount>,
 
     pub system_program: Program<'info, System>,
     pub token_program: Program<'info, Token>,
-    pub associated_token_program: Program<'info, AssociatedToken>,
 }
 
 #[derive(Accounts)]

@@ -108,7 +108,11 @@ export const UserScalarFieldEnum = {
   cvUrl: 'cvUrl',
   telegramHandle: 'telegramHandle',
   githubHandle: 'githubHandle',
+  discordHandle: 'discordHandle',
+  linkedinHandle: 'linkedinHandle',
   website: 'website',
+  website2: 'website2',
+  website3: 'website3',
   bannerImage: 'bannerImage',
   bannerHeight: 'bannerHeight',
   humanVerified: 'humanVerified'

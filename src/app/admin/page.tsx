@@ -1,19 +1,19 @@
-import { requireModerator, getStaffRole, OWNER_HANDLE } from "@/lib/auth-utils";
+import { requireStaff, getStaffRole, OWNER_HANDLE } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 
 export default async function AdminDashboardPage() {
-  await requireModerator();
+  await requireStaff();
   const staffRole = await getStaffRole();
 
-  const isOwner = staffRole === "owner";
-  const isAdmin = staffRole === "admin";
-  const isMod   = staffRole === "moderator";
+  const isOwner   = staffRole === "owner";
+  const isAdmin   = staffRole === "admin";
+  const isSupport = staffRole === "support";
 
   const dashConfig = {
-    owner:     { label: "Owner Dashboard",     accent: "#14b8a6", tag: "— BUILDER CONSOLE" },
-    admin:     { label: "Admin Dashboard",      accent: "#ef4444", tag: "— COMMAND CENTER" },
-    moderator: { label: "Moderator Dashboard",  accent: "#8b5cf6", tag: "— MODERATION CENTER" },
+    owner:   { label: "Owner Dashboard",   accent: "#14b8a6", tag: "— BUILDER CONSOLE" },
+    admin:   { label: "Admin Dashboard",    accent: "#ef4444", tag: "— COMMAND CENTER" },
+    support: { label: "Support Dashboard",  accent: "#8b5cf6", tag: "— DISPUTE CENTER" },
   }[staffRole!]!;
 
   const [
@@ -21,17 +21,17 @@ export default async function AdminDashboardPage() {
     totalRevenue, showcasePosts, latestUsers, pendingOrders, disputedOrders,
   ] = await Promise.all([
     isOwner || isAdmin ? db.user.count()                                                          : Promise.resolve(0),
-    db.gig.count({ where: { status: "active" } }),
+    isOwner || isAdmin ? db.gig.count({ where: { status: "active" } })                           : Promise.resolve(0),
     isOwner || isAdmin ? db.order.count()                                                         : Promise.resolve(0),
     isOwner || isAdmin ? db.order.count({ where: { status: "completed" } })                      : Promise.resolve(0),
     isOwner || isAdmin ? db.order.aggregate({ where: { status: "completed" }, _sum: { amount: true } }) : Promise.resolve({ _sum: { amount: 0 } }),
-    db.showcasePost.count(),
+    isOwner || isAdmin ? db.showcasePost.count()                                                  : Promise.resolve(0),
     isOwner ? db.user.findMany({
       orderBy: { createdAt: "desc" }, take: 8,
       select: { id: true, name: true, twitterHandle: true, image: true, createdAt: true, role: true, isOG: true, profileComplete: true },
     }) : Promise.resolve([]),
     isOwner || isAdmin ? db.order.count({ where: { status: { in: ["pending", "accepted", "funded", "delivered"] } } }) : Promise.resolve(0),
-    isOwner || isAdmin ? db.order.count({ where: { status: "disputed" } })                       : Promise.resolve(0),
+    db.order.count({ where: { status: "disputed" } }),
   ]);
 
   const revenue = (totalRevenue as any)._sum?.amount ?? 0;
@@ -43,15 +43,13 @@ export default async function AdminDashboardPage() {
       { label: "Total Orders",     value: totalOrders,     color: "#f59e0b" },
       { label: "Completed Orders", value: completedOrders, color: "#6366f1" },
       { label: "Total Revenue",    value: `$${revenue.toLocaleString()}`, color: "#ec4899" },
+      { label: "Active Gigs",      value: activeGigs,      color: "#22c55e" },
+      { label: "Showcase Posts",   value: showcasePosts,   color: "#8b5cf6" },
     ] : []),
-    { label: "Active Gigs",    value: activeGigs,    color: "#22c55e" },
-    { label: "Showcase Posts", value: showcasePosts, color: "#8b5cf6" },
-    ...(isOwner || isAdmin ? [
-      { label: "Open Disputes",  value: disputedOrders, color: "#ef4444" },
-    ] : []),
+    { label: "Open Disputes",  value: disputedOrders, color: "#ef4444" },
   ];
 
-  // Sections visible per role
+  // Sections visible per role — support only sees disputes
   const allSections = [
     {
       roles: ["owner"],
@@ -62,7 +60,7 @@ export default async function AdminDashboardPage() {
       icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
     },
     {
-      roles: ["owner", "admin", "moderator"],
+      roles: ["owner", "admin"],
       href: "/admin/gigs",
       label: "Gigs",
       desc: "Activate or deactivate service listings",
@@ -78,7 +76,7 @@ export default async function AdminDashboardPage() {
       icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
     },
     {
-      roles: ["owner", "admin", "moderator"],
+      roles: ["owner", "admin"],
       href: "/admin/showcase",
       label: "Showcase",
       desc: "Moderate showcase posts and remove content",
@@ -86,7 +84,7 @@ export default async function AdminDashboardPage() {
       icon: <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>,
     },
     {
-      roles: ["owner", "admin"],
+      roles: ["owner", "admin", "support"],
       href: "/admin/disputes",
       label: "Disputes",
       desc: "Resolve on-chain disputes — refund buyer or release to seller",
@@ -110,15 +108,15 @@ export default async function AdminDashboardPage() {
             <h1 style={{ fontSize: "2rem", fontWeight: 800, color: "var(--foreground)", margin: 0 }}>{dashConfig.label}</h1>
             <span style={{
               fontSize: "0.6rem", fontWeight: 800, letterSpacing: "0.1em", padding: "3px 10px", borderRadius: 99,
-              background: isOwner ? "linear-gradient(135deg,#14b8a6,#0f766e)" : isAdmin ? "rgba(239,68,68,0.1)" : "rgba(139,92,246,0.1)",
-              color: isOwner ? "#fff" : isAdmin ? "#ef4444" : "#8b5cf6",
+              background: isOwner ? "linear-gradient(135deg,#14b8a6,#0f766e)" : isAdmin ? "rgba(239,68,68,0.1)" : "rgba(99,102,241,0.1)",
+              color: isOwner ? "#fff" : isAdmin ? "#ef4444" : "#6366f1",
             }}>
               {staffRole!.toUpperCase()}
             </span>
           </div>
-          {isMod && (
+          {isSupport && (
             <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", marginTop: "0.4rem" }}>
-              You can moderate gigs and showcase content.
+              You handle dispute resolution for escrow orders.
             </p>
           )}
         </div>

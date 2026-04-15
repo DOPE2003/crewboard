@@ -67,7 +67,7 @@ export async function getProfilesForSwipe() {
     name: u.name,
     image: u.image,
     bannerImage: u.bannerImage,
-    role: u.userTitle ?? (u.role !== "USER" && u.role !== "MODERATOR" && u.role !== "ADMIN" ? u.role : null),
+    role: u.userTitle ?? (u.role !== "USER" && u.role !== "SUPPORT" && u.role !== "ADMIN" ? u.role : null),
     bio: u.bio,
     skills: u.skills,
     availability: u.availability,

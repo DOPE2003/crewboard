@@ -12,7 +12,11 @@ const ALLOWED_FIELDS = [
   "availability",
   "telegramHandle",
   "githubHandle",
+  "discordHandle",
+  "linkedinHandle",
   "website",
+  "website2",
+  "website3",
 ] as const;
 
 type AllowedField = (typeof ALLOWED_FIELDS)[number];

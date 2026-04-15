@@ -9,7 +9,7 @@ datasource db {
 
 enum Role {
   USER
-  MODERATOR
+  SUPPORT
   ADMIN
 }
 
@@ -39,7 +39,11 @@ model User {
   cvUrl                String?
   telegramHandle       String?
   githubHandle         String?
+  discordHandle        String?
+  linkedinHandle       String?
   website              String?
+  website2             String?
+  website3             String?
   bannerImage          String?
   bannerHeight         Int                   @default(140)
   humanVerified        Boolean               @default(false)

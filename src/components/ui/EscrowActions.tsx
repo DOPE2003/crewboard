@@ -22,7 +22,7 @@ interface Props {
 function friendlyError(e: any): string {
   const msg: string = e?.message ?? String(e);
   if (msg.includes("no record of a prior credit") || msg.includes("Attempt to debit"))
-    return "Your wallet has no SOL to pay the transaction fee. Get free devnet SOL at faucet.solana.com";
+    return "Your wallet has no SOL to pay the transaction fee.";
   if (msg.includes("insufficient funds") || msg.includes("0x1")) return "Insufficient USDC balance in your wallet";
   if (msg.toLowerCase().includes("rejected") || msg.includes("4001")) return "Transaction rejected by wallet";
   if (msg.includes("already in use") || msg.includes("already exists")) return "Escrow already funded for this order";
@@ -236,7 +236,7 @@ export default function EscrowActions({
             </button>
             {txHash && (
               <a
-                href={`https://explorer.solana.com/tx/${txHash}?cluster=devnet`}
+                href={`https://explorer.solana.com/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ fontSize: "0.65rem", color: "#2DD4BF", marginTop: "0.55rem", display: "inline-block" }}
@@ -252,7 +252,7 @@ export default function EscrowActions({
             Escrow funded. Waiting for the seller to accept and start working.
             {txHash && (
               <a
-                href={`https://explorer.solana.com/tx/${txHash}?cluster=devnet`}
+                href={`https://explorer.solana.com/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ color: "#2DD4BF", marginLeft: 8 }}
@@ -413,7 +413,7 @@ export default function EscrowActions({
             )}
             {txHash && (
               <a
-                href={`https://explorer.solana.com/tx/${txHash}?cluster=devnet`}
+                href={`https://explorer.solana.com/tx/${txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 style={{ fontSize: "0.65rem", color: "#22c55e", display: "inline-block" }}
@@ -439,17 +439,7 @@ export default function EscrowActions({
                   Insufficient USDC balance
                 </p>
                 <p className="text-amber-700 dark:text-amber-400 leading-relaxed">
-                  Your wallet doesn&apos;t have enough devnet USDC to fund this escrow. Get free test USDC at{" "}
-                  <a href="https://faucet.circle.com" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-amber-900 dark:hover:text-amber-200">
-                    faucet.circle.com
-                  </a>{" "}
-                  and devnet SOL at{" "}
-                  <a href="https://faucet.solana.com" target="_blank" rel="noopener noreferrer" className="underline font-medium hover:text-amber-900 dark:hover:text-amber-200">
-                    faucet.solana.com
-                  </a>.
-                </p>
-                <p className="text-amber-600 dark:text-amber-500 text-xs">
-                  Make sure your wallet is set to <strong>Devnet</strong> network in Phantom or Backpack settings.
+                  Your wallet doesn&apos;t have enough USDC to fund this escrow. Please top up your USDC balance and try again.
                 </p>
               </div>
             ) : (

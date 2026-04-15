@@ -95,10 +95,17 @@ export default async function Navbar() {
       }).catch(() => []);
       const userMap = Object.fromEntries(otherUsers.map((u) => [u.id, u]));
 
-      // Unread counts per conversation
-      const unreadPerConv = await Promise.all(
-        convs.map((c) => db.message.count({ where: { conversationId: c.id, read: false, senderId: { not: userId } } }).catch(() => 0))
-      );
+      // Unread counts per conversation — single query instead of N
+      const convIds = convs.map((c) => c.id);
+      const unreadGroups = convIds.length > 0
+        ? await db.message.groupBy({
+            by: ["conversationId"],
+            where: { conversationId: { in: convIds }, read: false, senderId: { not: userId } },
+            _count: { id: true },
+          }).catch(() => [])
+        : [];
+      const unreadMap = Object.fromEntries(unreadGroups.map((g) => [g.conversationId, g._count.id]));
+      const unreadPerConv = convs.map((c) => unreadMap[c.id] ?? 0);
 
       totalMsgUnread = unreadPerConv.reduce((a, b) => a + b, 0);
 

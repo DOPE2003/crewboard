@@ -8,7 +8,7 @@ declare module "next-auth" {
       userId?: string;
       twitterHandle?: string;
       profileComplete?: boolean;
-      role?: "USER" | "MODERATOR" | "ADMIN";
+      role?: "USER" | "SUPPORT" | "ADMIN";
     } & DefaultSession["user"];
   }
 }
@@ -18,7 +18,7 @@ declare module "next-auth/jwt" {
     userId?: string;
     twitterHandle?: string;
     profileComplete?: boolean;
-    role?: "USER" | "MODERATOR" | "ADMIN";
+    role?: "USER" | "SUPPORT" | "ADMIN";
     twitterAccessToken?: string;
     imageRefreshedAt?: number;
     issuedAt?: number;
