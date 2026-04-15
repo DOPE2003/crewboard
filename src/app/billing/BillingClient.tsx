@@ -90,46 +90,23 @@ export default function BillingClient({
   const [transferSuccess, setTransferSuccess] = useState(false);
   const [transferConfirm, setTransferConfirm] = useState(false);
   const [isMobile, setIsMobile]               = useState(false);
-  // Tracks whether Phantom is available + connected (for signing only)
-  const [isPhantomConnected, setIsPhantomConnected] = useState(false);
   const [disconnecting, setDisconnecting]     = useState(false);
 
-  const { publicKey, connected, signTransaction, select, disconnect } = useWallet();
+  const { publicKey, connected, signTransaction, select, connect, disconnect, wallets } = useWallet();
   const { connection } = useConnection();
 
   useEffect(() => {
     setIsMobile(detectMobile());
   }, []);
 
-  // Keep isPhantomConnected in sync after mount (window not available SSR)
+  // Auto-save wallet to DB when adapter connects and no address is stored yet
   useEffect(() => {
-    const provider =
-      (window as any).phantom?.solana ??
-      ((window as any).solana?.isPhantom ? (window as any).solana : null);
-    const check = () =>
-      setIsPhantomConnected(!!(provider?.isConnected || (connected && publicKey)));
-    check();
-    provider?.on?.("connect",    check);
-    provider?.on?.("disconnect", check);
-    return () => {
-      provider?.off?.("connect",    check);
-      provider?.off?.("disconnect", check);
-    };
-  }, [connected, publicKey]);
-
-  // Auto-save wallet to DB when Phantom connects and no address is stored yet
-  useEffect(() => {
-    if (walletAddress) return; // DB already has an address — don't overwrite
-    const provider =
-      (window as any).phantom?.solana ??
-      ((window as any).solana?.isPhantom ? (window as any).solana : null);
-    const save = (pk: string) =>
-      linkWallet({ publicKey: pk }).then(() => window.location.reload()).catch(console.error);
-    if (connected && publicKey) { save(publicKey.toBase58()); return; }
-    if (provider?.isConnected && provider?.publicKey) { save(provider.publicKey.toBase58()); return; }
-    const onConnect = () => { const pk = provider?.publicKey?.toBase58(); if (pk) save(pk); };
-    provider?.on?.("connect", onConnect);
-    return () => provider?.off?.("connect", onConnect);
+    if (walletAddress) return;
+    if (connected && publicKey) {
+      linkWallet({ publicKey: publicKey.toBase58() })
+        .then(() => window.location.reload())
+        .catch(console.error);
+    }
   }, [connected, publicKey, walletAddress]);
 
   // ── DB is source of truth for wallet ownership ─────────────────────────────
@@ -143,28 +120,24 @@ export default function BillingClient({
   }
 
   async function handleConnectWallet() {
-    // On mobile without Phantom injected → deep-link into Phantom browser
-    if (isMobile) {
-      const provider =
-        (window as any).phantom?.solana ??
-        ((window as any).solana?.isPhantom ? (window as any).solana : null);
-      if (!provider) {
-        window.location.href = phantomDeepLink(window.location.href);
-        return;
-      }
+    // On mobile without any wallet → deep-link to Phantom browser
+    if (isMobile && !wallets.some(w => w.readyState === "Installed")) {
+      window.location.href = phantomDeepLink(window.location.href);
+      return;
     }
-    const provider =
-      (window as any).phantom?.solana ??
-      ((window as any).solana?.isPhantom ? (window as any).solana : null);
-    if (!provider) {
+    // Use the wallet adapter — works across Chrome, Firefox, Brave, Edge
+    const phantomAdapter = wallets.find(w => w.adapter.name === "Phantom");
+    if (!phantomAdapter || phantomAdapter.readyState !== "Installed") {
       window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
       return;
     }
     try {
-      await provider.connect();
-      select("Phantom" as WalletName);
+      select(phantomAdapter.adapter.name as WalletName);
+      await new Promise(r => setTimeout(r, 100));
+      await connect();
     } catch (e: any) {
-      if (e?.code !== 4001) console.error("connect error", e);
+      if (e?.code !== 4001 && !e?.message?.includes("rejected"))
+        console.error("connect error", e);
     }
   }
 
@@ -172,18 +145,9 @@ export default function BillingClient({
     if (!confirm("Disconnect your wallet?")) return;
     setDisconnecting(true);
     try {
-      // 1. Disconnect adapter
       await disconnect();
-      // 2. Disconnect raw Phantom provider
-      const provider =
-        (window as any).phantom?.solana ??
-        ((window as any).solana?.isPhantom ? (window as any).solana : null);
-      try { await provider?.disconnect(); } catch { /* ignore */ }
-      // 3. Clear wallet-adapter localStorage key
       try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
-      // 4. Remove address from DB
       await unlinkWallet();
-      // 5. Go to dashboard — NOT back to billing (wallet is now gone)
       router.push("/dashboard");
     } catch {
       setDisconnecting(false);
@@ -458,7 +422,7 @@ export default function BillingClient({
               )}
 
               {/* ── Wallet linked but Phantom not connected → secondary CTA for signing ── */}
-              {hasWallet && !isPhantomConnected && (
+              {hasWallet && !connected && (
                 <button
                   onClick={handleConnectWallet}
                   style={{
@@ -486,7 +450,7 @@ export default function BillingClient({
                   <a href={`https://solscan.io/account/${addr}`} target="_blank" rel="noopener noreferrer" style={{ ...walletBtn, textDecoration: "none", display: "inline-flex", alignItems: "center" }}>
                     Solscan ↗
                   </a>
-                  {isPhantomConnected && (
+                  {connected && (
                     <button
                       onClick={() => { setShowTransfer(v => !v); setTransferError(null); setTransferConfirm(false); }}
                       style={{ ...walletBtn, background: "rgba(255,255,255,0.1)" }}

@@ -140,7 +140,7 @@ export default function NavProfileDropdown({
   const [walletMsg, setWalletMsg] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
 
-  const { publicKey, connected, select, disconnect } = useWallet();
+  const { publicKey, connected, select, connect, disconnect, wallets } = useWallet();
 
   // Detect mobile
   useEffect(() => {
@@ -208,20 +208,11 @@ export default function NavProfileDropdown({
     if (!confirm("Disconnect your wallet?")) return;
     setDisconnecting(true);
     try {
-      // 1. Disconnect adapter (clears connected + publicKey)
       await disconnect();
-      // 2. Disconnect raw Phantom provider so extension shows disconnected
-      const provider =
-        (window as any).phantom?.solana ??
-        ((window as any).solana?.isPhantom ? (window as any).solana : null);
-      try { await provider?.disconnect(); } catch { /* ignore */ }
-      // 3. Clear wallet-adapter localStorage key so autoConnect won't re-connect
       try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
-      // 4. Remove address from DB
       await unlinkWallet();
       setExtra((prev) => prev ? { ...prev, walletAddress: null } : prev);
       onClose();
-      // Redirect to dashboard — billing page would show a connected wallet still
       window.location.href = "/dashboard";
     } catch { /* ignore */ }
     finally { setDisconnecting(false); }
@@ -363,12 +354,16 @@ export default function NavProfileDropdown({
           ) : (
             <Row icon={I.wallet} label="Connect Wallet" onClick={async () => {
               onClose();
-              const provider = (window as any).phantom?.solana ?? ((window as any).solana?.isPhantom ? (window as any).solana : null);
-              if (!provider) { window.open("https://phantom.app/", "_blank", "noopener,noreferrer"); return; }
+              const phantomAdapter = wallets.find(w => w.adapter.name === "Phantom");
+              if (!phantomAdapter || phantomAdapter.readyState !== "Installed") {
+                window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
+                return;
+              }
               try {
-                await provider.connect();   // popup first
-                select("Phantom" as any);   // then sync adapter
-              } catch (e: any) { if (e?.code !== 4001) console.error(e); }
+                select(phantomAdapter.adapter.name as any);
+                await new Promise(r => setTimeout(r, 100));
+                await connect();
+              } catch (e: any) { if (e?.code !== 4001 && !e?.message?.includes("rejected")) console.error(e); }
             }} />
           )}
         </Card>

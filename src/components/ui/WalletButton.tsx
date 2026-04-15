@@ -1,6 +1,7 @@
 "use client";
 
 import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletName } from "@solana/wallet-adapter-base";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -8,25 +9,12 @@ function shortAddr(addr: string) {
   return addr.slice(0, 4) + "..." + addr.slice(-4);
 }
 
-/** True when running on a phone/tablet (userAgent-based). */
 function detectMobile(): boolean {
   return /Android|iPhone|iPad|iPod|Opera Mini|IEMobile|Mobile/i.test(
     navigator.userAgent
   );
 }
 
-/** True when Phantom has injected window.solana (desktop ext OR Phantom in-app browser). */
-function detectPhantom(): boolean {
-  return !!(
-    (window as any).phantom?.solana ??
-    ((window as any).solana?.isPhantom ? (window as any).solana : null)
-  );
-}
-
-/**
- * Phantom deep link — opens the given URL inside Phantom's in-app browser.
- * Format: https://phantom.app/ul/browse/{encodedUrl}?ref={encodedOrigin}
- */
 function phantomDeepLink(url: string): string {
   return (
     "https://phantom.app/ul/browse/" +
@@ -36,28 +24,13 @@ function phantomDeepLink(url: string): string {
   );
 }
 
-/**
- * Connects Phantom directly via window.phantom.solana within a click handler
- * (preserves user-gesture context so the extension popup fires).
- * CRITICAL ORDER: await provider.connect() FIRST so Phantom is connected before
- * select() initialises the adapter — otherwise adapter.connected is false on init
- * and publicKey never propagates.
- */
-async function connectPhantomDirect(select: (name: any) => void): Promise<boolean> {
-  const provider =
-    (window as any).phantom?.solana ??
-    ((window as any).solana?.isPhantom ? (window as any).solana : null);
-
-  if (!provider) return false;
-
-  try {
-    await provider.connect();   // 1️⃣ popup fires here, user approves → isConnected=true
-    select("Phantom");          // 2️⃣ adapter inits, sees isConnected=true, publicKey propagates
-    return true;
-  } catch (e: any) {
-    if (e?.code !== 4001) console.error("Phantom connect error:", e);
-    return false;
-  }
+/** Check if any Solana wallet is available (Phantom, Backpack, etc.) */
+function detectWallet(): boolean {
+  return !!(
+    (window as any).phantom?.solana ||
+    (window as any).solana ||
+    (window as any).backpack
+  );
 }
 
 export default function WalletButton() {
@@ -68,14 +41,13 @@ export default function WalletButton() {
 }
 
 function WalletButtonInner() {
-  const { connected, publicKey, select, disconnect } = useWallet();
+  const { connected, publicKey, select, connect, disconnect, wallet, wallets } = useWallet();
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Evaluate once on mount — neither changes after page load
-  const [isMobile]  = useState(() => detectMobile());
-  const [hasPhantom] = useState(() => detectPhantom());
+  const [isMobile] = useState(() => detectMobile());
+  const [hasWallet] = useState(() => detectWallet());
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -85,9 +57,8 @@ function WalletButtonInner() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // ── Mobile, no Phantom injected → "Open in Phantom" deep link ──────────────
-  // Once inside Phantom's browser, window.solana is available → normal connect
-  if (isMobile && !hasPhantom && !connected) {
+  // Mobile, no wallet detected → deep-link to Phantom browser
+  if (isMobile && !hasWallet && !connected) {
     return (
       <a
         href={phantomDeepLink(window.location.href)}
@@ -108,24 +79,33 @@ function WalletButtonInner() {
     );
   }
 
-  // ── Normal connect (desktop ext, or already inside Phantom browser) ─────────
   const handleConnect = async () => {
-    const ok = await connectPhantomDirect(select);
-    if (!ok) {
-      // Desktop fallback: send to Phantom install page
+    // Use the wallet adapter — works across Chrome, Firefox, Brave, Edge
+    try {
+      // If Phantom adapter is available, select it first
+      const phantomAdapter = wallets.find(w => w.adapter.name === "Phantom");
+      if (phantomAdapter) {
+        select(phantomAdapter.adapter.name as WalletName);
+        // connect() will be triggered by the adapter after select
+        // Give the adapter a moment to initialize after select
+        await new Promise(r => setTimeout(r, 100));
+        await connect();
+        return;
+      }
+      // No Phantom detected — redirect to install page
       window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
+    } catch (e: any) {
+      if (e?.code !== 4001 && !e?.message?.includes("rejected")) {
+        console.error("Wallet connect error:", e);
+      }
     }
   };
 
   const handleDisconnect = async () => {
     setOpen(false);
-    await disconnect();
-    // Also disconnect the raw provider so Phantom extension reflects the state
-    const provider =
-      (window as any).phantom?.solana ??
-      ((window as any).solana?.isPhantom ? (window as any).solana : null);
-    try { await provider?.disconnect(); } catch { /* ignore */ }
-    // Clear wallet-adapter's localStorage key to prevent auto-reconnect
+    try {
+      await disconnect();
+    } catch { /* ignore */ }
     try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
   };
 
@@ -189,7 +169,6 @@ function WalletButtonInner() {
   );
 }
 
-/** Phantom ghost logo icon */
 function PhantomIcon({ size = 12 }: { size?: number }) {
   return (
     <svg
@@ -198,7 +177,6 @@ function PhantomIcon({ size = 12 }: { size?: number }) {
       fill="currentColor"
       aria-hidden="true"
     >
-      {/* Simplified Phantom ghost silhouette */}
       <path d="M64 4C31.3 4 4 31.3 4 64s27.3 60 60 60 60-27.3 60-60S96.7 4 64 4zm28.5 68.2c-3.8 10.6-13.8 17.5-25 17.5-7 0-12.9-2.7-17.2-7.7l-3.8 7.7H34.4l7.8-15.8-5.3-10.5h10.5l1.5 3.1c.4-3.2 1.4-6.1 3.1-8.7 2.5-4.1 6.3-6.9 10.8-8.4v-.1c7.7-2.4 15.9-.1 21.1 5.8l4.1-8.2H99l-11.7 23.5 5.2 2.8z"/>
     </svg>
   );
