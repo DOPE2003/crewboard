@@ -145,7 +145,7 @@ export default function BannerUpload({ currentBanner }: Props) {
         className="profile-cover-banner banner-upload-wrap"
         style={{
           width: "100%",
-          aspectRatio: `${BANNER_ASPECT} / 1`,
+          height: 180,
           position: "relative",
           borderRadius: "16px 16px 0 0",
           overflow: "hidden",

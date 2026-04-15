@@ -34,7 +34,8 @@ export default async function AdminDashboardPage() {
     db.order.count({ where: { status: "disputed" } }),
   ]);
 
-  const revenue = (totalRevenue as any)._sum?.amount ?? 0;
+  const grossRevenue = (totalRevenue as any)._sum?.amount ?? 0;
+  const platformFees = Math.floor(grossRevenue * 0.10);
 
   // Stats visible per role
   const stats = [
@@ -42,7 +43,8 @@ export default async function AdminDashboardPage() {
       { label: "Total Users",      value: totalUsers,      color: "#14b8a6" },
       { label: "Total Orders",     value: totalOrders,     color: "#f59e0b" },
       { label: "Completed Orders", value: completedOrders, color: "#6366f1" },
-      { label: "Total Revenue",    value: `$${revenue.toLocaleString()}`, color: "#ec4899" },
+      { label: "Total Volume",     value: `$${grossRevenue.toLocaleString()}`, color: "#ec4899" },
+      { label: "Platform Fees",    value: `$${platformFees.toLocaleString()}`, color: "#14b8a6" },
       { label: "Active Gigs",      value: activeGigs,      color: "#22c55e" },
       { label: "Showcase Posts",   value: showcasePosts,   color: "#8b5cf6" },
     ] : []),

@@ -81,7 +81,8 @@ export default async function DashboardPage() {
   const escrowAmount = activeOrders
     .filter((o) => o.status === "funded" && (o.buyerId === userId || o.sellerId === userId))
     .reduce((sum, o) => sum + o.amount, 0);
-  const totalEarned = completedOrders.reduce((sum, o) => sum + o.amount, 0);
+  const grossEarned = completedOrders.reduce((sum, o) => sum + o.amount, 0);
+  const totalEarned = grossEarned - Math.floor(grossEarned * 0.10);
   const formatUSD = (amount: number) =>
     amount === 0 ? "$0" : `$${amount.toLocaleString("en-US", { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
 

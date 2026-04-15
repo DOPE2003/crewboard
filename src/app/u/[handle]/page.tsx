@@ -94,7 +94,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     db.order.aggregate({ where: { sellerId: user.id, status: "completed" }, _sum: { amount: true } }),
   ]);
 
-  const totalEarned = totalEarnedAgg._sum.amount ?? 0;
+  const grossEarned = totalEarnedAgg._sum.amount ?? 0;
+  const totalEarned = grossEarned - Math.floor(grossEarned * 0.10);
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null;
@@ -196,7 +197,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
   return (
     <main style={{ minHeight: "100vh", background: "var(--background)", paddingTop: "5rem", paddingBottom: "4rem" }}>
-      <div style={{ maxWidth: 1020, margin: "0 auto", padding: "0 1.25rem" }}>
+      <div style={{ maxWidth: 1280, margin: "0 auto", padding: "0 2rem" }}>
 
         {/* Email section — always shown to profile owner */}
         {isOwnProfile && (
@@ -205,15 +206,11 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </div>
         )}
 
-        {/* ── Cover Banner + Profile Header ── */}
-        <div style={{ borderRadius: 16, border: "1px solid var(--card-border)", overflow: "visible", marginBottom: "1rem" }}>
-
-          {/* Cover banner */}
+        {/* ── Cover Banner (full width) ── */}
+        <div style={{ borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1rem" }}>
           {isOwnProfile ? (
-            /* Own profile: interactive banner with upload */
             <div style={{ position: "relative" }}>
               <BannerUpload currentBanner={user.bannerImage ?? null} />
-              {/* Edit profile button overlay */}
               <div style={{ position: "absolute", top: "1rem", right: "1.5rem", zIndex: 3 }}>
                 <EditProfilePanel
                   initialRole={user.userTitle ?? ""}
@@ -224,194 +221,188 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               </div>
             </div>
           ) : (
-            /* Visitor view: static banner — fixed 3:1 ratio */
             <div
               className="profile-cover-banner"
               style={{
-                width: "100%", aspectRatio: "3 / 1", position: "relative",
+                width: "100%", height: 180, position: "relative",
                 background: user.bannerImage ? undefined : "#E8FAF7",
                 backgroundImage: user.bannerImage ? `url(${user.bannerImage})` : undefined,
                 backgroundSize: "cover", backgroundPosition: "center",
                 backgroundRepeat: "no-repeat",
-                borderRadius: "16px 16px 0 0", overflow: "hidden", borderBottom: "none",
               }}
             />
           )}
-
-          {/* Profile content below banner */}
-          <div style={{ background: "var(--background)", padding: "0 0 1.25rem", borderRadius: "0 0 16px 16px", overflow: "visible" }}>
-            {/* Avatar + save button row */}
-            <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", paddingLeft: 24, paddingRight: 24 }}>
-              {/* Avatar — floats up to overlap banner */}
-              <div style={{ position: "relative", marginTop: -44, zIndex: 10, flexShrink: 0 }}>
-                {isOwnProfile ? (
-                  <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId} />
-                ) : (
-                  <div style={{ width: 80, height: 80, borderRadius: "9999px", border: "3px solid var(--background)", background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden" }}>
-                    {user.image && <img src={user.image} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                  </div>
-                )}
-              </div>
-              {canMessage && (
-                <div style={{ paddingTop: "0.5rem" }}>
-                  <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />
-                </div>
-              )}
-            </div>
-
-            {/* Name + badges */}
-            <div style={{ marginTop: "0.65rem", padding: "0 24px" }}>
-              {/* Row 1: Name + OG + Wallet + CTA buttons (visitor) */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
-                <div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
-                    <h1 style={{ fontSize: "22px", fontWeight: 700, margin: 0, color: "var(--foreground)" }}>
-                      {displayName}
-                    </h1>
-                    {user.isOG && <OGBadge size="lg" />}
-                    {user.walletAddress && <WalletVerifiedBadge />}
-                    {avgRating && (
-                      <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "13px", fontWeight: 700, color: "#92400e", background: "#fef3c7", border: "1px solid #fde68a", padding: "2px 9px", borderRadius: 99, flexShrink: 0 }}>
-                        ★ {avgRating}
-                        <span style={{ fontWeight: 400, fontSize: "11px", color: "#a16207" }}>({reviews.length})</span>
-                      </span>
-                    )}
-                  </div>
-                  {/* Role title + starting price */}
-                  <div style={{ marginTop: 5, display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
-                    {user.userTitle && (
-                      <span style={{ fontSize: "15px", fontWeight: 600, color: "var(--foreground)" }}>
-                        {user.userTitle}
-                      </span>
-                    )}
-                    {minGigPrice !== null && (
-                      <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>
-                        · Starting from <span style={{ fontWeight: 700, color: "#14B8A6" }}>${minGigPrice}</span>
-                      </span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Primary CTAs — visitors only, top right */}
-                {canMessage && (
-                  <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
-                    <ContactButtons recipientId={user.id} />
-                  </div>
-                )}
-              </div>
-
-              {/* Row 2: Availability + last active + handle + member since */}
-              <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, marginBottom: 6, flexWrap: "wrap" }}>
-                <span style={{
-                  display: "flex", alignItems: "center", gap: 5,
-                  fontSize: "12px", fontWeight: 600, padding: "3px 10px", borderRadius: 99,
-                  background: avail === "available" ? "#dcfce7" : avail === "busy" ? "#fee2e2" : "var(--card-bg)",
-                  color: avail === "available" ? "#166534" : avail === "busy" ? "#991b1b" : "var(--text-muted)",
-                  border: "1px solid " + (avail === "available" ? "rgba(34,197,94,0.25)" : avail === "busy" ? "rgba(239,68,68,0.2)" : "var(--card-border)"),
-                }}>
-                  <span style={{ width: 6, height: 6, borderRadius: "50%", flexShrink: 0, background: AVAIL_COLOR[avail], animation: avail === "available" ? "availPulse 2s ease-in-out infinite" : undefined }} />
-                  {AVAIL_LABEL[avail]}
-                </span>
-                {lastActiveLabel && (
-                  <span style={{ fontSize: "12px", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
-                    <span style={{ width: 5, height: 5, borderRadius: "50%", background: lastActiveLabel === "Active now" ? "#22c55e" : "#d1d5db", display: "inline-block" }} />
-                    {lastActiveLabel}
-                  </span>
-                )}
-                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>@{user.twitterHandle}</span>
-                <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Member since {joinMonthYear}</span>
-              </div>
-
-              {/* Social links */}
-              <div style={{ marginTop: "0.5rem" }}>
-                <SocialLinksEditor
-                  twitterHandle={user.twitterHandle}
-                  twitterHandle2={user.twitterHandle2 ?? null}
-                  telegramHandle={user.telegramHandle ?? null}
-                  website={user.website ?? null}
-                  website2={user.website2 ?? null}
-                  website3={user.website3 ?? null}
-                  githubHandle={user.githubHandle ?? null}
-                  discordHandle={user.discordHandle ?? null}
-                  linkedinHandle={user.linkedinHandle ?? null}
-                  isOwnProfile={isOwnProfile}
-                />
-              </div>
-
-              {/* Bio */}
-              {user.bio ? (
-                <p style={{ fontSize: "14px", lineHeight: 1.75, color: "var(--text-muted)", margin: "0.75rem 0 0", maxWidth: "60ch" }}>
-                  {user.bio}
-                </p>
-              ) : isOwnProfile ? (
-                <p style={{ fontSize: "13px", color: "var(--text-muted)", fontStyle: "italic", margin: "0.75rem 0 0" }}>
-                  Add a bio to tell clients about yourself.
-                </p>
-              ) : null}
-
-              {/* Escrow trust banner — visitor view */}
-              {!isOwnProfile && (
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "1rem", padding: "8px 12px", background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)", borderRadius: 8 }}>
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
-                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                  <span style={{ fontSize: "12px", fontWeight: 600, color: "#0f766e" }}>
-                    Payments secured via Solana escrow — funds are only released when you approve the work
-                  </span>
-                  {user.walletAddress && (
-                    <span style={{ marginLeft: "auto", flexShrink: 0, fontSize: "10px", fontWeight: 700, color: "#16a34a", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 8px", borderRadius: 99 }}>
-                      Wallet verified
-                    </span>
-                  )}
-                </div>
-              )}
-
-              {/* "Why hire" bullets — visitor view */}
-              {!isOwnProfile && whyChooseBullets.length > 0 && (
-                <div style={{ marginTop: "0.85rem", padding: "0.85rem 1rem", background: "var(--card-bg)", borderRadius: 10, border: "1px solid var(--card-border)" }}>
-                  <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#14b8a6", marginBottom: "0.6rem" }}>
-                    Why hire {firstName}?
-                  </div>
-                  <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 5 }}>
-                    {whyChooseBullets.map(b => (
-                      <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 7, fontSize: "13px", color: "var(--foreground)", lineHeight: 1.5 }}>
-                        <span style={{ color: "#14b8a6", fontWeight: 700, flexShrink: 0 }}>✓</span>
-                        {b}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {/* Profile completion bar (own profile only) */}
-              {isOwnProfile && (
-                <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                    <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-                      Profile {completionPct}% complete
-                    </span>
-                    {nextItem && (
-                      <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-                        Next: <strong style={{ color: "var(--foreground)" }}>{nextItem.label}</strong>
-                      </span>
-                    )}
-                  </div>
-                  <div style={{ height: 6, background: "#e5e7eb", borderRadius: 99, overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${completionPct}%`, background: completionPct === 100 ? "#22c55e" : "#14B8A6", borderRadius: 99, transition: "width 0.4s" }} />
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
         </div>
 
-        {/* ── Two-column layout ── */}
-        <div className="profile-page-grid" style={{ display: "grid", gridTemplateColumns: "1fr 280px", gap: "1rem", alignItems: "start" }}>
+        {/* ── Two-column layout starts right after banner ── */}
+        <div className="profile-page-grid" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "1.5rem", alignItems: "start" }}>
 
-          {/* ── LEFT COLUMN ── */}
+          {/* ── LEFT COLUMN: Profile info + content ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
-            {/* Services — moved to top of left column for conversion */}
+            {/* Profile header card */}
+            <SectionCard style={{ padding: 0, overflow: "visible" }}>
+              {/* Avatar row */}
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", padding: "0 1.5rem" }}>
+                <div style={{ position: "relative", marginTop: -44, zIndex: 10, flexShrink: 0 }}>
+                  {isOwnProfile ? (
+                    <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId} />
+                  ) : (
+                    <div style={{ width: 88, height: 88, borderRadius: "9999px", border: "3px solid var(--background)", background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden" }}>
+                      {user.image && <img src={user.image} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+                    </div>
+                  )}
+                </div>
+                {canMessage && (
+                  <div style={{ paddingTop: "0.75rem" }}>
+                    <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />
+                  </div>
+                )}
+              </div>
+
+              {/* Name + details */}
+              <div style={{ padding: "0.65rem 1.5rem 1.5rem" }}>
+                {/* Name + badges + CTA */}
+                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                      <h1 style={{ fontSize: "24px", fontWeight: 700, margin: 0, color: "var(--foreground)" }}>
+                        {displayName}
+                      </h1>
+                      {user.isOG && <OGBadge size="lg" />}
+                      {user.walletAddress && <WalletVerifiedBadge />}
+                      {avgRating && (
+                        <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "13px", fontWeight: 700, color: "#92400e", background: "#fef3c7", border: "1px solid #fde68a", padding: "2px 9px", borderRadius: 99, flexShrink: 0 }}>
+                          ★ {avgRating}
+                          <span style={{ fontWeight: 400, fontSize: "11px", color: "#a16207" }}>({reviews.length})</span>
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ marginTop: 5, display: "flex", alignItems: "baseline", gap: 10, flexWrap: "wrap" }}>
+                      {user.userTitle && (
+                        <span style={{ fontSize: "15px", fontWeight: 600, color: "var(--foreground)" }}>
+                          {user.userTitle}
+                        </span>
+                      )}
+                      {minGigPrice !== null && (
+                        <span style={{ fontSize: "13px", color: "var(--text-muted)" }}>
+                          · Starting from <span style={{ fontWeight: 700, color: "#14B8A6" }}>${minGigPrice}</span>
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                  {canMessage && (
+                    <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                      <ContactButtons recipientId={user.id} />
+                    </div>
+                  )}
+                </div>
+
+                {/* Availability + meta */}
+                <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 10, marginBottom: 6, flexWrap: "wrap" }}>
+                  <span style={{
+                    display: "flex", alignItems: "center", gap: 5,
+                    fontSize: "12px", fontWeight: 600, padding: "3px 10px", borderRadius: 99,
+                    background: avail === "available" ? "#dcfce7" : avail === "busy" ? "#fee2e2" : "var(--card-bg)",
+                    color: avail === "available" ? "#166534" : avail === "busy" ? "#991b1b" : "var(--text-muted)",
+                    border: "1px solid " + (avail === "available" ? "rgba(34,197,94,0.25)" : avail === "busy" ? "rgba(239,68,68,0.2)" : "var(--card-border)"),
+                  }}>
+                    <span style={{ width: 6, height: 6, borderRadius: "50%", flexShrink: 0, background: AVAIL_COLOR[avail], animation: avail === "available" ? "availPulse 2s ease-in-out infinite" : undefined }} />
+                    {AVAIL_LABEL[avail]}
+                  </span>
+                  {lastActiveLabel && (
+                    <span style={{ fontSize: "12px", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ width: 5, height: 5, borderRadius: "50%", background: lastActiveLabel === "Active now" ? "#22c55e" : "#d1d5db", display: "inline-block" }} />
+                      {lastActiveLabel}
+                    </span>
+                  )}
+                  <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>@{user.twitterHandle}</span>
+                  <span style={{ fontSize: "12px", color: "var(--text-muted)" }}>Member since {joinMonthYear}</span>
+                </div>
+
+                {/* Social links */}
+                <div style={{ marginTop: "0.5rem" }}>
+                  <SocialLinksEditor
+                    twitterHandle={user.twitterHandle}
+                    twitterHandle2={user.twitterHandle2 ?? null}
+                    telegramHandle={user.telegramHandle ?? null}
+                    website={user.website ?? null}
+                    website2={user.website2 ?? null}
+                    website3={user.website3 ?? null}
+                    githubHandle={user.githubHandle ?? null}
+                    discordHandle={user.discordHandle ?? null}
+                    linkedinHandle={user.linkedinHandle ?? null}
+                    isOwnProfile={isOwnProfile}
+                  />
+                </div>
+
+                {/* Bio */}
+                {user.bio ? (
+                  <p style={{ fontSize: "14px", lineHeight: 1.75, color: "var(--text-muted)", margin: "0.75rem 0 0" }}>
+                    {user.bio}
+                  </p>
+                ) : isOwnProfile ? (
+                  <p style={{ fontSize: "13px", color: "var(--text-muted)", fontStyle: "italic", margin: "0.75rem 0 0" }}>
+                    Add a bio to tell clients about yourself.
+                  </p>
+                ) : null}
+
+                {/* Escrow trust banner — visitor view */}
+                {!isOwnProfile && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: "1rem", padding: "8px 12px", background: "rgba(20,184,166,0.06)", border: "1px solid rgba(20,184,166,0.2)", borderRadius: 8 }}>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span style={{ fontSize: "12px", fontWeight: 600, color: "#0f766e" }}>
+                      Payments secured via Solana escrow — funds are only released when you approve the work
+                    </span>
+                    {user.walletAddress && (
+                      <span style={{ marginLeft: "auto", flexShrink: 0, fontSize: "10px", fontWeight: 700, color: "#16a34a", background: "rgba(34,197,94,0.1)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 8px", borderRadius: 99 }}>
+                        Wallet verified
+                      </span>
+                    )}
+                  </div>
+                )}
+
+                {/* "Why hire" bullets — visitor view */}
+                {!isOwnProfile && whyChooseBullets.length > 0 && (
+                  <div style={{ marginTop: "0.85rem", padding: "0.85rem 1rem", background: "var(--card-bg)", borderRadius: 10, border: "1px solid var(--card-border)" }}>
+                    <div style={{ fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "#14b8a6", marginBottom: "0.6rem" }}>
+                      Why hire {firstName}?
+                    </div>
+                    <ul style={{ margin: 0, padding: 0, listStyle: "none", display: "flex", flexDirection: "column", gap: 5 }}>
+                      {whyChooseBullets.map(b => (
+                        <li key={b} style={{ display: "flex", alignItems: "flex-start", gap: 7, fontSize: "13px", color: "var(--foreground)", lineHeight: 1.5 }}>
+                          <span style={{ color: "#14b8a6", fontWeight: 700, flexShrink: 0 }}>✓</span>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Profile completion bar (own profile only) */}
+                {isOwnProfile && (
+                  <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+                      <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                        Profile {completionPct}% complete
+                      </span>
+                      {nextItem && (
+                        <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
+                          Next: <strong style={{ color: "var(--foreground)" }}>{nextItem.label}</strong>
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 99, overflow: "hidden" }}>
+                      <div style={{ height: "100%", width: `${completionPct}%`, background: completionPct === 100 ? "#22c55e" : "#14B8A6", borderRadius: 99, transition: "width 0.4s" }} />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </SectionCard>
+
+            {/* Services */}
             {(isOwnProfile || (user.gigs?.length > 0)) && (
               <SectionCard>
                 <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
@@ -641,8 +632,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
 
           </div>
 
-          {/* ── RIGHT SIDEBAR ── */}
-          <div className="profile-sidebar-col" style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+          {/* ── RIGHT SIDEBAR (sticky like Fiverr) ── */}
+          <div className="profile-sidebar-col" style={{ display: "flex", flexDirection: "column", gap: "1rem", position: "sticky", top: "6rem" }}>
 
             {/* Stats 2×2 */}
             <SectionCard>

@@ -34,8 +34,12 @@ export default async function BillingPage() {
 
   if (!dbUser) redirect("/login");
 
-  // Balance breakdown
-  const totalEarned     = allOrders.filter((o) => o.sellerId === userId && o.status === "completed").reduce((s, o) => s + o.amount, 0);
+  // Balance breakdown — amounts are gross (what buyer paid).
+  // Seller receives 90% (10% platform fee goes to treasury on-chain).
+  const FEE_RATE = 0.10;
+  const grossEarned     = allOrders.filter((o) => o.sellerId === userId && o.status === "completed").reduce((s, o) => s + o.amount, 0);
+  const totalFees       = Math.floor(grossEarned * FEE_RATE);
+  const totalEarned     = grossEarned - totalFees;
   const inEscrow        = allOrders.filter((o) => o.status === "funded").reduce((s, o) => s + o.amount, 0);
   const pendingRelease  = allOrders.filter((o) => o.sellerId === userId && o.status === "delivered").reduce((s, o) => s + o.amount, 0);
 
@@ -66,6 +70,7 @@ export default async function BillingPage() {
     <BillingClient
       walletAddress={dbUser.walletAddress}
       totalEarned={totalEarned}
+      totalFees={totalFees}
       inEscrow={inEscrow}
       pendingRelease={pendingRelease}
       userId={userId}

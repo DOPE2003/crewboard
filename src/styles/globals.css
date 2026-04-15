@@ -4835,7 +4835,7 @@ body:not(.dark) .verify-page-wrap p { color: #475569 !important; }
 
 /* ── Profile page grid ── */
 .profile-page-grid {
-  grid-template-columns: 1fr 300px;
+  grid-template-columns: 1fr 340px;
 }
 @media (max-width: 768px) {
   .profile-page-grid {
@@ -6729,6 +6729,9 @@ body.dark .act-date-label { color: #64748b; }
 @media (max-width: 900px) {
   .profile-page-grid {
     grid-template-columns: 1fr !important;
+  }
+  .profile-sidebar-col {
+    position: static !important;
   }
 }
 

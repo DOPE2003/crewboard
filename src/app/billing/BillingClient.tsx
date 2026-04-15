@@ -23,6 +23,7 @@ type MonthlyStat  = { month: string; total: number };
 type Props = {
   walletAddress: string | null;
   totalEarned: number;
+  totalFees: number;
   inEscrow: number;
   pendingRelease: number;
   userId: string;
@@ -74,7 +75,7 @@ function phantomDeepLink(url: string): string {
 }
 
 export default function BillingClient({
-  walletAddress, totalEarned, inEscrow, pendingRelease,
+  walletAddress, totalEarned, totalFees, inEscrow, pendingRelease,
   userId, orders, earningsByCategory, monthlyEarnings,
 }: Props) {
   const router = useRouter();
@@ -354,7 +355,12 @@ export default function BillingClient({
                             {order.gig?.title ?? "Order"}
                           </div>
                           <div style={{ fontSize: "0.8rem", fontWeight: 800, color: amtColor, fontFamily: "Space Mono, monospace", marginTop: "0.15rem" }}>
-                            {isOut ? "−" : "+"}${order.amount}
+                            {isOut ? "−" : "+"}${isOut ? order.amount : Math.floor(order.amount * 0.9)}
+                            {!isOut && order.status === "completed" && (
+                              <span style={{ fontSize: "0.6rem", fontWeight: 500, color: "var(--text-muted)", marginLeft: 6 }}>
+                                (${order.amount} - ${Math.floor(order.amount * 0.1)} fee)
+                              </span>
+                            )}
                           </div>
                           <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: "0.25rem", flexWrap: "wrap" }}>
                             <span style={{ fontSize: "0.58rem", fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: sc.bg, color: sc.text, textTransform: "capitalize" as const }}>
@@ -389,7 +395,7 @@ export default function BillingClient({
 
             {/* Balance cards */}
             {[
-              { label: "Total Earned",    value: fmt(totalEarned),    color: "#22c55e", bg: "rgba(34,197,94,0.07)",   border: "rgba(34,197,94,0.2)",   note: "From completed orders",    icon: <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/> },
+              { label: "Total Earned",    value: fmt(totalEarned),    color: "#22c55e", bg: "rgba(34,197,94,0.07)",   border: "rgba(34,197,94,0.2)",   note: totalFees > 0 ? `After ${fmt(totalFees)} platform fee (10%)` : "From completed orders (after 10% fee)",    icon: <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/> },
               { label: "In Escrow",       value: fmt(inEscrow),       color: "#f59e0b", bg: "rgba(245,158,11,0.07)",  border: "rgba(245,158,11,0.2)",  note: "Locked in smart contract", icon: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></> },
               { label: "Pending Release", value: fmt(pendingRelease), color: "#6366f1", bg: "rgba(99,102,241,0.07)",  border: "rgba(99,102,241,0.2)",  note: "Awaiting client approval", icon: <><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></> },
             ].map((s) => (
