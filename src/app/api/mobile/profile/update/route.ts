@@ -21,8 +21,8 @@
  */
 import { NextRequest } from "next/server";
 import db from "@/lib/db";
-import { withMobileAuth, MobileTokenPayload } from "../_lib/auth";
-import { ok, err } from "../_lib/response";
+import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
+import { ok, err } from "../../_lib/response";
 
 const ALLOWED_FIELDS = [
   "name", "image", "bio", "userTitle", "availability",
