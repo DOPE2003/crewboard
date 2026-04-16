@@ -17,9 +17,12 @@ export default async function AdminDashboardPage() {
     support: { label: "Support Dashboard",  accent: "#8b5cf6", tag: "— DISPUTE CENTER" },
   }[staffRole!]!;
 
+  const ACTIVE_STATUSES = ["accepted", "funded", "delivered"];
+
   const [
     totalUsers, activeGigs, totalOrders, completedOrders,
     totalRevenue, showcasePosts, latestUsers, pendingOrders, disputedOrders,
+    activeOrdersCount, activeOrders,
   ] = await Promise.all([
     isOwner || isAdmin ? db.user.count()                                                          : Promise.resolve(0),
     isOwner || isAdmin ? db.gig.count({ where: { status: "active" } })                           : Promise.resolve(0),
@@ -33,6 +36,17 @@ export default async function AdminDashboardPage() {
     }) : Promise.resolve([]),
     isOwner || isAdmin ? db.order.count({ where: { status: { in: ["pending", "accepted", "funded", "delivered"] } } }) : Promise.resolve(0),
     db.order.count({ where: { status: "disputed" } }),
+    isOwner || isAdmin ? db.order.count({ where: { status: { in: ACTIVE_STATUSES } } }) : Promise.resolve(0),
+    isOwner || isAdmin ? db.order.findMany({
+      where: { status: { in: ACTIVE_STATUSES } },
+      orderBy: { updatedAt: "desc" },
+      take: 50,
+      include: {
+        gig:    { select: { title: true, category: true } },
+        buyer:  { select: { name: true, twitterHandle: true } },
+        seller: { select: { name: true, twitterHandle: true } },
+      },
+    }) : Promise.resolve([]),
   ]);
 
   const grossRevenue = (totalRevenue as any)._sum?.amount ?? 0;
@@ -41,13 +55,14 @@ export default async function AdminDashboardPage() {
   // Stats visible per role
   const stats = [
     ...(isOwner || isAdmin ? [
-      { label: "Total Users",      value: totalUsers,      color: "#14b8a6" },
-      { label: "Total Orders",     value: totalOrders,     color: "#f59e0b" },
-      { label: "Completed Orders", value: completedOrders, color: "#6366f1" },
+      { label: "Total Users",      value: totalUsers,           color: "#14b8a6" },
+      { label: "Total Orders",     value: totalOrders,          color: "#f59e0b" },
+      { label: "Active Services",  value: activeOrdersCount,    color: "#3b82f6" },
+      { label: "Completed Orders", value: completedOrders,      color: "#6366f1" },
       { label: "Total Volume",     value: `$${grossRevenue.toLocaleString()}`, color: "#ec4899" },
       { label: "Platform Fees",    value: `$${platformFees.toLocaleString()}`, color: "#14b8a6" },
-      { label: "Active Gigs",      value: activeGigs,      color: "#22c55e" },
-      { label: "Showcase Posts",   value: showcasePosts,   color: "#8b5cf6" },
+      { label: "Active Gigs",      value: activeGigs,           color: "#22c55e" },
+      { label: "Showcase Posts",   value: showcasePosts,        color: "#8b5cf6" },
     ] : []),
     { label: "Open Disputes",  value: disputedOrders, color: "#ef4444" },
   ];
@@ -158,6 +173,89 @@ export default async function AdminDashboardPage() {
             </Link>
           ))}
         </div>
+
+        {/* Active Services — owner + admin */}
+        {(isOwner || isAdmin) && (
+          <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1.5rem" }}>
+            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                </svg>
+                <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>
+                  Active Services
+                  <span style={{ marginLeft: 8, fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "rgba(59,130,246,0.12)", color: "#3b82f6" }}>
+                    {activeOrdersCount} in progress
+                  </span>
+                </h2>
+              </div>
+              <Link href="/admin/orders?status=funded" style={{ fontSize: "0.75rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>View all orders →</Link>
+            </div>
+            {(activeOrders as any[]).length === 0 ? (
+              <div style={{ padding: "2.5rem", textAlign: "center", color: "var(--text-muted)", fontSize: "0.9rem" }}>No active services right now.</div>
+            ) : (
+              <div className="admin-table-wrap">
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.85rem" }}>
+                  <thead>
+                    <tr style={{ background: "rgba(var(--foreground-rgb),0.02)", textAlign: "left" }}>
+                      {["Service", "Buyer", "Seller", "Amount", "Status", "Escrow", "Started"].map((h) => (
+                        <th key={h} style={{ padding: "0.85rem 1.25rem", color: "var(--text-muted)", fontWeight: 600, whiteSpace: "nowrap", fontSize: "0.75rem" }}>{h}</th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {(activeOrders as any[]).map((order) => {
+                      const statusStyle: Record<string, { bg: string; color: string }> = {
+                        accepted:  { bg: "rgba(99,102,241,0.12)",  color: "#6366f1" },
+                        funded:    { bg: "rgba(245,158,11,0.12)",  color: "#f59e0b" },
+                        delivered: { bg: "rgba(59,130,246,0.12)",  color: "#3b82f6" },
+                      };
+                      const sc = statusStyle[order.status] ?? { bg: "rgba(0,0,0,0.04)", color: "var(--text-muted)" };
+                      return (
+                        <tr key={order.id} style={{ borderTop: "1px solid var(--card-border)" }}>
+                          <td style={{ padding: "0.9rem 1.25rem", maxWidth: 220 }}>
+                            <div style={{ fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                              {order.gig.title}
+                            </div>
+                            <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>{order.gig.category}</div>
+                          </td>
+                          <td style={{ padding: "0.9rem 1.25rem" }}>
+                            <Link href={`/u/${order.buyer.twitterHandle}`} style={{ color: "#14b8a6", textDecoration: "none", fontSize: "0.8rem", fontWeight: 600 }}>
+                              @{order.buyer.twitterHandle}
+                            </Link>
+                          </td>
+                          <td style={{ padding: "0.9rem 1.25rem" }}>
+                            <Link href={`/u/${order.seller.twitterHandle}`} style={{ color: "#14b8a6", textDecoration: "none", fontSize: "0.8rem", fontWeight: 600 }}>
+                              @{order.seller.twitterHandle}
+                            </Link>
+                          </td>
+                          <td style={{ padding: "0.9rem 1.25rem", fontWeight: 700, color: "var(--foreground)" }}>${order.amount}</td>
+                          <td style={{ padding: "0.9rem 1.25rem" }}>
+                            <span style={{ fontSize: "0.65rem", fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: sc.bg, color: sc.color }}>
+                              {order.status.toUpperCase()}
+                            </span>
+                          </td>
+                          <td style={{ padding: "0.9rem 1.25rem" }}>
+                            {order.escrowAddress ? (
+                              <span style={{ fontSize: "0.7rem", fontFamily: "monospace", color: "var(--text-muted)" }} title={order.escrowAddress}>
+                                {order.escrowAddress.slice(0, 6)}…{order.escrowAddress.slice(-4)}
+                              </span>
+                            ) : (
+                              <span style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>—</span>
+                            )}
+                          </td>
+                          <td style={{ padding: "0.9rem 1.25rem", color: "var(--text-muted)", fontSize: "0.8rem", whiteSpace: "nowrap" }}>
+                            {new Date(order.createdAt).toLocaleDateString()}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* System Notifications — owner only */}
         {isOwner && (
