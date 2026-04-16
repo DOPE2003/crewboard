@@ -151,7 +151,7 @@ export type ProWaitlistGroupByOutputType = {
   _max: ProWaitlistMaxAggregateOutputType | null
 }
 
-type GetProWaitlistGroupByPayload<T extends ProWaitlistGroupByArgs> = Prisma.PrismaPromise<
+export type GetProWaitlistGroupByPayload<T extends ProWaitlistGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ProWaitlistGroupByOutputType, T['by']> &
       {

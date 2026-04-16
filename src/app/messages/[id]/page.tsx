@@ -3,6 +3,7 @@ import db from "@/lib/db";
 import { redirect, notFound } from "next/navigation";
 import Link from "next/link";
 import MessageThread from "./MessageThread";
+import ChatActions from "./ChatActions";
 import { WalletVerifiedBadge, HumanVerifiedBadge } from "@/components/ui/VerificationBadges";
 import ConversationListUI, { ConvItem } from "../ConversationListUI";
 import ProfileBottomSheet, { ProfileSidebarDesktop, ProfileData } from "./ProfileBottomSheet";
@@ -251,40 +252,13 @@ export default async function ConversationPage({
               {other?.walletAddress && <WalletVerifiedBadge />}
               {other?.humanVerified && <HumanVerifiedBadge level={other.worldIdLevel} />}
 
-              {/* View Order — shown if active order exists */}
-              {activeOrder && (
-                <Link
-                  href={`/orders/${activeOrder.id}`}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 5,
-                    padding: "5px 12px", borderRadius: 8, fontSize: "11px", fontWeight: 700,
-                    background: "rgba(59,130,246,0.08)", color: "#3b82f6",
-                    border: "1px solid rgba(59,130,246,0.2)", textDecoration: "none", flexShrink: 0,
-                  }}
-                >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h5l3 5v3h-8V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/>
-                  </svg>
-                  Order
-                </Link>
-              )}
-
-              {/* Send Offer — always shown to initiate a gig request */}
               {other && (
-                <Link
-                  href={`/u/${other.twitterHandle}`}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 5,
-                    padding: "5px 12px", borderRadius: 8, fontSize: "11px", fontWeight: 700,
-                    background: "rgba(20,184,166,0.08)", color: "#0d9488",
-                    border: "1px solid rgba(20,184,166,0.2)", textDecoration: "none", flexShrink: 0,
-                  }}
-                >
-                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-                  </svg>
-                  Send Offer
-                </Link>
+                <ChatActions
+                  conversationId={id}
+                  receiverId={otherId}
+                  receiverName={other.name ?? other.twitterHandle ?? "them"}
+                  activeOrderId={activeOrder?.id ?? null}
+                />
               )}
             </div>
 

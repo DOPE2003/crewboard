@@ -58,6 +58,8 @@ model User {
   savedByTalents       SavedTalent[]         @relation("SavedMe")
   savedTalents         SavedTalent[]         @relation("SavedByMe")
   savedGigs            SavedGig[]
+  sentOffers           Offer[]               @relation("SentOffers")
+  receivedOffers       Offer[]               @relation("ReceivedOffers")
   showcaseInteractions ShowcaseInteraction[]
   showcasePosts        ShowcasePost[]
   proWaitlist          ProWaitlist?
@@ -107,6 +109,7 @@ model Conversation {
   createdAt    DateTime  @default(now())
   updatedAt    DateTime  @updatedAt
   messages     Message[]
+  offers       Offer[]
 }
 
 model Message {
@@ -169,6 +172,7 @@ model Order {
   gig           Gig      @relation(fields: [gigId], references: [id])
   seller        User     @relation("SellerOrders", fields: [sellerId], references: [id])
   reviews       Review[]
+  offer         Offer?
 
   @@index([buyerId])
   @@index([sellerId])
@@ -235,4 +239,28 @@ model PasswordResetToken {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
+}
+
+model Offer {
+  id             String       @id @default(cuid())
+  conversationId String
+  senderId       String
+  receiverId     String
+  title          String
+  description    String
+  amount         Int
+  deliveryDays   Int
+  status         String       @default("pending")
+  orderId        String?      @unique
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  sender         User         @relation("SentOffers", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver       User         @relation("ReceivedOffers", fields: [receiverId], references: [id], onDelete: Cascade)
+  order          Order?       @relation(fields: [orderId], references: [id])
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([receiverId])
 }

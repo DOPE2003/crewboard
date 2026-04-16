@@ -369,9 +369,9 @@ export default function NavProfileDropdown({
           <RowDivider />
           <Row icon={I.applications} label="My Applications"  href="/gigs/mine"     onClick={onClose} badge={gigsCount > 0 ? gigsCount : null} />
           <RowDivider />
-          <Row icon={I.sent}         label="Offers Sent"      href="/orders?tab=sent"      onClick={onClose} />
+          <Row icon={I.sent}         label="My Offers"        href="/offers"               onClick={onClose} />
           <RowDivider />
-          <Row icon={I.inbox}        label="Offers Received"  href="/orders?tab=received"  onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <Row icon={I.inbox}        label="Offers Received"  href="/offers"               onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
         </Card>
 
         {/* APP */}

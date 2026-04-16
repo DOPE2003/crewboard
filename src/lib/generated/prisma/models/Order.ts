@@ -227,7 +227,7 @@ export type OrderGroupByOutputType = {
   _max: OrderMaxAggregateOutputType | null
 }
 
-type GetOrderGroupByPayload<T extends OrderGroupByArgs> = Prisma.PrismaPromise<
+export type GetOrderGroupByPayload<T extends OrderGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<OrderGroupByOutputType, T['by']> &
       {
@@ -260,6 +260,7 @@ export type OrderWhereInput = {
   gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
+  offer?: Prisma.XOR<Prisma.OfferNullableScalarRelationFilter, Prisma.OfferWhereInput> | null
 }
 
 export type OrderOrderByWithRelationInput = {
@@ -277,6 +278,7 @@ export type OrderOrderByWithRelationInput = {
   gig?: Prisma.GigOrderByWithRelationInput
   seller?: Prisma.UserOrderByWithRelationInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
+  offer?: Prisma.OfferOrderByWithRelationInput
 }
 
 export type OrderWhereUniqueInput = Prisma.AtLeast<{
@@ -297,6 +299,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   reviews?: Prisma.ReviewListRelationFilter
+  offer?: Prisma.XOR<Prisma.OfferNullableScalarRelationFilter, Prisma.OfferWhereInput> | null
 }, "id" | "escrowAddress">
 
 export type OrderOrderByWithAggregationInput = {
@@ -345,6 +348,7 @@ export type OrderCreateInput = {
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateInput = {
@@ -359,6 +363,7 @@ export type OrderUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUpdateInput = {
@@ -373,6 +378,7 @@ export type OrderUpdateInput = {
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateInput = {
@@ -387,6 +393,7 @@ export type OrderUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderCreateManyInput = {
@@ -485,6 +492,11 @@ export type OrderSumOrderByAggregateInput = {
 export type OrderScalarRelationFilter = {
   is?: Prisma.OrderWhereInput
   isNot?: Prisma.OrderWhereInput
+}
+
+export type OrderNullableScalarRelationFilter = {
+  is?: Prisma.OrderWhereInput | null
+  isNot?: Prisma.OrderWhereInput | null
 }
 
 export type OrderCreateNestedManyWithoutBuyerInput = {
@@ -627,6 +639,22 @@ export type OrderUpdateOneRequiredWithoutReviewsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutReviewsInput, Prisma.OrderUpdateWithoutReviewsInput>, Prisma.OrderUncheckedUpdateWithoutReviewsInput>
 }
 
+export type OrderCreateNestedOneWithoutOfferInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOfferInput, Prisma.OrderUncheckedCreateWithoutOfferInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOfferInput
+  connect?: Prisma.OrderWhereUniqueInput
+}
+
+export type OrderUpdateOneWithoutOfferNestedInput = {
+  create?: Prisma.XOR<Prisma.OrderCreateWithoutOfferInput, Prisma.OrderUncheckedCreateWithoutOfferInput>
+  connectOrCreate?: Prisma.OrderCreateOrConnectWithoutOfferInput
+  upsert?: Prisma.OrderUpsertWithoutOfferInput
+  disconnect?: Prisma.OrderWhereInput | boolean
+  delete?: Prisma.OrderWhereInput | boolean
+  connect?: Prisma.OrderWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.OrderUpdateToOneWithWhereWithoutOfferInput, Prisma.OrderUpdateWithoutOfferInput>, Prisma.OrderUncheckedUpdateWithoutOfferInput>
+}
+
 export type OrderCreateWithoutBuyerInput = {
   id?: string
   amount: number
@@ -638,6 +666,7 @@ export type OrderCreateWithoutBuyerInput = {
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutBuyerInput = {
@@ -651,6 +680,7 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutBuyerInput = {
@@ -674,6 +704,7 @@ export type OrderCreateWithoutSellerInput = {
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutSellerInput = {
@@ -687,6 +718,7 @@ export type OrderUncheckedCreateWithoutSellerInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutSellerInput = {
@@ -758,6 +790,7 @@ export type OrderCreateWithoutGigInput = {
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutGigInput = {
@@ -771,6 +804,7 @@ export type OrderUncheckedCreateWithoutGigInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
+  offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutGigInput = {
@@ -810,6 +844,7 @@ export type OrderCreateWithoutReviewsInput = {
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
+  offer?: Prisma.OfferCreateNestedOneWithoutOrderInput
 }
 
 export type OrderUncheckedCreateWithoutReviewsInput = {
@@ -823,6 +858,7 @@ export type OrderUncheckedCreateWithoutReviewsInput = {
   txHash?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
 }
 
 export type OrderCreateOrConnectWithoutReviewsInput = {
@@ -852,6 +888,7 @@ export type OrderUpdateWithoutReviewsInput = {
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
+  offer?: Prisma.OfferUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutReviewsInput = {
@@ -865,6 +902,79 @@ export type OrderUncheckedUpdateWithoutReviewsInput = {
   txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
+}
+
+export type OrderCreateWithoutOfferInput = {
+  id?: string
+  amount: number
+  status?: string
+  escrowAddress?: string | null
+  txHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
+  gig: Prisma.GigCreateNestedOneWithoutOrdersInput
+  seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
+}
+
+export type OrderUncheckedCreateWithoutOfferInput = {
+  id?: string
+  gigId: string
+  buyerId: string
+  sellerId: string
+  amount: number
+  status?: string
+  escrowAddress?: string | null
+  txHash?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
+}
+
+export type OrderCreateOrConnectWithoutOfferInput = {
+  where: Prisma.OrderWhereUniqueInput
+  create: Prisma.XOR<Prisma.OrderCreateWithoutOfferInput, Prisma.OrderUncheckedCreateWithoutOfferInput>
+}
+
+export type OrderUpsertWithoutOfferInput = {
+  update: Prisma.XOR<Prisma.OrderUpdateWithoutOfferInput, Prisma.OrderUncheckedUpdateWithoutOfferInput>
+  create: Prisma.XOR<Prisma.OrderCreateWithoutOfferInput, Prisma.OrderUncheckedCreateWithoutOfferInput>
+  where?: Prisma.OrderWhereInput
+}
+
+export type OrderUpdateToOneWithWhereWithoutOfferInput = {
+  where?: Prisma.OrderWhereInput
+  data: Prisma.XOR<Prisma.OrderUpdateWithoutOfferInput, Prisma.OrderUncheckedUpdateWithoutOfferInput>
+}
+
+export type OrderUpdateWithoutOfferInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  escrowAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
+  gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
+  seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
+}
+
+export type OrderUncheckedUpdateWithoutOfferInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  gigId?: Prisma.StringFieldUpdateOperationsInput | string
+  buyerId?: Prisma.StringFieldUpdateOperationsInput | string
+  sellerId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.IntFieldUpdateOperationsInput | number
+  status?: Prisma.StringFieldUpdateOperationsInput | string
+  escrowAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  txHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
 }
 
 export type OrderCreateManyBuyerInput = {
@@ -902,6 +1012,7 @@ export type OrderUpdateWithoutBuyerInput = {
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutBuyerInput = {
@@ -915,6 +1026,7 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutBuyerInput = {
@@ -940,6 +1052,7 @@ export type OrderUpdateWithoutSellerInput = {
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutSellerInput = {
@@ -953,6 +1066,7 @@ export type OrderUncheckedUpdateWithoutSellerInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutSellerInput = {
@@ -990,6 +1104,7 @@ export type OrderUpdateWithoutGigInput = {
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateWithoutGigInput = {
@@ -1003,6 +1118,7 @@ export type OrderUncheckedUpdateWithoutGigInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
+  offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
 }
 
 export type OrderUncheckedUpdateManyWithoutGigInput = {
@@ -1063,6 +1179,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviews?: boolean | Prisma.Order$reviewsArgs<ExtArgs>
+  offer?: boolean | Prisma.Order$offerArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["order"]>
 
@@ -1117,6 +1234,7 @@ export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   reviews?: boolean | Prisma.Order$reviewsArgs<ExtArgs>
+  offer?: boolean | Prisma.Order$offerArgs<ExtArgs>
   _count?: boolean | Prisma.OrderCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type OrderIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1137,6 +1255,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     gig: Prisma.$GigPayload<ExtArgs>
     seller: Prisma.$UserPayload<ExtArgs>
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
+    offer: Prisma.$OfferPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1547,6 +1666,7 @@ export interface Prisma__OrderClient<T, Null = never, ExtArgs extends runtime.Ty
   gig<T extends Prisma.GigDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.GigDefaultArgs<ExtArgs>>): Prisma.Prisma__GigClient<runtime.Types.Result.GetResult<Prisma.$GigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   seller<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   reviews<T extends Prisma.Order$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  offer<T extends Prisma.Order$offerArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Order$offerArgs<ExtArgs>>): Prisma.Prisma__OfferClient<runtime.Types.Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2008,6 +2128,25 @@ export type Order$reviewsArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.ReviewScalarFieldEnum | Prisma.ReviewScalarFieldEnum[]
+}
+
+/**
+ * Order.offer
+ */
+export type Order$offerArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Offer
+   */
+  select?: Prisma.OfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Offer
+   */
+  omit?: Prisma.OfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfferInclude<ExtArgs> | null
+  where?: Prisma.OfferWhereInput
 }
 
 /**

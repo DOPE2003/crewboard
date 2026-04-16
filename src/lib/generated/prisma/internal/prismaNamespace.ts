@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.5.0
- * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
+ * Prisma Client JS version: 7.7.0
+ * Query Engine version: 75cbdc1eb7150937890ad5465d861175c6624711
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.5.0",
-  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
+  client: "7.7.0",
+  engine: "75cbdc1eb7150937890ad5465d861175c6624711"
 }
 
 /**
@@ -397,7 +397,8 @@ export const ModelName = {
   ShowcasePost: 'ShowcasePost',
   ShowcaseInteraction: 'ShowcaseInteraction',
   ProWaitlist: 'ProWaitlist',
-  PasswordResetToken: 'PasswordResetToken'
+  PasswordResetToken: 'PasswordResetToken',
+  Offer: 'Offer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -413,7 +414,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "passwordResetToken"
+    modelProps: "user" | "savedTalent" | "notification" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "passwordResetToken" | "offer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1453,6 +1454,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Offer: {
+      payload: Prisma.$OfferPayload<ExtArgs>
+      fields: Prisma.OfferFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfferFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfferFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>
+        }
+        findFirst: {
+          args: Prisma.OfferFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfferFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>
+        }
+        findMany: {
+          args: Prisma.OfferFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>[]
+        }
+        create: {
+          args: Prisma.OfferCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>
+        }
+        createMany: {
+          args: Prisma.OfferCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfferCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>[]
+        }
+        delete: {
+          args: Prisma.OfferDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>
+        }
+        update: {
+          args: Prisma.OfferUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>
+        }
+        deleteMany: {
+          args: Prisma.OfferDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfferUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfferUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>[]
+        }
+        upsert: {
+          args: Prisma.OfferUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfferPayload>
+        }
+        aggregate: {
+          args: Prisma.OfferAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOffer>
+        }
+        groupBy: {
+          args: Prisma.OfferGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfferGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfferCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfferCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1697,6 +1772,24 @@ export const PasswordResetTokenScalarFieldEnum = {
 } as const
 
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const OfferScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  receiverId: 'receiverId',
+  title: 'title',
+  description: 'description',
+  amount: 'amount',
+  deliveryDays: 'deliveryDays',
+  status: 'status',
+  orderId: 'orderId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1944,6 +2037,7 @@ export type GlobalOmitConfig = {
   showcaseInteraction?: Prisma.ShowcaseInteractionOmit
   proWaitlist?: Prisma.ProWaitlistOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
+  offer?: Prisma.OfferOmit
 }
 
 /* Types for Logging */

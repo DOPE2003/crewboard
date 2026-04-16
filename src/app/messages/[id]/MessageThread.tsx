@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import PusherClient from "pusher-js";
 import { sendMessage, markMessagesAsRead } from "@/actions/messages";
+import { respondToOffer } from "@/actions/offers";
 
 interface ReplyPreview {
   id: string;
@@ -51,6 +52,7 @@ function formatDate(iso: string) {
 
 const GIG_PREFIX = "__GIGREQUEST__:";
 const FILE_PREFIX = "__FILE__:";
+const OFFER_PREFIX = "__OFFER__:";
 
 interface GigCard {
   id: string;
@@ -146,8 +148,201 @@ function FileBubble({ payload, mine }: { payload: FilePayload; mine: boolean }) 
   );
 }
 
+interface OfferPayload {
+  offerId: string;
+  title: string;
+  description: string;
+  amount: number;
+  deliveryDays: number;
+  senderId: string;
+  status: "pending" | "accepted" | "declined";
+}
+
+function parseOfferPayload(body: string): OfferPayload | null {
+  if (!body.startsWith(OFFER_PREFIX)) return null;
+  try { return JSON.parse(body.slice(OFFER_PREFIX.length)); } catch { return null; }
+}
+
+const STATUS_CONFIG = {
+  pending:  { label: "Pending",  color: "#f59e0b", bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.2)"  },
+  accepted: { label: "Accepted", color: "#14B8A6", bg: "rgba(20,184,166,0.08)",  border: "rgba(20,184,166,0.2)"  },
+  declined: { label: "Declined", color: "#ef4444", bg: "rgba(239,68,68,0.08)",   border: "rgba(239,68,68,0.2)"   },
+};
+
+function OfferBubble({
+  payload,
+  mine,
+  currentUserId,
+  onStatusChange,
+}: {
+  payload: OfferPayload;
+  mine: boolean;
+  currentUserId: string;
+  onStatusChange: (offerId: string, status: "accepted" | "declined", orderId?: string) => void;
+}) {
+  const [status, setStatus] = useState<OfferPayload["status"]>(payload.status);
+  const [orderId, setOrderId] = useState<string | undefined>();
+  const [responding, setResponding] = useState<"accept" | "decline" | null>(null);
+  const [isPending, startTransition] = useTransition();
+  const isReceiver = !mine;
+  const cfg = STATUS_CONFIG[status];
+
+  const respond = (action: "accept" | "decline") => {
+    setResponding(action);
+    startTransition(async () => {
+      try {
+        const res = await respondToOffer(payload.offerId, action);
+        const newStatus = res.status;
+        const newOrderId = res.status === "accepted" ? (res as any).orderId : undefined;
+        setStatus(newStatus);
+        setOrderId(newOrderId);
+        onStatusChange(payload.offerId, newStatus, newOrderId);
+      } catch (e: any) {
+        console.error(e);
+      } finally {
+        setResponding(null);
+      }
+    });
+  };
+
+  return (
+    <div style={{
+      minWidth: 260, maxWidth: 320,
+      borderRadius: 16,
+      border: `1.5px solid ${cfg.border}`,
+      background: "var(--background)",
+      overflow: "hidden",
+      boxShadow: "0 2px 12px rgba(0,0,0,0.07)",
+    }}>
+      {/* Top accent bar */}
+      <div style={{ height: 3, background: `linear-gradient(90deg, ${cfg.color}, ${cfg.color}88)` }} />
+
+      <div style={{ padding: "14px 16px" }}>
+        {/* Header row */}
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke={cfg.color} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: cfg.color }}>
+              Custom Offer
+            </span>
+          </div>
+          {/* Status badge */}
+          <span style={{
+            fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 99,
+            background: cfg.bg, color: cfg.color, border: `1px solid ${cfg.border}`,
+          }}>
+            {cfg.label}
+          </span>
+        </div>
+
+        {/* Title */}
+        <div style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", marginBottom: 4, lineHeight: 1.3 }}>
+          {payload.title}
+        </div>
+
+        {/* Description */}
+        <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 12, lineHeight: 1.5, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+          {payload.description}
+        </div>
+
+        {/* Amount + Delivery */}
+        <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: status === "pending" && isReceiver ? 14 : 0 }}>
+          <span style={{ fontSize: 22, fontWeight: 800, color: "#14B8A6", lineHeight: 1 }}>
+            ${payload.amount}
+          </span>
+          <span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
+            {payload.deliveryDays} day{payload.deliveryDays !== 1 ? "s" : ""} delivery
+          </span>
+        </div>
+
+        {/* Actions: only receiver sees Accept/Decline while pending */}
+        {status === "pending" && isReceiver && (
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={() => respond("decline")}
+              disabled={!!responding || isPending}
+              style={{
+                flex: 1, padding: "8px 0", borderRadius: 9, fontSize: 13, fontWeight: 700,
+                border: "1px solid var(--card-border)", background: "transparent",
+                color: "var(--text-muted)", cursor: "pointer", fontFamily: "inherit",
+                opacity: responding === "decline" ? 0.6 : 1,
+              }}
+            >
+              {responding === "decline" ? "..." : "Decline"}
+            </button>
+            <button
+              onClick={() => respond("accept")}
+              disabled={!!responding || isPending}
+              style={{
+                flex: 2, padding: "8px 0", borderRadius: 9, fontSize: 13, fontWeight: 700,
+                border: "none", background: "#14B8A6", color: "#fff",
+                cursor: "pointer", fontFamily: "inherit",
+                opacity: responding === "accept" ? 0.7 : 1,
+                display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              }}
+            >
+              {responding === "accept" ? "Accepting..." : (
+                <>
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                  Accept Offer
+                </>
+              )}
+            </button>
+          </div>
+        )}
+
+        {/* Accepted: link to order */}
+        {status === "accepted" && orderId && (
+          <Link
+            href={`/orders/${orderId}`}
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              padding: "9px 0", borderRadius: 9, fontSize: 13, fontWeight: 700,
+              background: "rgba(20,184,166,0.1)", color: "#14B8A6",
+              border: "1px solid rgba(20,184,166,0.25)", textDecoration: "none",
+              marginTop: 2,
+            }}
+          >
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/>
+            </svg>
+            View Order & Fund Escrow
+          </Link>
+        )}
+
+        {/* Accepted: no orderId yet (sender before accept) → view offers */}
+        {status === "accepted" && !orderId && (
+          <Link
+            href="/offers"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+              padding: "9px 0", borderRadius: 9, fontSize: 13, fontWeight: 700,
+              background: "rgba(20,184,166,0.1)", color: "#14B8A6",
+              border: "1px solid rgba(20,184,166,0.25)", textDecoration: "none",
+              marginTop: 2,
+            }}
+          >
+            View Order & Fund Escrow →
+          </Link>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function replyBodyPreview(body: string): string {
   if (body.startsWith(GIG_PREFIX)) return "Service Request";
+  if (body.startsWith(OFFER_PREFIX)) {
+    try {
+      const p = JSON.parse(body.slice(OFFER_PREFIX.length));
+      return `Offer: ${p.title} — $${p.amount}`;
+    } catch {}
+    return "Custom Offer";
+  }
   if (body.startsWith(FILE_PREFIX)) {
     try {
       const p = JSON.parse(body.slice(FILE_PREFIX.length));
@@ -598,10 +793,32 @@ export default function MessageThread({
 
                 {(() => {
                   const filePayload = parseFilePayload(m.body);
+                  const offerPayload = parseOfferPayload(m.body);
                   if (gigCard) return (
                     <div style={{ display: "flex", flexDirection: "column", alignItems: mine ? "flex-end" : "flex-start", gap: "0.25rem" }}>
                       {m.replyTo && <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />}
                       <GigCardBubble gig={gigCard} mine={mine} />
+                      <span className="msgs-bubble-time" style={{ marginRight: mine ? "0.25rem" : 0, marginLeft: mine ? 0 : "0.25rem" }}>{formatTime(m.createdAt)}</span>
+                    </div>
+                  );
+                  if (offerPayload) return (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: mine ? "flex-end" : "flex-start", gap: "0.25rem" }}>
+                      {m.replyTo && <QuotedMessage replyTo={m.replyTo} mine={mine} currentUserId={currentUserId} otherDisplayName={otherDisplayName} />}
+                      <OfferBubble
+                        payload={offerPayload}
+                        mine={mine}
+                        currentUserId={currentUserId}
+                        onStatusChange={(offerId, newStatus, newOrderId) => {
+                          setMessages(prev => prev.map(msg =>
+                            msg.id === m.id
+                              ? { ...msg, body: OFFER_PREFIX + JSON.stringify({ ...offerPayload, status: newStatus }) }
+                              : msg
+                          ));
+                          if (newOrderId) {
+                            // Update the offer bubble body with orderId for link
+                          }
+                        }}
+                      />
                       <span className="msgs-bubble-time" style={{ marginRight: mine ? "0.25rem" : 0, marginLeft: mine ? 0 : "0.25rem" }}>{formatTime(m.createdAt)}</span>
                     </div>
                   );

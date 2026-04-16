@@ -147,7 +147,7 @@ export type ConversationGroupByOutputType = {
   _max: ConversationMaxAggregateOutputType | null
 }
 
-type GetConversationGroupByPayload<T extends ConversationGroupByArgs> = Prisma.PrismaPromise<
+export type GetConversationGroupByPayload<T extends ConversationGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ConversationGroupByOutputType, T['by']> &
       {
@@ -171,6 +171,7 @@ export type ConversationWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   messages?: Prisma.MessageListRelationFilter
+  offers?: Prisma.OfferListRelationFilter
 }
 
 export type ConversationOrderByWithRelationInput = {
@@ -179,6 +180,7 @@ export type ConversationOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   messages?: Prisma.MessageOrderByRelationAggregateInput
+  offers?: Prisma.OfferOrderByRelationAggregateInput
 }
 
 export type ConversationWhereUniqueInput = Prisma.AtLeast<{
@@ -190,6 +192,7 @@ export type ConversationWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Conversation"> | Date | string
   messages?: Prisma.MessageListRelationFilter
+  offers?: Prisma.OfferListRelationFilter
 }, "id">
 
 export type ConversationOrderByWithAggregationInput = {
@@ -218,6 +221,7 @@ export type ConversationCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageCreateNestedManyWithoutConversationInput
+  offers?: Prisma.OfferCreateNestedManyWithoutConversationInput
 }
 
 export type ConversationUncheckedCreateInput = {
@@ -226,6 +230,7 @@ export type ConversationUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   messages?: Prisma.MessageUncheckedCreateNestedManyWithoutConversationInput
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type ConversationUpdateInput = {
@@ -234,6 +239,7 @@ export type ConversationUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUpdateManyWithoutConversationNestedInput
+  offers?: Prisma.OfferUpdateManyWithoutConversationNestedInput
 }
 
 export type ConversationUncheckedUpdateInput = {
@@ -242,6 +248,7 @@ export type ConversationUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   messages?: Prisma.MessageUncheckedUpdateManyWithoutConversationNestedInput
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 export type ConversationCreateManyInput = {
@@ -312,11 +319,26 @@ export type ConversationUpdateOneRequiredWithoutMessagesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.ConversationUpdateToOneWithWhereWithoutMessagesInput, Prisma.ConversationUpdateWithoutMessagesInput>, Prisma.ConversationUncheckedUpdateWithoutMessagesInput>
 }
 
+export type ConversationCreateNestedOneWithoutOffersInput = {
+  create?: Prisma.XOR<Prisma.ConversationCreateWithoutOffersInput, Prisma.ConversationUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.ConversationCreateOrConnectWithoutOffersInput
+  connect?: Prisma.ConversationWhereUniqueInput
+}
+
+export type ConversationUpdateOneRequiredWithoutOffersNestedInput = {
+  create?: Prisma.XOR<Prisma.ConversationCreateWithoutOffersInput, Prisma.ConversationUncheckedCreateWithoutOffersInput>
+  connectOrCreate?: Prisma.ConversationCreateOrConnectWithoutOffersInput
+  upsert?: Prisma.ConversationUpsertWithoutOffersInput
+  connect?: Prisma.ConversationWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ConversationUpdateToOneWithWhereWithoutOffersInput, Prisma.ConversationUpdateWithoutOffersInput>, Prisma.ConversationUncheckedUpdateWithoutOffersInput>
+}
+
 export type ConversationCreateWithoutMessagesInput = {
   id?: string
   participants?: Prisma.ConversationCreateparticipantsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  offers?: Prisma.OfferCreateNestedManyWithoutConversationInput
 }
 
 export type ConversationUncheckedCreateWithoutMessagesInput = {
@@ -324,6 +346,7 @@ export type ConversationUncheckedCreateWithoutMessagesInput = {
   participants?: Prisma.ConversationCreateparticipantsInput | string[]
   createdAt?: Date | string
   updatedAt?: Date | string
+  offers?: Prisma.OfferUncheckedCreateNestedManyWithoutConversationInput
 }
 
 export type ConversationCreateOrConnectWithoutMessagesInput = {
@@ -347,6 +370,7 @@ export type ConversationUpdateWithoutMessagesInput = {
   participants?: Prisma.ConversationUpdateparticipantsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offers?: Prisma.OfferUpdateManyWithoutConversationNestedInput
 }
 
 export type ConversationUncheckedUpdateWithoutMessagesInput = {
@@ -354,6 +378,55 @@ export type ConversationUncheckedUpdateWithoutMessagesInput = {
   participants?: Prisma.ConversationUpdateparticipantsInput | string[]
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  offers?: Prisma.OfferUncheckedUpdateManyWithoutConversationNestedInput
+}
+
+export type ConversationCreateWithoutOffersInput = {
+  id?: string
+  participants?: Prisma.ConversationCreateparticipantsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageCreateNestedManyWithoutConversationInput
+}
+
+export type ConversationUncheckedCreateWithoutOffersInput = {
+  id?: string
+  participants?: Prisma.ConversationCreateparticipantsInput | string[]
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  messages?: Prisma.MessageUncheckedCreateNestedManyWithoutConversationInput
+}
+
+export type ConversationCreateOrConnectWithoutOffersInput = {
+  where: Prisma.ConversationWhereUniqueInput
+  create: Prisma.XOR<Prisma.ConversationCreateWithoutOffersInput, Prisma.ConversationUncheckedCreateWithoutOffersInput>
+}
+
+export type ConversationUpsertWithoutOffersInput = {
+  update: Prisma.XOR<Prisma.ConversationUpdateWithoutOffersInput, Prisma.ConversationUncheckedUpdateWithoutOffersInput>
+  create: Prisma.XOR<Prisma.ConversationCreateWithoutOffersInput, Prisma.ConversationUncheckedCreateWithoutOffersInput>
+  where?: Prisma.ConversationWhereInput
+}
+
+export type ConversationUpdateToOneWithWhereWithoutOffersInput = {
+  where?: Prisma.ConversationWhereInput
+  data: Prisma.XOR<Prisma.ConversationUpdateWithoutOffersInput, Prisma.ConversationUncheckedUpdateWithoutOffersInput>
+}
+
+export type ConversationUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  participants?: Prisma.ConversationUpdateparticipantsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUpdateManyWithoutConversationNestedInput
+}
+
+export type ConversationUncheckedUpdateWithoutOffersInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  participants?: Prisma.ConversationUpdateparticipantsInput | string[]
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  messages?: Prisma.MessageUncheckedUpdateManyWithoutConversationNestedInput
 }
 
 
@@ -363,10 +436,12 @@ export type ConversationUncheckedUpdateWithoutMessagesInput = {
 
 export type ConversationCountOutputType = {
   messages: number
+  offers: number
 }
 
 export type ConversationCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | ConversationCountOutputTypeCountMessagesArgs
+  offers?: boolean | ConversationCountOutputTypeCountOffersArgs
 }
 
 /**
@@ -386,6 +461,13 @@ export type ConversationCountOutputTypeCountMessagesArgs<ExtArgs extends runtime
   where?: Prisma.MessageWhereInput
 }
 
+/**
+ * ConversationCountOutputType without action
+ */
+export type ConversationCountOutputTypeCountOffersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.OfferWhereInput
+}
+
 
 export type ConversationSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -393,6 +475,7 @@ export type ConversationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   createdAt?: boolean
   updatedAt?: boolean
   messages?: boolean | Prisma.Conversation$messagesArgs<ExtArgs>
+  offers?: boolean | Prisma.Conversation$offersArgs<ExtArgs>
   _count?: boolean | Prisma.ConversationCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["conversation"]>
 
@@ -420,6 +503,7 @@ export type ConversationSelectScalar = {
 export type ConversationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "participants" | "createdAt" | "updatedAt", ExtArgs["result"]["conversation"]>
 export type ConversationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   messages?: boolean | Prisma.Conversation$messagesArgs<ExtArgs>
+  offers?: boolean | Prisma.Conversation$offersArgs<ExtArgs>
   _count?: boolean | Prisma.ConversationCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ConversationIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -429,6 +513,7 @@ export type $ConversationPayload<ExtArgs extends runtime.Types.Extensions.Intern
   name: "Conversation"
   objects: {
     messages: Prisma.$MessagePayload<ExtArgs>[]
+    offers: Prisma.$OfferPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -830,6 +915,7 @@ readonly fields: ConversationFieldRefs;
 export interface Prisma__ConversationClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   messages<T extends Prisma.Conversation$messagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Conversation$messagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  offers<T extends Prisma.Conversation$offersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Conversation$offersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OfferPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1277,6 +1363,30 @@ export type Conversation$messagesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.MessageScalarFieldEnum | Prisma.MessageScalarFieldEnum[]
+}
+
+/**
+ * Conversation.offers
+ */
+export type Conversation$offersArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Offer
+   */
+  select?: Prisma.OfferSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Offer
+   */
+  omit?: Prisma.OfferOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.OfferInclude<ExtArgs> | null
+  where?: Prisma.OfferWhereInput
+  orderBy?: Prisma.OfferOrderByWithRelationInput | Prisma.OfferOrderByWithRelationInput[]
+  cursor?: Prisma.OfferWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.OfferScalarFieldEnum | Prisma.OfferScalarFieldEnum[]
 }
 
 /**

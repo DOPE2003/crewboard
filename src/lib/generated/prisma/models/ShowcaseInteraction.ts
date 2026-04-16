@@ -199,7 +199,7 @@ export type ShowcaseInteractionGroupByOutputType = {
   _max: ShowcaseInteractionMaxAggregateOutputType | null
 }
 
-type GetShowcaseInteractionGroupByPayload<T extends ShowcaseInteractionGroupByArgs> = Prisma.PrismaPromise<
+export type GetShowcaseInteractionGroupByPayload<T extends ShowcaseInteractionGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ShowcaseInteractionGroupByOutputType, T['by']> &
       {

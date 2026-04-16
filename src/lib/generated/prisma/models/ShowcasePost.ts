@@ -230,7 +230,7 @@ export type ShowcasePostGroupByOutputType = {
   _max: ShowcasePostMaxAggregateOutputType | null
 }
 
-type GetShowcasePostGroupByPayload<T extends ShowcasePostGroupByArgs> = Prisma.PrismaPromise<
+export type GetShowcasePostGroupByPayload<T extends ShowcasePostGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<ShowcasePostGroupByOutputType, T['by']> &
       {

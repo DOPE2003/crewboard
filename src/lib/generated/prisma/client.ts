@@ -111,3 +111,8 @@ export type ProWaitlist = Prisma.ProWaitlistModel
  * 
  */
 export type PasswordResetToken = Prisma.PasswordResetTokenModel
+/**
+ * Model Offer
+ * 
+ */
+export type Offer = Prisma.OfferModel

@@ -64,7 +64,8 @@ export const ModelName = {
   ShowcasePost: 'ShowcasePost',
   ShowcaseInteraction: 'ShowcaseInteraction',
   ProWaitlist: 'ProWaitlist',
-  PasswordResetToken: 'PasswordResetToken'
+  PasswordResetToken: 'PasswordResetToken',
+  Offer: 'Offer'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -288,6 +289,24 @@ export const PasswordResetTokenScalarFieldEnum = {
 } as const
 
 export type PasswordResetTokenScalarFieldEnum = (typeof PasswordResetTokenScalarFieldEnum)[keyof typeof PasswordResetTokenScalarFieldEnum]
+
+
+export const OfferScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  senderId: 'senderId',
+  receiverId: 'receiverId',
+  title: 'title',
+  description: 'description',
+  amount: 'amount',
+  deliveryDays: 'deliveryDays',
+  status: 'status',
+  orderId: 'orderId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
 
 
 export const SortOrder = {
