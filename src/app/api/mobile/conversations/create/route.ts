@@ -1,42 +1,69 @@
-import { NextRequest, NextResponse } from "next/server";
+/**
+ * POST /api/mobile/conversations/create
+ *
+ * Find-or-create a 1-on-1 conversation with another user.
+ * Accepts the other user's ID or handle.
+ *
+ * Headers  Authorization: Bearer <token>
+ * Body     { otherUserId?: string; otherHandle?: string }
+ * 200      { data: { conversationId, isNew } }
+ * 400      { error }
+ * 404      { error: "User not found." }
+ */
+import { NextRequest } from "next/server";
 import db from "@/lib/db";
+import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
+import { ok, err } from "../../_lib/response";
 
-// POST /api/mobile/conversations/create
-// Creates or finds an existing conversation between two users
-export async function POST(req: NextRequest) {
+async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
-    const { userId, otherUserId } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { otherUserId, otherHandle } = body as {
+      otherUserId?: string;
+      otherHandle?: string;
+    };
 
-    if (!userId || !otherUserId) {
-      return NextResponse.json({ error: "Missing userId or otherUserId." }, { status: 400 });
+    if (!otherUserId && !otherHandle) {
+      return err("otherUserId or otherHandle is required.");
     }
 
-    // Check if conversation already exists between these two users
+    // Resolve other user
+    const other = await db.user.findFirst({
+      where: otherUserId
+        ? { id: otherUserId }
+        : { twitterHandle: otherHandle!.toLowerCase() },
+      select: { id: true },
+    });
+
+    if (!other) return err("User not found.", 404);
+    if (other.id === user.sub) return err("Cannot start a conversation with yourself.");
+
+    // Find existing conversation
     const existing = await db.conversation.findFirst({
       where: {
         AND: [
-          { participants: { has: userId } },
-          { participants: { has: otherUserId } },
+          { participants: { has: user.sub } },
+          { participants: { has: other.id } },
         ],
       },
       select: { id: true },
     });
 
     if (existing) {
-      return NextResponse.json({ conversationId: existing.id });
+      return ok({ conversationId: existing.id, isNew: false });
     }
 
     // Create new conversation
-    const conversation = await db.conversation.create({
-      data: {
-        participants: [userId, otherUserId],
-      },
+    const created = await db.conversation.create({
+      data: { participants: [user.sub, other.id] },
       select: { id: true },
     });
 
-    return NextResponse.json({ conversationId: conversation.id });
-  } catch (err) {
-    console.error("Create conversation error:", err);
-    return NextResponse.json({ error: "Failed to create conversation." }, { status: 500 });
+    return ok({ conversationId: created.id, isNew: true });
+  } catch (e) {
+    console.error("[mobile/conversations/create]", e);
+    return err("Something went wrong.", 500);
   }
 }
+
+export const POST = withMobileAuth(handler);

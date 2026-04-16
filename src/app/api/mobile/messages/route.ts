@@ -1,54 +1,231 @@
-import { NextRequest, NextResponse } from "next/server";
+/**
+ * GET  /api/mobile/messages?conversationId=<id>&before=<messageId>
+ * POST /api/mobile/messages
+ *
+ * GET: Returns up to 50 messages in a conversation, oldest-first.
+ *   Use `before` (message id) for cursor-based pagination (scroll-up / load more).
+ *   All special message types are parsed — iOS never sees raw `__OFFER__:` strings.
+ *
+ * POST: Send a plain-text message (or attach a pre-uploaded file URL).
+ *   Triggers Pusher for real-time delivery + notifies receiver.
+ *
+ * Headers  Authorization: Bearer <token>
+ * Body (POST) {
+ *   conversationId: string;
+ *   body: string;         // plain text OR serialised file/offer prefix (advanced)
+ *   replyToId?: string;   // id of message being replied to
+ * }
+ */
+import { NextRequest } from "next/server";
 import db from "@/lib/db";
-import { createMessage } from "@/lib/sendMessage";
+import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth";
+import { ok, err } from "../_lib/response";
+import { parseMessageBody } from "../_lib/parse-message";
+import { notifyUser } from "@/lib/notify";
 
-// GET /api/mobile/messages?conversationId=<id>&limit=50
-export async function GET(req: NextRequest) {
+// ─── GET ──────────────────────────────────────────────────────────────────────
+
+async function getHandler(req: NextRequest) {
+  const user = await getMobileUser(req);
+  if (!user) return err("Unauthorized", 401);
+
   const conversationId = req.nextUrl.searchParams.get("conversationId");
-  if (!conversationId) {
-    return NextResponse.json({ error: "Missing conversationId." }, { status: 400 });
-  }
+  if (!conversationId) return err("conversationId is required.");
 
-  const limit = parseInt(req.nextUrl.searchParams.get("limit") ?? "50");
+  const before = req.nextUrl.searchParams.get("before"); // message id cursor
 
-  const messages = await db.message.findMany({
-    where: { conversationId },
-    include: {
-      sender: {
-        select: { id: true, name: true, twitterHandle: true, image: true },
-      },
-      replyTo: {
-        select: { id: true, body: true, sender: { select: { name: true } } },
-      },
-    },
-    orderBy: { createdAt: "asc" },
-    take: limit,
-  });
-
-  return NextResponse.json(messages);
-}
-
-// POST /api/mobile/messages — send a new message
-export async function POST(req: NextRequest) {
   try {
-    const { conversationId, senderId, body, replyToId } = await req.json();
-
-    if (!conversationId || !senderId || !body?.trim()) {
-      return NextResponse.json({ error: "Missing required fields." }, { status: 400 });
+    // Verify the user is a participant
+    const conv = await db.conversation.findUnique({
+      where: { id: conversationId },
+      select: { participants: true },
+    });
+    if (!conv || !conv.participants.includes(user.sub)) {
+      return err("Conversation not found.", 404);
     }
 
-    // createMessage: saves to DB + fires Pusher + in-app notification + email
-    const message = await createMessage({ conversationId, senderId, body, replyToId });
+    // Cursor: find the createdAt of the `before` message
+    let beforeDate: Date | undefined;
+    if (before) {
+      const pivot = await db.message.findUnique({
+        where: { id: before },
+        select: { createdAt: true },
+      });
+      if (pivot) beforeDate = pivot.createdAt;
+    }
 
-    // Fetch sender info so the mobile client gets the full shape it expects
-    const sender = await db.user.findUnique({
-      where: { id: senderId },
-      select: { id: true, name: true, twitterHandle: true, image: true },
+    const rows = await db.message.findMany({
+      where: {
+        conversationId,
+        ...(beforeDate ? { createdAt: { lt: beforeDate } } : {}),
+      },
+      orderBy: { createdAt: "desc" }, // fetch newest-first, reverse below
+      take: 50,
+      select: {
+        id: true, senderId: true, body: true, createdAt: true, read: true,
+        replyTo: {
+          select: {
+            id: true, senderId: true, body: true,
+            sender: { select: { name: true, twitterHandle: true } },
+          },
+        },
+        sender: { select: { id: true, name: true, twitterHandle: true, image: true } },
+      },
     });
 
-    return NextResponse.json({ ...message, sender });
-  } catch (err) {
-    console.error("[POST /api/mobile/messages] error:", err);
-    return NextResponse.json({ error: "Failed to send message." }, { status: 500 });
+    // Mark unread messages as read (fire-and-forget)
+    const unreadIds = rows
+      .filter((m) => !m.read && m.senderId !== user.sub)
+      .map((m) => m.id);
+    if (unreadIds.length > 0) {
+      db.message.updateMany({
+        where: { id: { in: unreadIds } },
+        data: { read: true },
+      }).catch(() => {});
+    }
+
+    const messages = rows.reverse().map((m) => ({
+      id: m.id,
+      senderId: m.senderId,
+      sentByMe: m.senderId === user.sub,
+      sender: m.sender,
+      content: parseMessageBody(m.body),
+      replyTo: m.replyTo
+        ? {
+            id: m.replyTo.id,
+            senderId: m.replyTo.senderId,
+            senderName: m.replyTo.sender?.name ?? m.replyTo.sender?.twitterHandle ?? null,
+            content: parseMessageBody(m.replyTo.body),
+          }
+        : null,
+      read: m.read,
+      sentAt: m.createdAt,
+    }));
+
+    const nextCursor = rows.length === 50 ? rows[0].id : null;
+
+    return ok(messages, { nextCursor });
+  } catch (e) {
+    console.error("[mobile/messages GET]", e);
+    return err("Something went wrong.", 500);
   }
 }
+
+// ─── POST ─────────────────────────────────────────────────────────────────────
+
+async function postHandler(req: NextRequest, user: MobileTokenPayload) {
+  try {
+    const body = await req.json().catch(() => ({}));
+    const { conversationId, body: msgBody, replyToId } = body as {
+      conversationId?: string;
+      body?: string;
+      replyToId?: string;
+    };
+
+    if (!conversationId) return err("conversationId is required.");
+    if (!msgBody?.trim())  return err("body cannot be empty.");
+
+    // Verify participant
+    const conv = await db.conversation.findUnique({
+      where: { id: conversationId },
+      select: { participants: true },
+    });
+    if (!conv || !conv.participants.includes(user.sub)) {
+      return err("Conversation not found.", 404);
+    }
+
+    // Verify replyToId belongs to this conversation
+    if (replyToId) {
+      const replyMsg = await db.message.findUnique({
+        where: { id: replyToId },
+        select: { conversationId: true },
+      });
+      if (!replyMsg || replyMsg.conversationId !== conversationId) {
+        return err("Invalid replyToId.");
+      }
+    }
+
+    const message = await db.message.create({
+      data: {
+        conversationId,
+        senderId: user.sub,
+        body: msgBody.trim(),
+        ...(replyToId ? { replyToId } : {}),
+      },
+      select: {
+        id: true, senderId: true, body: true, createdAt: true, read: true,
+        replyTo: {
+          select: {
+            id: true, senderId: true, body: true,
+            sender: { select: { name: true, twitterHandle: true } },
+          },
+        },
+      },
+    });
+
+    // Update conversation timestamp
+    db.conversation.update({
+      where: { id: conversationId },
+      data: { updatedAt: new Date() },
+    }).catch(() => {});
+
+    // Notify the other participant (fire-and-forget)
+    const receiverId = conv.participants.find((p) => p !== user.sub);
+    if (receiverId) {
+      const sender = await db.user.findUnique({
+        where: { id: user.sub },
+        select: { name: true, twitterHandle: true },
+      });
+      const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
+
+      notifyUser({
+        userId: receiverId,
+        type: "message",
+        title: `New message from ${senderName}`,
+        body: parseMessageBody(msgBody).type === "text"
+          ? msgBody.slice(0, 100)
+          : "Sent you a file",
+        link: `/messages/${conversationId}`,
+      }).catch(() => {});
+    }
+
+    // Pusher real-time delivery (same pattern as web)
+    try {
+      const Pusher = (await import("pusher")).default;
+      const pusher = new Pusher({
+        appId: process.env.PUSHER_APP_ID!,
+        key: process.env.NEXT_PUBLIC_PUSHER_KEY!,
+        secret: process.env.PUSHER_SECRET!,
+        cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+        useTLS: true,
+      });
+      await pusher.trigger(`conversation-${conversationId}`, "new-message", {
+        ...message,
+        replyTo: message.replyTo ?? null,
+      });
+    } catch { /* Pusher failure must not fail the request */ }
+
+    return ok({
+      id: message.id,
+      senderId: message.senderId,
+      sentByMe: true,
+      content: parseMessageBody(message.body),
+      replyTo: message.replyTo
+        ? {
+            id: message.replyTo.id,
+            senderId: message.replyTo.senderId,
+            senderName: message.replyTo.sender?.name ?? message.replyTo.sender?.twitterHandle ?? null,
+            content: parseMessageBody(message.replyTo.body),
+          }
+        : null,
+      read: message.read,
+      sentAt: message.createdAt,
+    });
+  } catch (e) {
+    console.error("[mobile/messages POST]", e);
+    return err("Something went wrong.", 500);
+  }
+}
+
+export { getHandler as GET };
+export const POST = withMobileAuth(postHandler);

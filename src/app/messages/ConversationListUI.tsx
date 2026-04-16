@@ -8,6 +8,12 @@ function msgPreview(body: string, maxLen = 50): string {
     try { return "Service Request: " + JSON.parse(body.slice("__GIGREQUEST__:".length)).title; }
     catch { return "Service Request"; }
   }
+  if (body.startsWith("__OFFER__:")) {
+    try {
+      const o = JSON.parse(body.slice("__OFFER__:".length));
+      return `Custom Offer: ${o.title ?? "Offer"} — $${o.amount ?? ""}`;
+    } catch { return "Custom Offer"; }
+  }
   if (body.startsWith("__FILE__:")) {
     try {
       const f = JSON.parse(body.slice("__FILE__:".length));
