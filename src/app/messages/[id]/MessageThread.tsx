@@ -72,7 +72,7 @@ interface FilePayload {
   name: string;
   size: number;
   type: string;
-  data: string; // base64 data URL
+  data: string; // URL (blob proxy) or legacy base64 data URL
 }
 
 function parseFilePayload(body: string): FilePayload | null {
@@ -83,14 +83,17 @@ function parseFilePayload(body: string): FilePayload | null {
 function FileBubble({ payload, mine }: { payload: FilePayload; mine: boolean }) {
   const isImage = payload.type.startsWith("image/");
   const isVideo = payload.type.startsWith("video/");
+  const isAudio = payload.type.startsWith("audio/");
   const sizeLabel = payload.size > 1024 * 1024
     ? `${(payload.size / 1024 / 1024).toFixed(1)} MB`
     : `${Math.round(payload.size / 1024)} KB`;
+  // Use the URL directly — works for both blob proxy URLs and legacy base64 data URLs
+  const src = payload.data;
   if (isImage) {
     return (
-      <a href={payload.data} download={payload.name} style={{ display: "block", maxWidth: 260 }}>
+      <a href={src} download={payload.name} target="_blank" rel="noopener noreferrer" style={{ display: "block", maxWidth: 260 }}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={payload.data} alt={payload.name} style={{ width: "100%", borderRadius: 12, display: "block", cursor: "pointer" }} />
+        <img src={src} alt={payload.name} style={{ width: "100%", borderRadius: 12, display: "block", cursor: "pointer" }} />
         <div style={{ fontSize: 10, color: mine ? "rgba(0,0,0,0.45)" : "var(--text-muted)", marginTop: 4, textAlign: "right" }}>{payload.name}</div>
       </a>
     );
@@ -98,13 +101,34 @@ function FileBubble({ payload, mine }: { payload: FilePayload; mine: boolean }) 
   if (isVideo) {
     return (
       <div style={{ maxWidth: 300 }}>
-        <video controls src={payload.data} style={{ width: "100%", borderRadius: 12, display: "block" }} />
+        <video controls src={src} style={{ width: "100%", borderRadius: 12, display: "block" }} />
         <div style={{ fontSize: 10, color: mine ? "rgba(0,0,0,0.45)" : "var(--text-muted)", marginTop: 4, textAlign: "right" }}>{payload.name} · {sizeLabel}</div>
       </div>
     );
   }
+  if (isAudio) {
+    return (
+      <div style={{ minWidth: 220, maxWidth: 300 }}>
+        <div style={{
+          display: "flex", alignItems: "center", gap: 10,
+          padding: "10px 14px", borderRadius: 12,
+          background: mine ? "rgba(0,0,0,0.08)" : "rgba(20,184,166,0.08)",
+          border: `1px solid ${mine ? "rgba(0,0,0,0.1)" : "rgba(20,184,166,0.2)"}`,
+        }}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke={mine ? "#0f766e" : "#14B8A6"} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/>
+          </svg>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontSize: 12, fontWeight: 600, color: mine ? "rgba(0,0,0,0.8)" : "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{payload.name}</div>
+            <div style={{ fontSize: 10, color: "var(--text-muted)" }}>{sizeLabel}</div>
+          </div>
+        </div>
+        <audio controls src={src} style={{ width: "100%", marginTop: 6, height: 32 }} />
+      </div>
+    );
+  }
   return (
-    <a href={payload.data} download={payload.name} style={{
+    <a href={src} download={payload.name} target="_blank" rel="noopener noreferrer" style={{
       display: "flex", alignItems: "center", gap: 10, textDecoration: "none",
       padding: "10px 14px", borderRadius: 12,
       background: mine ? "rgba(0,0,0,0.08)" : "rgba(20,184,166,0.08)",
@@ -129,6 +153,7 @@ function replyBodyPreview(body: string): string {
       const p = JSON.parse(body.slice(FILE_PREFIX.length));
       if (p.type?.startsWith("image/")) return `📷 ${p.name}`;
       if (p.type?.startsWith("video/")) return `🎥 ${p.name}`;
+      if (p.type?.startsWith("audio/")) return `🎵 ${p.name}`;
       return `📎 ${p.name}`;
     } catch {}
     return "📎 File";
@@ -393,22 +418,48 @@ export default function MessageThread({
     await sendText(text);
   };
 
-  const processFile = (file: File) => {
+  const processFile = async (file: File) => {
     if (file.size > 10 * 1024 * 1024) { setSendError("File too large (max 10 MB)"); return; }
     setUploading(true);
     setUploadProgress(0);
-    const reader = new FileReader();
-    reader.onload = () => {
-      // Simulate upload progress
-      let p = 0;
-      const tick = setInterval(() => {
-        p += Math.random() * 25 + 10;
-        if (p >= 100) { p = 100; clearInterval(tick); setUploading(false); }
-        setUploadProgress(Math.min(p, 100));
-      }, 80);
-      setAttachedFile({ name: file.name, size: file.size, type: file.type, data: reader.result as string });
-    };
-    reader.readAsDataURL(file);
+    setSendError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const xhr = new XMLHttpRequest();
+      const uploadPromise = new Promise<{ url: string }>((resolve, reject) => {
+        xhr.upload.onprogress = (e) => {
+          if (e.lengthComputable) {
+            setUploadProgress(Math.round((e.loaded / e.total) * 90));
+          }
+        };
+        xhr.onload = () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try { resolve(JSON.parse(xhr.responseText)); } catch { reject(new Error("Invalid response")); }
+          } else {
+            try {
+              const err = JSON.parse(xhr.responseText);
+              reject(new Error(err.error || "Upload failed"));
+            } catch { reject(new Error(`Upload failed (${xhr.status})`)); }
+          }
+        };
+        xhr.onerror = () => reject(new Error("Network error during upload"));
+        xhr.open("POST", "/api/messages/upload");
+        xhr.send(formData);
+      });
+
+      const result = await uploadPromise;
+      setUploadProgress(100);
+      // Brief pause at 100% for visual satisfaction
+      await new Promise(r => setTimeout(r, 200));
+      setAttachedFile({ name: file.name, size: file.size, type: file.type, data: result.url });
+    } catch (err: any) {
+      setSendError(err?.message ?? "Failed to upload file");
+    } finally {
+      setUploading(false);
+    }
   };
 
   const handleFileAttach = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -667,45 +718,92 @@ export default function MessageThread({
       )}
 
       {/* File preview bar */}
-      {attachedFile && (
+      {(attachedFile || uploading) && (
         <div style={{
           padding: "10px 14px 6px",
           borderTop: "1px solid var(--card-border)",
           background: "var(--dropdown-bg)",
         }}>
+          <style>{`
+            @keyframes uploadPulse { 0%,100%{opacity:1} 50%{opacity:0.6} }
+            @keyframes uploadGlow { 0%{box-shadow:0 0 0 0 rgba(20,184,166,0.3)} 70%{box-shadow:0 0 0 8px rgba(20,184,166,0)} 100%{box-shadow:0 0 0 0 rgba(20,184,166,0)} }
+            @keyframes uploadCheck { 0%{transform:scale(0) rotate(-45deg);opacity:0} 50%{transform:scale(1.2) rotate(0deg);opacity:1} 100%{transform:scale(1) rotate(0deg);opacity:1} }
+            @keyframes uploadShimmer { 0%{background-position:-200% 0} 100%{background-position:200% 0} }
+          `}</style>
           <div style={{
             display: "flex", alignItems: "center", gap: 10,
             background: "var(--background)",
-            border: "1px solid var(--card-border)",
+            border: uploading ? "1px solid rgba(20,184,166,0.3)" : "1px solid var(--card-border)",
             borderRadius: 12,
             padding: "8px 10px",
-            boxShadow: "0 1px 4px rgba(0,0,0,0.06)",
+            boxShadow: uploading ? "0 2px 12px rgba(20,184,166,0.1)" : "0 1px 4px rgba(0,0,0,0.06)",
+            transition: "all 0.3s ease",
           }}>
-            {attachedFile.type.startsWith("image/") ? (
-              // eslint-disable-next-line @next/next/no-img-element
-              <img src={attachedFile.data} alt={attachedFile.name}
-                style={{ width: 52, height: 52, borderRadius: 8, objectFit: "cover", flexShrink: 0, border: "1px solid var(--card-border)" }} />
-            ) : (
-              <div style={{ width: 52, height: 52, borderRadius: 8, background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.15)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
-                </svg>
-              </div>
-            )}
+            {/* Thumbnail / icon */}
+            <div style={{ position: "relative", flexShrink: 0 }}>
+              {(attachedFile?.type ?? "").startsWith("image/") && attachedFile ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={attachedFile.data} alt={attachedFile.name}
+                  style={{
+                    width: 52, height: 52, borderRadius: 8, objectFit: "cover",
+                    border: "1px solid var(--card-border)",
+                    animation: uploading ? "uploadPulse 1.5s ease-in-out infinite" : "none",
+                  }} />
+              ) : (
+                <div style={{
+                  width: 52, height: 52, borderRadius: 8,
+                  background: uploading ? "rgba(20,184,166,0.12)" : "rgba(20,184,166,0.08)",
+                  border: "1px solid rgba(20,184,166,0.15)",
+                  display: "flex", alignItems: "center", justifyContent: "center",
+                  animation: uploading ? "uploadGlow 1.5s ease-in-out infinite" : "none",
+                }}>
+                  {uploading ? (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" style={{ animation: "uploadPulse 1.2s ease-in-out infinite" }}>
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                  ) : (
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/><polyline points="13 2 13 9 20 9"/>
+                    </svg>
+                  )}
+                </div>
+              )}
+              {/* Completion checkmark overlay */}
+              {!uploading && attachedFile && (
+                <div style={{
+                  position: "absolute", bottom: -3, right: -3,
+                  width: 18, height: 18, borderRadius: "50%",
+                  background: "#14B8A6", display: "flex", alignItems: "center", justifyContent: "center",
+                  animation: "uploadCheck 0.4s ease forwards",
+                  border: "2px solid var(--background)",
+                }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                </div>
+              )}
+            </div>
             <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{attachedFile.name}</div>
-              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>
-                {attachedFile.size > 1024 * 1024 ? `${(attachedFile.size / 1024 / 1024).toFixed(1)} MB` : `${Math.round(attachedFile.size / 1024)} KB`}
-                {uploading && <span style={{ marginLeft: 6, color: "#14B8A6" }}> · Preparing…</span>}
+              <div style={{ fontSize: 13, fontWeight: 600, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                {attachedFile?.name ?? "Uploading..."}
               </div>
-              {/* Progress bar */}
+              <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 2 }}>
+                {attachedFile ? (
+                  attachedFile.size > 1024 * 1024 ? `${(attachedFile.size / 1024 / 1024).toFixed(1)} MB` : `${Math.round(attachedFile.size / 1024)} KB`
+                ) : ""}
+                {uploading && <span style={{ marginLeft: 4, color: "#14B8A6", fontWeight: 600 }}>Uploading {uploadProgress}%</span>}
+                {!uploading && attachedFile && <span style={{ marginLeft: 4, color: "#14B8A6", fontWeight: 600 }}>Ready</span>}
+              </div>
+              {/* Animated progress bar */}
               {uploading && (
-                <div style={{ height: 3, borderRadius: 99, background: "var(--card-border)", marginTop: 6, overflow: "hidden" }}>
+                <div style={{ height: 4, borderRadius: 99, background: "var(--card-border)", marginTop: 6, overflow: "hidden", position: "relative" }}>
                   <div style={{
                     height: "100%", borderRadius: 99,
-                    background: "linear-gradient(90deg, #14B8A6, #0d9488)",
+                    background: "linear-gradient(90deg, #14B8A6, #0d9488, #14B8A6)",
+                    backgroundSize: "200% 100%",
                     width: `${uploadProgress}%`,
-                    transition: "width 0.1s ease",
+                    transition: "width 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
+                    animation: uploadProgress < 100 ? "uploadShimmer 1.5s linear infinite" : "none",
                   }} />
                 </div>
               )}
@@ -731,7 +829,7 @@ export default function MessageThread({
           type="file"
           style={{ display: "none" }}
           onChange={handleFileAttach}
-          accept="image/*,.pdf,.doc,.docx,.zip,.txt"
+          accept="image/*,video/*,.pdf,.doc,.docx,.zip,.txt,.csv,.xls,.xlsx,.ppt,.pptx,.mp3,.wav,.mp4,.mov,.avi"
         />
         {/* Attachment button */}
         <button

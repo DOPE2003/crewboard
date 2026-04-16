@@ -1,7 +1,7 @@
 "use client";
 
 import { useWallet } from "@solana/wallet-adapter-react";
-import { WalletName } from "@solana/wallet-adapter-base";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/contexts/LanguageContext";
 
@@ -24,15 +24,6 @@ function phantomDeepLink(url: string): string {
   );
 }
 
-/** Check if any Solana wallet is available (Phantom, Backpack, etc.) */
-function detectWallet(): boolean {
-  return !!(
-    (window as any).phantom?.solana ||
-    (window as any).solana ||
-    (window as any).backpack
-  );
-}
-
 export default function WalletButton() {
   const [mounted, setMounted] = useState(false);
   useEffect(() => { setMounted(true); }, []);
@@ -41,13 +32,16 @@ export default function WalletButton() {
 }
 
 function WalletButtonInner() {
-  const { connected, publicKey, select, connect, disconnect, wallet, wallets } = useWallet();
+  const { connected, publicKey, disconnect, wallets } = useWallet();
+  const { setVisible } = useWalletModal();
   const { t } = useLanguage();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   const [isMobile] = useState(() => detectMobile());
-  const [hasWallet] = useState(() => detectWallet());
+  // Use wallet adapter's wallets array — works with both Chrome injection
+  // AND Firefox Wallet Standard registration (async-safe)
+  const hasWallet = wallets.some(w => w.readyState === "Installed");
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -79,33 +73,14 @@ function WalletButtonInner() {
     );
   }
 
-  const handleConnect = async () => {
-    // Use the wallet adapter — works across Chrome, Firefox, Brave, Edge
-    try {
-      // If Phantom adapter is available, select it first
-      const phantomAdapter = wallets.find(w => w.adapter.name === "Phantom");
-      if (phantomAdapter) {
-        select(phantomAdapter.adapter.name as WalletName);
-        // connect() will be triggered by the adapter after select
-        // Give the adapter a moment to initialize after select
-        await new Promise(r => setTimeout(r, 100));
-        await connect();
-        return;
-      }
-      // No Phantom detected — redirect to install page
-      window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
-    } catch (e: any) {
-      if (e?.code !== 4001 && !e?.message?.includes("rejected")) {
-        console.error("Wallet connect error:", e);
-      }
-    }
+  const handleConnect = () => {
+    // Open the wallet adapter modal — handles all browsers (Chrome, Firefox, Brave, Edge)
+    setVisible(true);
   };
 
   const handleDisconnect = async () => {
     setOpen(false);
-    try {
-      await disconnect();
-    } catch { /* ignore */ }
+    try { await disconnect(); } catch { /* ignore */ }
     try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
   };
 
@@ -171,12 +146,7 @@ function WalletButtonInner() {
 
 function PhantomIcon({ size = 12 }: { size?: number }) {
   return (
-    <svg
-      width={size} height={size}
-      viewBox="0 0 128 128"
-      fill="currentColor"
-      aria-hidden="true"
-    >
+    <svg width={size} height={size} viewBox="0 0 128 128" fill="currentColor" aria-hidden="true">
       <path d="M64 4C31.3 4 4 31.3 4 64s27.3 60 60 60 60-27.3 60-60S96.7 4 64 4zm28.5 68.2c-3.8 10.6-13.8 17.5-25 17.5-7 0-12.9-2.7-17.2-7.7l-3.8 7.7H34.4l7.8-15.8-5.3-10.5h10.5l1.5 3.1c.4-3.2 1.4-6.1 3.1-8.7 2.5-4.1 6.3-6.9 10.8-8.4v-.1c7.7-2.4 15.9-.1 21.1 5.8l4.1-8.2H99l-11.7 23.5 5.2 2.8z"/>
     </svg>
   );

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 import type { WalletName } from "@solana/wallet-adapter-base";
 import { useRouter } from "next/navigation";
 import { linkWallet, unlinkWallet } from "@/actions/wallet";
@@ -92,7 +93,8 @@ export default function BillingClient({
   const [isMobile, setIsMobile]               = useState(false);
   const [disconnecting, setDisconnecting]     = useState(false);
 
-  const { publicKey, connected, signTransaction, select, connect, disconnect, wallets } = useWallet();
+  const { publicKey, connected, signTransaction, disconnect, wallets } = useWallet();
+  const { setVisible } = useWalletModal();
   const { connection } = useConnection();
 
   useEffect(() => {
@@ -125,20 +127,8 @@ export default function BillingClient({
       window.location.href = phantomDeepLink(window.location.href);
       return;
     }
-    // Use the wallet adapter — works across Chrome, Firefox, Brave, Edge
-    const phantomAdapter = wallets.find(w => w.adapter.name === "Phantom");
-    if (!phantomAdapter || phantomAdapter.readyState !== "Installed") {
-      window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
-      return;
-    }
-    try {
-      select(phantomAdapter.adapter.name as WalletName);
-      await new Promise(r => setTimeout(r, 100));
-      await connect();
-    } catch (e: any) {
-      if (e?.code !== 4001 && !e?.message?.includes("rejected"))
-        console.error("connect error", e);
-    }
+    // Open the wallet adapter modal — works across all browsers (Chrome, Firefox, Brave, Edge)
+    setVisible(true);
   }
 
   async function handleDisconnectWallet() {

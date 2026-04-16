@@ -7,6 +7,7 @@ import { signOut } from "next-auth/react";
 import { getNavDropdownData } from "@/actions/nav";
 import { unlinkWallet } from "@/actions/wallet";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { useWalletModal } from "@solana/wallet-adapter-react-ui";
 
 interface Props {
   isOpen: boolean;
@@ -140,7 +141,8 @@ export default function NavProfileDropdown({
   const [walletMsg, setWalletMsg] = useState(false);
   const dropRef = useRef<HTMLDivElement>(null);
 
-  const { publicKey, connected, select, connect, disconnect, wallets } = useWallet();
+  const { publicKey, connected, disconnect, wallets } = useWallet();
+  const { setVisible: setWalletModalVisible } = useWalletModal();
 
   // Detect mobile
   useEffect(() => {
@@ -352,18 +354,10 @@ export default function NavProfileDropdown({
             <Row icon={I.disconnect} label={disconnecting ? "Disconnecting…" : "Disconnect Wallet"}
               onClick={handleDisconnectWallet} danger />
           ) : (
-            <Row icon={I.wallet} label="Connect Wallet" onClick={async () => {
+            <Row icon={I.wallet} label="Connect Wallet" onClick={() => {
               onClose();
-              const phantomAdapter = wallets.find(w => w.adapter.name === "Phantom");
-              if (!phantomAdapter || phantomAdapter.readyState !== "Installed") {
-                window.open("https://phantom.app/", "_blank", "noopener,noreferrer");
-                return;
-              }
-              try {
-                select(phantomAdapter.adapter.name as any);
-                await new Promise(r => setTimeout(r, 100));
-                await connect();
-              } catch (e: any) { if (e?.code !== 4001 && !e?.message?.includes("rejected")) console.error(e); }
+              // Open the wallet adapter modal — works across all browsers
+              setWalletModalVisible(true);
             }} />
           )}
         </Card>
