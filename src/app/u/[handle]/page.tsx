@@ -224,7 +224,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
             <div
               className="profile-cover-banner"
               style={{
-                width: "100%", height: 180, position: "relative",
+                width: "100%", aspectRatio: "3 / 1", position: "relative",
                 background: user.bannerImage ? undefined : "#E8FAF7",
                 backgroundImage: user.bannerImage ? `url(${user.bannerImage})` : undefined,
                 backgroundSize: "cover", backgroundPosition: "center",

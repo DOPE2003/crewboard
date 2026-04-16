@@ -145,7 +145,7 @@ export default function BannerUpload({ currentBanner }: Props) {
         className="profile-cover-banner banner-upload-wrap"
         style={{
           width: "100%",
-          height: 180,
+          aspectRatio: "3 / 1",
           position: "relative",
           borderRadius: "16px 16px 0 0",
           overflow: "hidden",
@@ -153,6 +153,7 @@ export default function BannerUpload({ currentBanner }: Props) {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
+          background: preview ? undefined : "#0d1117",
           opacity: uploading ? 0.7 : 1,
           transition: "opacity 0.2s",
         }}
