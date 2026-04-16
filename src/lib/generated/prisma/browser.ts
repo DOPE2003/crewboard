@@ -82,3 +82,8 @@ export type ShowcaseInteraction = Prisma.ShowcaseInteractionModel
  * 
  */
 export type ProWaitlist = Prisma.ProWaitlistModel
+/**
+ * Model PasswordResetToken
+ * 
+ */
+export type PasswordResetToken = Prisma.PasswordResetTokenModel

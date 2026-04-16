@@ -234,7 +234,7 @@ export type GigGroupByOutputType = {
   _max: GigMaxAggregateOutputType | null
 }
 
-export type GetGigGroupByPayload<T extends GigGroupByArgs> = Prisma.PrismaPromise<
+type GetGigGroupByPayload<T extends GigGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<GigGroupByOutputType, T['by']> &
       {

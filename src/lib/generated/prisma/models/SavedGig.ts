@@ -151,7 +151,7 @@ export type SavedGigGroupByOutputType = {
   _max: SavedGigMaxAggregateOutputType | null
 }
 
-export type GetSavedGigGroupByPayload<T extends SavedGigGroupByArgs> = Prisma.PrismaPromise<
+type GetSavedGigGroupByPayload<T extends SavedGigGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SavedGigGroupByOutputType, T['by']> &
       {

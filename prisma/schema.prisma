@@ -61,6 +61,7 @@ model User {
   showcaseInteractions ShowcaseInteraction[]
   showcasePosts        ShowcasePost[]
   proWaitlist          ProWaitlist?
+  passwordResetTokens  PasswordResetToken[]
 }
 
 model SavedTalent {
@@ -223,4 +224,15 @@ model ProWaitlist {
   joinedAt DateTime @default(now())
   notified Boolean  @default(false)
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }

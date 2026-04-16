@@ -151,7 +151,7 @@ export type SavedTalentGroupByOutputType = {
   _max: SavedTalentMaxAggregateOutputType | null
 }
 
-export type GetSavedTalentGroupByPayload<T extends SavedTalentGroupByArgs> = Prisma.PrismaPromise<
+type GetSavedTalentGroupByPayload<T extends SavedTalentGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SavedTalentGroupByOutputType, T['by']> &
       {
