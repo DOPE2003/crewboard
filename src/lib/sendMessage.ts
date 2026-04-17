@@ -82,8 +82,8 @@ export async function createMessage({
     });
 
     const recipientId = conv?.participants.find((p) => p !== senderId);
-    if (!recipientId) {
-      console.warn("[createMessage] No recipient found in conversation participants — skipping notification");
+    if (!recipientId || recipientId === senderId) {
+      console.warn("[createMessage] No valid recipient found — skipping notification");
       return message;
     }
 

@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { deleteConversation } from "@/actions/messages";
 
 function msgPreview(body: string, maxLen = 50): string {
   if (body.startsWith("__GIGREQUEST__:")) {
@@ -72,9 +74,26 @@ export default function ConversationListUI({
   emptyContent?: React.ReactNode;
 }) {
   const [q, setQ] = useState("");
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
+  const [deletedIds, setDeletedIds] = useState<Set<string>>(new Set());
+  const [, startTransition] = useTransition();
+  const router = useRouter();
+
+  function handleDelete(e: React.MouseEvent, convId: string) {
+    e.preventDefault();
+    e.stopPropagation();
+    setDeletedIds((prev) => new Set([...prev, convId]));
+    startTransition(() => {
+      deleteConversation(convId).then(() => {
+        if (activeId === convId) router.push("/messages");
+      });
+    });
+  }
+
+  const visibleItems = items.filter((i) => !deletedIds.has(i.id));
 
   // Sort: unread first, then by updatedAt
-  const sorted = [...items].sort((a, b) => {
+  const sorted = [...visibleItems].sort((a, b) => {
     if (a.unread > 0 && b.unread === 0) return -1;
     if (a.unread === 0 && b.unread > 0) return 1;
     return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
@@ -149,6 +168,8 @@ export default function ConversationListUI({
             <Link
               key={item.id}
               href={`/messages/${item.id}`}
+              onMouseEnter={() => setHoveredId(item.id)}
+              onMouseLeave={() => setHoveredId(null)}
               style={{
                 display: "flex", alignItems: "flex-start", gap: 10, padding: "12px 14px",
                 textDecoration: "none",
@@ -158,6 +179,7 @@ export default function ConversationListUI({
                 cursor: "pointer",
                 transition: "background 0.12s",
                 boxSizing: "border-box",
+                position: "relative",
               }}
             >
               {/* Avatar */}
@@ -246,6 +268,35 @@ export default function ConversationListUI({
                   )}
                 </div>
               </div>
+
+              {/* Delete button — visible on hover */}
+              {hoveredId === item.id && (
+                <button
+                  onClick={(e) => handleDelete(e, item.id)}
+                  style={{
+                    position: "absolute",
+                    top: 8,
+                    right: 8,
+                    width: 22,
+                    height: 22,
+                    borderRadius: "50%",
+                    background: "rgba(127,127,127,0.18)",
+                    border: "none",
+                    cursor: "pointer",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    color: "var(--text-muted)",
+                    fontSize: "1rem",
+                    lineHeight: 1,
+                    padding: 0,
+                    flexShrink: 0,
+                  }}
+                  aria-label="Delete conversation"
+                >
+                  ×
+                </button>
+              )}
             </Link>
           );
         })}

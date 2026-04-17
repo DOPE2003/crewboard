@@ -304,3 +304,28 @@ export async function hireFromGig(gigId: string, sellerId: string): Promise<{ re
     throw new Error(err?.message ?? "Failed to create order");
   }
 }
+
+export async function deleteConversation(conversationId: string) {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) return { ok: false };
+
+  const conv = await db.conversation.findUnique({
+    where: { id: conversationId },
+    select: { participants: true },
+  });
+  if (!conv || !conv.participants.includes(userId)) return { ok: false };
+
+  const remaining = conv.participants.filter((p) => p !== userId);
+  if (remaining.length === 0) {
+    await db.conversation.delete({ where: { id: conversationId } });
+  } else {
+    await db.conversation.update({
+      where: { id: conversationId },
+      data: { participants: remaining },
+    });
+  }
+
+  revalidatePath("/messages", "layout");
+  return { ok: true };
+}

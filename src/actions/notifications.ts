@@ -20,3 +20,12 @@ export async function markNotificationRead(id: string) {
   await db.notification.updateMany({ where: { id, userId }, data: { read: true } });
   revalidatePath("/", "layout");
 }
+
+export async function deleteNotification(id: string) {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) return { ok: false };
+  await db.notification.deleteMany({ where: { id, userId } });
+  revalidatePath("/notifications");
+  return { ok: true };
+}
