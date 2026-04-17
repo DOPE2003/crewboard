@@ -27,6 +27,7 @@ export interface NavOrder {
 export interface NavConv {
   id: string
   lastMessage: string | null
+  lastSenderId?: string | null
   lastMessageTime: string | null
   unread: number
   otherUser: {

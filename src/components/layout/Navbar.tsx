@@ -121,6 +121,7 @@ export default async function Navbar() {
         return {
           id: c.id,
           lastMessage: lastMessageText,
+          lastSenderId: lastMsg?.senderId ?? null,
           lastMessageTime: lastMsg?.createdAt?.toISOString() ?? null,
           unread: unreadPerConv[i],
           otherUser: other

@@ -92,6 +92,7 @@ export default async function ActivitiesPage() {
       return {
         id: c.id,
         lastMessage: lastMessageText,
+        lastSenderId: lastMsg?.senderId ?? null,
         lastMessageTime: lastMsg?.createdAt?.toISOString() ?? null,
         unread: unreadPerConv[i],
         otherUser: other

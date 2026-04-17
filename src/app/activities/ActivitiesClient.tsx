@@ -3,8 +3,8 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { markAllConversationsRead } from '@/actions/messages'
-import { markAllNotificationsAsRead, markNotificationRead } from '@/actions/notifications'
+import { markAllConversationsRead, deleteConversation } from '@/actions/messages'
+import { markAllNotificationsAsRead, markNotificationRead, deleteNotification } from '@/actions/notifications'
 import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
 interface Props {
@@ -244,9 +244,27 @@ export default function ActivitiesClient({
     }
   }, [])
 
+  function handleDeleteNotif(e: React.MouseEvent, id: string) {
+    e.preventDefault(); e.stopPropagation()
+    const notif = notifs.find(n => n.id === id)
+    setNotifs(prev => prev.filter(n => n.id !== id))
+    if (notif && !notif.read) setUnreadNotifs(c => Math.max(0, c - 1))
+    deleteNotification(id).catch(() => {})
+  }
+
+  function handleDeleteConv(e: React.MouseEvent, id: string) {
+    e.preventDefault(); e.stopPropagation()
+    const conv = convs.find(c => c.id === id)
+    setConvs(prev => prev.filter(c => c.id !== id))
+    if (conv?.unread) setUnreadMsgs(c => Math.max(0, c - conv.unread))
+    deleteConversation(id).catch(() => {})
+  }
+
   // ── Build feed ────────────────────────────────────────────────────────────
   const baseItems = useMemo<FeedItem[]>(() => {
-    const msgItems   = convs.map(c => ({ kind: 'message' as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
+    // In 'all' tab, only surface conversations where someone messaged YOU (unread > 0)
+    const allMsgItems = convs.map(c => ({ kind: 'message' as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
+    const msgItems = allMsgItems.filter(item => activeTab !== 'all' || item.data.unread > 0)
     const orderItems = orders.map(o => ({ kind: 'order'   as const, data: o, ts: new Date(o.createdAt).getTime() }))
 
     const notifSrc =
@@ -259,7 +277,7 @@ export default function ActivitiesClient({
 
     let items: FeedItem[] =
       activeTab === 'all'      ? [...msgItems, ...notifItems, ...orderItems] :
-      activeTab === 'messages' ? msgItems :
+      activeTab === 'messages' ? allMsgItems :
       activeTab === 'orders'   ? orderItems :
       activeTab === 'payments' ? [...notifItems, ...orders.filter(o => o.status === 'completed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() }))] :
       activeTab === 'disputes' ? [...orders.filter(o => o.status === 'disputed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() })), ...notifItems] :
@@ -369,7 +387,14 @@ export default function ActivitiesClient({
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 2 }}>
             <span className="act-name" style={{ fontWeight: unreadCount > 0 ? 700 : 600 }}>{title}</span>
-            <span suppressHydrationWarning className="act-time">{fmtTime(c.lastMessageTime)}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+              <span suppressHydrationWarning className="act-time">{fmtTime(c.lastMessageTime)}</span>
+              <button
+                onClick={e => handleDeleteConv(e, c.id)}
+                style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(127,127,127,0.15)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1, padding: 0, flexShrink: 0 }}
+                aria-label="Delete conversation"
+              >×</button>
+            </div>
           </div>
           <p className="act-body">
             {gigReq ? `Service request: ${gigReq.title}${gigReq.price ? ` · $${gigReq.price}` : ''}` : previewLastMessage(c.lastMessage)}
@@ -419,7 +444,14 @@ export default function ActivitiesClient({
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8, marginBottom: 2 }}>
             <span className="act-name" style={{ fontWeight: !n.read ? 700 : 600 }}>{n.title}</span>
-            <span className="act-time">{fmtTime(n.createdAt)}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexShrink: 0 }}>
+              <span className="act-time">{fmtTime(n.createdAt)}</span>
+              <button
+                onClick={e => handleDeleteNotif(e, n.id)}
+                style={{ width: 20, height: 20, borderRadius: '50%', background: 'rgba(127,127,127,0.15)', border: 'none', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--text-muted)', fontSize: '0.95rem', lineHeight: 1, padding: 0, flexShrink: 0 }}
+                aria-label="Delete"
+              >×</button>
+            </div>
           </div>
           <p className="act-body" style={{ lineHeight: 1.55 }}>{n.body}</p>
           {cta && (
