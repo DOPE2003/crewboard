@@ -71,11 +71,19 @@ export async function POST(req: NextRequest) {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { identityToken, fullName, email: bodyEmail } = body as {
-      identityToken?: string;
-      fullName?: string;
-      email?: string;
-    };
+    // Accept both camelCase (identityToken) and snake_case (identity_token)
+    const identityToken: string | undefined =
+      body.identityToken ?? body.identity_token;
+    const bodyEmail: string | undefined =
+      body.email;
+    // fullName may arrive as a string OR as { givenName?, familyName? } from Swift
+    const rawFullName = body.fullName ?? body.full_name;
+    const fullName: string | undefined =
+      typeof rawFullName === "string"
+        ? rawFullName || undefined
+        : rawFullName && typeof rawFullName === "object"
+          ? [rawFullName.givenName, rawFullName.familyName].filter(Boolean).join(" ") || undefined
+          : undefined;
 
     if (!identityToken) {
       return err("identityToken is required.");
