@@ -20,6 +20,7 @@ import db from "@/lib/db";
 import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth";
 import { ok, err } from "../_lib/response";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 
 const OFFER_PREFIX = "__OFFER__:";
 
@@ -149,6 +150,13 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       title: "New Offer Received",
       body: `${senderName} sent you an offer: "${offer.title}" for $${offer.amount}`,
       link: `/messages/${conversationId}`,
+    }).catch(() => {});
+
+    sendPush({
+      userId: receiverId,
+      title: `New offer from ${senderName}`,
+      body: `${offer.title} · $${offer.amount}`,
+      data: { type: "offer", refId: offer.id },
     }).catch(() => {});
 
     // Pusher

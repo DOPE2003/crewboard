@@ -19,6 +19,7 @@ import db from "@/lib/db";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 
 async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
@@ -53,6 +54,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
         title: "Offer Declined",
         body: `${receiverName} declined your offer "${offer.title}". You can send a new one.`,
         link: `/messages/${offer.conversationId}`,
+      }).catch(() => {});
+
+      sendPush({
+        userId: offer.senderId,
+        title: `${receiverName} declined your offer`,
+        body: offer.title,
+        data: { type: "offer_declined", refId: offerId },
       }).catch(() => {});
 
       return ok({ status: "declined" as const });
@@ -94,6 +102,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Offer Accepted!",
       body: `${receiverName} accepted your offer "${offer.title}" for $${offer.amount}. Fund the escrow to start!`,
       link: `/orders/${order.id}`,
+    }).catch(() => {});
+
+    sendPush({
+      userId: offer.senderId,
+      title: `${receiverName} accepted your offer`,
+      body: offer.title,
+      data: { type: "offer_accepted", refId: offerId },
     }).catch(() => {});
 
     return ok({

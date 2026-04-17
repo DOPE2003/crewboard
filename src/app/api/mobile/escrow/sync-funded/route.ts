@@ -21,6 +21,7 @@ import db from "@/lib/db";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 
 async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
@@ -60,6 +61,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Order Funded",
       body: `Payment for "${order.gig.title}" is locked in escrow — start working!`,
       link: `/orders/${orderId}`,
+    }).catch(() => {});
+
+    sendPush({
+      userId: order.sellerId,
+      title: "Escrow funded — start working",
+      body: `${order.gig.title} · $${order.amount} locked`,
+      data: { type: "payment_funded", refId: orderId },
     }).catch(() => {});
 
     return ok({ orderId, status: "funded" });

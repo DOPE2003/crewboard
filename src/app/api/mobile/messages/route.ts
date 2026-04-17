@@ -22,6 +22,7 @@ import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth"
 import { ok, err } from "../_lib/response";
 import { parseMessageBody } from "../_lib/parse-message";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 
 // ─── GET ──────────────────────────────────────────────────────────────────────
 
@@ -186,6 +187,13 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
           ? msgBody.slice(0, 100)
           : "Sent you a file",
         link: `/messages/${conversationId}`,
+      }).catch(() => {});
+
+      sendPush({
+        userId: receiverId,
+        title: senderName,
+        body: (parseMessageBody(msgBody).type === "text" ? msgBody : "Sent you a file").slice(0, 120),
+        data: { type: "message", refId: conversationId, senderId: user.sub },
       }).catch(() => {});
     }
 

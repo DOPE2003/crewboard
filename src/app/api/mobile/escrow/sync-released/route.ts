@@ -15,6 +15,7 @@ import db from "@/lib/db";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 
 async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
@@ -50,6 +51,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Payment Released!",
       body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
       link: `/orders/${orderId}`,
+    }).catch(() => {});
+
+    sendPush({
+      userId: order.sellerId,
+      title: "Payment released",
+      body: `$${order.amount} · ${order.gig.title} — review the collaboration`,
+      data: { type: "payment_released", refId: orderId },
     }).catch(() => {});
 
     return ok({ orderId, status: "completed" });
