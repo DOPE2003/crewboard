@@ -2,30 +2,6 @@ import { getFirestore } from "firebase-admin/firestore";
 import { getMessaging } from "firebase-admin/messaging";
 import { getFirebaseAdminApp } from "./firebase-admin";
 
-async function getUserTokens(userId: string): Promise<string[]> {
-  const app = getFirebaseAdminApp();
-  const snapshot = await getFirestore(app)
-    .collection("users")
-    .doc(userId)
-    .collection("fcmTokens")
-    .get();
-
-  return snapshot.docs.map((d) => d.data().token as string).filter(Boolean);
-}
-
-async function pruneDeadTokens(userId: string, deadTokens: string[]) {
-  if (deadTokens.length === 0) return;
-  const app = getFirebaseAdminApp();
-  const col = getFirestore(app)
-    .collection("users")
-    .doc(userId)
-    .collection("fcmTokens");
-  const docs = await col.where("token", "in", deadTokens).get();
-  const batch = getFirestore(app).batch();
-  docs.forEach((d) => batch.delete(d.ref));
-  await batch.commit();
-}
-
 export async function sendPush(params: {
   userId: string;
   title: string;
@@ -33,38 +9,38 @@ export async function sendPush(params: {
   data: Record<string, string>;
   badge?: number;
 }): Promise<void> {
-  const tokens = await getUserTokens(params.userId);
-  if (tokens.length === 0) return;
-
   const app = getFirebaseAdminApp();
-  const response = await getMessaging(app).sendEachForMulticast({
-    tokens,
-    notification: { title: params.title, body: params.body },
-    data: params.data,
-    apns: {
-      payload: {
-        aps: {
-          sound: "default",
-          badge: params.badge ?? 1,
-          "content-available": 1,
+  const db = getFirestore(app);
+
+  const userDoc = await db.collection("users").doc(params.userId).get();
+  const token = userDoc.data()?.fcmToken as string | undefined;
+
+  if (!token) {
+    console.log(`[push] no FCM token for user ${params.userId}, skipping`);
+    return;
+  }
+
+  try {
+    await getMessaging(app).send({
+      token,
+      notification: { title: params.title, body: params.body },
+      data: params.data,
+      apns: {
+        payload: {
+          aps: {
+            sound: "default",
+            badge: params.badge ?? 1,
+            "mutable-content": 1,
+          },
         },
       },
-    },
-  });
-
-  const deadTokens: string[] = [];
-  response.responses.forEach((r, idx) => {
-    if (!r.success) {
-      const code = r.error?.code;
-      if (
-        code === "messaging/registration-token-not-registered" ||
-        code === "messaging/invalid-registration-token" ||
-        code === "messaging/invalid-argument"
-      ) {
-        deadTokens.push(tokens[idx]);
-      }
+      android: { priority: "high" },
+    });
+    console.log(`[push] sent to ${params.userId}`);
+  } catch (err: any) {
+    if (err.code === "messaging/registration-token-not-registered") {
+      db.collection("users").doc(params.userId).update({ fcmToken: null }).catch(() => {});
     }
-  });
-
-  pruneDeadTokens(params.userId, deadTokens).catch(() => {});
+    console.error(`[push] failed for ${params.userId}:`, err.code, err.message);
+  }
 }
