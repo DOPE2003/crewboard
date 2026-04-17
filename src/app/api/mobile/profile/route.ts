@@ -60,8 +60,13 @@ const PUBLIC_SELECT = {
 };
 
 export async function GET(req: NextRequest) {
-  // Public profile lookup: ?handle=<twitterHandle>
-  const handle = req.nextUrl.searchParams.get("handle");
+  const me = await getMobileUser(req);
+  if (!me) return err("Unauthorized", 401);
+
+  const handle     = req.nextUrl.searchParams.get("handle");
+  const requestedId = req.nextUrl.searchParams.get("id");
+
+  // ?handle= lookup (by twitter handle)
   if (handle) {
     const user = await db.user.findUnique({
       where: { twitterHandle: handle.toLowerCase() },
@@ -71,16 +76,15 @@ export async function GET(req: NextRequest) {
     return ok(user);
   }
 
-  // Own profile — requires auth
-  const me = await getMobileUser(req);
-  if (!me) return err("Unauthorized", 401);
+  // ?id= lookup — bearer token is only used for auth, not as identity
+  const targetId = requestedId ?? me.sub;
+  const isSelf   = targetId === me.sub;
 
   const user = await db.user.findUnique({
-    where: { id: me.sub },
-    select: {
-      ...PUBLIC_SELECT,
-      email: true, // private field, only visible to self
-    },
+    where: { id: targetId },
+    select: isSelf
+      ? { ...PUBLIC_SELECT, email: true } // email only for own profile
+      : PUBLIC_SELECT,
   });
   if (!user) return err("User not found.", 404);
   return ok(user);
