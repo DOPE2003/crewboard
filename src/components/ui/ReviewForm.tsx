@@ -42,7 +42,7 @@ export default function ReviewForm({ orderId, revieweeId, revieweeName }: Props)
 
   return (
     <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "0.75rem" }}>
-      <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "#0f172a" }}>
+      <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--foreground)" }}>
         Rate your experience with {revieweeName}
       </div>
 
@@ -58,7 +58,7 @@ export default function ReviewForm({ orderId, revieweeId, revieweeName }: Props)
             style={{
               background: "none", border: "none", cursor: "pointer", padding: 2,
               fontSize: "1.6rem", lineHeight: 1,
-              color: star <= (hovered || rating) ? "#f59e0b" : "#e2e8f0",
+              color: star <= (hovered || rating) ? "#f59e0b" : "var(--border-md)",
               transition: "color 0.1s",
             }}
           >

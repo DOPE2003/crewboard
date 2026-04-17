@@ -79,8 +79,8 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
 
   const inp: React.CSSProperties = {
     width: "100%", padding: "0.65rem 0.85rem", borderRadius: 8,
-    border: "1px solid #e2e8f0", background: "#f8fafc",
-    fontFamily: "Inter, sans-serif", fontSize: "16px", color: "#0f172a",
+    border: "1px solid var(--card-border)", background: "var(--surface-2)",
+    fontFamily: "Inter, sans-serif", fontSize: "16px", color: "var(--foreground)",
     outline: "none", boxSizing: "border-box",
   };
 
@@ -171,27 +171,27 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
     <div>
       {/* Existing items */}
       {items.length === 0 && !adding && (
-        <div style={{ fontSize: "0.82rem", color: "#94a3b8", fontStyle: "italic", marginBottom: "0.75rem" }}>
+        <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", fontStyle: "italic", marginBottom: "0.75rem" }}>
           No portfolio items yet. Add a project or upload a file.
         </div>
       )}
       <div style={{ display: "flex", flexDirection: "column", gap: "0.65rem", marginBottom: "0.75rem" }}>
         {items.map(item => (
-          <div key={item.id} style={{ borderRadius: 10, border: "1px solid #e2e8f0", background: "#f8fafc", overflow: "hidden" }}>
+          <div key={item.id} style={{ borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--card-bg)", overflow: "hidden" }}>
             {item.mediaUrl && <MediaPreview item={item} />}
             <div style={{ padding: "0.85rem 1rem", position: "relative" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 8 }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "#0f172a" }}>{item.title}</div>
-                  {item.year && <div style={{ fontSize: "0.68rem", color: "#94a3b8", marginTop: 1 }}>{item.year}</div>}
-                  {item.description && <p style={{ fontSize: "0.8rem", color: "#64748b", margin: "0.4rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
+                  <div style={{ fontWeight: 700, fontSize: "0.88rem", color: "var(--foreground)" }}>{item.title}</div>
+                  {item.year && <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginTop: 1 }}>{item.year}</div>}
+                  {item.description && <p style={{ fontSize: "0.8rem", color: "var(--text-muted)", margin: "0.4rem 0 0", lineHeight: 1.6 }}>{item.description}</p>}
                   {item.url && !item.mediaUrl && (
                     <a href={item.url} target="_blank" rel="noopener noreferrer" style={{ fontSize: "0.72rem", color: "#2DD4BF", textDecoration: "none", display: "inline-block", marginTop: 4 }}>
                       View project →
                     </a>
                   )}
                 </div>
-                <button onClick={() => remove(item.id)} title="Remove" style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8", padding: "2px", flexShrink: 0 }}>
+                <button onClick={() => remove(item.id)} title="Remove" style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)", padding: "2px", flexShrink: 0 }}>
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
                   </svg>
@@ -209,8 +209,8 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
           <div
             onClick={() => fileInputRef.current?.click()}
             style={{
-              border: "1.5px dashed #cbd5e1", borderRadius: 8, padding: "16px",
-              textAlign: "center", cursor: "pointer", background: "#f8fafc",
+              border: "1.5px dashed var(--border-md)", borderRadius: 8, padding: "16px",
+              textAlign: "center", cursor: "pointer", background: "var(--surface-2)",
               transition: "border-color 0.15s",
             }}
           >
@@ -231,10 +231,10 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
               </div>
             ) : (
               <>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#64748b", margin: "0 0 4px" }}>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)", margin: "0 0 4px" }}>
                   Upload a file (optional)
                 </p>
-                <p style={{ fontSize: 11, color: "#94a3b8", margin: 0 }}>
+                <p style={{ fontSize: 11, color: "var(--text-hint)", margin: 0 }}>
                   Images, MP4 video, PDF, Word, PowerPoint · Max 50MB for video, 10MB for others
                 </p>
               </>
@@ -251,7 +251,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
           {/* Upload progress */}
           {isUploading && (
             <div>
-              <div style={{ background: "#f3f4f6", borderRadius: 99, height: 4, overflow: "hidden" }}>
+              <div style={{ background: "var(--surface-2)", borderRadius: 99, height: 4, overflow: "hidden" }}>
                 <div style={{
                   background: "#14B8A6", height: "100%", borderRadius: 99,
                   width: isProcessing ? "100%" : `${uploadProgress}%`,
@@ -263,7 +263,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
                   animation: isProcessing ? "shimmer 1.2s linear infinite" : undefined,
                 }} />
               </div>
-              <p style={{ fontSize: 11, color: "#9ca3af", margin: "4px 0 0" }}>
+              <p style={{ fontSize: 11, color: "var(--text-muted)", margin: "4px 0 0" }}>
                 {isProcessing ? "Saving to cloud…" : `Uploading… ${uploadProgress}%`}
               </p>
             </div>
@@ -279,10 +279,10 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
             {urlError && <div style={{ fontSize: "0.68rem", color: "#ef4444", marginTop: 3 }}>{urlError}</div>}
           </div>
           <div className="portfolio-form-btns" style={{ display: "flex", gap: 8 }}>
-            <button onClick={confirmAdd} disabled={!draft.title.trim() || saving || isUploading} style={{ flex: 1, minHeight: 44, padding: "0.55rem 1.25rem", borderRadius: 8, background: "#0f172a", color: "#fff", fontWeight: 700, fontSize: "0.88rem", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
+            <button onClick={confirmAdd} disabled={!draft.title.trim() || saving || isUploading} style={{ flex: 1, minHeight: 44, padding: "0.55rem 1.25rem", borderRadius: 8, background: "#14B8A6", color: "#fff", fontWeight: 700, fontSize: "0.88rem", border: "none", cursor: "pointer", fontFamily: "inherit" }}>
               {saving ? "Saving…" : "Add Project"}
             </button>
-            <button onClick={() => setAdding(false)} style={{ flex: 1, minHeight: 44, padding: "0.55rem 1rem", borderRadius: 8, background: "none", color: "#64748b", fontWeight: 600, fontSize: "0.88rem", border: "1px solid #e2e8f0", cursor: "pointer", fontFamily: "inherit" }}>
+            <button onClick={() => setAdding(false)} style={{ flex: 1, minHeight: 44, padding: "0.55rem 1rem", borderRadius: 8, background: "none", color: "var(--text-muted)", fontWeight: 600, fontSize: "0.88rem", border: "1px solid var(--card-border)", cursor: "pointer", fontFamily: "inherit" }}>
               Cancel
             </button>
           </div>
@@ -290,7 +290,7 @@ export default function PortfolioEditor({ initialItems, handle }: Props) {
       )}
 
       {!adding && (
-        <button onClick={startAdd} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, width: "100%", minHeight: 44, padding: "0.6rem 1.1rem", borderRadius: 8, background: "none", border: "1px dashed #cbd5e1", color: "#64748b", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", fontFamily: "inherit" }}>
+        <button onClick={startAdd} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 6, width: "100%", minHeight: 44, padding: "0.6rem 1.1rem", borderRadius: 8, background: "none", border: "1px dashed var(--border-md)", color: "var(--text-muted)", fontWeight: 600, fontSize: "0.88rem", cursor: "pointer", fontFamily: "inherit" }}>
           <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Add Project
         </button>

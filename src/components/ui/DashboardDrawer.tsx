@@ -109,7 +109,7 @@ export default function DashboardDrawer() {
 
           {/* Workspace card */}
           {loading ? (
-            <div style={{ height: 64, borderRadius: 12, background: "#f1f5f9", marginBottom: "1rem" }} />
+            <div style={{ height: 64, borderRadius: 12, background: "var(--surface-2)", marginBottom: "1rem" }} />
           ) : user ? (
             <Link
               href={`/u/${user.twitterHandle}`}
@@ -117,27 +117,27 @@ export default function DashboardDrawer() {
               style={{
                 display: "flex", alignItems: "center", gap: "0.75rem",
                 padding: "0.75rem", borderRadius: 12, marginBottom: "1rem",
-                border: "1px solid rgba(0,0,0,0.08)", textDecoration: "none",
-                background: "#f8fafc",
+                border: "1px solid var(--card-border)", textDecoration: "none",
+                background: "var(--surface-2)",
               }}
             >
-              <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "#e2e8f0" }}>
+              <div style={{ width: 40, height: 40, borderRadius: "50%", overflow: "hidden", flexShrink: 0, background: "var(--avatar-bg)" }}>
                 {user.image
                   ? <img src={user.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
                   : <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg,#134e4a,#0f172a)" }} />}
               </div>
               <div style={{ minWidth: 0 }}>
-                <div style={{ fontWeight: 600, fontSize: "0.8rem", color: "#0f172a", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                <div style={{ fontWeight: 600, fontSize: "0.8rem", color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
                   {user.name ?? "Builder"}
                 </div>
                 <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 1 }}>
                   <span style={{ width: 6, height: 6, borderRadius: "50%", background: availColor }} />
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", color: "#94a3b8" }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.6rem", color: "var(--text-muted)" }}>
                     @{user.twitterHandle}
                   </span>
                 </div>
               </div>
-              <svg style={{ marginLeft: "auto", color: "#cbd5e1", flexShrink: 0 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+              <svg style={{ marginLeft: "auto", color: "var(--text-hint)", flexShrink: 0 }} width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><polyline points="9 18 15 12 9 6"/></svg>
             </Link>
           ) : null}
 
@@ -165,12 +165,12 @@ export default function DashboardDrawer() {
                 style={{
                   display: "flex", alignItems: "center", gap: "0.75rem",
                   padding: "0.6rem 0.75rem", borderRadius: 10,
-                  color: "#475569", textDecoration: "none",
+                  color: "var(--text-muted)", textDecoration: "none",
                   fontSize: "0.82rem", fontWeight: 500,
                   transition: "background 0.12s, color 0.12s",
                 }}
-                onMouseEnter={(e) => { e.currentTarget.style.background = "rgba(0,0,0,0.04)"; e.currentTarget.style.color = "#0f172a"; }}
-                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#475569"; }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = "var(--hover)"; e.currentTarget.style.color = "var(--foreground)"; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "var(--text-muted)"; }}
               >
                 <span style={{ opacity: 0.6 }}>{item.icon}</span>
                 {item.label}
@@ -188,9 +188,9 @@ export default function DashboardDrawer() {
                 { label: "Projects", value: 0, color: "#818cf8" },
                 { label: "Crew", value: 0, color: "#f59e0b" },
               ].map((s) => (
-                <div key={s.label} style={{ textAlign: "center", padding: "0.6rem 0.25rem", borderRadius: 10, background: "#f8fafc" }}>
+                <div key={s.label} style={{ textAlign: "center", padding: "0.6rem 0.25rem", borderRadius: 10, background: "var(--surface-2)" }}>
                   <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", color: s.color }}>{s.value}</div>
-                  <div style={{ fontSize: "0.55rem", color: "#94a3b8", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>{s.label}</div>
+                  <div style={{ fontSize: "0.55rem", color: "var(--text-muted)", textTransform: "uppercase", letterSpacing: "0.08em", marginTop: 2 }}>{s.label}</div>
                 </div>
               ))}
             </div>

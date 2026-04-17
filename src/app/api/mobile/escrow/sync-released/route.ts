@@ -28,7 +28,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
     const order = await db.order.findUnique({
       where: { id: orderId },
       select: {
-        buyerId: true, sellerId: true, status: true,
+        buyerId: true, sellerId: true, status: true, amount: true,
         gig: { select: { title: true } },
       },
     });
