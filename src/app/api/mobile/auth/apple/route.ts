@@ -92,7 +92,8 @@ export async function POST(req: NextRequest) {
     let claims: AppleClaims;
     try {
       claims = await verifyAppleToken(identityToken);
-    } catch {
+    } catch (verifyErr) {
+      console.error("[mobile/auth/apple] token verification failed:", verifyErr);
       return err("Apple token invalid or expired.", 401);
     }
 
