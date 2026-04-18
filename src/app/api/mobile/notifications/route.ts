@@ -53,7 +53,7 @@ async function getHandler(req: NextRequest) {
       take: limit,
       select: {
         id: true, type: true, title: true, body: true,
-        read: true, link: true, createdAt: true,
+        read: true, link: true, actionUrl: true, createdAt: true,
       },
     });
 

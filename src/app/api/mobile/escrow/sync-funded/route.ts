@@ -61,6 +61,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Order Funded",
       body: `Payment for "${order.gig.title}" is locked in escrow — start working!`,
       link: `/orders/${orderId}`,
+      actionUrl: `crewboard://order/${orderId}`,
     }).catch(() => {});
 
     sendPush({

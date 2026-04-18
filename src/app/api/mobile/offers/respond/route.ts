@@ -54,6 +54,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
         title: "Offer Declined",
         body: `${receiverName} declined your offer "${offer.title}". You can send a new one.`,
         link: `/messages/${offer.conversationId}`,
+        actionUrl: `crewboard://offer/${offerId}`,
       }).catch(() => {});
 
       sendPush({
@@ -102,6 +103,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Offer Accepted!",
       body: `${receiverName} accepted your offer "${offer.title}" for $${offer.amount}. Fund the escrow to start!`,
       link: `/orders/${order.id}`,
+      actionUrl: `crewboard://order/${order.id}`,
     }).catch(() => {});
 
     sendPush({

@@ -97,14 +97,15 @@ export async function createMessage({
     const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
     const preview = msgBodyPreview(body.trim(), 100);
 
-    // In-app notification
+    // In-app notification — title = sender name, body = message text (iOS parses directly)
     await db.notification.create({
       data: {
         userId: recipientId,
         type: "message",
-        title: "New message",
-        body: `${senderName}: ${preview}`,
+        title: senderName,
+        body: preview,
         link: `/messages/${conversationId}`,
+        actionUrl: `crewboard://chat/${conversationId}`,
       },
     });
     console.log(`[createMessage] In-app notification created for ${recipientId}`);

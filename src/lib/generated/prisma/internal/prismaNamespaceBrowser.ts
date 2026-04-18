@@ -142,7 +142,8 @@ export const NotificationScalarFieldEnum = {
   body: 'body',
   read: 'read',
   createdAt: 'createdAt',
-  link: 'link'
+  link: 'link',
+  actionUrl: 'actionUrl'
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]

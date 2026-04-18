@@ -27,6 +27,7 @@ export async function createOrder(gigId: string, sellerId: string) {
     title: "New Order",
     body: `${buyerName} placed an order for "${gig.title}"`,
     link: `/orders/${order.id}`,
+    actionUrl: `crewboard://order/${order.id}`,
   });
 
   revalidatePath("/orders");
@@ -82,6 +83,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
     title: "Order Update",
     body: `${actorName} ${statusLabels[status]} — ${order.gig.title}`,
     link: `/orders/${orderId}`,
+    actionUrl: `crewboard://order/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);
@@ -115,6 +117,7 @@ export async function reRequestOrder(orderId: string): Promise<{ redirectTo: str
     title: "New Order",
     body: `${buyerName} re-requested "${original.gig.title}"`,
     link: `/orders/${newOrder.id}`,
+    actionUrl: `crewboard://order/${newOrder.id}`,
   });
 
   return { redirectTo: `/orders/${newOrder.id}` };
@@ -143,6 +146,7 @@ export async function syncEscrowFunded(orderId: string, txHash: string, escrowAd
     title: "Order Funded",
     body: `Payment for "${order.gig.title}" is locked in escrow — start working!`,
     link: `/orders/${orderId}`,
+    actionUrl: `crewboard://order/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);
@@ -172,6 +176,7 @@ export async function syncEscrowReleased(orderId: string, txHash: string) {
     title: "Payment Released!",
     body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
     link: `/orders/${orderId}`,
+    actionUrl: `crewboard://order/${orderId}`,
   });
 
   revalidatePath(`/orders/${orderId}`);

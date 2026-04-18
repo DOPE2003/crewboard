@@ -51,6 +51,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Payment Released!",
       body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
       link: `/orders/${orderId}`,
+      actionUrl: `crewboard://order/${orderId}`,
     }).catch(() => {});
 
     sendPush({

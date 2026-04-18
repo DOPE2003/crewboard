@@ -150,6 +150,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       title: "New Offer Received",
       body: `${senderName} sent you an offer: "${offer.title}" for $${offer.amount}`,
       link: `/messages/${conversationId}`,
+      actionUrl: `crewboard://offer/${offer.id}`,
     }).catch(() => {});
 
     sendPush({

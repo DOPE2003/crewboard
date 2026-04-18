@@ -84,6 +84,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "Order Update",
       body: `${actorName} ${NOTIFY_LABELS[status]} — ${order.gig.title}`,
       link: `/orders/${orderId}`,
+      actionUrl: `crewboard://order/${orderId}`,
     }).catch(() => {});
 
     return ok({ orderId, status });

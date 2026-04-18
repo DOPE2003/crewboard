@@ -69,6 +69,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       title: "New Order!",
       body: `${buyerName} placed an order for "${gig.title}".`,
       link: `/orders/${order.id}`,
+      actionUrl: `crewboard://order/${order.id}`,
     }).catch(() => {});
 
     return ok({

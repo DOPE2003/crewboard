@@ -92,6 +92,7 @@ export async function createOffer({
     title: "New Offer Received",
     body: `${senderName} sent you an offer: "${offer.title}" for $${offer.amount}`,
     link: `/messages/${conversationId}`,
+    actionUrl: `crewboard://offer/${offer.id}`,
   });
 
   // Trigger Pusher for real-time
@@ -144,6 +145,7 @@ export async function respondToOffer(offerId: string, action: "accept" | "declin
       title: "Offer Declined",
       body: `${receiverName} declined your offer "${offer.title}". You can send a new one.`,
       link: `/messages/${offer.conversationId}`,
+      actionUrl: `crewboard://offer/${offerId}`,
     });
 
     revalidatePath(`/messages/${offer.conversationId}`);
@@ -187,6 +189,7 @@ export async function respondToOffer(offerId: string, action: "accept" | "declin
     title: "Offer Accepted!",
     body: `${receiverName} accepted your offer "${offer.title}" for $${offer.amount}. Fund the escrow to start!`,
     link: `/orders/${order.id}`,
+    actionUrl: `crewboard://order/${order.id}`,
   });
 
   revalidatePath(`/messages/${offer.conversationId}`);

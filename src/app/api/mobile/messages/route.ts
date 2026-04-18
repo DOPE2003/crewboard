@@ -182,11 +182,10 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       notifyUser({
         userId: receiverId,
         type: "message",
-        title: `New message from ${senderName}`,
-        body: parseMessageBody(msgBody).type === "text"
-          ? msgBody.slice(0, 100)
-          : "Sent you a file",
+        title: senderName,
+        body: parseMessageBody(msgBody).type === "text" ? msgBody.slice(0, 100) : "Sent you a file",
         link: `/messages/${conversationId}`,
+        actionUrl: `crewboard://chat/${conversationId}`,
       }).catch(() => {});
 
       sendPush({

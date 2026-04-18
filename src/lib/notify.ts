@@ -13,16 +13,18 @@ export async function notifyUser({
   title,
   body,
   link,
+  actionUrl,
 }: {
   userId: string;
   type: string;
   title: string;
   body: string;
   link?: string;
+  actionUrl?: string;
 }) {
   // Always create DB notification
   await db.notification.create({
-    data: { userId, type, title, body, ...(link ? { link } : {}) },
+    data: { userId, type, title, body, ...(link ? { link } : {}), ...(actionUrl ? { actionUrl } : {}) },
   });
 
   // Fire email if user has one — non-blocking
