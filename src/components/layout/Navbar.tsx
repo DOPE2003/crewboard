@@ -242,7 +242,7 @@ export default async function Navbar() {
       </div>
 
       {/* ── Crewboard Category Strip ── */}
-      <div style={{
+      <div className="cb-cat-strip" style={{
         background: "var(--nav-bg, #ffffff)",
         borderBottom: "1px solid var(--nav-border, #e5e7eb)",
         overflowX: "auto",

@@ -36,13 +36,10 @@ function DiscoverIcon({ active }: { active: boolean }) {
   )
 }
 
-function ServicesIcon({ active }: { active: boolean }) {
+function MessagesIcon({ active }: { active: boolean }) {
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? YELLOW : MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <rect x="3" y="3" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
-      <rect x="14" y="3" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
-      <rect x="3" y="14" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
-      <rect x="14" y="14" width="7" height="7" rx="1" fill={active ? 'rgba(245,158,11,0.15)' : 'none'}/>
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={active ? BRAND : MUTED} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" fill={active ? 'rgba(20,184,166,0.15)' : 'none'}/>
     </svg>
   )
 }
@@ -79,10 +76,10 @@ export default function BottomTabBar({
   const isProfileActive = pathname.startsWith('/u/') || pathname === '/dashboard'
 
   const tabsLeft = [
-    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,       match: (p: string) => p === '/',                   activeColor: BRAND  },
-    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,   match: (p: string) => p.startsWith('/talent'),     activeColor: BRAND  },
-    { href: '/gigs',       label: 'Services',   icon: (a: boolean) => <ServicesIcon active={a} />,   match: (p: string) => p.startsWith('/gigs'),       activeColor: YELLOW },
-    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,       match: (p: string) => p.startsWith('/activities'), activeColor: YELLOW },
+    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,       match: (p: string) => p === '/',                                       activeColor: BRAND  },
+    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,   match: (p: string) => p.startsWith('/talent'),                         activeColor: BRAND  },
+    { href: '/messages',   label: 'Messages',   icon: (a: boolean) => <MessagesIcon active={a} />,   match: (p: string) => p.startsWith('/messages'),                       activeColor: BRAND  },
+    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,       match: (p: string) => p.startsWith('/activities'),                     activeColor: YELLOW },
   ]
 
   return (

@@ -3105,17 +3105,20 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 
 /* ── MOBILE ── */
 @media (max-width: 767px) {
-  .msgs-shell { height: calc(100vh - 92px - var(--btab-h, 64px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
+  .msgs-shell { height: calc(100dvh - 56px - var(--btab-h, 56px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
   .msgs-sidebar { width: 100%; height: 100%; border-right: none; }
   .msgs-empty-panel { display: none; }
   .msgs-thread-panel {
     position: fixed;
-    inset: 56px 0 calc(var(--btab-h) + env(safe-area-inset-bottom, 0px)) 0;
+    /* 56px top nav + 40px category strip = 96px; hide category strip when in thread */
+    inset: 56px 0 calc(var(--btab-h, 56px) + env(safe-area-inset-bottom, 0px)) 0;
     z-index: 50;
     background: var(--background);
     border-right: none;
     overflow: hidden;
   }
+  /* Hide category strip when chat thread is open so it doesn't overlap */
+  body:has(.msgs-thread-panel) .cb-cat-strip { display: none !important; }
   .msgs-view-profile-btn { display: flex; }
   .msgs-back-btn { display: flex; }
   .msgs-bubble { max-width: 85%; }
@@ -6648,14 +6651,14 @@ body.dark .act-date-label { color: #64748b; }
 
   /* Talent swipe scroll container — clear bottom tab bar */
   .talent-scroll-container {
-    height: calc(100vh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important;
+    height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important;
   }
   .talent-scroll-slide {
-    height: calc(100vh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important;
+    height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important;
   }
 
   /* Messages list page scroll */
-  .msgs-sidebar { height: calc(100vh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important; }
+  .msgs-sidebar { height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important; }
 
   /* Notifications page */
   .notif-page { padding-bottom: calc(var(--btab-h) + env(safe-area-inset-bottom, 0px) + 24px) !important; }
@@ -6800,6 +6803,7 @@ img, video, iframe, table { max-width: 100%; }
   .msgs-thread-panel {
     /* Ensure it renders below the fixed navbar (56px) and above bottom tab bar */
     inset: 56px 0 calc(var(--btab-h, 56px) + env(safe-area-inset-bottom, 0px)) 0 !important;
+    /* Hide category strip to free up space */
   }
   .msgs-input-row {
     /* Extra bottom padding on iOS notch devices */
