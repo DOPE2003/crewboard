@@ -89,10 +89,12 @@ model Notification {
   link        String?
   actionUrl   String?
   senderImage String?
+  messageId   String?  // dedup key: one notification per (user, message)
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([userId, read])
+  @@unique([userId, messageId]) // nulls don't conflict — only enforces dedup when messageId is set
 }
 
 model Job {

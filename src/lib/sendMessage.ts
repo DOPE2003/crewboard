@@ -98,19 +98,26 @@ export async function createMessage({
     const senderImage = sender?.image ?? null;
     const preview     = msgBodyPreview(body.trim(), 100);
 
-    // In-app notification — title = sender name, body = message text (iOS parses directly)
-    await db.notification.create({
-      data: {
-        userId: recipientId,
-        type: "message",
-        title: senderName,
-        body: preview,
-        link: `/messages/${conversationId}`,
-        actionUrl: `crewboard://chat/${conversationId}`,
-        ...(senderImage ? { senderImage } : {}),
-      },
-    });
-    console.log(`[createMessage] In-app notification created for ${recipientId}`);
+    // In-app notification — messageId dedupes against the unique(userId, messageId) constraint
+    try {
+      await db.notification.create({
+        data: {
+          userId: recipientId,
+          type: "message",
+          title: senderName,
+          body: preview,
+          link: `/messages/${conversationId}`,
+          actionUrl: `crewboard://chat/${conversationId}`,
+          messageId: message.id,
+          ...(senderImage ? { senderImage } : {}),
+        },
+      });
+      console.log(`[createMessage] In-app notification created for ${recipientId}`);
+    } catch (e: any) {
+      if (e?.code === "P2002") {
+        console.log(`[createMessage] Notification deduped (already exists) for message ${message.id}`);
+      } else { throw e; }
+    }
 
     // Email
     const recipientEmail = recipient?.email ?? null;

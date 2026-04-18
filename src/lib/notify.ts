@@ -6,6 +6,9 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
 /**
  * Creates a DB notification AND fires an email to the user (if they have one).
  * Email is fire-and-forget — never blocks the main flow.
+ *
+ * Pass `messageId` to guarantee at-most-one notification per message:
+ * the DB unique constraint on (userId, messageId) silently drops duplicates.
  */
 export async function notifyUser({
   userId,
@@ -15,6 +18,7 @@ export async function notifyUser({
   link,
   actionUrl,
   senderImage,
+  messageId,
 }: {
   userId: string;
   type: string;
@@ -23,16 +27,23 @@ export async function notifyUser({
   link?: string;
   actionUrl?: string;
   senderImage?: string | null;
+  messageId?: string;
 }) {
-  // Always create DB notification
-  await db.notification.create({
-    data: {
-      userId, type, title, body,
-      ...(link        ? { link }        : {}),
-      ...(actionUrl   ? { actionUrl }   : {}),
-      ...(senderImage ? { senderImage } : {}),
-    },
-  });
+  try {
+    await db.notification.create({
+      data: {
+        userId, type, title, body,
+        ...(link        ? { link }        : {}),
+        ...(actionUrl   ? { actionUrl }   : {}),
+        ...(senderImage ? { senderImage } : {}),
+        ...(messageId   ? { messageId }   : {}),
+      },
+    });
+  } catch (e: any) {
+    // P2002 = unique constraint violation — duplicate notification, silently skip
+    if (e?.code === "P2002") return;
+    throw e;
+  }
 
   // Fire email if user has one — non-blocking
   db.user.findUnique({ where: { id: userId }, select: { email: true } })

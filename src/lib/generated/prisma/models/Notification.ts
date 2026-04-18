@@ -35,6 +35,7 @@ export type NotificationMinAggregateOutputType = {
   link: string | null
   actionUrl: string | null
   senderImage: string | null
+  messageId: string | null
 }
 
 export type NotificationMaxAggregateOutputType = {
@@ -48,6 +49,7 @@ export type NotificationMaxAggregateOutputType = {
   link: string | null
   actionUrl: string | null
   senderImage: string | null
+  messageId: string | null
 }
 
 export type NotificationCountAggregateOutputType = {
@@ -61,6 +63,7 @@ export type NotificationCountAggregateOutputType = {
   link: number
   actionUrl: number
   senderImage: number
+  messageId: number
   _all: number
 }
 
@@ -76,6 +79,7 @@ export type NotificationMinAggregateInputType = {
   link?: true
   actionUrl?: true
   senderImage?: true
+  messageId?: true
 }
 
 export type NotificationMaxAggregateInputType = {
@@ -89,6 +93,7 @@ export type NotificationMaxAggregateInputType = {
   link?: true
   actionUrl?: true
   senderImage?: true
+  messageId?: true
 }
 
 export type NotificationCountAggregateInputType = {
@@ -102,6 +107,7 @@ export type NotificationCountAggregateInputType = {
   link?: true
   actionUrl?: true
   senderImage?: true
+  messageId?: true
   _all?: true
 }
 
@@ -188,6 +194,7 @@ export type NotificationGroupByOutputType = {
   link: string | null
   actionUrl: string | null
   senderImage: string | null
+  messageId: string | null
   _count: NotificationCountAggregateOutputType | null
   _min: NotificationMinAggregateOutputType | null
   _max: NotificationMaxAggregateOutputType | null
@@ -222,6 +229,7 @@ export type NotificationWhereInput = {
   link?: Prisma.StringNullableFilter<"Notification"> | string | null
   actionUrl?: Prisma.StringNullableFilter<"Notification"> | string | null
   senderImage?: Prisma.StringNullableFilter<"Notification"> | string | null
+  messageId?: Prisma.StringNullableFilter<"Notification"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
 }
 
@@ -236,11 +244,13 @@ export type NotificationOrderByWithRelationInput = {
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   actionUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   senderImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageId?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type NotificationWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_messageId?: Prisma.NotificationUserIdMessageIdCompoundUniqueInput
   AND?: Prisma.NotificationWhereInput | Prisma.NotificationWhereInput[]
   OR?: Prisma.NotificationWhereInput[]
   NOT?: Prisma.NotificationWhereInput | Prisma.NotificationWhereInput[]
@@ -253,8 +263,9 @@ export type NotificationWhereUniqueInput = Prisma.AtLeast<{
   link?: Prisma.StringNullableFilter<"Notification"> | string | null
   actionUrl?: Prisma.StringNullableFilter<"Notification"> | string | null
   senderImage?: Prisma.StringNullableFilter<"Notification"> | string | null
+  messageId?: Prisma.StringNullableFilter<"Notification"> | string | null
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+}, "id" | "userId_messageId">
 
 export type NotificationOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -267,6 +278,7 @@ export type NotificationOrderByWithAggregationInput = {
   link?: Prisma.SortOrderInput | Prisma.SortOrder
   actionUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   senderImage?: Prisma.SortOrderInput | Prisma.SortOrder
+  messageId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.NotificationCountOrderByAggregateInput
   _max?: Prisma.NotificationMaxOrderByAggregateInput
   _min?: Prisma.NotificationMinOrderByAggregateInput
@@ -286,6 +298,7 @@ export type NotificationScalarWhereWithAggregatesInput = {
   link?: Prisma.StringNullableWithAggregatesFilter<"Notification"> | string | null
   actionUrl?: Prisma.StringNullableWithAggregatesFilter<"Notification"> | string | null
   senderImage?: Prisma.StringNullableWithAggregatesFilter<"Notification"> | string | null
+  messageId?: Prisma.StringNullableWithAggregatesFilter<"Notification"> | string | null
 }
 
 export type NotificationCreateInput = {
@@ -298,6 +311,7 @@ export type NotificationCreateInput = {
   link?: string | null
   actionUrl?: string | null
   senderImage?: string | null
+  messageId?: string | null
   user: Prisma.UserCreateNestedOneWithoutNotificationsInput
 }
 
@@ -312,6 +326,7 @@ export type NotificationUncheckedCreateInput = {
   link?: string | null
   actionUrl?: string | null
   senderImage?: string | null
+  messageId?: string | null
 }
 
 export type NotificationUpdateInput = {
@@ -324,6 +339,7 @@ export type NotificationUpdateInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneRequiredWithoutNotificationsNestedInput
 }
 
@@ -338,6 +354,7 @@ export type NotificationUncheckedUpdateInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NotificationCreateManyInput = {
@@ -351,6 +368,7 @@ export type NotificationCreateManyInput = {
   link?: string | null
   actionUrl?: string | null
   senderImage?: string | null
+  messageId?: string | null
 }
 
 export type NotificationUpdateManyMutationInput = {
@@ -363,6 +381,7 @@ export type NotificationUpdateManyMutationInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NotificationUncheckedUpdateManyInput = {
@@ -376,6 +395,7 @@ export type NotificationUncheckedUpdateManyInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NotificationListRelationFilter = {
@@ -386,6 +406,11 @@ export type NotificationListRelationFilter = {
 
 export type NotificationOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type NotificationUserIdMessageIdCompoundUniqueInput = {
+  userId: string
+  messageId: string
 }
 
 export type NotificationCountOrderByAggregateInput = {
@@ -399,6 +424,7 @@ export type NotificationCountOrderByAggregateInput = {
   link?: Prisma.SortOrder
   actionUrl?: Prisma.SortOrder
   senderImage?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
 }
 
 export type NotificationMaxOrderByAggregateInput = {
@@ -412,6 +438,7 @@ export type NotificationMaxOrderByAggregateInput = {
   link?: Prisma.SortOrder
   actionUrl?: Prisma.SortOrder
   senderImage?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
 }
 
 export type NotificationMinOrderByAggregateInput = {
@@ -425,6 +452,7 @@ export type NotificationMinOrderByAggregateInput = {
   link?: Prisma.SortOrder
   actionUrl?: Prisma.SortOrder
   senderImage?: Prisma.SortOrder
+  messageId?: Prisma.SortOrder
 }
 
 export type NotificationCreateNestedManyWithoutUserInput = {
@@ -479,6 +507,7 @@ export type NotificationCreateWithoutUserInput = {
   link?: string | null
   actionUrl?: string | null
   senderImage?: string | null
+  messageId?: string | null
 }
 
 export type NotificationUncheckedCreateWithoutUserInput = {
@@ -491,6 +520,7 @@ export type NotificationUncheckedCreateWithoutUserInput = {
   link?: string | null
   actionUrl?: string | null
   senderImage?: string | null
+  messageId?: string | null
 }
 
 export type NotificationCreateOrConnectWithoutUserInput = {
@@ -533,6 +563,7 @@ export type NotificationScalarWhereInput = {
   link?: Prisma.StringNullableFilter<"Notification"> | string | null
   actionUrl?: Prisma.StringNullableFilter<"Notification"> | string | null
   senderImage?: Prisma.StringNullableFilter<"Notification"> | string | null
+  messageId?: Prisma.StringNullableFilter<"Notification"> | string | null
 }
 
 export type NotificationCreateManyUserInput = {
@@ -545,6 +576,7 @@ export type NotificationCreateManyUserInput = {
   link?: string | null
   actionUrl?: string | null
   senderImage?: string | null
+  messageId?: string | null
 }
 
 export type NotificationUpdateWithoutUserInput = {
@@ -557,6 +589,7 @@ export type NotificationUpdateWithoutUserInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NotificationUncheckedUpdateWithoutUserInput = {
@@ -569,6 +602,7 @@ export type NotificationUncheckedUpdateWithoutUserInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type NotificationUncheckedUpdateManyWithoutUserInput = {
@@ -581,6 +615,7 @@ export type NotificationUncheckedUpdateManyWithoutUserInput = {
   link?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   actionUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   senderImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  messageId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -596,6 +631,7 @@ export type NotificationSelect<ExtArgs extends runtime.Types.Extensions.Internal
   link?: boolean
   actionUrl?: boolean
   senderImage?: boolean
+  messageId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notification"]>
 
@@ -610,6 +646,7 @@ export type NotificationSelectCreateManyAndReturn<ExtArgs extends runtime.Types.
   link?: boolean
   actionUrl?: boolean
   senderImage?: boolean
+  messageId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notification"]>
 
@@ -624,6 +661,7 @@ export type NotificationSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.
   link?: boolean
   actionUrl?: boolean
   senderImage?: boolean
+  messageId?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["notification"]>
 
@@ -638,9 +676,10 @@ export type NotificationSelectScalar = {
   link?: boolean
   actionUrl?: boolean
   senderImage?: boolean
+  messageId?: boolean
 }
 
-export type NotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "title" | "body" | "read" | "createdAt" | "link" | "actionUrl" | "senderImage", ExtArgs["result"]["notification"]>
+export type NotificationOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "type" | "title" | "body" | "read" | "createdAt" | "link" | "actionUrl" | "senderImage" | "messageId", ExtArgs["result"]["notification"]>
 export type NotificationInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -667,6 +706,7 @@ export type $NotificationPayload<ExtArgs extends runtime.Types.Extensions.Intern
     link: string | null
     actionUrl: string | null
     senderImage: string | null
+    messageId: string | null
   }, ExtArgs["result"]["notification"]>
   composites: {}
 }
@@ -1101,6 +1141,7 @@ export interface NotificationFieldRefs {
   readonly link: Prisma.FieldRef<"Notification", 'String'>
   readonly actionUrl: Prisma.FieldRef<"Notification", 'String'>
   readonly senderImage: Prisma.FieldRef<"Notification", 'String'>
+  readonly messageId: Prisma.FieldRef<"Notification", 'String'>
 }
     
 

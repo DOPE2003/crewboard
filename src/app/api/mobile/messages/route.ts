@@ -180,21 +180,31 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       const senderName  = sender?.name ?? sender?.twitterHandle ?? "Someone";
       const senderImage = sender?.image ?? null;
 
-      notifyUser({
+      const msgPreview = parseMessageBody(msgBody).type === "text" ? msgBody.slice(0, 100) : "Sent you a file";
+
+      // Create notification with dedup key — P2002 is silently swallowed inside notifyUser
+      await notifyUser({
         userId: receiverId,
         type: "message",
         title: senderName,
-        body: parseMessageBody(msgBody).type === "text" ? msgBody.slice(0, 100) : "Sent you a file",
+        body: msgPreview,
         link: `/messages/${conversationId}`,
         actionUrl: `crewboard://chat/${conversationId}`,
+        messageId: message.id,
         ...(senderImage ? { senderImage } : {}),
       }).catch(() => {});
+
+      // Query actual unread count so iOS badge reflects real backlog
+      const unreadCount = await db.notification.count({
+        where: { userId: receiverId, read: false },
+      }).catch(() => 1);
 
       sendPush({
         userId: receiverId,
         title: senderName,
-        body: (parseMessageBody(msgBody).type === "text" ? msgBody : "Sent you a file").slice(0, 120),
+        body: msgPreview.slice(0, 120),
         data: { type: "message", refId: conversationId, senderId: user.sub },
+        badge: unreadCount,
       }).catch(() => {});
     }
 
