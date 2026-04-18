@@ -251,6 +251,9 @@ export default async function HomePage() {
           <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
             {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
           </Link>
+          <Link href={isLoggedIn ? "/jobs/new" : "/login"} className="btn-hero-secondary">
+            Post a Job
+          </Link>
         </div>
 
         {/* Three trust pills — desktop only */}
