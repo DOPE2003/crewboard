@@ -54,6 +54,7 @@ export const ModelName = {
   User: 'User',
   SavedTalent: 'SavedTalent',
   Notification: 'Notification',
+  Job: 'Job',
   Project: 'Project',
   Conversation: 'Conversation',
   Message: 'Message',
@@ -148,6 +149,27 @@ export const NotificationScalarFieldEnum = {
 } as const
 
 export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
+
+
+export const JobScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  company: 'company',
+  budget: 'budget',
+  duration: 'duration',
+  chain: 'chain',
+  category: 'category',
+  level: 'level',
+  jobType: 'jobType',
+  tags: 'tags',
+  description: 'description',
+  milestones: 'milestones',
+  status: 'status',
+  ownerId: 'ownerId',
+  createdAt: 'createdAt'
+} as const
+
+export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
 
 
 export const ProjectScalarFieldEnum = {

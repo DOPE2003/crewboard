@@ -245,6 +245,9 @@ export default async function HomePage() {
           <Link href="/talent" className="btn-hero-primary">
             Browse Profiles
           </Link>
+          <Link href="/jobs" className="btn-hero-secondary">
+            Browse Jobs
+          </Link>
           <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
             {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
           </Link>

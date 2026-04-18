@@ -441,6 +441,7 @@ export type UserWhereInput = {
   bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
   gigs?: Prisma.GigListRelationFilter
+  jobs?: Prisma.JobListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   buyerOrders?: Prisma.OrderListRelationFilter
@@ -494,6 +495,7 @@ export type UserOrderByWithRelationInput = {
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
   gigs?: Prisma.GigOrderByRelationAggregateInput
+  jobs?: Prisma.JobOrderByRelationAggregateInput
   sentMessages?: Prisma.MessageOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
   buyerOrders?: Prisma.OrderOrderByRelationAggregateInput
@@ -550,6 +552,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
   gigs?: Prisma.GigListRelationFilter
+  jobs?: Prisma.JobListRelationFilter
   sentMessages?: Prisma.MessageListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
   buyerOrders?: Prisma.OrderListRelationFilter
@@ -685,6 +688,7 @@ export type UserCreateInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -738,6 +742,7 @@ export type UserUncheckedCreateInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -791,6 +796,7 @@ export type UserUpdateInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -844,6 +850,7 @@ export type UserUncheckedUpdateInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1183,6 +1190,20 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutJobsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobsInput, Prisma.UserUncheckedCreateWithoutJobsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutJobsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutJobsInput, Prisma.UserUncheckedCreateWithoutJobsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutJobsInput
+  upsert?: Prisma.UserUpsertWithoutJobsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutJobsInput, Prisma.UserUpdateWithoutJobsInput>, Prisma.UserUncheckedUpdateWithoutJobsInput>
+}
+
 export type UserCreateNestedOneWithoutSentMessagesInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutSentMessagesInput, Prisma.UserUncheckedCreateWithoutSentMessagesInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutSentMessagesInput
@@ -1401,6 +1422,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -1453,6 +1475,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -1510,6 +1533,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -1562,6 +1586,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -1630,6 +1655,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -1682,6 +1708,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1745,6 +1772,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -1797,6 +1825,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -1849,6 +1878,7 @@ export type UserCreateWithoutNotificationsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
@@ -1901,6 +1931,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
@@ -1969,6 +2000,7 @@ export type UserUpdateWithoutNotificationsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
@@ -2021,7 +2053,236 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUncheckedUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutJobsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutJobsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutJobsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobsInput, Prisma.UserUncheckedCreateWithoutJobsInput>
+}
+
+export type UserUpsertWithoutJobsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutJobsInput, Prisma.UserUncheckedUpdateWithoutJobsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutJobsInput, Prisma.UserUncheckedCreateWithoutJobsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutJobsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutJobsInput, Prisma.UserUncheckedUpdateWithoutJobsInput>
+}
+
+export type UserUpdateWithoutJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutJobsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
   reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
@@ -2073,6 +2334,7 @@ export type UserCreateWithoutSentMessagesInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
@@ -2125,6 +2387,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
@@ -2193,6 +2456,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
@@ -2245,6 +2509,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
@@ -2296,6 +2561,7 @@ export type UserCreateWithoutGigsInput = {
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -2348,6 +2614,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -2416,6 +2683,7 @@ export type UserUpdateWithoutGigsInput = {
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -2468,6 +2736,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -2521,6 +2790,7 @@ export type UserCreateWithoutSavedGigsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -2573,6 +2843,7 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -2641,6 +2912,7 @@ export type UserUpdateWithoutSavedGigsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -2693,6 +2965,7 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -2745,6 +3018,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
@@ -2797,6 +3071,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
@@ -2854,6 +3129,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -2906,6 +3182,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -2974,6 +3251,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
@@ -3026,6 +3304,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
@@ -3089,6 +3368,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -3141,6 +3421,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -3193,6 +3474,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -3245,6 +3527,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -3302,6 +3585,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -3354,6 +3638,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -3422,6 +3707,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -3474,6 +3760,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -3537,6 +3824,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -3589,6 +3877,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -3641,6 +3930,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -3693,6 +3983,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -3761,6 +4052,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -3813,6 +4105,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -3865,6 +4158,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -3917,6 +4211,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -3985,6 +4280,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -4037,6 +4333,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -4089,6 +4386,7 @@ export type UserCreateWithoutProWaitlistInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -4141,6 +4439,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -4209,6 +4508,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -4261,6 +4561,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -4313,6 +4614,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -4365,6 +4667,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -4433,6 +4736,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -4485,6 +4789,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -4537,6 +4842,7 @@ export type UserCreateWithoutSentOffersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -4589,6 +4895,7 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -4646,6 +4953,7 @@ export type UserCreateWithoutReceivedOffersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
@@ -4698,6 +5006,7 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   bannerHeight?: number
   humanVerified?: boolean
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
   buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
@@ -4766,6 +5075,7 @@ export type UserUpdateWithoutSentOffersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -4818,6 +5128,7 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -4881,6 +5192,7 @@ export type UserUpdateWithoutReceivedOffersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
@@ -4933,6 +5245,7 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
   buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
@@ -4956,6 +5269,7 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
 
 export type UserCountOutputType = {
   gigs: number
+  jobs: number
   sentMessages: number
   notifications: number
   buyerOrders: number
@@ -4974,6 +5288,7 @@ export type UserCountOutputType = {
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | UserCountOutputTypeCountGigsArgs
+  jobs?: boolean | UserCountOutputTypeCountJobsArgs
   sentMessages?: boolean | UserCountOutputTypeCountSentMessagesArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
   buyerOrders?: boolean | UserCountOutputTypeCountBuyerOrdersArgs
@@ -5005,6 +5320,13 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
  */
 export type UserCountOutputTypeCountGigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.GigWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountJobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.JobWhereInput
 }
 
 /**
@@ -5142,6 +5464,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   bannerHeight?: boolean
   humanVerified?: boolean
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
+  jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   buyerOrders?: boolean | Prisma.User$buyerOrdersArgs<ExtArgs>
@@ -5274,6 +5597,7 @@ export type UserSelectScalar = {
 export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
+  jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
   sentMessages?: boolean | Prisma.User$sentMessagesArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
   buyerOrders?: boolean | Prisma.User$buyerOrdersArgs<ExtArgs>
@@ -5298,6 +5622,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name: "User"
   objects: {
     gigs: Prisma.$GigPayload<ExtArgs>[]
+    jobs: Prisma.$JobPayload<ExtArgs>[]
     sentMessages: Prisma.$MessagePayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
     buyerOrders: Prisma.$OrderPayload<ExtArgs>[]
@@ -5744,6 +6069,7 @@ readonly fields: UserFieldRefs;
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   gigs<T extends Prisma.User$gigsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$gigsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$GigPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  jobs<T extends Prisma.User$jobsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$jobsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$JobPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   sentMessages<T extends Prisma.User$sentMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sentMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   buyerOrders<T extends Prisma.User$buyerOrdersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$buyerOrdersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$OrderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -6236,6 +6562,30 @@ export type User$gigsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   take?: number
   skip?: number
   distinct?: Prisma.GigScalarFieldEnum | Prisma.GigScalarFieldEnum[]
+}
+
+/**
+ * User.jobs
+ */
+export type User$jobsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Job
+   */
+  select?: Prisma.JobSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Job
+   */
+  omit?: Prisma.JobOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.JobInclude<ExtArgs> | null
+  where?: Prisma.JobWhereInput
+  orderBy?: Prisma.JobOrderByWithRelationInput | Prisma.JobOrderByWithRelationInput[]
+  cursor?: Prisma.JobWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.JobScalarFieldEnum | Prisma.JobScalarFieldEnum[]
 }
 
 /**

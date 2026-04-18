@@ -259,6 +259,7 @@ export default async function Navbar() {
         }}>
           {([
             { label: "Trending",          href: "/talent",                                    hot: true  },
+            { label: "Job Board",         href: "/jobs",                                      isNew: true },
             { label: "Coding & Tech",     href: "/talent?role=Coding+%26+Tech"               },
             { label: "AI Engineer",       href: "/talent?role=AI+Engineer",                  isNew: true },
             { label: "Graphic & Design",  href: "/talent?role=Graphic+%26+Design"            },

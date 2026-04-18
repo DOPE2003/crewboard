@@ -11,6 +11,7 @@
 export type * from './models/User'
 export type * from './models/SavedTalent'
 export type * from './models/Notification'
+export type * from './models/Job'
 export type * from './models/Project'
 export type * from './models/Conversation'
 export type * from './models/Message'

@@ -57,6 +57,11 @@ export type SavedTalent = Prisma.SavedTalentModel
  */
 export type Notification = Prisma.NotificationModel
 /**
+ * Model Job
+ * 
+ */
+export type Job = Prisma.JobModel
+/**
  * Model Project
  * 
  */

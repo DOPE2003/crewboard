@@ -49,6 +49,7 @@ model User {
   bannerHeight         Int                   @default(140)
   humanVerified        Boolean               @default(false)
   gigs                 Gig[]
+  jobs                 Job[]
   sentMessages         Message[]
   notifications        Notification[]
   buyerOrders          Order[]               @relation("BuyerOrders")
@@ -92,6 +93,28 @@ model Notification {
 
   @@index([userId])
   @@index([userId, read])
+}
+
+model Job {
+  id          String   @id @default(cuid())
+  title       String
+  company     String
+  budget      String
+  duration    String?
+  chain       String   @default("ETH")
+  category    String   @default("Development")
+  level       String   @default("Senior")
+  jobType     String   @default("Remote")
+  tags        String[]
+  description String
+  milestones  Boolean  @default(false)
+  status      String   @default("open")
+  ownerId     String
+  createdAt   DateTime @default(now())
+  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+
+  @@index([status])
+  @@index([chain])
 }
 
 model Project {
