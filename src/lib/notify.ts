@@ -14,6 +14,7 @@ export async function notifyUser({
   body,
   link,
   actionUrl,
+  senderImage,
 }: {
   userId: string;
   type: string;
@@ -21,10 +22,16 @@ export async function notifyUser({
   body: string;
   link?: string;
   actionUrl?: string;
+  senderImage?: string | null;
 }) {
   // Always create DB notification
   await db.notification.create({
-    data: { userId, type, title, body, ...(link ? { link } : {}), ...(actionUrl ? { actionUrl } : {}) },
+    data: {
+      userId, type, title, body,
+      ...(link        ? { link }        : {}),
+      ...(actionUrl   ? { actionUrl }   : {}),
+      ...(senderImage ? { senderImage } : {}),
+    },
   });
 
   // Fire email if user has one — non-blocking

@@ -90,12 +90,13 @@ export async function createMessage({
     console.log(`[createMessage] Recipient id: ${recipientId}`);
 
     const [sender, recipient] = await Promise.all([
-      db.user.findUnique({ where: { id: senderId }, select: { name: true, twitterHandle: true } }),
+      db.user.findUnique({ where: { id: senderId }, select: { name: true, twitterHandle: true, image: true } }),
       db.user.findUnique({ where: { id: recipientId }, select: { email: true } }),
     ]);
 
-    const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
-    const preview = msgBodyPreview(body.trim(), 100);
+    const senderName  = sender?.name ?? sender?.twitterHandle ?? "Someone";
+    const senderImage = sender?.image ?? null;
+    const preview     = msgBodyPreview(body.trim(), 100);
 
     // In-app notification — title = sender name, body = message text (iOS parses directly)
     await db.notification.create({
@@ -106,6 +107,7 @@ export async function createMessage({
         body: preview,
         link: `/messages/${conversationId}`,
         actionUrl: `crewboard://chat/${conversationId}`,
+        ...(senderImage ? { senderImage } : {}),
       },
     });
     console.log(`[createMessage] In-app notification created for ${recipientId}`);

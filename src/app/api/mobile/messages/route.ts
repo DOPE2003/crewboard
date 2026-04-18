@@ -175,9 +175,10 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
     if (receiverId) {
       const sender = await db.user.findUnique({
         where: { id: user.sub },
-        select: { name: true, twitterHandle: true },
+        select: { name: true, twitterHandle: true, image: true },
       });
-      const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
+      const senderName  = sender?.name ?? sender?.twitterHandle ?? "Someone";
+      const senderImage = sender?.image ?? null;
 
       notifyUser({
         userId: receiverId,
@@ -186,6 +187,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         body: parseMessageBody(msgBody).type === "text" ? msgBody.slice(0, 100) : "Sent you a file",
         link: `/messages/${conversationId}`,
         actionUrl: `crewboard://chat/${conversationId}`,
+        ...(senderImage ? { senderImage } : {}),
       }).catch(() => {});
 
       sendPush({

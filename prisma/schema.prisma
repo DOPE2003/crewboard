@@ -85,9 +85,10 @@ model Notification {
   body      String
   read      Boolean  @default(false)
   createdAt DateTime @default(now())
-  link      String?
-  actionUrl String?
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  link        String?
+  actionUrl   String?
+  senderImage String?
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([userId])
   @@index([userId, read])
