@@ -3105,12 +3105,16 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 
 /* ── MOBILE ── */
 @media (max-width: 767px) {
-  .msgs-shell { height: calc(100dvh - 56px - var(--btab-h, 56px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
-  .msgs-sidebar { width: 100%; height: 100%; border-right: none; }
-  .msgs-empty-panel { display: none; }
+  /* Remove .page extra top padding for messages pages — .main-content already clears nav */
+  main.page:has(.msgs-shell) { padding-top: 0 !important; }
+  /* Shell height: .main-content clears 92px (56px nav + 36px strip) from viewport top */
+  .msgs-shell { height: calc(100dvh - 92px - var(--btab-h, 56px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
+  /* Sidebar full-width on mobile — !important overrides inline width:320 */
+  .msgs-sidebar { width: 100% !important; height: 100%; border-right: none; }
+  .msgs-empty-panel { display: none !important; }
   .msgs-thread-panel {
     position: fixed;
-    /* 56px top nav + 40px category strip = 96px; hide category strip when in thread */
+    /* category strip hidden when thread open → only 56px nav visible */
     inset: 56px 0 calc(var(--btab-h, 56px) + env(safe-area-inset-bottom, 0px)) 0;
     z-index: 50;
     background: var(--background);
@@ -6657,8 +6661,8 @@ body.dark .act-date-label { color: #64748b; }
     height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important;
   }
 
-  /* Messages list page scroll */
-  .msgs-sidebar { height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important; }
+  /* Messages list page scroll — matches shell height (92px total nav) */
+  .msgs-sidebar { height: calc(100dvh - 92px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important; }
 
   /* Notifications page */
   .notif-page { padding-bottom: calc(var(--btab-h) + env(safe-area-inset-bottom, 0px) + 24px) !important; }
@@ -6796,6 +6800,8 @@ img, video, iframe, table { max-width: 100%; }
   .card { padding: 1rem !important; }
   h1 { font-size: clamp(1.5rem, 6vw, 2.5rem) !important; }
   h2 { font-size: clamp(1.2rem, 5vw, 2rem) !important; }
+  /* Jobs Post form: stack to single column on mobile */
+  .jobs-form-grid { grid-template-columns: 1fr !important; gap: 0 !important; }
 }
 
 /* ── Messages: ensure input always stays above bottom tab bar ─── */

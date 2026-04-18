@@ -247,8 +247,8 @@ export default async function ConversationPage({
               </Link>
             )}
 
-            {/* Chat action buttons */}
-            <div style={{ display: "flex", gap: "0.4rem", marginLeft: "auto", flexShrink: 0, alignItems: "center" }}>
+            {/* Chat action buttons — hidden on mobile, shown on desktop */}
+            <div className="hidden md:flex" style={{ gap: "0.4rem", marginLeft: "auto", flexShrink: 0, alignItems: "center" }}>
               {other?.walletAddress && <WalletVerifiedBadge />}
               {other?.humanVerified && <HumanVerifiedBadge level={other.worldIdLevel} />}
 
@@ -262,8 +262,14 @@ export default async function ConversationPage({
               )}
             </div>
 
-            {/* Mobile: View Profile button (opens bottom sheet) */}
-            <ProfileBottomSheet profile={profileData} />
+            {/* Mobile: View Profile button — replaces action buttons */}
+            <div style={{ marginLeft: "auto", flexShrink: 0 }} className="flex md:hidden">
+              <ProfileBottomSheet profile={profileData} />
+            </div>
+            {/* Desktop: profile sheet still available */}
+            <div className="hidden md:block">
+              <ProfileBottomSheet profile={profileData} />
+            </div>
           </div>
 
           <MessageThread

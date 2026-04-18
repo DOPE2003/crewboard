@@ -83,7 +83,7 @@ export default async function MessagesPage() {
     <main className="page">
       <div className="msgs-shell">
         {/* Left sidebar */}
-        <div style={{
+        <div className="msgs-sidebar" style={{
           width: 320, flexShrink: 0,
           borderRight: "1px solid var(--card-border)",
           display: "flex", flexDirection: "column", overflow: "hidden",
@@ -108,8 +108,8 @@ export default async function MessagesPage() {
           />
         </div>
 
-        {/* Right: empty state */}
-        <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--background)", padding: "2rem" }}>
+        {/* Right: empty state (hidden on mobile) */}
+        <div className="msgs-empty-panel" style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", background: "var(--background)", padding: "2rem" }}>
           <div style={{
             width: 72, height: 72, borderRadius: 20,
             background: "rgba(20,184,166,0.1)",

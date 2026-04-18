@@ -114,8 +114,8 @@ export default function PostJobPage() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {/* Two-column layout */}
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
+          {/* Two-column layout (stacks on mobile) */}
+          <div className="jobs-form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }}>
 
             {/* LEFT COLUMN */}
             <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>

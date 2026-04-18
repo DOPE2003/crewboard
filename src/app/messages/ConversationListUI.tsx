@@ -171,13 +171,14 @@ export default function ConversationListUI({
               onMouseEnter={() => setHoveredId(item.id)}
               onMouseLeave={() => setHoveredId(null)}
               style={{
-                display: "flex", alignItems: "flex-start", gap: 10, padding: "12px 14px",
+                display: "flex", alignItems: "flex-start", gap: 10,
+                padding: hoveredId === item.id ? "12px 40px 12px 14px" : "12px 14px",
                 textDecoration: "none",
                 borderBottom: "1px solid var(--card-border)",
                 borderLeft: active ? "3px solid #14B8A6" : "3px solid transparent",
                 background: active ? "rgba(20,184,166,0.06)" : item.unread > 0 ? "rgba(20,184,166,0.02)" : "transparent",
                 cursor: "pointer",
-                transition: "background 0.12s",
+                transition: "background 0.12s, padding 0.1s",
                 boxSizing: "border-box",
                 position: "relative",
               }}
@@ -269,28 +270,30 @@ export default function ConversationListUI({
                 </div>
               </div>
 
-              {/* Delete button — visible on hover */}
+              {/* Delete button — visible on hover, vertically centered, won't overlap content */}
               {hoveredId === item.id && (
                 <button
                   onClick={(e) => handleDelete(e, item.id)}
                   style={{
                     position: "absolute",
-                    top: 8,
-                    right: 8,
-                    width: 22,
-                    height: 22,
+                    top: "50%",
+                    right: 10,
+                    transform: "translateY(-50%)",
+                    width: 24,
+                    height: 24,
                     borderRadius: "50%",
-                    background: "rgba(127,127,127,0.18)",
-                    border: "none",
+                    background: "rgba(239,68,68,0.12)",
+                    border: "1px solid rgba(239,68,68,0.2)",
                     cursor: "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    color: "var(--text-muted)",
-                    fontSize: "1rem",
+                    color: "#ef4444",
+                    fontSize: "0.9rem",
                     lineHeight: 1,
                     padding: 0,
                     flexShrink: 0,
+                    zIndex: 1,
                   }}
                   aria-label="Delete conversation"
                 >
