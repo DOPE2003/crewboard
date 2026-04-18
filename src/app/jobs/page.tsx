@@ -16,14 +16,13 @@ export default async function JobBoardPage() {
   });
 
   const openCount = jobs.length;
-  const chains = ["ALL", "ETH", "SOL", "BASE", "ARB", "AVAX", "BNB"];
 
   return (
     <main className="page" style={{ minHeight: "100vh" }}>
-      <div style={{ maxWidth: 860, margin: "0 auto", padding: "2.5rem 1.5rem 6rem" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "2.5rem 2rem 6rem" }}>
 
         {/* Header */}
-        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 28, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 16, marginBottom: 32, flexWrap: "wrap" }}>
           <div>
             <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.55rem", letterSpacing: "0.28em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.4rem" }}>
               WEB3 · JOB BOARD
@@ -33,7 +32,7 @@ export default async function JobBoardPage() {
             </h1>
             <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.75rem", color: "var(--text-muted)", marginTop: 6, marginBottom: 0 }}>
               <span style={{ color: "#14B8A6", fontWeight: 700 }}>{openCount} open</span>
-              {" · "}{chains.length - 1} chains{" · "}5 categories
+              {" · "}Web3 freelance opportunities
             </p>
           </div>
           <Link
@@ -61,7 +60,6 @@ export default async function JobBoardPage() {
             company: j.company,
             budget: j.budget,
             duration: j.duration,
-            chain: j.chain,
             category: j.category,
             level: j.level,
             jobType: j.jobType,
@@ -75,7 +73,6 @@ export default async function JobBoardPage() {
               image: j.owner.image,
             },
           }))}
-          chains={chains}
           isLoggedIn={isLoggedIn}
         />
 

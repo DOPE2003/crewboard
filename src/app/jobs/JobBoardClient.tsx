@@ -3,11 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 
-const CHAIN_COLORS: Record<string, string> = {
-  ETH: "#627EEA", SOL: "#9945FF", BASE: "#0052FF",
-  ARB: "#28A0F0", AVAX: "#E84142", BNB: "#F3BA2F",
-};
-
 const CATEGORY_ICONS: Record<string, string> = {
   Development: "⌨️", Design: "🎨", Marketing: "📣",
   Community: "👥", Research: "🔬", Other: "✦",
@@ -22,84 +17,48 @@ function timeAgo(iso: string) {
 
 type Job = {
   id: string; title: string; company: string; budget: string;
-  duration: string | null; chain: string; category: string;
+  duration: string | null; category: string;
   level: string; jobType: string; tags: string[];
   description: string; milestones: boolean; createdAt: string;
   owner: { name: string | null; twitterHandle: string; image: string | null };
 };
 
 export default function JobBoardClient({
-  jobs, chains, isLoggedIn,
+  jobs, isLoggedIn,
 }: {
-  jobs: Job[]; chains: string[]; isLoggedIn: boolean;
+  jobs: Job[]; isLoggedIn: boolean;
 }) {
-  const [activeChain, setActiveChain] = useState("ALL");
   const [search, setSearch] = useState("");
 
   const filtered = jobs.filter(j => {
-    const matchChain = activeChain === "ALL" || j.chain === activeChain;
     const q = search.toLowerCase().trim();
-    const matchSearch = !q ||
+    return !q ||
       j.title.toLowerCase().includes(q) ||
       j.company.toLowerCase().includes(q) ||
       j.tags.some(t => t.toLowerCase().includes(q)) ||
       j.category.toLowerCase().includes(q);
-    return matchChain && matchSearch;
   });
 
   return (
     <>
       {/* Search */}
-      <div style={{ position: "relative", marginBottom: 16 }}>
+      <div style={{ position: "relative", marginBottom: 24 }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"
-          style={{ position: "absolute", left: 13, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", pointerEvents: "none" }}>
+          style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)", color: "var(--text-muted)", pointerEvents: "none" }}>
           <circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/>
         </svg>
         <input
-          placeholder="Search title, skill..."
+          placeholder="Search title, skill, category..."
           value={search}
           onChange={e => setSearch(e.target.value)}
           style={{
-            width: "100%", height: 44, paddingLeft: 38, paddingRight: 16,
-            border: "1px solid var(--card-border)", borderRadius: 12,
+            width: "100%", height: 48, paddingLeft: 42, paddingRight: 16,
+            border: "1px solid var(--card-border)", borderRadius: 14,
             background: "var(--background)", color: "var(--foreground)",
             fontSize: 14, outline: "none", boxSizing: "border-box",
             fontFamily: "inherit",
           }}
         />
-      </div>
-
-      {/* Chain filter pills */}
-      <div style={{ display: "flex", gap: 8, flexWrap: "nowrap", overflowX: "auto", marginBottom: 24, paddingBottom: 4 }}>
-        {chains.map(chain => {
-          const active = activeChain === chain;
-          const color = chain === "ALL" ? "#14B8A6" : (CHAIN_COLORS[chain] ?? "#14B8A6");
-          return (
-            <button
-              key={chain}
-              onClick={() => setActiveChain(chain)}
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "7px 16px", borderRadius: 99, flexShrink: 0,
-                border: `1.5px solid ${active ? color : "var(--card-border)"}`,
-                background: active ? color : "transparent",
-                color: active ? "#fff" : "var(--foreground)",
-                fontFamily: "Inter, sans-serif", fontWeight: 700,
-                fontSize: "0.75rem", cursor: "pointer",
-                transition: "all 0.15s",
-              }}
-            >
-              {chain !== "ALL" && (
-                <span style={{
-                  width: 7, height: 7, borderRadius: "50%",
-                  background: active ? "rgba(255,255,255,0.7)" : color,
-                  flexShrink: 0,
-                }} />
-              )}
-              {chain}
-            </button>
-          );
-        })}
       </div>
 
       {/* Jobs list */}
@@ -135,83 +94,67 @@ export default function JobBoardClient({
           </Link>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 16 }}>
           {filtered.map(job => {
-            const chainColor = CHAIN_COLORS[job.chain] ?? "#14B8A6";
             const catIcon = CATEGORY_ICONS[job.category] ?? "✦";
             const ownerName = job.owner.name ?? `@${job.owner.twitterHandle}`;
             return (
               <div
                 key={job.id}
                 style={{
-                  padding: "18px 20px",
+                  padding: "20px 22px",
                   border: "1px solid var(--card-border)",
-                  borderRadius: 16,
+                  borderRadius: 18,
                   background: "var(--dropdown-bg)",
-                  display: "flex", flexDirection: "column", gap: 10,
+                  display: "flex", flexDirection: "column", gap: 12,
                   transition: "border-color 0.15s",
                 }}
               >
                 {/* Top row */}
-                <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
-                  <div style={{ minWidth: 0 }}>
-                    <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--foreground)", margin: "0 0 4px", lineHeight: 1.25 }}>
-                      {job.title}
-                    </h3>
-                    <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>
-                      {job.company}
-                    </span>
-                  </div>
-                  {/* Chain badge */}
-                  <span style={{
-                    display: "inline-flex", alignItems: "center", gap: 5,
-                    padding: "4px 10px", borderRadius: 99,
-                    background: `${chainColor}18`, color: chainColor,
-                    border: `1px solid ${chainColor}35`,
-                    fontFamily: "Inter, sans-serif", fontWeight: 700,
-                    fontSize: "0.72rem", flexShrink: 0,
-                  }}>
-                    <span style={{ width: 6, height: 6, borderRadius: "50%", background: chainColor }} />
-                    {job.chain}
+                <div>
+                  <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.05rem", color: "var(--foreground)", margin: "0 0 4px", lineHeight: 1.25 }}>
+                    {job.title}
+                  </h3>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.8rem", color: "var(--text-muted)" }}>
+                    {job.company}
                   </span>
                 </div>
 
-                {/* Budget + meta pills */}
+                {/* Meta pills */}
                 <div style={{ display: "flex", flexWrap: "wrap", gap: 6 }}>
                   {/* Budget */}
                   <span style={{
                     display: "inline-flex", alignItems: "center", gap: 4,
-                    padding: "3px 10px", borderRadius: 99,
+                    padding: "4px 12px", borderRadius: 99,
                     background: "rgba(20,184,166,0.1)", color: "#14B8A6",
-                    fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.72rem",
+                    fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.75rem",
                   }}>
-                    <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
                     {job.budget}
                   </span>
                   {/* Category */}
                   <span style={{
-                    padding: "3px 10px", borderRadius: 99,
+                    padding: "4px 12px", borderRadius: 99,
                     background: "rgba(var(--foreground-rgb,0,0,0),0.05)",
                     color: "var(--text-muted)", fontFamily: "Inter, sans-serif",
-                    fontWeight: 600, fontSize: "0.72rem",
+                    fontWeight: 600, fontSize: "0.75rem",
                   }}>
                     {catIcon} {job.category}
                   </span>
                   {/* Level */}
                   <span style={{
-                    padding: "3px 10px", borderRadius: 99,
+                    padding: "4px 12px", borderRadius: 99,
                     background: "rgba(var(--foreground-rgb,0,0,0),0.05)",
                     color: "var(--text-muted)", fontFamily: "Inter, sans-serif",
-                    fontWeight: 600, fontSize: "0.72rem",
+                    fontWeight: 600, fontSize: "0.75rem",
                   }}>
                     {job.level}
                   </span>
                   {/* Job type */}
                   <span style={{
-                    padding: "3px 10px", borderRadius: 99,
+                    padding: "4px 12px", borderRadius: 99,
                     background: "rgba(var(--foreground-rgb,0,0,0),0.05)",
                     color: "var(--text-muted)", fontFamily: "Inter, sans-serif",
-                    fontWeight: 600, fontSize: "0.72rem",
+                    fontWeight: 600, fontSize: "0.75rem",
                   }}>
                     {job.jobType}
                   </span>
@@ -219,9 +162,9 @@ export default function JobBoardClient({
                   {job.milestones && (
                     <span style={{
                       display: "inline-flex", alignItems: "center", gap: 4,
-                      padding: "3px 10px", borderRadius: 99,
+                      padding: "4px 12px", borderRadius: 99,
                       background: "rgba(139,92,246,0.1)", color: "#8b5cf6",
-                      fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "0.72rem",
+                      fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "0.75rem",
                     }}>
                       ▮▮▮ Milestones
                     </span>
@@ -229,10 +172,10 @@ export default function JobBoardClient({
                   {/* Duration */}
                   {job.duration && (
                     <span style={{
-                      padding: "3px 10px", borderRadius: 99,
+                      padding: "4px 12px", borderRadius: 99,
                       background: "rgba(var(--foreground-rgb,0,0,0),0.05)",
                       color: "var(--text-muted)", fontFamily: "Inter, sans-serif",
-                      fontWeight: 600, fontSize: "0.72rem",
+                      fontWeight: 600, fontSize: "0.75rem",
                     }}>
                       {job.duration}
                     </span>
@@ -246,7 +189,7 @@ export default function JobBoardClient({
                       <span key={tag} style={{
                         padding: "2px 8px", borderRadius: 6,
                         border: "1px solid var(--card-border)",
-                        fontFamily: "Inter, sans-serif", fontSize: "0.68rem",
+                        fontFamily: "Inter, sans-serif", fontSize: "0.7rem",
                         color: "var(--text-muted)",
                       }}>
                         {tag}
@@ -256,12 +199,12 @@ export default function JobBoardClient({
                 )}
 
                 {/* Description */}
-                <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.82rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.65, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                <p style={{ fontFamily: "Inter, sans-serif", fontSize: "0.84rem", color: "var(--text-muted)", margin: 0, lineHeight: 1.65, display: "-webkit-box", WebkitLineClamp: 2, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
                   {job.description}
                 </p>
 
                 {/* Footer */}
-                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: 2 }}>
+                <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, marginTop: "auto", paddingTop: 4 }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                     {job.owner.image ? (
                       // eslint-disable-next-line @next/next/no-img-element
@@ -279,10 +222,10 @@ export default function JobBoardClient({
                     href={`/talent`}
                     style={{
                       display: "inline-flex", alignItems: "center", gap: 5,
-                      padding: "6px 14px", borderRadius: 8,
+                      padding: "7px 16px", borderRadius: 10,
                       border: "1.5px solid #14B8A6", color: "#14B8A6",
                       fontFamily: "Inter, sans-serif", fontWeight: 700,
-                      fontSize: "0.72rem", textDecoration: "none",
+                      fontSize: "0.75rem", textDecoration: "none",
                       transition: "background 0.15s",
                     }}
                   >
