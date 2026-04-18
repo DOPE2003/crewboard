@@ -262,9 +262,9 @@ export default function ActivitiesClient({
 
   // ── Build feed ────────────────────────────────────────────────────────────
   const baseItems = useMemo<FeedItem[]>(() => {
-    // In 'all' tab, only surface conversations where someone messaged YOU (unread > 0)
+    // Only surface conversations where someone messaged YOU (unread > 0)
     const allMsgItems = convs.map(c => ({ kind: 'message' as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
-    const msgItems = allMsgItems.filter(item => activeTab !== 'all' || item.data.unread > 0)
+    const msgItems = allMsgItems.filter(item => item.data.unread > 0)
     const orderItems = orders.map(o => ({ kind: 'order'   as const, data: o, ts: new Date(o.createdAt).getTime() }))
 
     const notifSrc =
@@ -277,7 +277,7 @@ export default function ActivitiesClient({
 
     let items: FeedItem[] =
       activeTab === 'all'      ? [...msgItems, ...notifItems, ...orderItems] :
-      activeTab === 'messages' ? allMsgItems :
+      activeTab === 'messages' ? msgItems :
       activeTab === 'orders'   ? orderItems :
       activeTab === 'payments' ? [...notifItems, ...orders.filter(o => o.status === 'completed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() }))] :
       activeTab === 'disputes' ? [...orders.filter(o => o.status === 'disputed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() })), ...notifItems] :
