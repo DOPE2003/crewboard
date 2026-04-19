@@ -67,17 +67,33 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             },
           });
         } catch (e: any) {
-          // P2002: twitterHandle already exists under a different/null twitterId.
-          // Link the twitterId to the existing user instead.
-          if (e?.code === "P2002" && handle) {
-            await db.user.update({
-              where: { twitterHandle: handle },
-              data: {
-                twitterId: account.providerAccountId,
-                name: user.name ?? undefined,
-                image: image ?? undefined,
-              },
-            });
+          // P2002: unique constraint hit — twitterHandle or email already exists
+          // under a different twitterId (e.g. Apple-merged account reconnecting Twitter).
+          // Try to link the Twitter credentials to the existing row.
+          if (e?.code === "P2002") {
+            // 1. Match by twitterHandle (same handle on Twitter as in DB)
+            const byHandle = handle
+              ? await db.user.findUnique({ where: { twitterHandle: handle }, select: { id: true } })
+              : null;
+            // 2. Fallback: match by email (covers Apple-merged accounts with a different handle)
+            const byEmail = !byHandle && user.email
+              ? await db.user.findUnique({ where: { email: user.email }, select: { id: true } })
+              : null;
+
+            const target = byHandle ?? byEmail;
+            if (target) {
+              await db.user.update({
+                where: { id: target.id },
+                data: {
+                  twitterId: account.providerAccountId,
+                  name: user.name ?? undefined,
+                  image: image ?? undefined,
+                  ...(handle ? { twitterHandle: handle } : {}),
+                },
+              });
+            } else {
+              throw e;
+            }
           } else {
             throw e;
           }
