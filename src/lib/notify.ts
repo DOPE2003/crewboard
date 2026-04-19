@@ -28,9 +28,9 @@ export async function notifyUser({
   actionUrl?: string;
   senderImage?: string | null;
   messageId?: string;
-}) {
+}): Promise<string | null> {
   try {
-    await db.notification.create({
+    const notif = await db.notification.create({
       data: {
         userId, type, title, body,
         ...(link        ? { link }        : {}),
@@ -38,10 +38,12 @@ export async function notifyUser({
         ...(senderImage ? { senderImage } : {}),
         ...(messageId   ? { messageId }   : {}),
       },
+      select: { id: true },
     });
+    return notif.id;
   } catch (e: any) {
     // P2002 = unique constraint violation — duplicate notification, silently skip
-    if (e?.code === "P2002") return;
+    if (e?.code === "P2002") return null;
     throw e;
   }
 

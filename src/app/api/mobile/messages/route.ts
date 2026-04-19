@@ -182,8 +182,8 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
 
       const msgPreview = parseMessageBody(msgBody).type === "text" ? msgBody.slice(0, 100) : "Sent you a file";
 
-      // Create notification with dedup key — P2002 is silently swallowed inside notifyUser
-      await notifyUser({
+      // Create notification — returns the ID for deep-link in push payload
+      const notifId = await notifyUser({
         userId: receiverId,
         type: "message",
         title: senderName,
@@ -192,7 +192,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         actionUrl: `crewboard://chat/${conversationId}`,
         messageId: message.id,
         ...(senderImage ? { senderImage } : {}),
-      }).catch(() => {});
+      }).catch(() => null);
 
       // Query actual unread count so iOS badge reflects real backlog
       const unreadCount = await db.notification.count({
@@ -203,7 +203,11 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         userId: receiverId,
         title: senderName,
         body: msgPreview.slice(0, 120),
-        data: { type: "message", refId: conversationId, senderId: user.sub },
+        data: {
+          type: "message",
+          actionUrl: `crewboard://chat/${conversationId}`,
+          ...(notifId ? { notificationId: notifId } : {}),
+        },
         badge: unreadCount,
       }).catch(() => {});
     }
