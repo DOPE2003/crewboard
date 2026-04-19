@@ -262,10 +262,15 @@ export default function ActivitiesClient({
 
   // ── Build feed ────────────────────────────────────────────────────────────
   const baseItems = useMemo<FeedItem[]>(() => {
-    // Only surface conversations where someone messaged YOU (unread > 0)
+    // Conversations: already filtered by unread > 0.
     const allMsgItems = convs.map(c => ({ kind: 'message' as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
     const msgItems = allMsgItems.filter(item => item.data.unread > 0)
-    const orderItems = orders.map(o => ({ kind: 'order'   as const, data: o, ts: new Date(o.createdAt).getTime() }))
+
+    // Orders: only active flows — pending, accepted, funded, delivered, disputed.
+    const activeOrderStatuses = new Set(['pending', 'accepted', 'funded', 'delivered', 'disputed'])
+    const orderItems = orders
+      .filter(o => activeOrderStatuses.has(o.status))
+      .map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() }))
 
     const notifSrc =
       activeTab === 'reviews'  ? reviewNotifs  :
@@ -273,13 +278,16 @@ export default function ActivitiesClient({
       activeTab === 'disputes' ? disputeNotifs :
       nonMsgNotifs
 
-    const notifItems = notifSrc.map(n => ({ kind: 'notification' as const, data: n, ts: new Date(n.createdAt).getTime() }))
+    // Notifications: hide read ones (inbox-style).
+    const notifItems = notifSrc
+      .filter(n => !n.read)
+      .map(n => ({ kind: 'notification' as const, data: n, ts: new Date(n.createdAt).getTime() }))
 
     let items: FeedItem[] =
       activeTab === 'all'      ? [...msgItems, ...notifItems, ...orderItems] :
       activeTab === 'messages' ? msgItems :
       activeTab === 'orders'   ? orderItems :
-      activeTab === 'payments' ? [...notifItems, ...orders.filter(o => o.status === 'completed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() }))] :
+      activeTab === 'payments' ? notifItems :
       activeTab === 'disputes' ? [...orders.filter(o => o.status === 'disputed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() })), ...notifItems] :
       notifItems
 
@@ -674,7 +682,7 @@ export default function ActivitiesClient({
               activeTab === 'payments' ? 'Payments and escrow events will appear here.' :
               activeTab === 'disputes' ? 'No disputes. Nice work staying out of here.' :
               activeTab === 'reviews'  ? 'Reviews you receive will appear here.' :
-              'No activity yet.'
+              hasAnyUnread ? 'No more activity in this tab.' : "You're all caught up."
             } />
           ) : (
             groupedItems.map((group, gi) => (
@@ -682,13 +690,15 @@ export default function ActivitiesClient({
                 <p className="act-date-label" style={{ paddingTop: gi === 0 ? 0 : 16 }}>
                   {group.label}
                 </p>
-                {group.items.map((item, i) => (
-                  <div key={`${item.kind}-${item.data.id}-${i}`}>
-                    {item.kind === 'message'      && <MessageCard c={item.data} />}
-                    {item.kind === 'notification' && <NotifCard   n={item.data} />}
-                    {item.kind === 'order'        && <OrderCard   o={item.data} />}
-                  </div>
-                ))}
+                <div className="act-feed-list">
+                  {group.items.map((item, i) => (
+                    <div key={`${item.kind}-${item.data.id}-${i}`}>
+                      {item.kind === 'message'      && <MessageCard c={item.data} />}
+                      {item.kind === 'notification' && <NotifCard   n={item.data} />}
+                      {item.kind === 'order'        && <OrderCard   o={item.data} />}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))
           )}

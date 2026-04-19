@@ -6576,6 +6576,36 @@ body.dark .act-mobile-tabs { background: var(--surface); border-color: var(--bor
 }
 .act-card--unread:hover { border-color: rgba(13,201,161,0.4); }
 
+/* Continuous feed list (iOS-parity) */
+.act-feed-list {
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  overflow: hidden;
+}
+.act-feed-list .act-card {
+  border-radius: 0;
+  border: none;
+  border-top: 1px solid var(--border);
+  margin-bottom: 0;
+  background: transparent;
+  padding: 14px 16px;
+}
+.act-feed-list > div:first-child .act-card { border-top: none; }
+.act-feed-list .act-card:hover {
+  background: var(--bg-secondary);
+  box-shadow: none;
+  transform: none;
+}
+.act-feed-list .act-card--unread {
+  border-left: 3px solid var(--brand);
+  background: #f6fffd;
+}
+.act-feed-list .act-card--unread:hover { background: #ecfefc; }
+body.dark .act-feed-list { background: var(--surface); border-color: var(--border); }
+body.dark .act-feed-list .act-card--unread { background: rgba(20,184,166,0.05); }
+body.dark .act-feed-list .act-card:hover { background: rgba(255,255,255,0.03); }
+
 /* Unread dot */
 .act-unread-dot {
   position: absolute;

@@ -55,6 +55,7 @@ export const ModelName = {
   SavedTalent: 'SavedTalent',
   Notification: 'Notification',
   Job: 'Job',
+  JobApplication: 'JobApplication',
   Project: 'Project',
   Conversation: 'Conversation',
   Message: 'Message',
@@ -65,6 +66,8 @@ export const ModelName = {
   ShowcasePost: 'ShowcasePost',
   ShowcaseInteraction: 'ShowcaseInteraction',
   ProWaitlist: 'ProWaitlist',
+  NotificationPreferences: 'NotificationPreferences',
+  EmailVerifyToken: 'EmailVerifyToken',
   PasswordResetToken: 'PasswordResetToken',
   Offer: 'Offer'
 } as const
@@ -106,6 +109,7 @@ export const UserScalarFieldEnum = {
   stripeVerificationId: 'stripeVerificationId',
   email: 'email',
   passwordHash: 'passwordHash',
+  emailVerified: 'emailVerified',
   lastSeenAt: 'lastSeenAt',
   portfolioItems: 'portfolioItems',
   cvUrl: 'cvUrl',
@@ -167,10 +171,26 @@ export const JobScalarFieldEnum = {
   milestones: 'milestones',
   status: 'status',
   ownerId: 'ownerId',
+  acceptedApplicantId: 'acceptedApplicantId',
   createdAt: 'createdAt'
 } as const
 
 export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
+
+
+export const JobApplicationScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  applicantId: 'applicantId',
+  coverLetter: 'coverLetter',
+  proposedRate: 'proposedRate',
+  portfolioURL: 'portfolioURL',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobApplicationScalarFieldEnum = (typeof JobApplicationScalarFieldEnum)[keyof typeof JobApplicationScalarFieldEnum]
 
 
 export const ProjectScalarFieldEnum = {
@@ -303,6 +323,30 @@ export const ProWaitlistScalarFieldEnum = {
 } as const
 
 export type ProWaitlistScalarFieldEnum = (typeof ProWaitlistScalarFieldEnum)[keyof typeof ProWaitlistScalarFieldEnum]
+
+
+export const NotificationPreferencesScalarFieldEnum = {
+  userId: 'userId',
+  jobAlerts: 'jobAlerts',
+  jobCategories: 'jobCategories',
+  offerAlerts: 'offerAlerts',
+  chatAlerts: 'chatAlerts',
+  marketing: 'marketing',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationPreferencesScalarFieldEnum = (typeof NotificationPreferencesScalarFieldEnum)[keyof typeof NotificationPreferencesScalarFieldEnum]
+
+
+export const EmailVerifyTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailVerifyTokenScalarFieldEnum = (typeof EmailVerifyTokenScalarFieldEnum)[keyof typeof EmailVerifyTokenScalarFieldEnum]
 
 
 export const PasswordResetTokenScalarFieldEnum = {

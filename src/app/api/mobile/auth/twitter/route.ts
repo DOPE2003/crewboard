@@ -67,12 +67,14 @@ export async function POST(req: NextRequest) {
           name: twitterUser.name ?? undefined,
           image: image ?? undefined,
           twitterHandle: handle,
+          emailVerified: new Date(), // Twitter proves identity
         },
         create: {
           twitterId: twitterUser.id,
           twitterHandle: handle,
           name: twitterUser.name,
           image,
+          emailVerified: new Date(),
         },
         select: { id: true, twitterHandle: true, role: true, profileComplete: true, name: true, email: true, isOG: true },
       });
@@ -129,11 +131,12 @@ export async function POST(req: NextRequest) {
         role: true, profileComplete: true, isOG: true, bio: true, userTitle: true,
         skills: true, availability: true, walletAddress: true, humanVerified: true,
         githubHandle: true, telegramHandle: true, linkedinHandle: true,
-        discordHandle: true, website: true, bannerImage: true,
+        discordHandle: true, website: true, bannerImage: true, emailVerified: true,
       },
     });
 
-    return ok({ token, user: fullUser });
+    const { emailVerified, ...userRest } = fullUser ?? {} as any;
+    return ok({ token, user: { ...userRest, emailVerified: !!emailVerified } });
   } catch (e) {
     console.error("[mobile/auth/twitter]", e);
     return err("Something went wrong.", 500);

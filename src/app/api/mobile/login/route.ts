@@ -50,6 +50,7 @@ export async function POST(req: NextRequest) {
         profileComplete: true,
         isOG: true,
         humanVerified: true,
+        emailVerified: true,
         role: true,
         bannerImage: true,
         githubHandle: true,
@@ -78,9 +79,9 @@ export async function POST(req: NextRequest) {
     // fire-and-forget
     db.user.update({ where: { id: user.id }, data: { lastSeenAt: new Date() } }).catch(() => {});
 
-    const { passwordHash: _ph, ...profile } = user;
+    const { passwordHash: _ph, emailVerified, ...rest } = user;
 
-    return ok({ token, user: profile });
+    return ok({ token, user: { ...rest, emailVerified: !!emailVerified } });
   } catch (e) {
     console.error("[mobile/login]", e);
     return err("Something went wrong.", 500);

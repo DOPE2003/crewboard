@@ -388,6 +388,7 @@ export const ModelName = {
   SavedTalent: 'SavedTalent',
   Notification: 'Notification',
   Job: 'Job',
+  JobApplication: 'JobApplication',
   Project: 'Project',
   Conversation: 'Conversation',
   Message: 'Message',
@@ -398,6 +399,8 @@ export const ModelName = {
   ShowcasePost: 'ShowcasePost',
   ShowcaseInteraction: 'ShowcaseInteraction',
   ProWaitlist: 'ProWaitlist',
+  NotificationPreferences: 'NotificationPreferences',
+  EmailVerifyToken: 'EmailVerifyToken',
   PasswordResetToken: 'PasswordResetToken',
   Offer: 'Offer'
 } as const
@@ -415,7 +418,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "job" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "passwordResetToken" | "offer"
+    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "offer"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -712,6 +715,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.JobCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.JobCountAggregateOutputType> | number
+        }
+      }
+    }
+    JobApplication: {
+      payload: Prisma.$JobApplicationPayload<ExtArgs>
+      fields: Prisma.JobApplicationFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.JobApplicationFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.JobApplicationFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+        }
+        findFirst: {
+          args: Prisma.JobApplicationFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.JobApplicationFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+        }
+        findMany: {
+          args: Prisma.JobApplicationFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+        }
+        create: {
+          args: Prisma.JobApplicationCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+        }
+        createMany: {
+          args: Prisma.JobApplicationCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.JobApplicationCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+        }
+        delete: {
+          args: Prisma.JobApplicationDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+        }
+        update: {
+          args: Prisma.JobApplicationUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+        }
+        deleteMany: {
+          args: Prisma.JobApplicationDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.JobApplicationUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.JobApplicationUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>[]
+        }
+        upsert: {
+          args: Prisma.JobApplicationUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$JobApplicationPayload>
+        }
+        aggregate: {
+          args: Prisma.JobApplicationAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateJobApplication>
+        }
+        groupBy: {
+          args: Prisma.JobApplicationGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobApplicationGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.JobApplicationCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.JobApplicationCountAggregateOutputType> | number
         }
       }
     }
@@ -1455,6 +1532,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    NotificationPreferences: {
+      payload: Prisma.$NotificationPreferencesPayload<ExtArgs>
+      fields: Prisma.NotificationPreferencesFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.NotificationPreferencesFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.NotificationPreferencesFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>
+        }
+        findFirst: {
+          args: Prisma.NotificationPreferencesFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.NotificationPreferencesFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>
+        }
+        findMany: {
+          args: Prisma.NotificationPreferencesFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>[]
+        }
+        create: {
+          args: Prisma.NotificationPreferencesCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>
+        }
+        createMany: {
+          args: Prisma.NotificationPreferencesCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.NotificationPreferencesCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>[]
+        }
+        delete: {
+          args: Prisma.NotificationPreferencesDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>
+        }
+        update: {
+          args: Prisma.NotificationPreferencesUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>
+        }
+        deleteMany: {
+          args: Prisma.NotificationPreferencesDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.NotificationPreferencesUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.NotificationPreferencesUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>[]
+        }
+        upsert: {
+          args: Prisma.NotificationPreferencesUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$NotificationPreferencesPayload>
+        }
+        aggregate: {
+          args: Prisma.NotificationPreferencesAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateNotificationPreferences>
+        }
+        groupBy: {
+          args: Prisma.NotificationPreferencesGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationPreferencesGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.NotificationPreferencesCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.NotificationPreferencesCountAggregateOutputType> | number
+        }
+      }
+    }
+    EmailVerifyToken: {
+      payload: Prisma.$EmailVerifyTokenPayload<ExtArgs>
+      fields: Prisma.EmailVerifyTokenFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.EmailVerifyTokenFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.EmailVerifyTokenFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>
+        }
+        findFirst: {
+          args: Prisma.EmailVerifyTokenFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.EmailVerifyTokenFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>
+        }
+        findMany: {
+          args: Prisma.EmailVerifyTokenFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>[]
+        }
+        create: {
+          args: Prisma.EmailVerifyTokenCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>
+        }
+        createMany: {
+          args: Prisma.EmailVerifyTokenCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.EmailVerifyTokenCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>[]
+        }
+        delete: {
+          args: Prisma.EmailVerifyTokenDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>
+        }
+        update: {
+          args: Prisma.EmailVerifyTokenUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>
+        }
+        deleteMany: {
+          args: Prisma.EmailVerifyTokenDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.EmailVerifyTokenUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.EmailVerifyTokenUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>[]
+        }
+        upsert: {
+          args: Prisma.EmailVerifyTokenUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$EmailVerifyTokenPayload>
+        }
+        aggregate: {
+          args: Prisma.EmailVerifyTokenAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateEmailVerifyToken>
+        }
+        groupBy: {
+          args: Prisma.EmailVerifyTokenGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailVerifyTokenGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.EmailVerifyTokenCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.EmailVerifyTokenCountAggregateOutputType> | number
+        }
+      }
+    }
     PasswordResetToken: {
       payload: Prisma.$PasswordResetTokenPayload<ExtArgs>
       fields: Prisma.PasswordResetTokenFieldRefs
@@ -1663,6 +1888,7 @@ export const UserScalarFieldEnum = {
   stripeVerificationId: 'stripeVerificationId',
   email: 'email',
   passwordHash: 'passwordHash',
+  emailVerified: 'emailVerified',
   lastSeenAt: 'lastSeenAt',
   portfolioItems: 'portfolioItems',
   cvUrl: 'cvUrl',
@@ -1724,10 +1950,26 @@ export const JobScalarFieldEnum = {
   milestones: 'milestones',
   status: 'status',
   ownerId: 'ownerId',
+  acceptedApplicantId: 'acceptedApplicantId',
   createdAt: 'createdAt'
 } as const
 
 export type JobScalarFieldEnum = (typeof JobScalarFieldEnum)[keyof typeof JobScalarFieldEnum]
+
+
+export const JobApplicationScalarFieldEnum = {
+  id: 'id',
+  jobId: 'jobId',
+  applicantId: 'applicantId',
+  coverLetter: 'coverLetter',
+  proposedRate: 'proposedRate',
+  portfolioURL: 'portfolioURL',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type JobApplicationScalarFieldEnum = (typeof JobApplicationScalarFieldEnum)[keyof typeof JobApplicationScalarFieldEnum]
 
 
 export const ProjectScalarFieldEnum = {
@@ -1860,6 +2102,30 @@ export const ProWaitlistScalarFieldEnum = {
 } as const
 
 export type ProWaitlistScalarFieldEnum = (typeof ProWaitlistScalarFieldEnum)[keyof typeof ProWaitlistScalarFieldEnum]
+
+
+export const NotificationPreferencesScalarFieldEnum = {
+  userId: 'userId',
+  jobAlerts: 'jobAlerts',
+  jobCategories: 'jobCategories',
+  offerAlerts: 'offerAlerts',
+  chatAlerts: 'chatAlerts',
+  marketing: 'marketing',
+  updatedAt: 'updatedAt'
+} as const
+
+export type NotificationPreferencesScalarFieldEnum = (typeof NotificationPreferencesScalarFieldEnum)[keyof typeof NotificationPreferencesScalarFieldEnum]
+
+
+export const EmailVerifyTokenScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  token: 'token',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EmailVerifyTokenScalarFieldEnum = (typeof EmailVerifyTokenScalarFieldEnum)[keyof typeof EmailVerifyTokenScalarFieldEnum]
 
 
 export const PasswordResetTokenScalarFieldEnum = {
@@ -2126,6 +2392,7 @@ export type GlobalOmitConfig = {
   savedTalent?: Prisma.SavedTalentOmit
   notification?: Prisma.NotificationOmit
   job?: Prisma.JobOmit
+  jobApplication?: Prisma.JobApplicationOmit
   project?: Prisma.ProjectOmit
   conversation?: Prisma.ConversationOmit
   message?: Prisma.MessageOmit
@@ -2136,6 +2403,8 @@ export type GlobalOmitConfig = {
   showcasePost?: Prisma.ShowcasePostOmit
   showcaseInteraction?: Prisma.ShowcaseInteractionOmit
   proWaitlist?: Prisma.ProWaitlistOmit
+  notificationPreferences?: Prisma.NotificationPreferencesOmit
+  emailVerifyToken?: Prisma.EmailVerifyTokenOmit
   passwordResetToken?: Prisma.PasswordResetTokenOmit
   offer?: Prisma.OfferOmit
 }

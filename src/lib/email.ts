@@ -126,6 +126,19 @@ export async function sendPasswordResetEmail({
   `);
 }
 
+export async function sendEmailVerificationEmail({
+  to, verifyUrl,
+}: { to: string; verifyUrl: string }) {
+  return send(to, "Verify your Crewboard email", `
+    <h2 style="margin:0 0 10px;font-size:20px;color:#0f172a;">Verify your email</h2>
+    <p style="color:#475569;font-size:15px;line-height:1.7;margin:0 0 24px;">
+      Thanks for joining Crewboard! Click the button below to verify your email address. This link expires in <strong>24 hours</strong>.
+    </p>
+    <a href="${verifyUrl}" style="display:inline-block;padding:12px 28px;background:#2dd4bf;color:#0f172a;font-weight:700;border-radius:8px;text-decoration:none;">Verify Email</a>
+    <p style="margin-top:28px;font-size:13px;color:#94a3b8;">If you didn't create a Crewboard account, you can safely ignore this email.</p>
+  `);
+}
+
 export async function sendHireNotification({
   to, buyerName, conversationId,
 }: { to: string; buyerName: string; conversationId: string }) {

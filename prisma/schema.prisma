@@ -34,6 +34,7 @@ model User {
   stripeVerificationId String?               @unique
   email                String?               @unique
   passwordHash         String?
+  emailVerified        DateTime?
   lastSeenAt           DateTime?
   portfolioItems       Json                  @default("[]")
   cvUrl                String?
@@ -50,6 +51,7 @@ model User {
   humanVerified        Boolean               @default(false)
   gigs                 Gig[]
   jobs                 Job[]
+  jobApplications      JobApplication[]
   sentMessages         Message[]
   notifications        Notification[]
   buyerOrders          Order[]               @relation("BuyerOrders")
@@ -64,7 +66,9 @@ model User {
   showcaseInteractions ShowcaseInteraction[]
   showcasePosts        ShowcasePost[]
   proWaitlist          ProWaitlist?
-  passwordResetTokens  PasswordResetToken[]
+  passwordResetTokens     PasswordResetToken[]
+  emailVerifyTokens       EmailVerifyToken[]
+  notificationPreferences NotificationPreferences?
 }
 
 model SavedTalent {
@@ -110,13 +114,34 @@ model Job {
   tags        String[]
   description String
   milestones  Boolean  @default(false)
-  status      String   @default("open")
-  ownerId     String
-  createdAt   DateTime @default(now())
-  owner       User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  status                String   @default("open")
+  ownerId               String
+  acceptedApplicantId   String?
+  createdAt             DateTime @default(now())
+  owner                 User     @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  applications          JobApplication[]
 
   @@index([status])
   @@index([chain])
+}
+
+model JobApplication {
+  id            String   @id @default(cuid())
+  jobId         String
+  applicantId   String
+  coverLetter   String
+  proposedRate  String?
+  portfolioURL  String?
+  status        String   @default("pending")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  job       Job  @relation(fields: [jobId], references: [id], onDelete: Cascade)
+  applicant User @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+
+  @@unique([jobId, applicantId])
+  @@index([jobId, status])
+  @@index([applicantId, status])
 }
 
 model Project {
@@ -255,6 +280,26 @@ model ProWaitlist {
   joinedAt DateTime @default(now())
   notified Boolean  @default(false)
   user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model NotificationPreferences {
+  userId         String   @id
+  jobAlerts      Boolean  @default(true)
+  jobCategories  String[] @default([])
+  offerAlerts    Boolean  @default(true)
+  chatAlerts     Boolean  @default(true)
+  marketing      Boolean  @default(false)
+  updatedAt      DateTime @updatedAt
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model EmailVerifyToken {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model PasswordResetToken {

@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
         email: email.toLowerCase(),
         passwordHash,
         name: name || handle,
-        image: image || null,
+        image: (image && !image.startsWith("data:")) ? image : null,
         isOG: userCount < 20,
       },
       select: { id: true, isOG: true },

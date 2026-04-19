@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "TEAMID.com.crewboard.ios",
+        "paths": [
+          "/jobs/*",
+          "/gigs/*",
+          "/offer/*",
+          "/orders/*",
+          "/u/*",
+          "NOT /api/*",
+          "NOT /.well-known/*"
+        ]
+      }
+    ]
+  }
+}

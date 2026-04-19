@@ -17,7 +17,11 @@ import db from "@/lib/db";
 import { signMobileJWT } from "../_lib/jwt";
 import { ok, err } from "../_lib/response";
 import { rateLimit, clientIp } from "../_lib/rate-limit";
-import { sendWelcomeEmail } from "@/lib/email";
+import { sendWelcomeEmail, sendEmailVerificationEmail } from "@/lib/email";
+import { randomBytes } from "crypto";
+
+const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
+const VERIFY_TTL_MS = 24 * 60 * 60 * 1000;
 
 export async function POST(req: NextRequest) {
   // 5 registrations / minute per IP
@@ -66,9 +70,12 @@ export async function POST(req: NextRequest) {
       },
       select: {
         id: true, twitterHandle: true, name: true, email: true,
-        image: true, role: true, profileComplete: true, isOG: true,
+        image: true, role: true, profileComplete: true, isOG: true, emailVerified: true,
       },
     });
+
+    // Create default notification preferences
+    db.notificationPreferences.create({ data: { userId: user.id } }).catch(() => {});
 
     // Welcome notification + email (fire-and-forget)
     db.notification.create({
@@ -82,13 +89,25 @@ export async function POST(req: NextRequest) {
 
     sendWelcomeEmail({ to: email, name: user.name ?? handle, handle }).catch(() => {});
 
+    // Send email verification
+    const verifyToken = randomBytes(32).toString("hex");
+    await db.emailVerifyToken.create({
+      data: {
+        userId: user.id,
+        token: verifyToken,
+        expiresAt: new Date(Date.now() + VERIFY_TTL_MS),
+      },
+    });
+    const verifyUrl = `${BASE_URL}/verify-email?token=${verifyToken}`;
+    sendEmailVerificationEmail({ to: email, verifyUrl }).catch(() => {});
+
     const token = await signMobileJWT({
       sub: user.id,
       handle: user.twitterHandle,
       role: user.role,
     });
 
-    return ok({ token, user });
+    return ok({ token, user: { ...user, emailVerified: false } });
   } catch (e) {
     console.error("[mobile/register]", e);
     return err("Something went wrong.", 500);

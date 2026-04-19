@@ -150,6 +150,7 @@ export async function POST(req: NextRequest) {
             name: fullName?.trim() || handle,
             email: email ?? undefined,
             isOG: userCount < 20,
+            emailVerified: new Date(), // Apple proves identity
           },
           select: { id: true, twitterHandle: true, role: true, profileComplete: true, name: true, email: true },
         });
@@ -190,11 +191,12 @@ export async function POST(req: NextRequest) {
         role: true, profileComplete: true, isOG: true, bio: true, userTitle: true,
         skills: true, availability: true, walletAddress: true, humanVerified: true,
         githubHandle: true, telegramHandle: true, linkedinHandle: true,
-        discordHandle: true, website: true, bannerImage: true,
+        discordHandle: true, website: true, bannerImage: true, emailVerified: true,
       },
     });
 
-    return ok({ token, user: fullUser, isNewUser: isNew });
+    const { emailVerified, ...userRest } = fullUser ?? {} as any;
+    return ok({ token, user: { ...userRest, emailVerified: !!emailVerified }, isNewUser: isNew });
   } catch (e) {
     console.error("[mobile/auth/apple]", e);
     return err("Something went wrong.", 500);

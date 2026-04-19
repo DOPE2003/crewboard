@@ -38,6 +38,11 @@ export type Notification = Prisma.NotificationModel
  */
 export type Job = Prisma.JobModel
 /**
+ * Model JobApplication
+ * 
+ */
+export type JobApplication = Prisma.JobApplicationModel
+/**
  * Model Project
  * 
  */
@@ -87,6 +92,16 @@ export type ShowcaseInteraction = Prisma.ShowcaseInteractionModel
  * 
  */
 export type ProWaitlist = Prisma.ProWaitlistModel
+/**
+ * Model NotificationPreferences
+ * 
+ */
+export type NotificationPreferences = Prisma.NotificationPreferencesModel
+/**
+ * Model EmailVerifyToken
+ * 
+ */
+export type EmailVerifyToken = Prisma.EmailVerifyTokenModel
 /**
  * Model PasswordResetToken
  * 

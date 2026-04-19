@@ -14,6 +14,8 @@ import { NextRequest } from "next/server";
 import db from "@/lib/db";
 import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth";
 import { ok, err } from "../_lib/response";
+import { rateLimit } from "../_lib/rate-limit";
+import { fanOutNewJobNotifications } from "@/lib/job-notify";
 
 // ─── GET ──────────────────────────────────────────────────────────────────────
 
@@ -69,6 +71,7 @@ export async function GET(req: NextRequest) {
       milestones: j.milestones,
       createdAt: j.createdAt.toISOString(),
       owner: {
+        id: j.ownerId,
         name: j.owner.name,
         twitterHandle: j.owner.twitterHandle,
         image: j.owner.image,
@@ -85,6 +88,14 @@ export async function GET(req: NextRequest) {
 // ─── POST (create job) ────────────────────────────────────────────────────────
 
 async function postHandler(req: NextRequest, user: MobileTokenPayload) {
+  // Rate limit: 3 jobs/hour, 10 jobs/day per user
+  if (!rateLimit(`job-post-hour:${user.sub}`, 3, 60 * 60 * 1000)) {
+    return err("You can only post 3 jobs per hour. Please wait before posting again.", 429);
+  }
+  if (!rateLimit(`job-post-day:${user.sub}`, 10, 24 * 60 * 60 * 1000)) {
+    return err("Daily job post limit reached (10/day).", 429);
+  }
+
   try {
     const body = await req.json().catch(() => ({}));
     const {
@@ -96,6 +107,21 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       return err("title, company, budget and description are required.");
     }
 
+    const jobCategory = category || "Development";
+
+    // Duplicate detection: same user, same title+company within 10 minutes
+    const tenMinAgo = new Date(Date.now() - 10 * 60 * 1000);
+    const dupe = await db.job.findFirst({
+      where: {
+        ownerId: user.sub,
+        title: { equals: title.trim(), mode: "insensitive" },
+        company: { equals: company.trim(), mode: "insensitive" },
+        createdAt: { gte: tenMinAgo },
+      },
+      select: { id: true },
+    });
+    if (dupe) return err("Duplicate job detected. Please wait before reposting the same job.", 400);
+
     const job = await db.job.create({
       data: {
         title: title.trim(),
@@ -103,7 +129,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         budget: budget.trim(),
         duration: duration?.trim() || null,
         chain: chain || "ETH",
-        category: category || "Development",
+        category: jobCategory,
         level: level || "Senior",
         jobType: jobType || "Remote",
         tags: Array.isArray(tags) ? tags.map((t: string) => t.trim()).filter(Boolean) : [],
@@ -111,6 +137,18 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         milestones: !!milestones,
         ownerId: user.sub,
       },
+    });
+
+    // Fan-out push notifications (fire-and-forget)
+    queueMicrotask(() => {
+      fanOutNewJobNotifications({
+        id: job.id,
+        title: job.title,
+        company: job.company,
+        budget: job.budget,
+        category: jobCategory,
+        ownerId: user.sub,
+      }).catch(e => console.error("[jobs/notify]", e));
     });
 
     return ok({ id: job.id });
