@@ -103,7 +103,8 @@ async function getHandler(req: NextRequest) {
       sentAt: m.createdAt,
     }));
 
-    const nextCursor = rows.length === 50 ? rows[0].id : null;
+    // rows is desc (newest first); oldest row is last — that's the scroll-up cursor
+    const nextCursor = rows.length === 50 ? rows[rows.length - 1].id : null;
 
     return ok(messages, { nextCursor });
   } catch (e) {

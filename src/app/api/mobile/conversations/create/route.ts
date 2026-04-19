@@ -38,7 +38,8 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
     if (!other) return err("User not found.", 404);
     if (other.id === user.sub) return err("Cannot start a conversation with yourself.");
 
-    // Find existing conversation
+    // Find existing conversation — orderBy updatedAt so both sides always resolve
+    // to the same canonical (most recently active) conversation, even if duplicates exist
     const existing = await db.conversation.findFirst({
       where: {
         AND: [
@@ -46,6 +47,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
           { participants: { has: other.id } },
         ],
       },
+      orderBy: { updatedAt: "desc" },
       select: { id: true },
     });
 
