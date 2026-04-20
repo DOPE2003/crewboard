@@ -93,7 +93,7 @@ function getDateGroup(iso: string): string {
   return 'EARLIER'
 }
 
-type SidebarTab = 'all' | 'messages' | 'orders' | 'payments' | 'disputes' | 'reviews'
+type SidebarTab = 'all' | 'messages' | 'orders' | 'payments' | 'disputes' | 'reviews' | 'system'
 
 function previewLastMessage(body: string | null): string {
   if (!body) return 'No messages yet'
@@ -210,11 +210,13 @@ export default function ActivitiesClient({
   const reviewNotifs    = useMemo(() => nonMsgNotifs.filter(n => n.type === 'review'), [nonMsgNotifs])
   const paymentNotifs   = useMemo(() => nonMsgNotifs.filter(n => ['payment_received', 'escrow_funded', 'escrow_released'].includes(n.type)), [nonMsgNotifs])
   const disputeNotifs   = useMemo(() => nonMsgNotifs.filter(n => ['dispute_opened', 'dispute'].includes(n.type)), [nonMsgNotifs])
+  const systemNotifs    = useMemo(() => nonMsgNotifs.filter(n => ['system', 'welcome', 'signin', 'profile_view'].includes(n.type) || !['review', 'payment_received', 'escrow_funded', 'escrow_released', 'dispute_opened', 'dispute', 'order', 'offer'].includes(n.type)), [nonMsgNotifs])
   const disputeOrders   = useMemo(() => orders.filter(o => o.status === 'disputed'), [orders])
 
   const reviewUnread    = reviewNotifs.filter(n => !n.read).length
   const paymentUnread   = paymentNotifs.filter(n => !n.read).length
   const disputeCount    = disputeOrders.length + disputeNotifs.filter(n => !n.read).length
+  const systemUnread    = systemNotifs.filter(n => !n.read).length
 
   async function handleMarkAllRead() {
     if (markingAll || !hasAnyUnread) return
@@ -275,6 +277,7 @@ export default function ActivitiesClient({
       activeTab === 'reviews'  ? reviewNotifs  :
       activeTab === 'payments' ? paymentNotifs :
       activeTab === 'disputes' ? disputeNotifs :
+      activeTab === 'system'   ? systemNotifs  :
       nonMsgNotifs
 
     const notifItems = notifSrc
@@ -286,6 +289,7 @@ export default function ActivitiesClient({
       activeTab === 'orders'   ? orderItems :
       activeTab === 'payments' ? notifItems :
       activeTab === 'disputes' ? [...orders.filter(o => o.status === 'disputed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() })), ...notifItems] :
+      activeTab === 'system'   ? notifItems :
       notifItems
 
     const q = search.toLowerCase().trim()
@@ -338,6 +342,7 @@ export default function ActivitiesClient({
     { key: 'payments', label: 'Payments',        count: paymentUnread },
     { key: 'disputes', label: 'Disputes',        count: disputeCount, urgent: disputeCount > 0 },
     { key: 'reviews',  label: 'Reviews',         count: reviewUnread },
+    { key: 'system',   label: 'System',          count: systemUnread },
   ]
 
   // ── Sub-components ────────────────────────────────────────────────────────
@@ -550,6 +555,7 @@ export default function ActivitiesClient({
     activeTab === 'orders'   ? 'Orders' :
     activeTab === 'payments' ? 'Payments' :
     activeTab === 'disputes' ? 'Disputes' :
+    activeTab === 'system'   ? 'System' :
                                'Reviews'
 
   const mobileTabs: { key: SidebarTab; label: string }[] = [
@@ -559,6 +565,7 @@ export default function ActivitiesClient({
     { key: 'payments', label: 'Payments' },
     { key: 'disputes', label: 'Disputes' },
     { key: 'reviews',  label: 'Reviews' },
+    { key: 'system',   label: 'System' },
   ]
 
   return (
@@ -679,6 +686,7 @@ export default function ActivitiesClient({
               activeTab === 'payments' ? 'Payments and escrow events will appear here.' :
               activeTab === 'disputes' ? 'No disputes. Nice work staying out of here.' :
               activeTab === 'reviews'  ? 'Reviews you receive will appear here.' :
+              activeTab === 'system'   ? 'System notifications will appear here.' :
               hasAnyUnread ? 'No more activity in this tab.' : "You're all caught up."
             } />
           ) : (
