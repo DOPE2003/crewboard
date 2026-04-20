@@ -263,8 +263,7 @@ export default function ActivitiesClient({
   // ── Build feed ────────────────────────────────────────────────────────────
   const baseItems = useMemo<FeedItem[]>(() => {
     // Conversations: already filtered by unread > 0.
-    const allMsgItems = convs.map(c => ({ kind: 'message' as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
-    const msgItems = allMsgItems.filter(item => item.data.unread > 0)
+    const msgItems = convs.map(c => ({ kind: 'message' as const, data: c, ts: c.lastMessageTime ? new Date(c.lastMessageTime).getTime() : 0 }))
 
     // Orders: only active flows — pending, accepted, funded, delivered, disputed.
     const activeOrderStatuses = new Set(['pending', 'accepted', 'funded', 'delivered', 'disputed'])
@@ -278,9 +277,7 @@ export default function ActivitiesClient({
       activeTab === 'disputes' ? disputeNotifs :
       nonMsgNotifs
 
-    // Notifications: hide read ones (inbox-style).
     const notifItems = notifSrc
-      .filter(n => !n.read)
       .map(n => ({ kind: 'notification' as const, data: n, ts: new Date(n.createdAt).getTime() }))
 
     let items: FeedItem[] =
