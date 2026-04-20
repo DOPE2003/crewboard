@@ -80,8 +80,8 @@ export async function mergeAccounts(canonicalId: string, orphanId: string) {
       data:  { saverId: canonicalId },
     }),
     db.showcasePost.updateMany({
-      where: { authorId: orphanId },
-      data:  { authorId: canonicalId },
+      where: { userId: orphanId },
+      data:  { userId: canonicalId },
     }),
     db.showcaseInteraction.updateMany({
       where: { userId: orphanId },
