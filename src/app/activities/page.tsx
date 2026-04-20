@@ -107,8 +107,12 @@ export default async function ActivitiesPage() {
       }
     })
 
-    notifications = notifs.map(n => ({ ...n, createdAt: n.createdAt.toISOString() }))
-    totalNotifUnread = notifs.filter(n => !n.read).length
+    // Strip message-type notifications — message unread state is tracked via
+    // conversation.unread counts. Including them here inflates the badge without
+    // adding anything to the feed (the client filters them out anyway).
+    const nonMsgNotifs = notifs.filter(n => n.type !== 'message')
+    notifications = nonMsgNotifs.map(n => ({ ...n, createdAt: n.createdAt.toISOString() }))
+    totalNotifUnread = nonMsgNotifs.filter(n => !n.read).length
 
     orders = recentOrders.map(o => {
       const role: 'buyer' | 'seller' = o.buyerId === userId ? 'buyer' : 'seller'
