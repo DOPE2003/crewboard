@@ -38,16 +38,12 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
     if (!other) return err("User not found.", 404);
     if (other.id === user.sub) return err("Cannot start a conversation with yourself.");
 
-    // Find existing conversation — orderBy updatedAt so both sides always resolve
-    // to the same canonical (most recently active) conversation, even if duplicates exist
-    const existing = await db.conversation.findFirst({
-      where: {
-        AND: [
-          { participants: { has: user.sub } },
-          { participants: { has: other.id } },
-        ],
-      },
-      orderBy: { updatedAt: "desc" },
+    // Canonical key: sort participant IDs so ["a","b"] and ["b","a"] map to the same key
+    const participantKey = [user.sub, other.id].sort().join(":");
+
+    // Upsert by participantKey — DB-level unique constraint prevents duplicates
+    const existing = await db.conversation.findUnique({
+      where: { participantKey },
       select: { id: true },
     });
 
@@ -57,7 +53,10 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
     // Create new conversation
     const created = await db.conversation.create({
-      data: { participants: [user.sub, other.id] },
+      data: {
+        participants: [user.sub, other.id],
+        participantKey,
+      },
       select: { id: true },
     });
 

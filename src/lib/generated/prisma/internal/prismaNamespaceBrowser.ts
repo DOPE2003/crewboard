@@ -210,6 +210,7 @@ export type ProjectScalarFieldEnum = (typeof ProjectScalarFieldEnum)[keyof typeo
 export const ConversationScalarFieldEnum = {
   id: 'id',
   participants: 'participants',
+  participantKey: 'participantKey',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

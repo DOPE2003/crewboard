@@ -4,10 +4,14 @@ import db from "@/lib/db";
 import { notifyUser } from "@/lib/notify";
 
 // One-time endpoint: grants OG badge to first 20 users and notifies them.
-// Protected by ADMIN_SECRET env var.
+// Auth: session role=ADMIN OR x-admin-secret header.
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  const isAdminSession = (session?.user as any)?.role === "ADMIN";
   const secret = req.headers.get("x-admin-secret");
-  if (!secret || secret !== process.env.ADMIN_SECRET) {
+  const isAdminSecret = secret && secret === process.env.ADMIN_SECRET;
+
+  if (!isAdminSession && !isAdminSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

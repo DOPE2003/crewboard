@@ -26,10 +26,7 @@ import { sendPush } from "@/lib/push";
 
 // ─── GET ──────────────────────────────────────────────────────────────────────
 
-async function getHandler(req: NextRequest) {
-  const user = await getMobileUser(req);
-  if (!user) return err("Unauthorized", 401);
-
+async function getHandler(req: NextRequest, user: MobileTokenPayload) {
   const conversationId = req.nextUrl.searchParams.get("conversationId");
   if (!conversationId) return err("conversationId is required.");
 
@@ -107,8 +104,8 @@ async function getHandler(req: NextRequest) {
       sentAt: m.createdAt,
     }));
 
-    // rows is desc (newest first); oldest row is last — that's the scroll-up cursor
-    const nextCursor = rows.length === 50 ? rows[rows.length - 1].id : null;
+    // rows was fetched DESC then reversed to ASC — rows[0] is oldest, used as scroll-up cursor
+    const nextCursor = rows.length === 50 ? rows[0].id : null;
 
     return ok(messages, { nextCursor });
   } catch (e) {
@@ -173,7 +170,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
     db.conversation.update({
       where: { id: conversationId },
       data: { updatedAt: new Date() },
-    }).catch(() => {});
+    }).catch((e) => console.error("[mobile/messages] conv.updatedAt update failed:", e));
 
     // Notify the other participant (fire-and-forget)
     const receiverId = conv.participants.find((p) => p !== user.sub);
@@ -214,7 +211,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
           ...(notifId ? { notificationId: notifId } : {}),
         },
         badge: unreadCount,
-      }).catch(() => {});
+      }).catch((e) => console.error("[mobile/messages] sendPush failed:", e));
     }
 
     // Pusher real-time delivery (same pattern as web)
@@ -231,7 +228,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         ...message,
         replyTo: message.replyTo ?? null,
       });
-    } catch { /* Pusher failure must not fail the request */ }
+    } catch (e) { console.error("[mobile/messages] Pusher trigger failed:", e); }
 
     return ok({
       id: message.id,
@@ -255,5 +252,5 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
   }
 }
 
-export { getHandler as GET };
+export const GET  = withMobileAuth(getHandler);
 export const POST = withMobileAuth(postHandler);

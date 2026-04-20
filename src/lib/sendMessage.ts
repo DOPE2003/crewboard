@@ -15,6 +15,7 @@
 import db from "@/lib/db";
 import { pusher } from "@/lib/pusher";
 import { sendMessageNotification } from "@/lib/email";
+import { sendPush } from "@/lib/push";
 
 function msgBodyPreview(body: string, maxLen = 100): string {
   if (body.startsWith("__GIGREQUEST__:")) {
@@ -43,8 +44,6 @@ export async function createMessage({
   body: string;
   replyToId?: string | null;
 }) {
-  console.error("CREATE MESSAGE CALLED", { conversationId, senderId, bodyLength: body.length });
-
   // ── 1. Save to DB (hard fail if this throws) ────────────────────────────────
   const message = await db.message.create({
     data: {
@@ -71,7 +70,7 @@ export async function createMessage({
     await pusher.trigger(`conversation-${conversationId}`, "new-message", message);
     console.log(`[createMessage] Pusher triggered for conv: ${conversationId}`);
   } catch (err) {
-    console.warn("[createMessage] Pusher trigger failed (non-fatal):", err);
+    console.error("[createMessage] Pusher trigger failed:", err);
   }
 
   // ── 3. In-app notification + email (non-fatal) ───────────────────────────────
@@ -118,6 +117,17 @@ export async function createMessage({
         console.log(`[createMessage] Notification deduped (already exists) for message ${message.id}`);
       } else { throw e; }
     }
+
+    // FCM push for mobile users (fire-and-forget)
+    sendPush({
+      userId: recipientId,
+      title: senderName,
+      body: preview.slice(0, 120),
+      data: {
+        type: "message",
+        actionUrl: `crewboard://chat/${conversationId}`,
+      },
+    }).catch(() => {});
 
     // Email
     const recipientEmail = recipient?.email ?? null;

@@ -1,13 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth } from "@/auth";
 import db from "@/lib/db";
 import { notifyUser } from "@/lib/notify";
 
 // Sends an in-app notification + email to every user asking them to update their role.
-// Protected by ADMIN_SECRET env var.
+// Auth: session role=ADMIN OR x-admin-secret header.
 // Safe to call multiple times — skips users who already have this notification.
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  const isAdminSession = (session?.user as any)?.role === "ADMIN";
   const secret = req.headers.get("x-admin-secret");
-  if (!secret || secret !== process.env.ADMIN_SECRET) {
+  const isAdminSecret = secret && secret === process.env.ADMIN_SECRET;
+
+  if (!isAdminSession && !isAdminSecret) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 

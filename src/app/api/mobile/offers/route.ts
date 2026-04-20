@@ -21,6 +21,7 @@ import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth"
 import { ok, err } from "../_lib/response";
 import { notifyUser } from "@/lib/notify";
 import { sendPush } from "@/lib/push";
+import { rateLimit } from "../_lib/rate-limit";
 
 const OFFER_PREFIX = "__OFFER__:";
 
@@ -69,6 +70,11 @@ async function getHandler(req: NextRequest) {
 // ─── POST ─────────────────────────────────────────────────────────────────────
 
 async function postHandler(req: NextRequest, user: MobileTokenPayload) {
+  // 10 offers per hour per user
+  if (!rateLimit(`offers:${user.sub}`, 10, 60 * 60 * 1000)) {
+    return err("Too many offers sent. Please wait before sending another.", 429);
+  }
+
   try {
     const body = await req.json().catch(() => ({}));
     const { conversationId, receiverId, title, description, amount, deliveryDays } = body as {

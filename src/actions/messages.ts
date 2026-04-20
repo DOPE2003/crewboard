@@ -164,16 +164,15 @@ export async function sendFirstMessage(
     if (!senderId) throw new Error("Unauthorized");
     if (!body.trim()) throw new Error("Message cannot be empty");
 
-    // Find or create conversation (re-use if exists — even if empty)
-    const existing = await db.conversation.findFirst({
-      where: {
-        AND: [{ participants: { has: senderId } }, { participants: { has: recipientId } }],
-      },
+    const participantKey = [senderId, recipientId].sort().join(":");
+
+    const existing = await db.conversation.findUnique({
+      where: { participantKey },
       select: { id: true },
     });
 
     const conversationId = existing?.id ?? (await db.conversation.create({
-      data: { participants: [senderId, recipientId] },
+      data: { participants: [senderId, recipientId], participantKey },
       select: { id: true },
     })).id;
 
@@ -213,18 +212,14 @@ export async function cleanupEmptyConversations(): Promise<void> {
 
 // Shared helper — find or create conversation and optionally send an opening message
 async function getOrCreateConversation(senderId: string, recipientId: string) {
-  const existing = await db.conversation.findFirst({
-    where: {
-      AND: [
-        { participants: { has: senderId } },
-        { participants: { has: recipientId } },
-      ],
-    },
+  const participantKey = [senderId, recipientId].sort().join(":");
+  const existing = await db.conversation.findUnique({
+    where: { participantKey },
     select: { id: true },
   });
   if (existing) return existing.id;
   const conv = await db.conversation.create({
-    data: { participants: [senderId, recipientId] },
+    data: { participants: [senderId, recipientId], participantKey },
     select: { id: true },
   });
   return conv.id;

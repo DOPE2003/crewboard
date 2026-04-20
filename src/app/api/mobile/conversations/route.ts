@@ -64,27 +64,27 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
     const userMap = Object.fromEntries(otherUsers.map((u) => [u.id, u]));
 
-    const items = conversations.map((c, i) => {
+    const items = conversations.flatMap((c, i) => {
       const otherId = c.participants.find((p) => p !== user.sub) ?? "";
       const other   = userMap[otherId] ?? null;
+      // Skip conversations where the other user no longer exists
+      if (!other) return [];
       const lastMsg = c.messages[0] ?? null;
 
-      return {
+      return [{
         id: c.id,
         updatedAt: c.updatedAt.toISOString(),
         unread: unreadCounts[i],
-        other: other
-          ? {
-              id: other.id,
-              handle: other.twitterHandle,
-              name: other.name,
-              image: other.image,
-              title: other.userTitle,
-              online: other.lastSeenAt
-                ? Date.now() - new Date(other.lastSeenAt).getTime() < 3 * 60 * 1000
-                : false,
-            }
-          : null,
+        other: {
+          id: other.id,
+          handle: other.twitterHandle,
+          name: other.name,
+          image: other.image,
+          title: other.userTitle,
+          online: other.lastSeenAt
+            ? Date.now() - new Date(other.lastSeenAt).getTime() < 3 * 60 * 1000
+            : false,
+        },
         lastMessage: lastMsg
           ? {
               id: lastMsg.id,
@@ -94,7 +94,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
               sentAt: lastMsg.createdAt,
             }
           : null,
-      };
+      }];
     });
 
     const nextCursor =
