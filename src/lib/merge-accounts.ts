@@ -73,7 +73,7 @@ export async function mergeAccounts(canonicalId: string, orphanId: string) {
     }),
     db.savedTalent.deleteMany({
       // avoid duplicates before re-pointing
-      where: { saverId: orphanId, savedId: canonicalId },
+      where: { saverId: orphanId, savedUserId: canonicalId },
     }),
     db.savedTalent.updateMany({
       where: { saverId: orphanId },
