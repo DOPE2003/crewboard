@@ -99,7 +99,8 @@ export async function POST(req: NextRequest) {
       },
     });
     const verifyUrl = `${BASE_URL}/verify-email?token=${verifyToken}`;
-    sendEmailVerificationEmail({ to: email, verifyUrl }).catch(() => {});
+    // Must be awaited — fire-and-forget gets killed by Vercel before Resend fires
+    await sendEmailVerificationEmail({ to: email, verifyUrl }).catch(() => {});
 
     const token = await signMobileJWT({
       sub: user.id,
