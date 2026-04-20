@@ -33,7 +33,8 @@ async function getHandler(req: NextRequest) {
   const conversationId = req.nextUrl.searchParams.get("conversationId");
   if (!conversationId) return err("conversationId is required.");
 
-  const before = req.nextUrl.searchParams.get("before"); // message id cursor
+  const before = req.nextUrl.searchParams.get("before"); // load older messages
+  const after  = req.nextUrl.searchParams.get("after");  // poll for new messages
 
   try {
     // Verify the user is a participant
@@ -45,20 +46,23 @@ async function getHandler(req: NextRequest) {
       return err("Conversation not found.", 404);
     }
 
-    // Cursor: find the createdAt of the `before` message
+    // Resolve cursor dates
     let beforeDate: Date | undefined;
+    let afterDate:  Date | undefined;
     if (before) {
-      const pivot = await db.message.findUnique({
-        where: { id: before },
-        select: { createdAt: true },
-      });
+      const pivot = await db.message.findUnique({ where: { id: before }, select: { createdAt: true } });
       if (pivot) beforeDate = pivot.createdAt;
+    }
+    if (after) {
+      const pivot = await db.message.findUnique({ where: { id: after }, select: { createdAt: true } });
+      if (pivot) afterDate = pivot.createdAt;
     }
 
     const rows = await db.message.findMany({
       where: {
         conversationId,
         ...(beforeDate ? { createdAt: { lt: beforeDate } } : {}),
+        ...(afterDate  ? { createdAt: { gt: afterDate  } } : {}),
       },
       orderBy: { createdAt: "desc" }, // fetch newest-first, reverse below
       take: 50,
