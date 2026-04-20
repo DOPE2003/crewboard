@@ -60,16 +60,16 @@ export async function mergeAccounts(canonicalId: string, orphanId: string) {
       data:  { sellerId: canonicalId },
     }),
     db.jobApplication.updateMany({
-      where: { userId: orphanId },
-      data:  { userId: canonicalId },
+      where: { applicantId: orphanId },
+      data:  { applicantId: canonicalId },
     }),
     db.review.updateMany({
       where: { reviewerId: orphanId },
       data:  { reviewerId: canonicalId },
     }),
     db.review.updateMany({
-      where: { subjectId: orphanId },
-      data:  { subjectId: canonicalId },
+      where: { revieweeId: orphanId },
+      data:  { revieweeId: canonicalId },
     }),
     db.savedTalent.deleteMany({
       // avoid duplicates before re-pointing
