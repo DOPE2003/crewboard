@@ -8,9 +8,10 @@ export async function POST(req: NextRequest) {
   const userId = (session?.user as any)?.userId;
   if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-  // Twitter/X users cannot change their avatar here — it syncs from X
+  // Only block real Twitter/X users (not Apple Sign-In, whose IDs are stored in the same column)
   const dbUser = await db.user.findUnique({ where: { id: userId }, select: { twitterId: true } });
-  if (dbUser?.twitterId) {
+  const isRealTwitterUser = dbUser?.twitterId && !dbUser.twitterId.startsWith("apple:");
+  if (isRealTwitterUser) {
     return NextResponse.json({ error: "Twitter users cannot change their profile photo here. Update it on X." }, { status: 403 });
   }
 

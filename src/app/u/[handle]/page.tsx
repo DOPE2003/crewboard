@@ -159,7 +159,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const completionPct = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100);
   const nextItem = completionItems.find(i => !i.done);
 
-  const displayName = user.name ?? (user.twitterId ? "Anonymous" : user.twitterHandle);
+  const displayName = user.name ?? user.twitterHandle;
   const firstName = displayName.split(" ")[0];
 
   // Lowest active gig price
@@ -246,7 +246,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", padding: "0 1.5rem" }}>
                 <div style={{ position: "relative", marginTop: -44, zIndex: 10, flexShrink: 0 }}>
                   {isOwnProfile ? (
-                    <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId} />
+                    <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId && !user.twitterId.startsWith("apple:")} />
                   ) : (
                     <div style={{ width: 88, height: 88, borderRadius: "9999px", border: "3px solid var(--background)", background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden" }}>
                       {user.image && <img src={user.image} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
