@@ -10,7 +10,7 @@
  * - Generates a signed 20-minute token stored in PasswordResetToken.
  * - Reset link points to: https://crewboard.fun/reset-password?token=<token>
  * - Token is single-use: the web /reset-password flow invalidates it on success.
- * - Only users with a passwordHash can reset via this flow (OAuth-only accounts skip silently).
+ * - Works for OAuth-only accounts too — lets them set a password for the first time.
  */
 import { NextRequest } from "next/server";
 import { randomBytes } from "crypto";
@@ -47,7 +47,8 @@ export async function POST(req: NextRequest) {
     });
 
     // Always return 200 — prevents email enumeration
-    if (!user || !user.email || !user.passwordHash) return OK_RESPONSE;
+    // Note: we allow OAuth-only accounts (no passwordHash) to set a password via this flow
+    if (!user || !user.email) return OK_RESPONSE;
 
     // Invalidate any existing tokens for this user
     await db.passwordResetToken.deleteMany({ where: { userId: user.id } });
