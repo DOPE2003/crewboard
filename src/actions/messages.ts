@@ -71,10 +71,22 @@ export async function markMessagesAsRead(conversationId: string) {
   const userId = (session?.user as any)?.userId as string | undefined;
   if (!userId) return;
 
-  await db.message.updateMany({
-    where: { conversationId, read: false, senderId: { not: userId } },
-    data: { read: true },
-  });
+  await db.$transaction([
+    db.message.updateMany({
+      where: { conversationId, read: false, senderId: { not: userId } },
+      data: { read: true },
+    }),
+    // Sync notification read-state — prevents ghost unreads in the bell
+    db.notification.updateMany({
+      where: {
+        userId,
+        type: "message",
+        read: false,
+        link: { contains: `/messages/${conversationId}` },
+      },
+      data: { read: true },
+    }),
+  ]);
   revalidatePath("/messages", "layout");
 }
 

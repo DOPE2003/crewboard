@@ -78,12 +78,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       updates.email = (updates.email as string).toLowerCase();
     }
 
-    // Reject base64 image blobs — image must be a remote URL
+    // Drop base64 data URIs — image must be a remote URL (upload via /mobile/messages/upload first).
+    // Skip silently so other fields in the same request (name, bio, etc.) still save.
     if (typeof updates.image === "string" && (updates.image as string).startsWith("data:")) {
-      return err("image must be a URL, not a base64 data URI.");
+      delete updates.image;
     }
     if (typeof updates.bannerImage === "string" && (updates.bannerImage as string).startsWith("data:")) {
-      return err("bannerImage must be a URL, not a base64 data URI.");
+      delete updates.bannerImage;
     }
 
     // Validate skills is an array of strings

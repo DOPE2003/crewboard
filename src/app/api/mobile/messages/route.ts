@@ -75,15 +75,18 @@ async function getHandler(req: NextRequest, user: MobileTokenPayload) {
       },
     });
 
-    // Mark unread messages as read (fire-and-forget)
+    // Mark unread messages as read + sync notification read-state (fire-and-forget)
     const unreadIds = rows
       .filter((m) => !m.read && m.senderId !== user.sub)
       .map((m) => m.id);
     if (unreadIds.length > 0) {
-      db.message.updateMany({
-        where: { id: { in: unreadIds } },
-        data: { read: true },
-      }).catch(() => {});
+      db.$transaction([
+        db.message.updateMany({ where: { id: { in: unreadIds } }, data: { read: true } }),
+        db.notification.updateMany({
+          where: { userId: user.sub, type: "message", read: false, link: { contains: `/messages/${conversationId}` } },
+          data: { read: true },
+        }),
+      ]).catch(() => {});
     }
 
     const messages = rows.reverse().map((m) => ({
