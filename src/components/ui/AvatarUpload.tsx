@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import ImageCropModal from "./ImageCropModal";
+import UserAvatar from "./UserAvatar";
 
 export default function AvatarUpload({
   currentImage,
@@ -12,7 +13,7 @@ export default function AvatarUpload({
   name?: string | null;
   isTwitterUser?: boolean;
 }) {
-  const [preview, setPreview] = useState(currentImage ?? "");
+  const [preview, setPreview] = useState<string | null>(currentImage ?? null);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
   const [cropSrc, setCropSrc] = useState<string | null>(null);
@@ -25,24 +26,40 @@ export default function AvatarUpload({
     setError("");
     const objectUrl = URL.createObjectURL(file);
     setCropSrc(objectUrl);
-    // reset input so the same file can be re-selected
     if (fileRef.current) fileRef.current.value = "";
   }
 
   async function handleCropConfirm(dataUrl: string) {
     if (cropSrc) URL.revokeObjectURL(cropSrc);
     setCropSrc(null);
-    setPreview(dataUrl);
+    setPreview(dataUrl); // optimistic
     setUploading(true);
+    setError("");
 
-    const res = await fetch("/api/user/avatar", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ url: dataUrl }),
-    });
+    try {
+      // Convert data URL to Blob and upload as a file — avoids storing base64 in DB
+      const res = await fetch(dataUrl);
+      const blob = await res.blob();
+      const file = new File([blob], "avatar.jpg", { type: blob.type || "image/jpeg" });
 
-    if (!res.ok) setError("Failed to save. Try again.");
-    setUploading(false);
+      const form = new FormData();
+      form.append("file", file);
+
+      const upload = await fetch("/api/user/avatar", { method: "POST", body: form });
+      const json = await upload.json();
+
+      if (!upload.ok) {
+        setError(json.error ?? "Failed to save. Try again.");
+        setPreview(currentImage ?? null); // revert on error
+      } else {
+        setPreview(json.image ?? dataUrl);
+      }
+    } catch {
+      setError("Upload failed. Try again.");
+      setPreview(currentImage ?? null);
+    } finally {
+      setUploading(false);
+    }
   }
 
   function handleCropCancel() {
@@ -53,18 +70,13 @@ export default function AvatarUpload({
   return (
     <>
       <div style={{ position: "relative", width: 90, height: 90, flexShrink: 0 }}>
-        {/* Avatar */}
-        <div style={{
-          width: 90, height: 90, borderRadius: "50%",
-          background: "linear-gradient(135deg,#134e4a,#0f172a)",
-          overflow: "hidden", border: "3px solid #f1f5f9",
-        }}>
-          {preview
-            // eslint-disable-next-line @next/next/no-img-element
-            ? <img src={preview} alt={name ?? ""} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-            : null
-          }
-        </div>
+        {/* Avatar with broken-image fallback */}
+        <UserAvatar
+          src={preview}
+          name={name}
+          size={90}
+          style={{ border: "3px solid #f1f5f9" }}
+        />
 
         {/* Camera button — hidden for Twitter/X users */}
         {!isTwitterUser && (
@@ -115,7 +127,6 @@ export default function AvatarUpload({
         {error && <div style={{ position: "absolute", top: "100%", left: 0, fontSize: "0.65rem", color: "#ef4444", marginTop: 4, whiteSpace: "nowrap" }}>{error}</div>}
       </div>
 
-      {/* Crop modal */}
       {cropSrc && (
         <ImageCropModal
           src={cropSrc}
