@@ -10,6 +10,7 @@ import OGBadge from "@/components/ui/OGBadge";
 import { WalletVerifiedBadge } from "@/components/ui/VerificationBadges";
 import SaveTalentButton from "@/components/ui/SaveTalentButton";
 import AvatarUpload from "@/components/ui/AvatarUpload";
+import UserAvatar from "@/components/ui/UserAvatar";
 import EditProfilePanel from "@/components/ui/EditProfilePanel";
 import PortfolioEditor from "@/components/forms/PortfolioEditor";
 import SocialLinksEditor from "@/components/ui/SocialLinksEditor";
@@ -248,9 +249,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   {isOwnProfile ? (
                     <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId && !user.twitterId.startsWith("apple:")} />
                   ) : (
-                    <div style={{ width: 88, height: 88, borderRadius: "9999px", border: "3px solid var(--background)", background: "linear-gradient(135deg,#134e4a,#0f172a)", overflow: "hidden" }}>
-                      {user.image && <img src={user.image} alt={displayName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                    </div>
+                    <UserAvatar src={user.image} name={user.name ?? user.twitterHandle} size={88} style={{ border: "3px solid var(--background)" }} />
                   )}
                 </div>
                 {canMessage && (
@@ -575,9 +574,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     <div key={r.id} style={{ borderBottom: "1px solid var(--card-border)", paddingBottom: "1.25rem" }}>
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.5rem" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                          <div style={{ width: 30, height: 30, borderRadius: "50%", background: "var(--avatar-bg)", overflow: "hidden", flexShrink: 0 }}>
-                            {r.reviewer.image && <img src={r.reviewer.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
-                          </div>
+                          <UserAvatar src={r.reviewer.image} name={r.reviewer.name ?? r.reviewer.twitterHandle} size={30} />
                           <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--foreground)" }}>
                             {r.reviewer.name ?? r.reviewer.twitterHandle}
                           </span>

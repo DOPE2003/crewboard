@@ -4,6 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { deleteConversation } from "@/actions/messages";
+import UserAvatar from "@/components/ui/UserAvatar";
 
 function msgPreview(body: string, maxLen = 50): string {
   if (body.startsWith("__GIGREQUEST__:")) {
@@ -185,29 +186,7 @@ export default function ConversationListUI({
             >
               {/* Avatar */}
               <div style={{ position: "relative", flexShrink: 0, width: 44, height: 44 }}>
-                {item.user?.image && (
-                  // eslint-disable-next-line @next/next/no-img-element
-                  <img
-                    src={item.user.image}
-                    alt=""
-                    style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", display: "block" }}
-                    onError={(e) => {
-                      const t = e.currentTarget;
-                      t.style.display = "none";
-                      const fb = t.nextElementSibling as HTMLElement | null;
-                      if (fb) fb.style.display = "flex";
-                    }}
-                  />
-                )}
-                <div style={{
-                  width: 44, height: 44, borderRadius: "50%",
-                  background: "linear-gradient(135deg, #14B8A6, #0F6E56)",
-                  display: item.user?.image ? "none" : "flex",
-                  alignItems: "center", justifyContent: "center",
-                  fontSize: 15, fontWeight: 700, color: "white", flexShrink: 0,
-                }}>
-                  {(item.user?.name ?? item.user?.twitterHandle ?? "U")[0].toUpperCase()}
-                </div>
+                <UserAvatar src={item.user?.image} name={item.user?.name ?? item.user?.twitterHandle} size={44} />
                 {/* Online dot */}
                 <span style={{
                   position: "absolute", bottom: 1, right: 1,

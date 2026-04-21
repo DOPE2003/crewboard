@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import UserAvatar from "@/components/ui/UserAvatar";
 
 type MediaItem = { mediaUrl: string; mediaType: string; title: string };
 
@@ -188,16 +189,7 @@ function ProfileCard({ user }: { user: User }) {
       >
         {/* Avatar + name */}
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
-          {user.image ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={user.image} alt="" style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", flexShrink: 0, border: "2px solid var(--card-border)" }} />
-          ) : (
-            <div style={{ width: 40, height: 40, borderRadius: "50%", flexShrink: 0, background: "linear-gradient(135deg,#14b8a6,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ fontSize: 15, fontWeight: 700, color: "#fff" }}>
-                {(user.name ?? user.twitterHandle ?? "?")[0].toUpperCase()}
-              </span>
-            </div>
-          )}
+          <UserAvatar src={user.image} name={user.name ?? user.twitterHandle} size={40} style={{ border: "2px solid var(--card-border)" }} />
           <div style={{ minWidth: 0 }}>
             <p style={{ fontSize: 14, fontWeight: 600, color: "var(--foreground)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               {user.name ?? user.twitterHandle}
