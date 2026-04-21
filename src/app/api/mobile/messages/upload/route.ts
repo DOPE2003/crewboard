@@ -38,13 +38,12 @@ async function handler(req: NextRequest, _user: MobileTokenPayload) {
 
   try {
     const blob = await put(filename, file, {
-      access: "private",
+      access: "public",
       token: process.env.BLOB_READ_WRITE_TOKEN,
     });
 
-    // Proxy URL is accessible without session auth — safe for mobile clients
-    const url = `/api/blob/serve?url=${encodeURIComponent(blob.url)}`;
-    return ok({ url, name: file.name, size: file.size, type: file.type });
+    // Public blob URL — absolute, no proxy needed, loadable directly by iOS
+    return ok({ url: blob.url, name: file.name, size: file.size, type: file.type });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("[mobile/messages/upload]", message);
