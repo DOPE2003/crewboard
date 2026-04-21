@@ -37,7 +37,8 @@ export async function updateSocialLinks({
   if (discordHandle !== undefined) { const v = discordHandle.replace(/^@/, "").trim(); data.discordHandle = v || null; }
   if (linkedinHandle !== undefined) { const v = linkedinHandle.replace(/^@/, "").trim(); data.linkedinHandle = v || null; }
 
-  await db.user.update({ where: { id: userId }, data });
+  const updated = await db.user.update({ where: { id: userId }, data, select: { twitterHandle: true } });
+  revalidatePath(`/u/${updated.twitterHandle}`);
 }
 
 export async function saveBannerImage(bannerImage: string) {
