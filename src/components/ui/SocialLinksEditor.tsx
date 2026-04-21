@@ -16,6 +16,7 @@ interface Props {
   discordHandle: string | null;
   linkedinHandle: string | null;
   isOwnProfile: boolean;
+  isTwitterUser?: boolean;
 }
 
 function DiscordIcon({ size = 12 }: { size?: number }) {
@@ -28,7 +29,7 @@ function DiscordIcon({ size = 12 }: { size?: number }) {
 
 export default function SocialLinksEditor({
   twitterHandle, twitterHandle2, telegramHandle, website, website2, website3,
-  githubHandle, discordHandle, linkedinHandle, isOwnProfile,
+  githubHandle, discordHandle, linkedinHandle, isOwnProfile, isTwitterUser = false,
 }: Props) {
   const router = useRouter();
   const [editingTw2, setEditingTw2] = useState(false);
@@ -168,18 +169,20 @@ export default function SocialLinksEditor({
 
   return (
     <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-      {/* Twitter -- always shown */}
-      <a
-        href={`https://twitter.com/${twitterHandle}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        style={pill}
-      >
-        <Twitter size={12} />
-        @{twitterHandle}
-      </a>
+      {/* Primary X — only shown for real Twitter OAuth users */}
+      {isTwitterUser && (
+        <a
+          href={`https://twitter.com/${twitterHandle}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          style={pill}
+        >
+          <Twitter size={12} />
+          @{twitterHandle}
+        </a>
+      )}
 
-      {/* Second X account */}
+      {/* X account (editable) — for Twitter users this is a second account; for others it's their primary */}
       {renderHandlePill(
         "X Account",
         <Twitter size={12} style={{ flexShrink: 0 }} />,

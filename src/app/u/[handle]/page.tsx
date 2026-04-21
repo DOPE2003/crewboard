@@ -332,6 +332,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     discordHandle={user.discordHandle ?? null}
                     linkedinHandle={user.linkedinHandle ?? null}
                     isOwnProfile={isOwnProfile}
+                    isTwitterUser={!!user.twitterId && !user.twitterId.startsWith("apple:")}
                   />
                 </div>
 
