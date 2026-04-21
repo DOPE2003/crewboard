@@ -44,8 +44,15 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
       const val = (body as Record<string, unknown>)[key];
 
+      // image / bannerImage: null or "" means "unchanged" — require an explicit URL to update,
+      // or a dedicated clearImage action (not yet exposed). Prevents accidental wipes when the
+      // iOS client sends null for fields it never loaded from the server.
+      if ((key === "image" || key === "bannerImage") && (val === null || val === "")) {
+        continue;
+      }
+
       if (val === null || val === "") {
-        updates[key] = null; // clear
+        updates[key] = null; // clear text fields intentionally
       } else {
         updates[key] = val; // set
       }
