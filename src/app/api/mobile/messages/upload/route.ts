@@ -12,7 +12,7 @@
 import { NextRequest } from "next/server";
 import { put } from "@vercel/blob";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
-import { ok, err } from "../../_lib/response";
+import { err } from "../../_lib/response";
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10 MB
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
@@ -45,7 +45,8 @@ async function handler(req: NextRequest, _user: MobileTokenPayload) {
 
     // Absolute proxy URL — no session auth required on /api/blob/serve, safe for iOS
     const url = `${BASE_URL}/api/blob/serve?url=${encodeURIComponent(blob.url)}`;
-    return ok({ url, name: file.name, size: file.size, type: file.type });
+    // Return flat shape (not wrapped in {data:}) — matches the spec iOS was built against
+    return Response.json({ url, name: file.name, size: file.size, type: file.type });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : String(e);
     console.error("[mobile/messages/upload]", message);
