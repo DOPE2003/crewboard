@@ -174,7 +174,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
 
     // Notify the other participant (fire-and-forget)
     const receiverId = conv.participants.find((p) => p !== user.sub);
-    if (receiverId) {
+    if (receiverId && receiverId !== user.sub) {
       const sender = await db.user.findUnique({
         where: { id: user.sub },
         select: { name: true, twitterHandle: true, image: true },
@@ -187,6 +187,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       // Create notification — returns the ID for deep-link in push payload
       const notifId = await notifyUser({
         userId: receiverId,
+        senderId: user.sub,
         type: "message",
         title: senderName,
         body: msgPreview,

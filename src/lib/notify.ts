@@ -9,9 +9,13 @@ const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
  *
  * Pass `messageId` to guarantee at-most-one notification per message:
  * the DB unique constraint on (userId, messageId) silently drops duplicates.
+ *
+ * Pass `senderId` to prevent self-notifications (notification skipped when
+ * userId === senderId).
  */
 export async function notifyUser({
   userId,
+  senderId,
   type,
   title,
   body,
@@ -21,6 +25,7 @@ export async function notifyUser({
   messageId,
 }: {
   userId: string;
+  senderId?: string;
   type: string;
   title: string;
   body: string;
@@ -29,6 +34,11 @@ export async function notifyUser({
   senderImage?: string | null;
   messageId?: string;
 }): Promise<string | null> {
+  // Never notify a user about their own actions
+  if (senderId && userId === senderId) return null;
+
+  let notifId: string | null = null;
+
   try {
     const notif = await db.notification.create({
       data: {
@@ -40,7 +50,7 @@ export async function notifyUser({
       },
       select: { id: true },
     });
-    return notif.id;
+    notifId = notif.id;
   } catch (e: any) {
     // P2002 = unique constraint violation — duplicate notification, silently skip
     if (e?.code === "P2002") return null;
@@ -62,4 +72,6 @@ export async function notifyUser({
       }
     })
     .catch(() => {});
+
+  return notifId;
 }

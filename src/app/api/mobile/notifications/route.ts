@@ -1,5 +1,5 @@
 /**
- * GET  /api/mobile/notifications          — recent notifications (paginated)
+ * GET  /api/mobile/notifications          — recent notifications (paginated, max 30 days old)
  * POST /api/mobile/notifications          — mark notifications as read
  *
  * GET query params:
@@ -18,19 +18,21 @@
  */
 import { NextRequest } from "next/server";
 import db from "@/lib/db";
-import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth";
+import { withMobileAuth, MobileTokenPayload } from "../_lib/auth";
 import { ok, err } from "../_lib/response";
+
+const RETENTION_DAYS = 30;
+const RETENTION_MS   = RETENTION_DAYS * 24 * 60 * 60 * 1000;
 
 // ─── GET ──────────────────────────────────────────────────────────────────────
 
-async function getHandler(req: NextRequest) {
-  const user = await getMobileUser(req);
-  if (!user) return err("Unauthorized", 401);
-
+async function getHandler(req: NextRequest, user: MobileTokenPayload) {
   const unreadOnly = req.nextUrl.searchParams.get("unreadOnly") === "true";
   const cursor     = req.nextUrl.searchParams.get("cursor");
   const limitParam = parseInt(req.nextUrl.searchParams.get("limit") ?? "30");
   const limit      = Math.min(Math.max(1, limitParam), 50);
+
+  const cutoff = new Date(Date.now() - RETENTION_MS);
 
   try {
     // Cursor: find the createdAt of the pivot notification
@@ -45,9 +47,9 @@ async function getHandler(req: NextRequest) {
 
     const notifications = await db.notification.findMany({
       where: {
-        userId: user.sub,
+        userId:    user.sub,
+        createdAt: { gte: cutoff, ...(cursorDate ? { lt: cursorDate } : {}) },
         ...(unreadOnly ? { read: false } : {}),
-        ...(cursorDate ? { createdAt: { lt: cursorDate } } : {}),
       },
       orderBy: { createdAt: "desc" },
       take: limit,
@@ -57,16 +59,28 @@ async function getHandler(req: NextRequest) {
       },
     });
 
+    // Derive actionUrl from link for message notifications that predate the actionUrl field
+    const enriched = notifications.map((n) => {
+      if (n.type === "message" && !n.actionUrl && n.link) {
+        const convId = n.link.split("/messages/")[1];
+        return { ...n, actionUrl: convId ? `crewboard://chat/${convId}` : null };
+      }
+      return n;
+    });
+
     const unreadCount = await db.notification.count({
-      where: { userId: user.sub, read: false },
+      where: { userId: user.sub, read: false, createdAt: { gte: cutoff } },
     });
 
     const nextCursor =
-      notifications.length === limit
-        ? notifications[notifications.length - 1].id
-        : null;
+      enriched.length === limit ? enriched[enriched.length - 1].id : null;
 
-    return ok(notifications, { unreadCount, nextCursor });
+    // Prune notifications older than 30 days for this user (fire-and-forget)
+    db.notification.deleteMany({
+      where: { userId: user.sub, createdAt: { lt: cutoff } },
+    }).catch(() => {});
+
+    return ok(enriched, { unreadCount, nextCursor });
   } catch (e) {
     console.error("[mobile/notifications GET]", e);
     return err("Something went wrong.", 500);
@@ -105,5 +119,5 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
   }
 }
 
-export { getHandler as GET };
+export const GET  = withMobileAuth(getHandler);
 export const POST = withMobileAuth(postHandler);
