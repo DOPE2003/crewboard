@@ -74,7 +74,8 @@ interface FilePayload {
   name: string;
   size: number;
   type: string;
-  data: string; // URL (blob proxy) or legacy base64 data URL
+  data?: string; // legacy field name (web uploads)
+  url?: string;  // field name used by iOS uploads
 }
 
 function parseFilePayload(body: string): FilePayload | null {
@@ -89,8 +90,8 @@ function FileBubble({ payload, mine }: { payload: FilePayload; mine: boolean }) 
   const sizeLabel = payload.size > 1024 * 1024
     ? `${(payload.size / 1024 / 1024).toFixed(1)} MB`
     : `${Math.round(payload.size / 1024)} KB`;
-  // Use the URL directly — works for both blob proxy URLs and legacy base64 data URLs
-  const src = payload.data;
+  // Support both field names: iOS sends "url", web legacy sends "data"
+  const src = payload.url ?? payload.data ?? "";
   if (isImage) {
     return (
       <a href={src} download={payload.name} target="_blank" rel="noopener noreferrer" style={{ display: "block", maxWidth: 260 }}>
