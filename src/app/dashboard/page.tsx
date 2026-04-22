@@ -36,6 +36,7 @@ export default async function DashboardPage() {
     profileViewCount,
     totalGigCount,
     unreadMessageCount,
+    totalConvoCount,
   ] = await Promise.all([
     db.user.findUnique({
       where: { id: userId },
@@ -69,6 +70,7 @@ export default async function DashboardPage() {
     db.notification.count({ where: { userId, type: "profile_view" } }),
     db.gig.count({ where: { userId } }),
     db.notification.count({ where: { userId, read: false, type: { not: "profile_view" } } }),
+    db.conversation.count({ where: { participants: { has: userId } } }),
   ]);
 
   if (!dbUserRaw) redirect("/login");
@@ -134,6 +136,42 @@ export default async function DashboardPage() {
     !profileScore.breakdown.services && "at least 1 service",
     !profileScore.breakdown.wallet   && "wallet",
   ].filter(Boolean) as string[];
+
+  // First Job Accelerator
+  const showAccelerator = !isClient && completedOrders.length === 0;
+  const acceleratorSteps = [
+    {
+      label: "Complete your profile",
+      sub: "Reach 70% to appear in talent search",
+      cta: "Complete",
+      href: `/u/${dbUser.twitterHandle}`,
+      done: profileScore.meetsThreshold,
+    },
+    {
+      label: "Add your first service",
+      sub: "Let clients know what you offer and at what price",
+      cta: "Add service",
+      href: "/gigs/new",
+      done: dbUser.gigs.length > 0,
+    },
+    {
+      label: "Send your first message",
+      sub: "Reach out to a client or respond to a job posting",
+      cta: "Open chat",
+      href: "/messages",
+      done: totalConvoCount > 0,
+    },
+    {
+      label: "Apply to 3 jobs",
+      sub: "Message clients on the job board to pitch yourself",
+      cta: "Browse jobs",
+      href: "/jobs",
+      done: totalConvoCount >= 3,
+    },
+  ];
+  const accelDone = acceleratorSteps.filter(s => s.done).length;
+  const accelTotal = acceleratorSteps.length;
+  const accelComplete = accelDone === accelTotal;
 
   return (
     <main className="dash-main-wrap mf-page" style={{ minHeight: "100vh", paddingBottom: "5rem" }}>
@@ -227,7 +265,125 @@ export default async function DashboardPage() {
           </div>
         )}
 
-        {/* ── 3. HEADER (no greeting — just actions) ── */}
+        {/* ── 3. FIRST JOB ACCELERATOR ── */}
+        {showAccelerator && (
+          <div style={{
+            marginBottom: "1.5rem", borderRadius: 14,
+            border: accelComplete ? "1px solid rgba(34,197,94,0.35)" : "1px solid var(--card-border)",
+            background: "var(--card-bg)", overflow: "hidden",
+          }}>
+            {/* Header */}
+            <div style={{
+              padding: "1rem 1.25rem",
+              borderBottom: "1px solid var(--card-border)",
+              display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem",
+            }}>
+              <div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: accelComplete ? "#22c55e" : "#14b8a6", marginBottom: 3 }}>
+                  First Job Accelerator
+                </div>
+                <div style={{ fontSize: "1rem", fontWeight: 800, color: accelComplete ? "#22c55e" : "var(--foreground)" }}>
+                  {accelComplete ? "You're ready to get hired" : "Land your first job faster"}
+                </div>
+              </div>
+
+              {/* Progress pill */}
+              <div style={{
+                display: "flex", alignItems: "center", gap: 10, flexShrink: 0,
+              }}>
+                <div style={{ display: "flex", gap: 4 }}>
+                  {acceleratorSteps.map((s, i) => (
+                    <div key={i} style={{
+                      width: 28, height: 4, borderRadius: 99,
+                      background: s.done ? (accelComplete ? "#22c55e" : "#14b8a6") : "var(--card-border)",
+                      transition: "background 0.3s",
+                    }} />
+                  ))}
+                </div>
+                <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+                  {accelDone}/{accelTotal}
+                </span>
+              </div>
+            </div>
+
+            {/* Steps */}
+            <div style={{ padding: "0.35rem 0" }}>
+              {acceleratorSteps.map((step, i) => (
+                <Link
+                  key={i}
+                  href={step.done ? "#" : step.href}
+                  style={{
+                    display: "flex", alignItems: "center", gap: "0.9rem",
+                    padding: "0.7rem 1.25rem",
+                    textDecoration: "none",
+                    borderBottom: i < accelTotal - 1 ? "1px solid var(--card-border)" : "none",
+                    opacity: step.done ? 0.6 : 1,
+                    pointerEvents: step.done ? "none" : "auto",
+                  }}
+                >
+                  {/* Check circle */}
+                  <div style={{
+                    width: 22, height: 22, borderRadius: "50%", flexShrink: 0,
+                    background: step.done ? (accelComplete ? "#22c55e" : "#14b8a6") : "transparent",
+                    border: step.done ? "none" : "1.5px solid var(--card-border)",
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    transition: "background 0.2s",
+                  }}>
+                    {step.done && (
+                      <svg width="11" height="11" viewBox="0 0 12 12" fill="none">
+                        <path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    )}
+                  </div>
+
+                  {/* Text */}
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{
+                      fontSize: "0.82rem", fontWeight: step.done ? 500 : 600,
+                      color: "var(--foreground)",
+                      textDecoration: step.done ? "line-through" : "none",
+                    }}>
+                      {step.label}
+                    </div>
+                    {!step.done && (
+                      <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginTop: 1, lineHeight: 1.4 }}>
+                        {step.sub}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* CTA */}
+                  {!step.done && (
+                    <span style={{
+                      fontSize: "0.72rem", fontWeight: 700, color: "#14b8a6",
+                      flexShrink: 0, whiteSpace: "nowrap",
+                    }}>
+                      {step.cta} →
+                    </span>
+                  )}
+                </Link>
+              ))}
+            </div>
+
+            {/* Micro-copy footer */}
+            <div style={{
+              padding: "0.6rem 1.25rem",
+              borderTop: "1px solid var(--card-border)",
+              background: accelComplete ? "rgba(34,197,94,0.04)" : "rgba(20,184,166,0.03)",
+            }}>
+              <p style={{ margin: 0, fontSize: "0.7rem", color: "var(--text-muted)", display: "flex", alignItems: "center", gap: 5 }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, color: accelComplete ? "#22c55e" : "#14b8a6" }}>
+                  <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                </svg>
+                {accelComplete
+                  ? "All steps done — your profile is visible to clients and you're ready to be hired."
+                  : "Freelancers who complete these steps get hired 3x faster."}
+              </p>
+            </div>
+          </div>
+        )}
+
+        {/* ── 4. HEADER ── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.25rem", flexWrap: "wrap", gap: "0.75rem" }}>
           <h1 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em" }}>
             Dashboard
