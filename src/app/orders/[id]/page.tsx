@@ -14,7 +14,8 @@ function hexAlpha(hex: string, alpha: number) {
   return `rgba(${r},${g},${b},${alpha})`;
 }
 
-const STATUS_STEPS = ["pending", "funded", "accepted", "delivered", "completed"];
+const STATUS_STEPS_FULL   = ["pending", "funded", "accepted", "delivered", "completed"];
+const STATUS_STEPS_SIMPLE = ["pending", "accepted", "delivered", "completed"];
 
 const STATUS_COLORS: Record<string, string> = {
   pending:   "#f59e0b",
@@ -75,6 +76,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const isSeller = order.sellerId === userId;
   const isActive = !["completed", "cancelled", "disputed"].includes(order.status);
   const showActions = order.status !== "cancelled";
+  const STATUS_STEPS = order.txHash ? STATUS_STEPS_FULL : STATUS_STEPS_SIMPLE;
   const stepIndex = STATUS_STEPS.indexOf(order.status);
 
   const other = isBuyer ? order.seller : order.buyer;
@@ -149,7 +151,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div style={{ display: "flex", alignItems: "center", gap: 0 }}>
               {STATUS_STEPS.map((step, i) => {
                 const done = i <= stepIndex;
-                const label = { pending: "Placed", funded: "Funded", accepted: "Accepted", delivered: "Delivered", completed: "Done" }[step];
+                const label = ({ pending: "Placed", funded: "Funded", accepted: "Accepted", delivered: "Delivered", completed: "Done" } as Record<string, string>)[step];
                 return (
                   <div key={step} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", position: "relative" }}>
                     {i > 0 && (

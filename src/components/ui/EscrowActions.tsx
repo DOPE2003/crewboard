@@ -57,7 +57,7 @@ export default function EscrowActions({
 
   // Whether this status requires an on-chain wallet tx
   const needsWallet =
-    (isBuyer && (orderStatus === "pending" || orderStatus === "delivered")) ||
+    (isBuyer && orderStatus === "delivered") ||
     (isSeller && orderStatus === "accepted");
 
   async function handleDbAction(status: string) {
@@ -159,47 +159,57 @@ export default function EscrowActions({
         {orderStatus === "pending" && isBuyer && (
           <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
             <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
-              Fund escrow to activate your order. The seller will start work once payment is locked on-chain.
+              Order placed — waiting for the freelancer to accept. You&apos;ll be notified once they confirm.
             </p>
-            {needsWallet && !connected ? (
-              <WalletMultiButton style={{ fontSize: "0.75rem", height: 36, borderRadius: 99 }} />
-            ) : (
-              <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-                <button
-                  onClick={handleFundEscrow}
-                  disabled={!!loading}
-                  className="btn-primary"
-                  style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", display: "flex", alignItems: "center" }}
-                >
-                  {loading === "fund" && <Spinner />}
-                  {loading === "fund" ? "Funding…" : `Fund Escrow ($${orderAmount} USDC)`}
-                </button>
-                <button
-                  onClick={() => handleDbAction("cancelled")}
-                  disabled={!!loading}
-                  className="btn-secondary"
-                  style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer" }}
-                >
-                  {loading === "cancelled" ? "Cancelling…" : "Cancel"}
-                </button>
-              </div>
-            )}
+            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
+              <button
+                onClick={() => handleDbAction("cancelled")}
+                disabled={!!loading}
+                className="btn-secondary"
+                style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer" }}
+              >
+                {loading === "cancelled" ? "Cancelling…" : "Cancel Order"}
+              </button>
+              {sellerWallet && (
+                connected ? (
+                  <button
+                    onClick={handleFundEscrow}
+                    disabled={!!loading}
+                    style={{ fontSize: "0.7rem", background: "none", border: "none", color: "#14B8A6", cursor: "pointer", padding: 0, textDecoration: "underline" }}
+                  >
+                    {loading === "fund" ? "Funding…" : `Fund escrow instead ($${orderAmount} USDC) ↗`}
+                  </button>
+                ) : (
+                  <WalletMultiButton style={{ fontSize: "0.72rem", height: 32, borderRadius: 99 }} />
+                )
+              )}
+            </div>
           </div>
         )}
 
         {orderStatus === "pending" && isSeller && (
-          <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
-            <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", flex: 1 }}>
-              Waiting for the buyer to fund escrow before you can accept.
+          <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.2)" }}>
+            <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              New order received. Accept to confirm you&apos;ll take the work — the buyer will be notified immediately.
+            </p>
+            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+              <button
+                onClick={() => handleDbAction("accepted")}
+                disabled={!!loading}
+                className="btn-primary"
+                style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", display: "flex", alignItems: "center" }}
+              >
+                {loading === "accepted" && <Spinner />}
+                {loading === "accepted" ? "Accepting…" : "Accept Order"}
+              </button>
+              <button
+                onClick={() => handleDbAction("cancelled")}
+                disabled={!!loading}
+                style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "transparent", color: "var(--text-muted)", border: "1px solid var(--card-border)", fontWeight: 500 }}
+              >
+                {loading === "cancelled" ? "Declining…" : "Decline"}
+              </button>
             </div>
-            <button
-              onClick={() => handleDbAction("cancelled")}
-              disabled={!!loading}
-              className="btn-secondary"
-              style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer" }}
-            >
-              {loading === "cancelled" ? "Cancelling…" : "Cancel"}
-            </button>
           </div>
         )}
 
@@ -340,30 +350,35 @@ export default function EscrowActions({
 
         {/* ─── DELIVERED ─── */}
         {orderStatus === "delivered" && isBuyer && (
-          <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.2)" }}>
-            <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
-              Work delivered! Review the deliverable then release funds from escrow.
+          <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(34,197,94,0.06)", border: "1px solid rgba(34,197,94,0.25)" }}>
+            <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              The freelancer has submitted their work. Review the deliverable, then release payment to complete the order.
             </p>
-            {needsWallet && !connected ? (
-              <WalletMultiButton style={{ fontSize: "0.75rem", height: 36, borderRadius: 99 }} />
-            ) : (
-              <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-                <button
-                  onClick={handleReleaseFunds}
-                  disabled={!!loading}
-                  style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "linear-gradient(135deg, #22c55e, #16a34a)", color: "#fff", border: "none", fontWeight: 700, display: "flex", alignItems: "center" }}
-                >
-                  {loading === "release" && <Spinner />}
-                  {loading === "release" ? "Releasing…" : "Release Funds"}
-                </button>
-                <button
-                  onClick={() => handleDbAction("disputed")}
-                  disabled={!!loading}
-                  style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.25)", fontWeight: 600 }}
-                >
-                  {loading === "disputed" ? "Opening…" : "Open Dispute"}
-                </button>
-              </div>
+            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+              <button
+                onClick={() => handleDbAction("completed")}
+                disabled={!!loading}
+                style={{ fontSize: "0.82rem", padding: "0.65rem 1.5rem", cursor: "pointer", borderRadius: 10, background: "#22c55e", color: "#fff", border: "none", fontWeight: 600, display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 10px rgba(34,197,94,0.28)" }}
+              >
+                {loading === "completed" && <Spinner />}
+                {loading === "completed" ? "Releasing…" : "Release Payment — Mark as Completed"}
+              </button>
+              <button
+                onClick={() => handleDbAction("disputed")}
+                disabled={!!loading}
+                style={{ fontSize: "0.78rem", padding: "0.6rem 1.25rem", cursor: "pointer", borderRadius: 10, background: "rgba(239,68,68,0.08)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)", fontWeight: 500 }}
+              >
+                {loading === "disputed" ? "Opening…" : "Raise a dispute"}
+              </button>
+            </div>
+            {connected && sellerWallet && (
+              <button
+                onClick={handleReleaseFunds}
+                disabled={!!loading}
+                style={{ marginTop: 10, fontSize: "0.7rem", background: "none", border: "none", color: "#14B8A6", cursor: "pointer", padding: 0, textDecoration: "underline" }}
+              >
+                {loading === "release" ? "Releasing on-chain…" : "Release via on-chain escrow instead ↗"}
+              </button>
             )}
           </div>
         )}

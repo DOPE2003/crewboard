@@ -4,10 +4,14 @@ import { redirect } from "next/navigation";
 import Link from "next/link";
 
 // ── Workflow steps (ordered) ────────────────────────────────────────────────
-const STEPS = ["pending", "funded", "accepted", "delivered", "completed"] as const;
-const STEP_INDEX: Record<string, number> = {
-  pending: 1, funded: 2, accepted: 3, delivered: 4, completed: 5,
-};
+const STEPS_FULL    = ["pending", "funded", "accepted", "delivered", "completed"] as const;
+const STEPS_SIMPLE  = ["pending", "accepted", "delivered", "completed"] as const;
+
+function stepIndex(status: string, hasEscrow: boolean): number {
+  const steps: readonly string[] = hasEscrow ? STEPS_FULL : STEPS_SIMPLE;
+  const idx = steps.indexOf(status);
+  return idx >= 0 ? idx + 1 : 0;
+}
 
 // ── Escrow state per status ─────────────────────────────────────────────────
 function escrowLabel(status: string): { text: string; color: string } {
@@ -24,7 +28,7 @@ function escrowLabel(status: string): { text: string; color: string } {
 
 // ── Role-aware status label ─────────────────────────────────────────────────
 function statusLabel(status: string, role: "buyer" | "seller"): string {
-  if (status === "pending")   return role === "buyer" ? "Waiting for freelancer to accept" : "Waiting for client to fund escrow";
+  if (status === "pending")   return role === "buyer" ? "Waiting for freelancer to accept" : "New order — accept to start";
   if (status === "funded")    return role === "buyer" ? "Escrow locked — freelancer working" : "Escrow funded — accept to start";
   if (status === "accepted")  return role === "buyer" ? "Freelancer working on it" : "In progress — deliver when ready";
   if (status === "delivered") return role === "buyer" ? "Waiting for your review & payment" : "Delivered — awaiting client approval";
@@ -47,7 +51,8 @@ function statusColor(status: string, role: "buyer" | "seller"): string {
 
 // ── Primary CTA per order ───────────────────────────────────────────────────
 function primaryCta(status: string, role: "buyer" | "seller", orderId: string): { label: string; href: string; urgent: boolean } | null {
-  if (status === "pending")   return { label: "Continue Chat",            href: `/orders/${orderId}`, urgent: false };
+  if (status === "pending" && role === "seller") return { label: "Accept Order",        href: `/orders/${orderId}`, urgent: true  };
+  if (status === "pending" && role === "buyer")  return { label: "Continue Chat",       href: `/orders/${orderId}`, urgent: false };
   if (status === "funded"  && role === "seller") return { label: "Accept & Start",    href: `/orders/${orderId}`, urgent: true  };
   if (status === "funded"  && role === "buyer")  return { label: "View Progress",     href: `/orders/${orderId}`, urgent: false };
   if (status === "accepted")  return { label: role === "seller" ? "Submit Delivery" : "View Progress", href: `/orders/${orderId}`, urgent: role === "seller" };
@@ -61,6 +66,7 @@ function primaryCta(status: string, role: "buyer" | "seller", orderId: string): 
 // ── "Waiting for me" predicate ──────────────────────────────────────────────
 function isWaitingForMe(status: string, role: "buyer" | "seller"): boolean {
   if (role === "buyer"  && status === "delivered") return true;
+  if (role === "seller" && status === "pending")   return true;
   if (role === "seller" && status === "funded")    return true;
   if (role === "seller" && status === "accepted")  return true;
   return false;
@@ -196,13 +202,14 @@ export default async function OrdersPage({
 
 // ── Order Card ──────────────────────────────────────────────────────────────
 function OrderCard({ order, role, other }: { order: any; role: "buyer" | "seller"; other: any }) {
-  const color   = statusColor(order.status, role);
-  const label   = statusLabel(order.status, role);
-  const escrow  = escrowLabel(order.status);
-  const cta     = primaryCta(order.status, role, order.id);
-  const stepIdx = STEP_INDEX[order.status] ?? 0;
-  const totalSteps = 5;
-  const isUrgent = cta?.urgent ?? false;
+  const hasEscrow  = !!order.txHash;
+  const color      = statusColor(order.status, role);
+  const label      = statusLabel(order.status, role);
+  const escrow     = hasEscrow ? escrowLabel(order.status) : { text: "No escrow", color: "#94a3b8" };
+  const cta        = primaryCta(order.status, role, order.id);
+  const stepIdx    = stepIndex(order.status, hasEscrow);
+  const totalSteps = hasEscrow ? 5 : 4;
+  const isUrgent   = cta?.urgent ?? false;
   const otherName = other?.name ?? other?.twitterHandle ?? "Unknown";
   const counterpartRole = role === "buyer" ? "Freelancer" : "Client";
 
