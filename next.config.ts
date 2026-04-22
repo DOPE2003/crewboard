@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import path from "path";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["face-api.js"],
@@ -19,6 +20,20 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: "6mb",
     },
+  },
+
+  // Turbopack is the default dev server in Next.js 16; no custom config needed.
+  // The empty object silences the "webpack config present but no turbopack config" warning.
+  turbopack: {},
+
+  webpack: (config) => {
+    // A stray package.json at /Desktop confuses webpack's resolver into looking
+    // for node_modules there instead of here. Pin module resolution to this dir.
+    config.resolve.modules = [
+      path.resolve(__dirname, "node_modules"),
+      "node_modules",
+    ];
+    return config;
   },
 
   images: {

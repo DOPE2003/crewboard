@@ -435,6 +435,137 @@ export default async function HomePage() {
       </div>
       )}
 
+      {/* ── ECOSYSTEM SPOTLIGHT ── */}
+      <div style={{ padding: "clamp(1.5rem,4vw,2.5rem) clamp(1rem,4vw,2rem)", background: "var(--background)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+
+          {/* Section overline */}
+          <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1.1rem" }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
+              From the ecosystem
+            </div>
+            <div style={{ flex: 1, height: 1, background: "var(--card-border)" }} />
+          </div>
+
+          {/* Banner — image left, content right */}
+          <div className="eco-banner" style={{
+            display: "grid", gridTemplateColumns: "minmax(0,42%) 1fr",
+            borderRadius: 18, border: "1px solid var(--card-border)",
+            background: "var(--card-bg)", overflow: "hidden",
+            boxShadow: "0 2px 12px rgba(0,0,0,0.05)",
+          }}>
+
+            {/* Image panel */}
+            <div style={{ position: "relative", background: "#0B0B2E", overflow: "hidden", minHeight: 220 }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large"
+                alt="Solana Summit Germany"
+                style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              />
+              {/* Spotlight badge */}
+              <div style={{
+                position: "absolute", top: 14, left: 14,
+                display: "inline-flex", alignItems: "center", gap: 5,
+                background: "#0d9488", color: "#fff",
+                fontSize: "10px", fontWeight: 800, letterSpacing: "0.9px", textTransform: "uppercase" as const,
+                padding: "6px 10px", borderRadius: 8,
+                boxShadow: "0 4px 14px rgba(0,0,0,0.35)",
+              }}>
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2l1.5 5L19 8l-4.5 3.5L16 17l-4-3-4 3 1.5-5.5L5 8l5.5-1z"/>
+                </svg>
+                Spotlight
+              </div>
+            </div>
+
+            {/* Content panel */}
+            <div style={{ padding: "1.5rem 1.75rem", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "1rem" }}>
+
+              <div>
+                {/* Solana kicker */}
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "10px", fontWeight: 800, letterSpacing: "1.2px", textTransform: "uppercase" as const, color: "var(--text-muted)", marginBottom: "0.8rem" }}>
+                  <div style={{ width: 8, height: 8, borderRadius: 2, background: "linear-gradient(135deg,#9945FF,#14F195)", flexShrink: 0 }} />
+                  Powered by{" "}
+                  <span style={{ background: "linear-gradient(90deg,#9945FF,#14F195)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 900 }}>
+                    SOLANA
+                  </span>
+                  · Curated by Superteam
+                </div>
+
+                {/* Publisher */}
+                <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: "0.85rem" }}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="https://pbs.twimg.com/profile_images/1675131690048618498/lHJEv03V_400x400.jpg"
+                    alt="Superteam Germany"
+                    style={{ width: 30, height: 30, borderRadius: "50%", objectFit: "cover", border: "1.5px solid var(--card-border)", flexShrink: 0 }}
+                  />
+                  <div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "13px", fontWeight: 700, color: "var(--foreground)" }}>
+                      Superteam Germany
+                      <span style={{ width: 14, height: 14, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "8px", fontWeight: 800, flexShrink: 0 }}>✓</span>
+                    </div>
+                    <div style={{ fontSize: "11px", color: "var(--text-muted)" }}>@SuperteamDE · Solana DACH</div>
+                  </div>
+                </div>
+
+                {/* Title */}
+                <h3 style={{ fontFamily: "Inter, sans-serif", fontSize: "clamp(1rem,2vw,1.15rem)", fontWeight: 800, color: "var(--foreground)", margin: "0 0 0.75rem", lineHeight: 1.25, letterSpacing: "-0.02em" }}>
+                  Content Creators Program &amp; $500 Travel Boost — Solana Summit Germany
+                </h3>
+
+                {/* Tags */}
+                <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+                  {(["✨ Ecosystem", "Content", "IRL Event", "KOL"] as const).map((tag, i) => (
+                    <span key={tag} style={{
+                      fontSize: "11px", fontWeight: 600, padding: "4px 10px", borderRadius: 99,
+                      background: i === 0 ? "rgba(20,184,166,0.08)" : "var(--background)",
+                      color: i === 0 ? "#0d9488" : "var(--text-muted)",
+                      border: i === 0 ? "1px solid rgba(20,184,166,0.2)" : "1px solid var(--card-border)",
+                    }}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Benefit + CTA */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
+                <div>
+                  <div style={{ fontSize: "1.15rem", fontWeight: 800, color: "#14b8a6", letterSpacing: "-0.02em", lineHeight: 1.1 }}>$500 Travel Boost</div>
+                  <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 2 }}>+ Exclusive benefits on-site</div>
+                </div>
+                <a
+                  href="https://t.co/4EFTnBjaWn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 7, flexShrink: 0,
+                    padding: "0.62rem 1.2rem", borderRadius: 10,
+                    background: "var(--foreground)", color: "var(--dropdown-bg)",
+                    fontWeight: 700, fontSize: "0.82rem", textDecoration: "none",
+                    whiteSpace: "nowrap",
+                  }}
+                >
+                  Apply now
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M7 17L17 7M9 7h8v8"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <style>{`
+          @media (max-width: 680px) {
+            .eco-banner { grid-template-columns: 1fr !important; }
+            .eco-banner > div:first-child { aspect-ratio: 16/9; min-height: 0 !important; }
+          }
+        `}</style>
+      </div>
+
       {/* ── HOW IT WORKS ── */}
       <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
