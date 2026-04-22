@@ -41,7 +41,7 @@ export default async function HomePage() {
     take: 6,
     select: {
       twitterHandle: true, name: true, image: true, userTitle: true,
-      availability: true, skills: true,
+      availability: true, skills: true, lastSeenAt: true, walletAddress: true,
       gigs: {
         where: { status: "active" },
         select: { price: true },
@@ -49,6 +49,7 @@ export default async function HomePage() {
         take: 1,
       },
       sellerOrders: { where: { status: "completed" }, select: { id: true } },
+      reviewsReceived: { select: { rating: true } },
     },
   }).catch(() => []);
 
@@ -301,60 +302,86 @@ export default async function HomePage() {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isAvail = f.availability === "available";
-                const initials = (f.name ?? f.twitterHandle ?? "?")[0].toUpperCase();
+                const isVerified = !!f.walletAddress;
+                const reviews: { rating: number }[] = f.reviewsReceived ?? [];
+                const avgRating = reviews.length > 0
+                  ? (reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length)
+                  : null;
+                const activeRecently = f.lastSeenAt
+                  ? (Date.now() - new Date(f.lastSeenAt).getTime()) < 7 * 24 * 60 * 60 * 1000
+                  : false;
                 return (
                   <Link
                     key={f.twitterHandle}
                     href={`/u/${f.twitterHandle}`}
                     style={{
-                      flexShrink: 0, width: 160,
+                      flexShrink: 0, width: 168,
                       background: "var(--surface)", border: "1px solid var(--card-border)",
                       borderRadius: 14, padding: "1rem",
                       textDecoration: "none", color: "inherit",
-                      display: "flex", flexDirection: "column", gap: 8,
+                      display: "flex", flexDirection: "column", gap: 9,
                       transition: "box-shadow 0.2s, transform 0.2s",
                     }}
                     className="trending-card"
                   >
-                    {/* Avatar */}
-                    <div style={{ position: "relative", width: 44, height: 44 }}>
-                      {f.image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={f.image} alt="" style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover" }} />
-                      ) : (
-                        <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg,#14B8A6,#0F6E56)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontWeight: 700, fontSize: 16 }}>
-                          {initials}
-                        </div>
-                      )}
+                    {/* Avatar + online dot */}
+                    <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={f.image}
+                        alt=""
+                        style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", display: "block" }}
+                        onError={undefined}
+                      />
                       <span style={{
                         position: "absolute", bottom: 1, right: 1, width: 10, height: 10,
                         borderRadius: "50%", border: "2px solid var(--surface)",
                         background: isAvail ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#94a3b8",
                       }} />
                     </div>
-                    {/* Name + role */}
+
+                    {/* Name + username */}
                     <div>
-                      <div style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {f.name ?? `@${f.twitterHandle}`}
+                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 110 }}>
+                          {f.name ?? f.twitterHandle}
+                        </span>
+                        {isVerified && (
+                          <svg width="13" height="13" viewBox="0 0 24 24" fill="#14B8A6" style={{ flexShrink: 0 }}>
+                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                          </svg>
+                        )}
                       </div>
-                      {f.userTitle && (
-                        <div style={{ fontSize: 11, color: "var(--text-muted)", marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                          {f.userTitle}
-                        </div>
-                      )}
+                      <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                        {f.userTitle ?? "Freelancer"}
+                      </div>
                     </div>
-                    {/* Price + orders */}
-                    <div style={{ marginTop: "auto", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                      {minPrice != null && (
-                        <span style={{ fontSize: 12, fontWeight: 700, color: "#14B8A6" }}>
-                          from ${minPrice}
+
+                    {/* Stats: rating · jobs · active */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 8px", alignItems: "center" }}>
+                      {avgRating !== null && (
+                        <span style={{ fontSize: 11, fontWeight: 600, color: "#f59e0b", display: "flex", alignItems: "center", gap: 2 }}>
+                          ⭐ {avgRating.toFixed(1)}
                         </span>
                       )}
                       {completedCount > 0 && (
                         <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
-                          {completedCount} done
+                          {completedCount} job{completedCount !== 1 ? "s" : ""}
                         </span>
                       )}
+                      {activeRecently && (
+                        <span style={{ fontSize: 9, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+                          Active
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Price — always shown */}
+                    <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 8 }}>
+                      <span style={{ fontSize: 12, fontWeight: 700, color: minPrice != null ? "#14B8A6" : "var(--text-muted)" }}>
+                        {minPrice != null ? `From $${minPrice}` : "Price on request"}
+                      </span>
                     </div>
                   </Link>
                 );
@@ -617,62 +644,100 @@ export default async function HomePage() {
             {featuredFreelancers.map((u) => {
               const minPrice = (u as any).gigs?.[0]?.price ?? null;
               const completedCount = (u as any).sellerOrders?.length ?? 0;
-              const initial = ((u.name ?? u.twitterHandle) || "U")[0].toUpperCase();
+              const isVerified = !!(u as any).walletAddress;
+              const reviews: { rating: number }[] = (u as any).reviewsReceived ?? [];
+              const avgRating = reviews.length > 0
+                ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
+                : null;
+              const activeRecently = (u as any).lastSeenAt
+                ? (Date.now() - new Date((u as any).lastSeenAt).getTime()) < 7 * 24 * 60 * 60 * 1000
+                : false;
               return (
                 <Link
                   key={u.twitterHandle}
                   href={`/u/${u.twitterHandle}`}
                   style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "0.85rem",
-                    padding: "1.25rem",
-                    borderRadius: 16,
-                    background: "var(--card-bg)",
-                    border: "1px solid var(--card-border)",
+                    display: "flex", flexDirection: "column", gap: "0.85rem",
+                    padding: "1.25rem", borderRadius: 16,
+                    background: "var(--card-bg)", border: "1px solid var(--card-border)",
                     textDecoration: "none",
                     transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
                   }}
                   className="ff-card"
                 >
-                  {/* Avatar + availability */}
+                  {/* Row 1: Avatar + availability badge */}
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                    {u.image ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img src={u.image} alt={u.name ?? u.twitterHandle} style={{ width: 48, height: 48, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--card-border)" }} />
-                    ) : (
-                      <div style={{ width: 48, height: 48, borderRadius: "50%", background: "linear-gradient(135deg,#14b8a6,#6366f1)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, color: "#fff" }}>{initial}</div>
-                    )}
-                    {u.availability === "available" && (
-                      <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.65rem", fontWeight: 600, color: "#22c55e", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", padding: "3px 8px", borderRadius: 99 }}>
-                        <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-                        Available
-                      </span>
-                    )}
+                    <div style={{ position: "relative" }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={u.image ?? ""}
+                        alt={u.name ?? u.twitterHandle}
+                        style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--card-border)", display: "block" }}
+                      />
+                    </div>
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
+                      {u.availability === "available" && (
+                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.62rem", fontWeight: 600, color: "#22c55e", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 7px", borderRadius: 99 }}>
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+                          Available
+                        </span>
+                      )}
+                      {activeRecently && u.availability !== "available" && (
+                        <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontWeight: 500 }}>Active recently</span>
+                      )}
+                    </div>
                   </div>
 
-                  {/* Name + role */}
+                  {/* Row 2: Name + verified + role */}
                   <div>
-                    <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "var(--foreground)", marginBottom: 2 }}>{u.name ?? `@${u.twitterHandle}`}</div>
-                    <div style={{ fontSize: "0.75rem", color: "var(--text-muted)", fontWeight: 500 }}>{(u as any).userTitle ?? "Web3 Builder"}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
+                      <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 160 }}>
+                        {u.name ?? `@${u.twitterHandle}`}
+                      </span>
+                      {isVerified && (
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#14b8a6" style={{ flexShrink: 0 }} aria-label="Wallet verified">
+                          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                      )}
+                    </div>
+                    <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", fontWeight: 500 }}>
+                      {(u as any).userTitle ?? "Freelancer"}
+                    </div>
                   </div>
 
-                  {/* Skills */}
+                  {/* Row 3: Rating + jobs */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    {avgRating !== null ? (
+                      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#f59e0b", display: "flex", alignItems: "center", gap: 3 }}>
+                        ⭐ {avgRating.toFixed(1)}
+                        <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.68rem" }}>({reviews.length})</span>
+                      </span>
+                    ) : (
+                      <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>No reviews yet</span>
+                    )}
+                    {completedCount > 0 && (
+                      <>
+                        <span style={{ color: "var(--card-border)", fontSize: 10 }}>·</span>
+                        <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 500 }}>
+                          {completedCount} job{completedCount !== 1 ? "s" : ""}
+                        </span>
+                      </>
+                    )}
+                  </div>
+
+                  {/* Row 4: Skills */}
                   {Array.isArray((u as any).skills) && (u as any).skills.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                       {((u as any).skills as string[]).slice(0, 3).map((s: string) => (
-                        <span key={s} style={{ fontSize: "0.65rem", fontWeight: 600, color: "#14b8a6", background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.18)", padding: "2px 8px", borderRadius: 99 }}>{s}</span>
+                        <span key={s} style={{ fontSize: "0.62rem", fontWeight: 600, color: "#14b8a6", background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.18)", padding: "2px 7px", borderRadius: 99 }}>{s}</span>
                       ))}
                     </div>
                   )}
 
-                  {/* Footer: orders + price */}
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: "auto", paddingTop: "0.6rem", borderTop: "1px solid var(--card-border)" }}>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 500 }}>
-                      {completedCount > 0 ? `${completedCount} order${completedCount !== 1 ? "s" : ""} completed` : "New freelancer"}
-                    </span>
-                    <span style={{ fontSize: "0.72rem", fontWeight: 600, color: minPrice != null ? "#14b8a6" : "var(--text-muted)" }}>
-                      {minPrice != null ? `from $${minPrice}` : "Price on request"}
+                  {/* Row 5: Price — always shown */}
+                  <div style={{ marginTop: "auto", paddingTop: "0.6rem", borderTop: "1px solid var(--card-border)" }}>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 700, color: minPrice != null ? "#14b8a6" : "var(--text-muted)" }}>
+                      {minPrice != null ? `From $${minPrice}` : "Price on request"}
                     </span>
                   </div>
                 </Link>
