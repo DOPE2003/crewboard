@@ -6258,13 +6258,6 @@ body.dark .auth-split-logo-mobile { filter: brightness(0) invert(1); }
   .auth-split-home-link { display: none; }
 }
 
-/* ── Profile cover banner ── */
-.profile-cover-banner {
-  background: #E8FAF7;
-}
-.dark .profile-cover-banner {
-  background: rgba(20, 184, 166, 0.08);
-}
 
 /* ── Profile page: stack to single column on mobile ── */
 @media (max-width: 768px) {
@@ -6292,16 +6285,6 @@ body.dark .auth-split-logo-mobile { filter: brightness(0) invert(1); }
   background: none !important;
 }
 
-/* ── Banner upload: X remove button is hover-only ── */
-.banner-upload-wrap .banner-remove-btn {
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s;
-}
-.banner-upload-wrap:hover .banner-remove-btn {
-  opacity: 1;
-  pointer-events: auto;
-}
 
 /* ── Activities page ─────────────────────────────────────────────────────── */
 .act-layout {
@@ -7418,9 +7401,6 @@ body.dark .trending-card:hover {
 /* ── Dark mode: fix hardcoded light-only inline styles ── */
 
 /* Profile page: portfolio viewer (visitor view) description + gig cards */
-body.dark .profile-cover-banner {
-  background-color: #111827 !important;
-}
 
 /* Profile page: gig card in services section */
 body.dark a[href^="/gigs/"] > div[style*="background: \"var(--background)\""],

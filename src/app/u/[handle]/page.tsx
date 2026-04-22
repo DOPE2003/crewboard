@@ -3,7 +3,6 @@ import { auth } from "@/auth";
 import { notifyUser } from "@/lib/notify";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import BannerUpload from "@/components/ui/BannerUpload";
 import ContactButtons from "@/components/ui/ContactButtons";
 import LogoutButton from "@/components/ui/LogoutButton";
 import OGBadge from "@/components/ui/OGBadge";
@@ -207,60 +206,38 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
           </div>
         )}
 
-        {/* ── Cover Banner (full width) ── */}
-        <div style={{ borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1rem" }}>
-          {isOwnProfile ? (
-            <div style={{ position: "relative" }}>
-              <BannerUpload currentBanner={user.bannerImage ?? null} />
-              <div style={{ position: "absolute", top: "1rem", right: "1.5rem", zIndex: 3 }}>
-                <EditProfilePanel
-                  initialRole={user.userTitle ?? ""}
-                  initialSkills={user.skills}
-                  initialBio={user.bio ?? ""}
-                  initialAvailability={user.availability ?? "available"}
-                />
-              </div>
-            </div>
-          ) : (
-            <div
-              className="profile-cover-banner"
-              style={{
-                width: "100%", aspectRatio: "3 / 1", position: "relative",
-                background: user.bannerImage ? undefined : "#E8FAF7",
-                backgroundImage: user.bannerImage ? `url(${user.bannerImage})` : undefined,
-                backgroundSize: "cover", backgroundPosition: "center",
-                backgroundRepeat: "no-repeat",
-              }}
-            />
-          )}
-        </div>
-
-        {/* ── Two-column layout starts right after banner ── */}
+        {/* ── Two-column layout ── */}
         <div className="profile-page-grid" style={{ display: "grid", gridTemplateColumns: "1fr 340px", gap: "1.5rem", alignItems: "start" }}>
 
           {/* ── LEFT COLUMN: Profile info + content ── */}
           <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
 
             {/* Profile header card */}
-            <SectionCard style={{ padding: 0, overflow: "visible" }}>
-              {/* Avatar row */}
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", padding: "0 1.5rem" }}>
-                <div style={{ position: "relative", marginTop: -44, zIndex: 10, flexShrink: 0 }}>
+            <SectionCard>
+              {/* Avatar + actions row */}
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: "1rem", marginBottom: "1rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
                   {isOwnProfile ? (
                     <AvatarUpload currentImage={user.image} name={user.name} isTwitterUser={!!user.twitterId && !user.twitterId.startsWith("apple:")} />
                   ) : (
-                    <UserAvatar src={user.image} name={user.name ?? user.twitterHandle} size={88} style={{ border: "3px solid var(--background)" }} />
+                    <UserAvatar src={user.image} name={user.name ?? user.twitterHandle} size={72} style={{ border: "2px solid var(--card-border)", flexShrink: 0 }} />
                   )}
                 </div>
-                {canMessage && (
-                  <div style={{ paddingTop: "0.75rem" }}>
-                    <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />
-                  </div>
-                )}
+                <div style={{ display: "flex", gap: 8, alignItems: "center", flexShrink: 0 }}>
+                  {canMessage && <SaveTalentButton targetUserId={user.id} initialSaved={isSaved} />}
+                  {isOwnProfile && (
+                    <EditProfilePanel
+                      initialRole={user.userTitle ?? ""}
+                      initialSkills={user.skills}
+                      initialBio={user.bio ?? ""}
+                      initialAvailability={user.availability ?? "available"}
+                    />
+                  )}
+                </div>
               </div>
 
               {/* Name + details */}
-              <div style={{ padding: "0.65rem 1.5rem 1.5rem" }}>
+              <div>
                 {/* Name + badges + CTA */}
                 <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "0.75rem" }}>
                   <div>
@@ -381,24 +358,6 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                   </div>
                 )}
 
-                {/* Profile completion bar (own profile only) */}
-                {isOwnProfile && (
-                  <div style={{ marginTop: "1rem", paddingTop: "1rem", borderTop: "1px solid var(--card-border)" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-                      <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-                        Profile {completionPct}% complete
-                      </span>
-                      {nextItem && (
-                        <span style={{ fontSize: "11px", color: "var(--text-muted)" }}>
-                          Next: <strong style={{ color: "var(--foreground)" }}>{nextItem.label}</strong>
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ height: 6, background: "#e5e7eb", borderRadius: 99, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: `${completionPct}%`, background: completionPct === 100 ? "#22c55e" : "#14B8A6", borderRadius: 99, transition: "width 0.4s" }} />
-                    </div>
-                  </div>
-                )}
               </div>
             </SectionCard>
 
