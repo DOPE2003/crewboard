@@ -35,12 +35,12 @@ export default async function HomePage() {
     memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
   }));
 
-  const featuredFreelancers = await db.user.findMany({
+  const rawFeatured = await db.user.findMany({
     where: { profileComplete: true, image: { not: null } },
     orderBy: { createdAt: "desc" },
-    take: 6,
+    take: 18,
     select: {
-      twitterHandle: true, name: true, image: true, userTitle: true,
+      twitterHandle: true, name: true, image: true, userTitle: true, bio: true,
       availability: true, skills: true, lastSeenAt: true, walletAddress: true,
       gigs: {
         where: { status: "active" },
@@ -52,6 +52,22 @@ export default async function HomePage() {
       reviewsReceived: { select: { rating: true } },
     },
   }).catch(() => []);
+
+  function profileQuality(u: any): number {
+    let s = 0;
+    if (u.walletAddress) s += 4;
+    if ((u.reviewsReceived?.length ?? 0) > 0) s += 4;
+    if ((u.sellerOrders?.length ?? 0) > 0) s += 3;
+    if (u.bio && u.bio.length > 10) s += 2;
+    if (u.lastSeenAt && Date.now() - new Date(u.lastSeenAt).getTime() < 7 * 864e5) s += 2;
+    if (u.gigs?.length > 0) s += 1;
+    if (!u.name) s -= 3;
+    return s;
+  }
+
+  const featuredFreelancers = [...rawFeatured]
+    .sort((a, b) => profileQuality(b) - profileQuality(a))
+    .slice(0, 6);
 
 
   const userName = session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder";
@@ -298,17 +314,17 @@ export default async function HomePage() {
               padding: "0 clamp(1rem,4vw,2rem) 0.5rem",
               WebkitOverflowScrolling: "touch",
             } as React.CSSProperties}>
-              {featuredFreelancers.slice(0, 6).map((f: any) => {
+              {featuredFreelancers.map((f: any) => {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isAvail = f.availability === "available";
                 const isVerified = !!f.walletAddress;
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
                 const avgRating = reviews.length > 0
-                  ? (reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length)
+                  ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
                   : null;
                 const activeRecently = f.lastSeenAt
-                  ? (Date.now() - new Date(f.lastSeenAt).getTime()) < 7 * 24 * 60 * 60 * 1000
+                  ? (Date.now() - new Date(f.lastSeenAt).getTime()) < 7 * 864e5
                   : false;
                 return (
                   <Link
@@ -327,12 +343,7 @@ export default async function HomePage() {
                     {/* Avatar + online dot */}
                     <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
                       {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={f.image}
-                        alt=""
-                        style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", display: "block" }}
-                        onError={undefined}
-                      />
+                      <img src={f.image} alt="" style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", display: "block" }} />
                       <span style={{
                         position: "absolute", bottom: 1, right: 1, width: 10, height: 10,
                         borderRadius: "50%", border: "2px solid var(--surface)",
@@ -340,40 +351,43 @@ export default async function HomePage() {
                       }} />
                     </div>
 
-                    {/* Name + username */}
+                    {/* Name + verified */}
                     <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 110 }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
+                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 108 }}>
                           {f.name ?? f.twitterHandle}
                         </span>
                         {isVerified && (
-                          <svg width="13" height="13" viewBox="0 0 24 24" fill="#14B8A6" style={{ flexShrink: 0 }}>
-                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                          </svg>
+                          <span className="cbadge-wrap">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="#14B8A6" style={{ flexShrink: 0, display: "block" }}>
+                              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                            </svg>
+                            <span className="cbadge-tip">Verified via wallet</span>
+                          </span>
                         )}
                       </div>
-                      <div style={{ fontSize: 10, color: "var(--text-muted)", marginTop: 1, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                      <div style={{ fontSize: 10, color: "var(--text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                         {f.userTitle ?? "Freelancer"}
                       </div>
                     </div>
 
-                    {/* Stats: rating · jobs · active */}
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: "4px 8px", alignItems: "center" }}>
-                      {avgRating !== null && (
-                        <span style={{ fontSize: 11, fontWeight: 600, color: "#f59e0b", display: "flex", alignItems: "center", gap: 2 }}>
-                          ⭐ {avgRating.toFixed(1)}
-                        </span>
-                      )}
-                      {completedCount > 0 && (
-                        <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
-                          {completedCount} job{completedCount !== 1 ? "s" : ""}
-                        </span>
-                      )}
+                    {/* Stats row — always shown */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: avgRating !== null ? "#f59e0b" : "var(--text-muted)" }}>
+                        {avgRating !== null ? `⭐ ${avgRating.toFixed(1)}` : "⭐ New"}
+                      </span>
+                      <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
+                      <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
+                        {completedCount} job{completedCount !== 1 ? "s" : ""}
+                      </span>
                       {activeRecently && (
-                        <span style={{ fontSize: 9, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 3 }}>
-                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-                          Active
-                        </span>
+                        <>
+                          <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
+                          <span style={{ fontSize: 9, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 2 }}>
+                            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", flexShrink: 0, display: "inline-block" }} />
+                            Active
+                          </span>
+                        </>
                       )}
                     </div>
 
@@ -650,14 +664,14 @@ export default async function HomePage() {
                 ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
                 : null;
               const activeRecently = (u as any).lastSeenAt
-                ? (Date.now() - new Date((u as any).lastSeenAt).getTime()) < 7 * 24 * 60 * 60 * 1000
+                ? (Date.now() - new Date((u as any).lastSeenAt).getTime()) < 7 * 864e5
                 : false;
               return (
                 <Link
                   key={u.twitterHandle}
                   href={`/u/${u.twitterHandle}`}
                   style={{
-                    display: "flex", flexDirection: "column", gap: "0.85rem",
+                    display: "flex", flexDirection: "column", gap: "0.8rem",
                     padding: "1.25rem", borderRadius: 16,
                     background: "var(--card-bg)", border: "1px solid var(--card-border)",
                     textDecoration: "none",
@@ -665,67 +679,65 @@ export default async function HomePage() {
                   }}
                   className="ff-card"
                 >
-                  {/* Row 1: Avatar + availability badge */}
+                  {/* Row 1: Avatar + availability */}
                   <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                    <div style={{ position: "relative" }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={u.image ?? ""}
-                        alt={u.name ?? u.twitterHandle}
-                        style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--card-border)", display: "block" }}
-                      />
-                    </div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={u.image ?? ""}
+                      alt={u.name ?? u.twitterHandle}
+                      style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--card-border)", display: "block", flexShrink: 0 }}
+                    />
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-                      {u.availability === "available" && (
-                        <span style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.62rem", fontWeight: 600, color: "#22c55e", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 7px", borderRadius: 99 }}>
+                      {u.availability === "available" ? (
+                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.62rem", fontWeight: 600, color: "#22c55e", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 7px", borderRadius: 99 }}>
                           <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
                           Available
                         </span>
-                      )}
-                      {activeRecently && u.availability !== "available" && (
-                        <span style={{ fontSize: "0.6rem", color: "var(--text-muted)", fontWeight: 500 }}>Active recently</span>
-                      )}
+                      ) : activeRecently ? (
+                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.6rem", fontWeight: 500, color: "var(--text-muted)" }}>
+                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
+                          Active recently
+                        </span>
+                      ) : null}
                     </div>
                   </div>
 
-                  {/* Row 2: Name + verified + role */}
+                  {/* Row 2: Name + verified */}
                   <div>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
                       <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 160 }}>
                         {u.name ?? `@${u.twitterHandle}`}
                       </span>
                       {isVerified && (
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="#14b8a6" style={{ flexShrink: 0 }} aria-label="Wallet verified">
-                          <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                        </svg>
+                        <span className="cbadge-wrap">
+                          <svg width="15" height="15" viewBox="0 0 24 24" fill="#14b8a6" style={{ flexShrink: 0, display: "block" }}>
+                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                          </svg>
+                          <span className="cbadge-tip">Verified via wallet connection</span>
+                        </span>
                       )}
                     </div>
+                    {/* Row 3: Role */}
                     <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", fontWeight: 500 }}>
                       {(u as any).userTitle ?? "Freelancer"}
                     </div>
                   </div>
 
-                  {/* Row 3: Rating + jobs */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-                    {avgRating !== null ? (
-                      <span style={{ fontSize: "0.75rem", fontWeight: 700, color: "#f59e0b", display: "flex", alignItems: "center", gap: 3 }}>
-                        ⭐ {avgRating.toFixed(1)}
-                        <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.68rem" }}>({reviews.length})</span>
-                      </span>
-                    ) : (
-                      <span style={{ fontSize: "0.68rem", color: "var(--text-muted)" }}>No reviews yet</span>
-                    )}
-                    {completedCount > 0 && (
-                      <>
-                        <span style={{ color: "var(--card-border)", fontSize: 10 }}>·</span>
-                        <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 500 }}>
-                          {completedCount} job{completedCount !== 1 ? "s" : ""}
-                        </span>
-                      </>
-                    )}
+                  {/* Row 4: Rating + jobs — ALWAYS shown */}
+                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: avgRating !== null ? "#f59e0b" : "var(--text-muted)", display: "flex", alignItems: "center", gap: 3 }}>
+                      {avgRating !== null ? `⭐ ${avgRating.toFixed(1)}` : "⭐ New"}
+                      {avgRating !== null && reviews.length > 0 && (
+                        <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.66rem" }}>({reviews.length})</span>
+                      )}
+                    </span>
+                    <span style={{ color: "var(--card-border)", fontSize: 10 }}>·</span>
+                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 500 }}>
+                      {completedCount} job{completedCount !== 1 ? "s" : ""}
+                    </span>
                   </div>
 
-                  {/* Row 4: Skills */}
+                  {/* Row 5: Skills */}
                   {Array.isArray((u as any).skills) && (u as any).skills.length > 0 && (
                     <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
                       {((u as any).skills as string[]).slice(0, 3).map((s: string) => (
@@ -734,7 +746,7 @@ export default async function HomePage() {
                     </div>
                   )}
 
-                  {/* Row 5: Price — always shown */}
+                  {/* Row 6: Price — always shown */}
                   <div style={{ marginTop: "auto", paddingTop: "0.6rem", borderTop: "1px solid var(--card-border)" }}>
                     <span style={{ fontSize: "0.8rem", fontWeight: 700, color: minPrice != null ? "#14b8a6" : "var(--text-muted)" }}>
                       {minPrice != null ? `From $${minPrice}` : "Price on request"}
@@ -756,6 +768,20 @@ export default async function HomePage() {
           @media (max-width: 900px) { .ff-grid { grid-template-columns: repeat(2,1fr); } }
           @media (max-width: 500px) { .ff-grid { grid-template-columns: 1fr; } }
           .ff-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.07); border-color: rgba(20,184,166,0.3) !important; }
+          .cbadge-wrap { position: relative; display: inline-flex; align-items: center; cursor: default; }
+          .cbadge-tip {
+            display: none; position: absolute; bottom: calc(100% + 7px); left: 50%;
+            transform: translateX(-50%);
+            background: #0f172a; color: #e2e8f0; font-size: 11px; font-weight: 500;
+            padding: 4px 9px; border-radius: 6px; white-space: nowrap;
+            pointer-events: none; z-index: 99;
+            border: 1px solid rgba(20,184,166,0.25);
+          }
+          .cbadge-tip::after {
+            content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
+            border: 4px solid transparent; border-top-color: #0f172a;
+          }
+          .cbadge-wrap:hover .cbadge-tip { display: block; }
         `}</style>
       </div>
 
