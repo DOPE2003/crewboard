@@ -290,83 +290,94 @@ export default async function HomePage() {
                     key={f.twitterHandle}
                     href={`/u/${f.twitterHandle}`}
                     style={{
-                      flexShrink: 0, width: 168,
                       background: "var(--surface)", border: "1px solid var(--card-border)",
-                      borderRadius: 14, padding: "1rem",
+                      borderRadius: 14, padding: "14px 14px 12px",
                       textDecoration: "none", color: "inherit",
-                      display: "flex", flexDirection: "column", gap: 9,
-                      transition: "box-shadow 0.2s, transform 0.2s",
+                      display: "flex", flexDirection: "column", gap: 8,
+                      transition: "box-shadow 0.18s, transform 0.18s, border-color 0.18s",
                     }}
-                    className="trending-card"
+                    className="ff-card"
                   >
-                    {/* Avatar + online dot */}
-                    <div style={{ position: "relative", width: 44, height: 44, flexShrink: 0 }}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={f.image} alt="" style={{ width: 44, height: 44, borderRadius: "50%", objectFit: "cover", display: "block" }} />
-                      <span style={{
-                        position: "absolute", bottom: 1, right: 1, width: 10, height: 10,
-                        borderRadius: "50%", border: "2px solid var(--surface)",
-                        background: isAvail ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#94a3b8",
-                      }} />
-                    </div>
-
-                    {/* Name + verified */}
-                    <div>
-                      <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                        <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 108 }}>
-                          {f.name ?? f.twitterHandle}
-                        </span>
-                        {isVerified && (
-                          <span className="cbadge-wrap">
-                            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 17, height: 17, borderRadius: "50%", background: "#14B8A6", flexShrink: 0 }}>
-                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12"/>
-                              </svg>
-                            </span>
-                            <span className="cbadge-tip">Verified identity</span>
+                    {/* Header: avatar left, name/role right */}
+                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
+                      <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={f.image} alt="" style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", display: "block" }} />
+                        <span style={{
+                          position: "absolute", bottom: 1, right: 1, width: 9, height: 9,
+                          borderRadius: "50%", border: "2px solid var(--surface)",
+                          background: isAvail ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#94a3b8",
+                        }} />
+                      </div>
+                      <div style={{ minWidth: 0, flex: 1, paddingTop: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
+                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {f.name ?? f.twitterHandle}
                           </span>
-                        )}
-                      </div>
-                      <div style={{ fontSize: 10, color: "var(--text-muted)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-                        {f.userTitle ?? "Freelancer"}
+                          {isVerified && (
+                            <span className="cbadge-wrap" style={{ flexShrink: 0 }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 15, height: 15, borderRadius: "50%", background: "#14B8A6" }}>
+                                <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                                  <polyline points="20 6 9 17 4 12"/>
+                                </svg>
+                              </span>
+                              <span className="cbadge-tip">Verified identity</span>
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                          {f.userTitle ?? "Freelancer"}
+                        </div>
                       </div>
                     </div>
 
-                    {/* Stats row — always shown */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                    {/* Status badges */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
                       {avgRating !== null ? (
                         <>
-                          <span style={{ fontSize: 11, fontWeight: 600, color: "#f59e0b" }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#92400e", background: "#fef3c7", borderRadius: 99, padding: "2px 7px" }}>
                             ⭐ {avgRating.toFixed(1)}
                           </span>
-                          <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
                           <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
                             {completedCount} job{completedCount !== 1 ? "s" : ""}
                           </span>
+                          {activeRecently && (
+                            <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#15803d", background: "rgba(34,197,94,0.12)", borderRadius: 99, padding: "2px 7px" }}>
+                              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", flexShrink: 0, display: "inline-block" }} />
+                              Active
+                            </span>
+                          )}
                         </>
                       ) : (
                         <>
-                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-muted)" }}>New</span>
-                          <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
-                          <span style={{ fontSize: 10, color: "#22c55e", fontWeight: 600 }}>Available</span>
-                        </>
-                      )}
-                      {activeRecently && avgRating !== null && (
-                        <>
-                          <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
-                          <span style={{ fontSize: 9, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 2 }}>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "var(--text-muted)", background: "var(--background)", border: "1px solid var(--card-border)", borderRadius: 99, padding: "2px 7px" }}>
+                            ⭐ New
+                          </span>
+                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#15803d", background: "rgba(34,197,94,0.12)", borderRadius: 99, padding: "2px 7px" }}>
                             <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", flexShrink: 0, display: "inline-block" }} />
-                            Active
+                            Available
                           </span>
                         </>
                       )}
                     </div>
 
-                    {/* Price — always shown */}
-                    <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 8 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: "#14B8A6" }}>
+                    {/* Skill tags */}
+                    {(f.skills as string[] | null)?.length ? (
+                      <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
+                        {(f.skills as string[]).slice(0, 3).map((skill: string) => (
+                          <span key={skill} style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", background: "var(--background)", border: "1px solid var(--card-border)", borderRadius: 6, padding: "2px 7px", whiteSpace: "nowrap" }}>
+                            {skill}
+                          </span>
+                        ))}
+                      </div>
+                    ) : null}
+
+                    {/* Price footer */}
+                    <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 9, display: "flex", alignItems: "baseline", gap: 4 }}>
+                      <span style={{ fontSize: 14, fontWeight: 700, color: "#14B8A6", letterSpacing: "-0.01em" }}>
                         From ${minPrice != null ? minPrice : 50}
                       </span>
+                      <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>/ project</span>
                     </div>
                   </Link>
                 );
@@ -383,10 +394,10 @@ export default async function HomePage() {
           .ff-grid { grid-template-columns: repeat(3,1fr); }
           @media (max-width: 900px) { .ff-grid { grid-template-columns: repeat(2,1fr); } }
           @media (max-width: 500px) { .ff-grid { grid-template-columns: 1fr; } }
-          .ff-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.07); border-color: rgba(20,184,166,0.3) !important; }
+          .ff-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.08); border-color: rgba(20,184,166,0.35) !important; }
           .cbadge-wrap { position: relative; display: inline-flex; align-items: center; cursor: default; }
           .cbadge-tip {
-            display: none; position: absolute; bottom: calc(100% + 7px); left: 50%;
+            display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
             transform: translateX(-50%);
             background: #0f172a; color: #e2e8f0; font-size: 11px; font-weight: 500;
             padding: 4px 9px; border-radius: 6px; white-space: nowrap;
