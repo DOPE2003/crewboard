@@ -3,7 +3,6 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
-import ScrollToTrustButton from "@/components/home/ScrollToTrustButton";
 import HeroSearch from "@/components/home/HeroSearch";
 import "@/styles/landing.css";
 
@@ -138,8 +137,8 @@ export default async function HomePage() {
             zIndex: 1,
           }}
         >
-          Hire your next<br />
-          Web3 <span style={{ color: "#14B8A6" }}>freelancer.</span>
+          Hire top freelancers.<br />
+          Pay only when <span style={{ color: "#14B8A6" }}>work is done.</span>
         </h1>
 
         {/* Welcome back */}
@@ -187,39 +186,21 @@ export default async function HomePage() {
             color: "var(--text-muted)",
             fontSize: "0.88rem",
             lineHeight: 1.85,
-            maxWidth: "22rem",
+            maxWidth: "24rem",
             letterSpacing: "0.01em",
-            marginBottom: "1.25rem",
+            marginBottom: "1.5rem",
             opacity: 0,
             animation: "fadeUp 0.6s 0.58s forwards",
             position: "relative",
             zIndex: 1,
           }}
         >
-          Connect with builders. Ship real products.
-          <span className="hidden md:inline"><br />The professional network Web3 deserves.</span>
+          Post a job, get matched with talent, and pay securely after delivery.
         </p>
-
-        {/* ── Trust signal — moved above CTAs for mobile ── */}
-        <div style={{
-          opacity: 0, animation: "fadeUp 0.6s 0.62s forwards",
-          position: "relative", zIndex: 1, marginBottom: 20,
-          display: "flex", alignItems: "center", gap: 7,
-          background: "rgba(20,184,166,0.07)",
-          border: "1px solid rgba(20,184,166,0.25)",
-          borderRadius: 99, padding: "6px 14px",
-        }}>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-          </svg>
-          <span style={{ fontSize: "0.72rem", color: "var(--foreground)", fontWeight: 600 }}>
-            Payments secured on-chain via <span style={{ color: "#14B8A6" }}>Solana escrow</span>
-          </span>
-        </div>
 
         {/* ── Search bar — mobile only (desktop uses navbar search) ── */}
         <div className="flex md:hidden" style={{
-          opacity: 0, animation: "fadeUp 0.6s 0.7s forwards",
+          opacity: 0, animation: "fadeUp 0.6s 0.65s forwards",
           position: "relative", zIndex: 1, width: "100%",
           justifyContent: "center",
           marginBottom: 16,
@@ -227,65 +208,49 @@ export default async function HomePage() {
           <HeroSearch />
         </div>
 
-        {/* CTA buttons */}
+        {/* CTA */}
         <div
           style={{
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            gap: 10,
-            marginBottom: 32,
+            gap: 12,
+            marginBottom: 20,
             opacity: 0,
-            animation: "fadeUp 0.6s 0.78s forwards",
+            animation: "fadeUp 0.6s 0.72s forwards",
             position: "relative",
             zIndex: 1,
-            flexWrap: "wrap",
-            justifyContent: "center",
           }}
         >
-          <Link href="/talent" className="btn-hero-primary">
-            Browse Profiles
-          </Link>
-          <Link href="/jobs" className="btn-hero-secondary">
-            Browse Jobs
-          </Link>
-          <Link href={isLoggedIn ? "/gigs/new" : "/register"} className="btn-hero-secondary">
-            {isLoggedIn ? "Post a Service" : "Join as Freelancer"}
-          </Link>
-          <Link href={isLoggedIn ? "/jobs/new" : "/login"} className="btn-hero-secondary">
+          <Link href={isLoggedIn ? "/jobs/new" : "/register"} className="btn-hero-primary">
             Post a Job
+          </Link>
+          <Link
+            href="/jobs"
+            style={{
+              fontSize: "0.8rem",
+              color: "var(--text-muted)",
+              textDecoration: "none",
+              fontWeight: 500,
+              transition: "color 0.15s",
+            }}
+            onMouseEnter={undefined}
+          >
+            Looking for work?{" "}
+            <span style={{ color: "#14B8A6", fontWeight: 600 }}>Find Jobs</span>
           </Link>
         </div>
 
-        {/* Three trust pills — desktop only */}
+        {/* Trust line */}
         <div style={{
-          opacity: 0, animation: "fadeUp 0.6s 0.85s forwards",
+          opacity: 0, animation: "fadeUp 0.6s 0.82s forwards",
           position: "relative", zIndex: 1, marginBottom: 28,
-          display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
-        }} className="hidden md:flex">
-          <div style={{ display: "flex", gap: 8, flexWrap: "wrap", justifyContent: "center" }}>
-            {[
-              { icon: <><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></>, label: "On-chain escrow" },
-              { icon: <><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></>, label: "No upfront risk" },
-              { icon: <><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></>, label: "Secure wallet payments" },
-            ].map((item) => (
-              <span key={item.label} style={{
-                display: "inline-flex", alignItems: "center", gap: 5,
-                fontSize: "0.7rem", fontWeight: 600,
-                color: "var(--text-muted)",
-                background: "rgba(var(--foreground-rgb,0,0,0),0.04)",
-                border: "1px solid var(--card-border)",
-                padding: "4px 10px", borderRadius: 99,
-              }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                  {item.icon}
-                </svg>
-                {item.label}
-              </span>
-            ))}
-          </div>
-
-          {/* How escrow works link */}
-          <ScrollToTrustButton />
+          fontSize: "0.72rem", color: "var(--text-muted)", fontWeight: 500,
+          display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "center",
+        }}>
+          <span>✔ Secure payments</span>
+          <span>✔ Verified freelancers</span>
+          <span>✔ No upfront risk</span>
         </div>
 
         {/* Scroll indicator — desktop only */}
