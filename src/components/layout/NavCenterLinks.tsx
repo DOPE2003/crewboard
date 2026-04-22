@@ -6,13 +6,11 @@ import Link from "next/link";
 const HOMEPAGE_LINKS = [
   { label: "Browse Talent", id: "browse" },
   { label: "How It Works",  id: "how-it-works" },
-  { label: "Categories",    id: "categories" },
 ];
 
 const INNER_LINKS = [
   { label: "Browse Talent", href: "/talent" },
   { label: "How It Works",  href: "/#how-it-works" },
-  { label: "Categories",    href: "/#categories" },
 ];
 
 export default function NavCenterLinks() {

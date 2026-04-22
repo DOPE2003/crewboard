@@ -262,13 +262,9 @@ export default async function Navbar() {
             { label: "Job Board",         href: "/jobs",                                      isNew: true },
             { label: "Coding & Tech",     href: "/talent?role=Coding+%26+Tech"               },
             { label: "AI Engineer",       href: "/talent?role=AI+Engineer",                  isNew: true },
-            { label: "Graphic & Design",  href: "/talent?role=Graphic+%26+Design"            },
+            { label: "Design",            href: "/talent?role=Graphic+%26+Design"            },
             { label: "Video & Animation", href: "/talent?role=Video+%26+Animation"            },
-            { label: "Social Marketing",  href: "/talent?role=Social+Marketing"               },
-            { label: "KOL Manager",       href: "/talent?role=KOL+Manager"                   },
-            { label: "Content Creator",   href: "/talent?role=Content+Creator"                },
-            { label: "Web3 Designer",     href: "/talent?role=Web3+Web+Designer"              },
-            { label: "Exchange Listings", href: "/talent?role=Exchange+Listings+Manager"      },
+            { label: "Marketing",         href: "/talent?role=Social+Marketing"               },
           ] as { label: string; href: string; hot?: boolean; isNew?: boolean }[]).map((cat) => (
             <Link
               key={cat.label}

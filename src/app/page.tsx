@@ -70,8 +70,6 @@ export default async function HomePage() {
     .slice(0, 6);
 
 
-  const userName = session?.user?.name?.split(" ")[0] ?? (session?.user as any)?.twitterHandle ?? "Builder";
-
   return (
     <>
     <main className="page landing-page-main">
@@ -157,44 +155,6 @@ export default async function HomePage() {
           Hire top freelancers.<br />
           Pay only when <span style={{ color: "#14B8A6" }}>work is done.</span>
         </h1>
-
-        {/* Welcome back */}
-        {isLoggedIn && (
-          <div
-            className="hero-welcome-block"
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "0.3rem",
-              marginBottom: "1rem",
-              opacity: 0,
-              animation: "fadeUp 0.6s 0.38s forwards",
-              position: "relative",
-              zIndex: 1,
-            }}
-          >
-            <span className="hero-welcome-label" style={{
-              fontFamily: "Inter, sans-serif",
-              fontSize: "0.6875rem",
-              letterSpacing: "0.15em",
-              textTransform: "uppercase" as const,
-              color: "var(--text-muted)",
-            }}>
-              Welcome back
-            </span>
-            <span className="hero-welcome-name" style={{
-              fontFamily: "Inter, sans-serif",
-              fontWeight: 700,
-              fontSize: "2rem",
-              letterSpacing: "-0.01em",
-              lineHeight: 1,
-              color: "var(--text-1)",
-            }}>
-              {userName}
-            </span>
-          </div>
-        )}
 
         {/* Subtitle */}
         <p
@@ -358,10 +318,12 @@ export default async function HomePage() {
                         </span>
                         {isVerified && (
                           <span className="cbadge-wrap">
-                            <svg width="13" height="13" viewBox="0 0 24 24" fill="#14B8A6" style={{ flexShrink: 0, display: "block" }}>
-                              <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                            </svg>
-                            <span className="cbadge-tip">Verified via wallet</span>
+                            <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 17, height: 17, borderRadius: "50%", background: "#14B8A6", flexShrink: 0 }}>
+                              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                              </svg>
+                            </span>
+                            <span className="cbadge-tip">Verified identity</span>
                           </span>
                         )}
                       </div>
@@ -372,14 +334,24 @@ export default async function HomePage() {
 
                     {/* Stats row — always shown */}
                     <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: avgRating !== null ? "#f59e0b" : "var(--text-muted)" }}>
-                        {avgRating !== null ? `⭐ ${avgRating.toFixed(1)}` : "⭐ New"}
-                      </span>
-                      <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
-                      <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
-                        {completedCount} job{completedCount !== 1 ? "s" : ""}
-                      </span>
-                      {activeRecently && (
+                      {avgRating !== null ? (
+                        <>
+                          <span style={{ fontSize: 11, fontWeight: 600, color: "#f59e0b" }}>
+                            ⭐ {avgRating.toFixed(1)}
+                          </span>
+                          <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
+                          <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
+                            {completedCount} job{completedCount !== 1 ? "s" : ""}
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <span style={{ fontSize: 10, fontWeight: 600, color: "var(--text-muted)" }}>New</span>
+                          <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
+                          <span style={{ fontSize: 10, color: "#22c55e", fontWeight: 600 }}>Available</span>
+                        </>
+                      )}
+                      {activeRecently && avgRating !== null && (
                         <>
                           <span style={{ fontSize: 10, color: "var(--card-border)" }}>·</span>
                           <span style={{ fontSize: 9, color: "#22c55e", fontWeight: 600, display: "flex", alignItems: "center", gap: 2 }}>
@@ -392,8 +364,8 @@ export default async function HomePage() {
 
                     {/* Price — always shown */}
                     <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 8 }}>
-                      <span style={{ fontSize: 12, fontWeight: 700, color: minPrice != null ? "#14B8A6" : "var(--text-muted)" }}>
-                        {minPrice != null ? `From $${minPrice}` : "Price on request"}
+                      <span style={{ fontSize: 12, fontWeight: 700, color: "#14B8A6" }}>
+                        From ${minPrice != null ? minPrice : 50}
                       </span>
                     </div>
                   </Link>
