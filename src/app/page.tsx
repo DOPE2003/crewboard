@@ -1,5 +1,6 @@
 import React from "react";
 import Link from "next/link";
+import { ShieldCheck, Clock, BadgeCheck } from "lucide-react";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
@@ -218,16 +219,27 @@ export default async function HomePage() {
           </Link>
         </div>
 
-        {/* Trust line */}
+        {/* Trust pills */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.82s forwards",
           position: "relative", zIndex: 1, marginBottom: 28,
-          fontSize: "0.72rem", color: "var(--text-muted)", fontWeight: 500,
-          display: "flex", alignItems: "center", gap: 14, flexWrap: "wrap", justifyContent: "center",
+          display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center",
         }}>
-          <span>✔ Secure payments</span>
-          <span>✔ Verified freelancers</span>
-          <span>✔ No upfront risk</span>
+          {([
+            { icon: <ShieldCheck size={12} strokeWidth={2} />, label: "Secure payments" },
+            { icon: <BadgeCheck size={12} strokeWidth={2} />, label: "Verified freelancers" },
+            { icon: <Clock size={12} strokeWidth={2} />, label: "No upfront risk" },
+          ] as { icon: React.ReactNode; label: string }[]).map((t) => (
+            <span key={t.label} style={{
+              display: "inline-flex", alignItems: "center", gap: 5,
+              fontSize: "0.72rem", fontWeight: 500, color: "var(--text-muted)",
+              background: "var(--surface)", border: "1px solid var(--card-border)",
+              borderRadius: 99, padding: "4px 10px",
+            }}>
+              <span style={{ color: "#14B8A6", display: "flex", alignItems: "center" }}>{t.icon}</span>
+              {t.label}
+            </span>
+          ))}
         </div>
 
         {/* Scroll indicator — desktop only */}
@@ -261,10 +273,13 @@ export default async function HomePage() {
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
               <div>
-                <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.4rem,3vw,2rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#14B8A6", marginBottom: "0.4rem" }}>
+                  Featured talent
+                </div>
+                <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
                   Top freelancers, ready to hire
                 </h2>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", margin: "0.4rem 0 0" }}>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: "0.35rem 0 0", lineHeight: 1.5 }}>
                   Verified profiles with real reviews and track records
                 </p>
               </div>
@@ -394,7 +409,14 @@ export default async function HomePage() {
           .ff-grid { grid-template-columns: repeat(3,1fr); }
           @media (max-width: 900px) { .ff-grid { grid-template-columns: repeat(2,1fr); } }
           @media (max-width: 500px) { .ff-grid { grid-template-columns: 1fr; } }
-          .ff-card:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(0,0,0,0.08); border-color: rgba(20,184,166,0.35) !important; }
+          .ff-card {
+            transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
+          }
+          .ff-card:hover {
+            transform: translateY(-3px) scale(1.012);
+            box-shadow: 0 10px 32px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.04);
+            border-color: rgba(20,184,166,0.4) !important;
+          }
           .cbadge-wrap { position: relative; display: inline-flex; align-items: center; cursor: default; }
           .cbadge-tip {
             display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
@@ -418,10 +440,13 @@ export default async function HomePage() {
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.4rem,3vw,2rem)", color: "var(--foreground)", margin: "0 0 0.5rem", letterSpacing: "-0.02em" }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#14B8A6", marginBottom: "0.4rem" }}>
+              Simple process
+            </div>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: "0 0 0.4rem", letterSpacing: "-0.02em" }}>
               How it works
             </h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", margin: 0 }}>Three steps. No hassle.</p>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: 0, lineHeight: 1.5 }}>Three steps. No hassle.</p>
           </div>
 
           <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="hiw-grid">
@@ -464,14 +489,14 @@ export default async function HomePage() {
                 bg: "rgba(34,197,94,0.1)",
               },
             ] as { step: string; title: string; desc: string; icon: React.ReactNode; color: string; bg: string }[]).map((item, i) => (
-              <div key={item.step} style={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "1.25rem", borderRadius: 14, background: "var(--background)", border: "1px solid var(--card-border)" }}>
+              <div key={item.step} className="hiw-card" style={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "1.25rem", borderRadius: 14, background: "var(--background)", border: "1px solid var(--card-border)" }}>
                 <div style={{ width: 48, height: 48, borderRadius: 14, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", color: item.color, flexShrink: 0 }}>
                   {item.icon}
                 </div>
                 <div>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.15em", color: item.color, textTransform: "uppercase" as const, marginBottom: 4 }}>Step {item.step}</div>
-                  <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "var(--foreground)", margin: "0 0 0.35rem", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", lineHeight: 1.6, margin: 0 }}>{item.desc}</p>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", color: item.color, textTransform: "uppercase" as const, marginBottom: 5 }}>Step {item.step}</div>
+                  <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "0.95rem", color: "var(--foreground)", margin: "0 0 0.3rem", letterSpacing: "-0.01em" }}>{item.title}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.82rem", lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
                 </div>
               </div>
             ))}
@@ -486,6 +511,14 @@ export default async function HomePage() {
         <style>{`
           .hiw-grid { grid-template-columns: repeat(3,1fr); }
           @media (max-width: 700px) { .hiw-grid { grid-template-columns: 1fr; } }
+          .hiw-card {
+            transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
+          }
+          .hiw-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
+            border-color: rgba(20,184,166,0.2) !important;
+          }
         `}</style>
       </div>
 

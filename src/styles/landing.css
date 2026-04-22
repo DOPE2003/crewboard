@@ -137,7 +137,7 @@ body.dark .glass-card {
 /* ── Mobile overrides (≤767px) ── */
 @media (max-width: 767px) {
   .landing-hero {
-    background: #E8FAF7 !important;
+    background: var(--background) !important;
     height: auto !important;
     min-height: unset !important;
     padding: 28px 16px 24px !important;
