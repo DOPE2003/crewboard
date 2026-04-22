@@ -50,12 +50,32 @@ export default function TalentPage() {
         </p>
 
         {loading ? (
-          <div style={{ textAlign: "center", padding: "80px 0", color: "var(--text-muted)", fontSize: 14 }}>
-            Loading profiles…
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: 16 }}>
+            {[...Array(6)].map((_, i) => (
+              <div key={i} style={{ borderRadius: 16, background: "var(--surface)", border: "1px solid var(--card-border)", height: 260, animation: "pulse 1.5s ease-in-out infinite", opacity: 0.6 }} />
+            ))}
           </div>
         ) : filtered.length === 0 ? (
-          <div style={{ textAlign: "center", padding: "80px 0", color: "var(--text-muted)", fontSize: 14 }}>
-            No profiles found.
+          <div style={{ textAlign: "center", padding: "5rem 1rem" }}>
+            <div style={{ width: 64, height: 64, borderRadius: 18, background: "rgba(20,184,166,0.1)", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 16px" }}>
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/>
+              </svg>
+            </div>
+            <p style={{ fontWeight: 700, fontSize: "1rem", color: "var(--foreground)", margin: "0 0 6px" }}>
+              {selectedRole === "All" ? "No freelancers yet" : `No ${selectedRole} freelancers yet`}
+            </p>
+            <p style={{ fontSize: "0.82rem", color: "var(--text-muted)", margin: "0 0 20px", lineHeight: 1.6, maxWidth: 280, marginInline: "auto" }}>
+              {selectedRole === "All"
+                ? "Be among the first to join and get discovered by projects."
+                : "Try browsing all categories or check back later."}
+            </p>
+            {selectedRole !== "All" && (
+              <a href="/talent" style={{ fontSize: "0.82rem", fontWeight: 600, color: "#14B8A6", textDecoration: "none" }}>
+                Browse all talent →
+              </a>
+            )}
           </div>
         ) : (
           <div className="mf-card-grid">

@@ -20,8 +20,10 @@ export async function completeOnboarding(data: {
 
   const { role, skills, bio, availability } = data;
 
-  if (!role) throw new Error("Role is required.");
-  if (!bio || !bio.trim()) throw new Error("Bio is required.");
+  if (!role) throw new Error("Please select a role.");
+  if (!skills || skills.length === 0) throw new Error("Please add at least 1 skill.");
+  if (!bio || !bio.trim()) throw new Error("Please write a short bio.");
+  if (bio.trim().length < 20) throw new Error("Bio must be at least 20 characters.");
   if (bio.length > 200) throw new Error("Bio must be 200 characters or less.");
   if (containsSocial(bio)) throw new Error(SOCIAL_ERROR);
   if (Array.isArray(skills) && skills.some((s: string) => containsSocial(s))) {
@@ -43,5 +45,20 @@ export async function completeOnboarding(data: {
   revalidatePath("/dashboard");
   revalidatePath("/talent");
   
+  return { ok: true };
+}
+
+export async function completeOnboardingAsClient() {
+  const session = await auth();
+  const userId = session?.user?.userId;
+  if (!userId) throw new Error("Unauthorized");
+
+  await db.user.update({
+    where: { id: userId },
+    data: { profileComplete: true, userTitle: "Client" },
+  });
+
+  revalidatePath("/");
+  revalidatePath("/dashboard");
   return { ok: true };
 }

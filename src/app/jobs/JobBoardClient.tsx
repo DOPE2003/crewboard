@@ -78,20 +78,22 @@ export default function JobBoardClient({
             No jobs found
           </p>
           <p style={{ fontSize: 13, color: "var(--text-muted)", margin: "0 0 24px", maxWidth: 280, marginInline: "auto", lineHeight: 1.65 }}>
-            Be the first to post a Web3 gig and get matched with top freelancers in minutes.
+            {search ? "No jobs match your search. Try a different keyword." : "No jobs posted yet. Be the first to post and get matched with top freelancers."}
           </p>
-          <Link
-            href={isLoggedIn ? "/jobs/new" : "/login"}
-            style={{
-              display: "inline-flex", alignItems: "center", gap: 7,
-              background: "#14B8A6", color: "#fff",
-              fontFamily: "Inter, sans-serif", fontWeight: 700,
-              fontSize: "0.82rem", padding: "10px 24px", borderRadius: 12,
-              textDecoration: "none",
-            }}
-          >
-            Post Job
-          </Link>
+          {!search && (
+            <Link
+              href={isLoggedIn ? "/jobs/new" : "/login"}
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 7,
+                background: "#14B8A6", color: "#fff",
+                fontFamily: "Inter, sans-serif", fontWeight: 600,
+                fontSize: "0.875rem", padding: "10px 24px", borderRadius: 10,
+                textDecoration: "none",
+              }}
+            >
+              Post a job →
+            </Link>
+          )}
         </div>
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(340px, 1fr))", gap: 16 }}>
