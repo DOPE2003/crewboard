@@ -294,26 +294,25 @@ export default async function HomePage() {
       </div>
 
 
-      {/* ── TRENDING FREELANCERS (mobile-first horizontal scroll) ── */}
+      {/* ── FEATURED FREELANCERS ── */}
       {featuredFreelancers.length > 0 && (
         <div style={{ background: "var(--background)", padding: "clamp(1.5rem,4vw,2.5rem) 0", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
-          <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+          <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 clamp(1rem,4vw,2rem)" }}>
             {/* Section header */}
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0 clamp(1rem,4vw,2rem)", marginBottom: "1rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <span style={{ width: 7, height: 7, borderRadius: "50%", background: "#14B8A6", display: "inline-block", animation: "tealPulse 2s ease-in-out infinite" }} />
-                <span style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase" as const, color: "#14B8A6" }}>Trending</span>
+            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
+              <div>
+                <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.4rem,3vw,2rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                  Top freelancers, ready to hire
+                </h2>
+                <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", margin: "0.4rem 0 0" }}>
+                  Verified profiles with real reviews and track records
+                </p>
               </div>
-              <Link href="/talent" style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-muted)", textDecoration: "none" }}>
-                View all →
+              <Link href="/talent" style={{ fontSize: "0.8rem", fontWeight: 600, color: "#14b8a6", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+                Browse all →
               </Link>
             </div>
-            {/* Horizontal scroll row */}
-            <div style={{
-              display: "flex", gap: "0.75rem", overflowX: "auto", scrollbarWidth: "none",
-              padding: "0 clamp(1rem,4vw,2rem) 0.5rem",
-              WebkitOverflowScrolling: "touch",
-            } as React.CSSProperties}>
+            <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="ff-grid">
               {featuredFreelancers.map((f: any) => {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
@@ -401,361 +400,6 @@ export default async function HomePage() {
                 );
               })}
             </div>
-          </div>
-        </div>
-      )}
-
-      {/* ── CATEGORIES ── */}
-      <div id="categories" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--background)", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-
-          {/* Header */}
-          <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#14b8a6", marginBottom: "0.75rem", fontWeight: 700 }}>
-              Talent Marketplace
-            </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.75rem,3.5vw,2.5rem)", color: "var(--foreground)", margin: "0 0 0.75rem", letterSpacing: "-0.02em", lineHeight: 1.15 }}>
-              Browse by category
-            </h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.7, maxWidth: "28rem", margin: "0 auto" }}>
-              Find the right talent for your needs
-            </p>
-          </div>
-
-          {/* Grid */}
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)",
-            gap: "clamp(0.75rem,2vw,1.25rem)",
-          }}
-          className="cat-grid"
-          >
-            {([
-              {
-                title: "Web3 Developer",
-                href: "/talent?role=Coding+%26+Tech",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
-                  </svg>
-                ),
-                color: "#6366f1",
-                bg: "rgba(99,102,241,0.08)",
-              },
-              {
-                title: "Smart Contract Engineer",
-                href: "/talent?role=Coding+%26+Tech",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                ),
-                color: "#14b8a6",
-                bg: "rgba(20,184,166,0.08)",
-              },
-              {
-                title: "AI Engineer",
-                href: "/talent?role=AI+Engineer",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2a2 2 0 0 1 2 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 0 1 7 7h1a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-1v1a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-1H2a1 1 0 0 1-1-1v-3a1 1 0 0 1 1-1h1a7 7 0 0 1 7-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 0 1 2-2z"/>
-                    <circle cx="9" cy="14" r="1"/><circle cx="15" cy="14" r="1"/>
-                  </svg>
-                ),
-                color: "#f59e0b",
-                bg: "rgba(245,158,11,0.08)",
-              },
-              {
-                title: "KOL Manager",
-                href: "/talent?role=KOL+Manager",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
-                  </svg>
-                ),
-                color: "#ec4899",
-                bg: "rgba(236,72,153,0.08)",
-              },
-              {
-                title: "Designer",
-                href: "/talent?role=Graphic+%26+Design",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="13.5" cy="6.5" r="2.5"/><circle cx="17.5" cy="10.5" r="2.5"/>
-                    <circle cx="8.5" cy="7.5" r="2.5"/><circle cx="6.5" cy="12.5" r="2.5"/>
-                    <path d="M12 20v-8.5"/>
-                    <path d="M12 20c-3.87 0-7-3.13-7-7"/>
-                    <path d="M12 20c3.87 0 7-3.13 7-7"/>
-                  </svg>
-                ),
-                color: "#8b5cf6",
-                bg: "rgba(139,92,246,0.08)",
-              },
-              {
-                title: "Marketing",
-                href: "/talent?role=Social+Marketing",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
-                  </svg>
-                ),
-                color: "#0ea5e9",
-                bg: "rgba(14,165,233,0.08)",
-              },
-            ] as { title: string; href: string; icon: React.ReactNode; color: string; bg: string }[]).map((cat) => (
-              <Link
-                key={cat.title}
-                href={cat.href}
-                className="cat-card"
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "flex-start",
-                  gap: "0.75rem",
-                  padding: "clamp(1.1rem,2.5vw,1.5rem)",
-                  borderRadius: 16,
-                  background: "var(--card-bg)",
-                  border: "1px solid var(--card-border)",
-                  textDecoration: "none",
-                  transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
-                  cursor: "pointer",
-                }}
-              >
-                <div style={{
-                  width: 48, height: 48, borderRadius: 12,
-                  background: cat.bg,
-                  display: "flex", alignItems: "center", justifyContent: "center",
-                  color: cat.color,
-                  flexShrink: 0,
-                  transition: "transform 0.2s",
-                }}>
-                  {cat.icon}
-                </div>
-                <div>
-                  <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.9rem", color: "var(--foreground)", lineHeight: 1.25, letterSpacing: "-0.01em" }}>
-                    {cat.title}
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 6 }}>
-                    <span style={{ fontSize: "0.7rem", fontWeight: 600, color: cat.color, letterSpacing: "0.04em" }}>Browse →</span>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-
-        <style>{`
-          .cat-grid { grid-template-columns: repeat(3, 1fr); }
-          @media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
-          @media (max-width: 480px) { .cat-grid { grid-template-columns: repeat(2, 1fr); } }
-          .cat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 28px rgba(0,0,0,0.08);
-            border-color: rgba(20,184,166,0.35) !important;
-          }
-        `}</style>
-      </div>
-
-      {/* ── HOW IT WORKS ── */}
-      <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5.5rem) clamp(1rem,4vw,2rem)", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3.5rem)" }}>
-            <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#14b8a6", marginBottom: "0.75rem", fontWeight: 700 }}>Simple Process</div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.75rem,3.5vw,2.5rem)", color: "var(--foreground)", margin: "0 0 0.75rem", letterSpacing: "-0.02em", lineHeight: 1.15 }}>How it works</h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.7, maxWidth: "28rem", margin: "0 auto" }}>From hiring to delivery — three steps, fully on-chain.</p>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr auto 1fr", alignItems: "start", gap: "clamp(0.5rem,2vw,1.5rem)" }} className="hiw-grid">
-            {([
-              {
-                step: "01",
-                title: "Find Talent",
-                desc: "Browse vetted Web3 builders by role, skill, and availability. Message directly — no intermediaries.",
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-                  </svg>
-                ),
-                color: "#6366f1",
-                bg: "rgba(99,102,241,0.1)",
-              },
-              {
-                step: "02",
-                title: "Fund Securely via Escrow",
-                desc: "Funds are locked in a Solana smart contract — not held by us, not by the freelancer. They're released only when you approve the work.",
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                ),
-                color: "#14b8a6",
-                bg: "rgba(20,184,166,0.1)",
-              },
-              {
-                step: "03",
-                title: "Get Work Delivered",
-                desc: "Review the deliverable. Release payment on approval — funds go directly to the builder's wallet.",
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                ),
-                color: "#22c55e",
-                bg: "rgba(34,197,94,0.1)",
-              },
-            ] as { step: string; title: string; desc: string; icon: React.ReactNode; color: string; bg: string }[]).reduce<React.ReactNode[]>((acc, item, i, arr) => {
-              acc.push(
-                <div key={item.step} style={{ display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", gap: "1rem" }}>
-                  <div style={{ width: 64, height: 64, borderRadius: 18, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", color: item.color, flexShrink: 0 }}>
-                    {item.icon}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: "0.55rem", fontWeight: 700, letterSpacing: "0.2em", color: item.color, marginBottom: "0.4rem", textTransform: "uppercase" as const }}>{item.step}</div>
-                    <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.05rem", color: "var(--foreground)", margin: "0 0 0.5rem", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                    <p style={{ color: "var(--text-muted)", fontSize: "0.82rem", lineHeight: 1.65, margin: 0, maxWidth: "18rem" }}>{item.desc}</p>
-                  </div>
-                </div>
-              );
-              if (i < arr.length - 1) {
-                acc.push(
-                  <div key={`arrow-${i}`} className="hiw-arrow" style={{ display: "flex", alignItems: "center", justifyContent: "center", paddingTop: 20, color: "var(--text-muted)", opacity: 0.4 }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-                    </svg>
-                  </div>
-                );
-              }
-              return acc;
-            }, [])}
-          </div>
-        </div>
-        <style>{`
-          .hiw-grid { grid-template-columns: 1fr auto 1fr auto 1fr; }
-          .hiw-arrow { display: flex !important; }
-          @media (max-width: 700px) {
-            .hiw-grid { grid-template-columns: 1fr !important; }
-            .hiw-arrow { display: none !important; }
-          }
-        `}</style>
-      </div>
-
-      {/* ── FEATURED FREELANCERS ── */}
-      <div id="browse" style={{ padding: "clamp(3rem,6vw,5.5rem) clamp(1rem,4vw,2rem)", background: "var(--background)", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <div>
-              <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#14b8a6", marginBottom: "0.75rem", fontWeight: 700 }}>Ready to hire</div>
-              <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.75rem,3.5vw,2.5rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.15 }}>Featured Freelancers</h2>
-            </div>
-            <Link href="/talent" style={{ fontSize: "0.8rem", fontWeight: 600, color: "#14b8a6", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
-              View all talent
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-            </Link>
-          </div>
-
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="ff-grid">
-            {featuredFreelancers.map((u) => {
-              const minPrice = (u as any).gigs?.[0]?.price ?? null;
-              const completedCount = (u as any).sellerOrders?.length ?? 0;
-              const isVerified = !!(u as any).walletAddress;
-              const reviews: { rating: number }[] = (u as any).reviewsReceived ?? [];
-              const avgRating = reviews.length > 0
-                ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
-                : null;
-              const activeRecently = (u as any).lastSeenAt
-                ? (Date.now() - new Date((u as any).lastSeenAt).getTime()) < 7 * 864e5
-                : false;
-              return (
-                <Link
-                  key={u.twitterHandle}
-                  href={`/u/${u.twitterHandle}`}
-                  style={{
-                    display: "flex", flexDirection: "column", gap: "0.8rem",
-                    padding: "1.25rem", borderRadius: 16,
-                    background: "var(--card-bg)", border: "1px solid var(--card-border)",
-                    textDecoration: "none",
-                    transition: "transform 0.2s, box-shadow 0.2s, border-color 0.2s",
-                  }}
-                  className="ff-card"
-                >
-                  {/* Row 1: Avatar + availability */}
-                  <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between" }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={u.image ?? ""}
-                      alt={u.name ?? u.twitterHandle}
-                      style={{ width: 52, height: 52, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--card-border)", display: "block", flexShrink: 0 }}
-                    />
-                    <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 4 }}>
-                      {u.availability === "available" ? (
-                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.62rem", fontWeight: 600, color: "#22c55e", background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", padding: "2px 7px", borderRadius: 99 }}>
-                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-                          Available
-                        </span>
-                      ) : activeRecently ? (
-                        <span style={{ display: "flex", alignItems: "center", gap: 4, fontSize: "0.6rem", fontWeight: 500, color: "var(--text-muted)" }}>
-                          <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", display: "inline-block" }} />
-                          Active recently
-                        </span>
-                      ) : null}
-                    </div>
-                  </div>
-
-                  {/* Row 2: Name + verified */}
-                  <div>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
-                      <span style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.92rem", color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: 160 }}>
-                        {u.name ?? `@${u.twitterHandle}`}
-                      </span>
-                      {isVerified && (
-                        <span className="cbadge-wrap">
-                          <svg width="15" height="15" viewBox="0 0 24 24" fill="#14b8a6" style={{ flexShrink: 0, display: "block" }}>
-                            <path d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                          </svg>
-                          <span className="cbadge-tip">Verified via wallet connection</span>
-                        </span>
-                      )}
-                    </div>
-                    {/* Row 3: Role */}
-                    <div style={{ fontSize: "0.73rem", color: "var(--text-muted)", fontWeight: 500 }}>
-                      {(u as any).userTitle ?? "Freelancer"}
-                    </div>
-                  </div>
-
-                  {/* Row 4: Rating + jobs — ALWAYS shown */}
-                  <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <span style={{ fontSize: "0.75rem", fontWeight: 700, color: avgRating !== null ? "#f59e0b" : "var(--text-muted)", display: "flex", alignItems: "center", gap: 3 }}>
-                      {avgRating !== null ? `⭐ ${avgRating.toFixed(1)}` : "⭐ New"}
-                      {avgRating !== null && reviews.length > 0 && (
-                        <span style={{ color: "var(--text-muted)", fontWeight: 400, fontSize: "0.66rem" }}>({reviews.length})</span>
-                      )}
-                    </span>
-                    <span style={{ color: "var(--card-border)", fontSize: 10 }}>·</span>
-                    <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", fontWeight: 500 }}>
-                      {completedCount} job{completedCount !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-
-                  {/* Row 5: Skills */}
-                  {Array.isArray((u as any).skills) && (u as any).skills.length > 0 && (
-                    <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-                      {((u as any).skills as string[]).slice(0, 3).map((s: string) => (
-                        <span key={s} style={{ fontSize: "0.62rem", fontWeight: 600, color: "#14b8a6", background: "rgba(20,184,166,0.08)", border: "1px solid rgba(20,184,166,0.18)", padding: "2px 7px", borderRadius: 99 }}>{s}</span>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Row 6: Price — always shown */}
-                  <div style={{ marginTop: "auto", paddingTop: "0.6rem", borderTop: "1px solid var(--card-border)" }}>
-                    <span style={{ fontSize: "0.8rem", fontWeight: 700, color: minPrice != null ? "#14b8a6" : "var(--text-muted)" }}>
-                      {minPrice != null ? `From $${minPrice}` : "Price on request"}
-                    </span>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
 
           {featuredFreelancers.length === 0 && (
             <div style={{ textAlign: "center", padding: "3rem", color: "var(--text-muted)", fontSize: "0.85rem" }}>
@@ -784,68 +428,81 @@ export default async function HomePage() {
           .cbadge-wrap:hover .cbadge-tip { display: block; }
         `}</style>
       </div>
+      )}
 
-      {/* ── TRUST SECTION ── */}
-      <div id="trust" style={{ padding: "clamp(3rem,6vw,5.5rem) clamp(1rem,4vw,2rem)", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", borderBottom: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
+      {/* ── HOW IT WORKS ── */}
+      <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+
           <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <div style={{ fontFamily: "Space Mono, monospace", fontSize: "0.6rem", letterSpacing: "0.22em", textTransform: "uppercase" as const, color: "#14b8a6", marginBottom: "0.75rem", fontWeight: 700 }}>Built for Web3</div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.75rem,3.5vw,2.5rem)", color: "var(--foreground)", margin: "0 0 0.75rem", letterSpacing: "-0.02em", lineHeight: 1.15 }}>Hire without the risk</h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", lineHeight: 1.7, maxWidth: "28rem", margin: "0 auto" }}>Every order on Crewboard is protected end-to-end — from the first message to the final payment.</p>
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.4rem,3vw,2rem)", color: "var(--foreground)", margin: "0 0 0.5rem", letterSpacing: "-0.02em" }}>
+              How it works
+            </h2>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.85rem", margin: 0 }}>Three steps. No hassle.</p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: "clamp(0.75rem,2vw,1.5rem)" }} className="trust-grid">
+          <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="hiw-grid">
             {([
               {
+                step: "1",
+                title: "Post a job",
+                desc: "Describe what you need. It takes 2 minutes and it's free.",
                 icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                  </svg>
-                ),
-                color: "#14b8a6",
-                bg: "rgba(20,184,166,0.08)",
-                title: "On-Chain Escrow",
-                desc: "Funds are locked in a Solana smart contract the moment an order starts. No one can move them until you approve delivery.",
-              },
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01z"/>
-                  </svg>
-                ),
-                color: "#f59e0b",
-                bg: "rgba(245,158,11,0.08)",
-                title: "Verified Talent",
-                desc: "Every freelancer on Crewboard is a real Web3 builder with a verified on-chain identity — no fake accounts.",
-              },
-              {
-                icon: (
-                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
                   </svg>
                 ),
                 color: "#6366f1",
-                bg: "rgba(99,102,241,0.08)",
-                title: "No Upfront Risk",
-                desc: "You only release payment when the work meets your standards. Dispute resolution is built into the protocol.",
+                bg: "rgba(99,102,241,0.1)",
               },
-            ] as { icon: React.ReactNode; color: string; bg: string; title: string; desc: string }[]).map((item) => (
-              <div key={item.title} style={{ display: "flex", flexDirection: "column", gap: "1rem", padding: "clamp(1.25rem,2.5vw,1.75rem)", borderRadius: 16, background: "var(--background)", border: "1px solid var(--card-border)" }}>
-                <div style={{ width: 52, height: 52, borderRadius: 14, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", color: item.color, flexShrink: 0 }}>
+              {
+                step: "2",
+                title: "Hire a freelancer",
+                desc: "Browse profiles, read reviews, and message candidates directly. Pick the best fit.",
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+                    <polyline points="16 11 18 13 22 9"/>
+                  </svg>
+                ),
+                color: "#14b8a6",
+                bg: "rgba(20,184,166,0.1)",
+              },
+              {
+                step: "3",
+                title: "Pay after delivery",
+                desc: "Your payment is held safely and only released when you approve the work. No risk.",
+                icon: (
+                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="20 6 9 17 4 12"/>
+                  </svg>
+                ),
+                color: "#22c55e",
+                bg: "rgba(34,197,94,0.1)",
+              },
+            ] as { step: string; title: string; desc: string; icon: React.ReactNode; color: string; bg: string }[]).map((item, i) => (
+              <div key={item.step} style={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "1.25rem", borderRadius: 14, background: "var(--background)", border: "1px solid var(--card-border)" }}>
+                <div style={{ width: 48, height: 48, borderRadius: 14, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", color: item.color, flexShrink: 0 }}>
                   {item.icon}
                 </div>
                 <div>
-                  <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1rem", color: "var(--foreground)", margin: "0 0 0.5rem", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "0.82rem", lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
+                  <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.15em", color: item.color, textTransform: "uppercase" as const, marginBottom: 4 }}>Step {item.step}</div>
+                  <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "0.95rem", color: "var(--foreground)", margin: "0 0 0.35rem", letterSpacing: "-0.01em" }}>{item.title}</h3>
+                  <p style={{ color: "var(--text-muted)", fontSize: "0.8rem", lineHeight: 1.6, margin: 0 }}>{item.desc}</p>
                 </div>
               </div>
             ))}
           </div>
+
+          <div style={{ textAlign: "center", marginTop: "clamp(1.5rem,3vw,2.5rem)" }}>
+            <Link href={isLoggedIn ? "/jobs/new" : "/register"} className="btn-hero-primary" style={{ display: "inline-flex" }}>
+              Post a Job — it&apos;s free
+            </Link>
+          </div>
         </div>
         <style>{`
-          .trust-grid { grid-template-columns: repeat(3,1fr); }
-          @media (max-width: 900px) { .trust-grid { grid-template-columns: repeat(2,1fr); } }
-          @media (max-width: 500px) { .trust-grid { grid-template-columns: 1fr; } }
+          .hiw-grid { grid-template-columns: repeat(3,1fr); }
+          @media (max-width: 700px) { .hiw-grid { grid-template-columns: 1fr; } }
         `}</style>
       </div>
 
