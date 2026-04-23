@@ -98,12 +98,18 @@ export default function EscrowActions({
           router.refresh();
           return;
         }
-        const isInsufficientFunds =
+        const isInsufficientSol =
+          msg.includes("Insufficient SOL") ||
           msg.includes("no record of a prior credit") ||
+          msg.includes("Attempt to debit");
+        const isInsufficientUsdc =
+          msg.includes("Insufficient USDC") ||
+          msg.includes("No USDC") ||
           msg.includes("insufficient funds") ||
-          msg.includes("Attempt to debit") ||
           msg.includes("0x1");
-        setError(isInsufficientFunds ? "INSUFFICIENT_FUNDS" : (msg.slice(0, 120) || "Transaction failed. Please try again."));
+        if (isInsufficientSol) setError("INSUFFICIENT_SOL");
+        else if (isInsufficientUsdc) setError("INSUFFICIENT_USDC");
+        else setError(msg.slice(0, 120) || "Transaction failed. Please try again.");
         return;
       }
 
@@ -157,32 +163,86 @@ export default function EscrowActions({
 
         {/* ─── PENDING ─── */}
         {orderStatus === "pending" && isBuyer && (
-          <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)" }}>
-            <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
-              Order placed — waiting for the freelancer to accept. You&apos;ll be notified once they confirm.
+          <div style={{ padding: "1rem 1.1rem", borderRadius: 12, background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.18)" }}>
+            <p style={{ margin: "0 0 1rem", fontSize: "0.78rem", color: "var(--foreground)", lineHeight: 1.5, fontWeight: 600 }}>
+              Fund this order to lock in your payment.
             </p>
-            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap", alignItems: "center" }}>
-              <button
-                onClick={() => handleDbAction("cancelled")}
-                disabled={!!loading}
-                className="btn-secondary"
-                style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer" }}
-              >
-                {loading === "cancelled" ? "Cancelling…" : "Cancel Order"}
-              </button>
-              {sellerWallet && (
-                connected ? (
+            <p style={{ margin: "0 0 1rem", fontSize: "0.72rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
+              Your USDC stays in escrow until the freelancer delivers — they can&apos;t touch it until you approve the work.
+            </p>
+
+            {/* Primary CTA: Fund escrow */}
+            {sellerWallet && (
+              connected ? (
+                <>
                   <button
                     onClick={handleFundEscrow}
                     disabled={!!loading}
-                    style={{ fontSize: "0.7rem", background: "none", border: "none", color: "#14B8A6", cursor: "pointer", padding: 0, textDecoration: "underline" }}
+                    style={{
+                      width: "100%",
+                      display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+                      fontSize: "0.92rem", fontWeight: 700,
+                      padding: "0.85rem 1.4rem", borderRadius: 10,
+                      background: "#14B8A6", color: "#fff",
+                      border: "none", cursor: loading ? "wait" : "pointer",
+                      opacity: loading ? 0.7 : 1,
+                      transition: "background 0.15s, transform 0.1s",
+                      boxShadow: "0 2px 8px rgba(20,184,166,0.25)",
+                    }}
                   >
-                    {loading === "fund" ? "Funding…" : `Fund escrow instead ($${orderAmount} USDC) ↗`}
+                    {loading === "fund" && <Spinner />}
+                    {loading === "fund" ? "Funding escrow…" : `Fund escrow — $${orderAmount} USDC`}
                   </button>
+                  <p style={{ margin: "0.55rem 0 0", fontSize: "0.68rem", color: "var(--text-muted)", textAlign: "center", lineHeight: 1.4 }}>
+                    🔒 Secure payment — released only after delivery
+                  </p>
+                </>
+              ) : (
+                <WalletMultiButton style={{ width: "100%", height: 44, borderRadius: 10, fontSize: "0.85rem" }} />
+              )
+            )}
+
+            {/* Error message — inline, action-oriented */}
+            {error && (error === "INSUFFICIENT_SOL" || error === "INSUFFICIENT_USDC") && (
+              <div style={{
+                marginTop: "0.85rem",
+                padding: "0.75rem 0.9rem",
+                borderRadius: 8,
+                background: "rgba(245,158,11,0.08)",
+                border: "1px solid rgba(245,158,11,0.3)",
+                fontSize: "0.74rem",
+                color: "var(--foreground)",
+                lineHeight: 1.5,
+              }}>
+                {error === "INSUFFICIENT_SOL" ? (
+                  <>
+                    <strong>⚠️ Not enough SOL to continue.</strong>
+                    <br />
+                    You need ~0.005 SOL to fund this order. Add SOL to your wallet and try again.
+                  </>
                 ) : (
-                  <WalletMultiButton style={{ fontSize: "0.72rem", height: 32, borderRadius: 99 }} />
-                )
-              )}
+                  <>
+                    <strong>⚠️ Not enough USDC.</strong>
+                    <br />
+                    You need ${orderAmount} USDC to fund this order. Top up your wallet and try again.
+                  </>
+                )}
+              </div>
+            )}
+
+            {/* Secondary: Cancel — small, subtle, at bottom */}
+            <div style={{ marginTop: "0.9rem", textAlign: "center" }}>
+              <button
+                onClick={() => handleDbAction("cancelled")}
+                disabled={!!loading}
+                style={{
+                  background: "none", border: "none", padding: "4px 8px",
+                  fontSize: "0.7rem", color: "var(--text-muted)",
+                  cursor: loading ? "wait" : "pointer", textDecoration: "underline",
+                }}
+              >
+                {loading === "cancelled" ? "Cancelling…" : "Cancel order"}
+              </button>
             </div>
           </div>
         )}
@@ -446,20 +506,10 @@ export default function EscrowActions({
           </div>
         )}
 
-        {error && (
+        {/* Generic error (only for non-balance errors — balance errors render inline above) */}
+        {error && error !== "INSUFFICIENT_SOL" && error !== "INSUFFICIENT_USDC" && (
           <div className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-4 text-sm mt-3">
-            {error === "INSUFFICIENT_FUNDS" ? (
-              <div className="flex flex-col gap-2">
-                <p className="font-semibold text-amber-800 dark:text-amber-300">
-                  Insufficient USDC balance
-                </p>
-                <p className="text-amber-700 dark:text-amber-400 leading-relaxed">
-                  Your wallet doesn&apos;t have enough USDC to fund this escrow. Please top up your USDC balance and try again.
-                </p>
-              </div>
-            ) : (
-              <p className="text-red-700 dark:text-red-400">{error}</p>
-            )}
+            <p className="text-red-700 dark:text-red-400">{error}</p>
           </div>
         )}
       </div>
