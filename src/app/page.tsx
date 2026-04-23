@@ -325,16 +325,9 @@ export default async function HomePage() {
 
                 {/* Publisher row */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
-                  {/* Avatar with brand fallback */}
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, position: "relative", overflow: "hidden", border: "2px solid var(--card-border)", background: "radial-gradient(circle at 30% 25%, #1a0000 0%, #7a0000 35%, #cc3300 65%, #e86000 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: "11px", fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", fontFamily: "Inter, sans-serif", lineHeight: 1, position: "relative", zIndex: 1 }}>st</span>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src="https://pbs.twimg.com/profile_images/1895098803649953792/f0KlFdvt_400x400.jpg"
-                      alt=""
-                      onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }}
-                      style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-                    />
+                  {/* Avatar — Superteam brand gradient */}
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, border: "2px solid var(--card-border)", background: "radial-gradient(circle at 30% 25%, #1a0000 0%, #7a0000 35%, #cc3300 65%, #e86000 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: "12px", fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", fontFamily: "Inter, sans-serif", lineHeight: 1 }}>st</span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
