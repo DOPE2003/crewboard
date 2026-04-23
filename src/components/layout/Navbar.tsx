@@ -252,9 +252,11 @@ export default async function Navbar() {
         <div style={{
           display: "flex",
           alignItems: "center",
+          justifyContent: "space-between",
           padding: "0 24px",
           maxWidth: 1280,
           margin: "0 auto",
+          width: "100%",
           gap: 0,
         }}>
           {([

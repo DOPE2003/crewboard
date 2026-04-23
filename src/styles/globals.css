@@ -547,8 +547,8 @@ body.dark .nav-center-btn:hover { background: rgba(255,255,255,0.06); }
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 0.85rem 1rem;
-  min-width: 180px;
-  max-width: 220px;
+  min-width: 210px;
+  max-width: 255px;
   box-shadow: 0 8px 32px rgba(0,0,0,0.08), 0 1px 4px rgba(0,0,0,0.04);
   opacity: 0;
   transition: box-shadow 0.2s, transform 0.2s;
