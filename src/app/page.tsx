@@ -327,7 +327,7 @@ export default async function HomePage() {
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
-                    src="https://pbs.twimg.com/profile_images/1675131690048618498/lHJEv03V_400x400.jpg"
+                    src="https://pbs.twimg.com/profile_images/1895098803649953792/f0KlFdvt_400x400.jpg"
                     alt="Superteam Germany"
                     style={{ width: 36, height: 36, borderRadius: "50%", objectFit: "cover", border: "2px solid var(--card-border)", flexShrink: 0 }}
                   />
@@ -362,17 +362,25 @@ export default async function HomePage() {
                 </p>
 
                 {/* Info row */}
-                <div style={{ display: "flex", alignItems: "center", gap: "1rem", flexWrap: "wrap", marginBottom: "0.8rem" }}>
-                  {([
-                    { icon: "📍", label: "Germany" },
-                    { icon: "🎤", label: "IRL Event" },
-                    { icon: "🎬", label: "Content" },
-                  ] as { icon: string; label: string }[]).map((item) => (
-                    <div key={item.label} style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
-                      <span style={{ fontSize: "12px" }}>{item.icon}</span>
-                      {item.label}
-                    </div>
-                  ))}
+                <div style={{ display: "flex", alignItems: "center", gap: "1.1rem", flexWrap: "wrap", marginBottom: "0.8rem" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+                    </svg>
+                    Germany
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                    IRL Event
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+                    </svg>
+                    Content
+                  </div>
                 </div>
 
                 {/* Tags */}
