@@ -39,6 +39,20 @@ function Spinner() {
   );
 }
 
+// Retry an async fn up to `attempts` times with 1s delay between tries.
+async function withRetry<T>(fn: () => Promise<T>, attempts = 3, label = ""): Promise<T> {
+  let last: any;
+  for (let i = 0; i < attempts; i++) {
+    try { return await fn(); }
+    catch (e) {
+      last = e;
+      console.warn(`[EscrowActions] ${label} attempt ${i + 1} failed:`, e);
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+  throw last;
+}
+
 export default function EscrowActions({
   orderId, orderStatus, orderAmount, isBuyer, isSeller, sellerWallet, buyerWallet, txHash,
 }: Props) {
@@ -76,47 +90,77 @@ export default function EscrowActions({
   async function handleFundEscrow() {
     if (!anchorWallet) return setError("Connect your Solana wallet first");
     if (!sellerWallet) return setError("Seller has no wallet address on file");
-    setLoading("fund");
     setError("");
-    try {
-      const sellerPubkey = new PublicKey(sellerWallet);
-      const [escrowPDA] = deriveEscrowPDA(anchorWallet.publicKey, sellerPubkey, orderId);
 
-      let txSig: string;
-      try {
-        txSig = await fundEscrow(anchorWallet, connection, orderId, sellerPubkey, orderAmount);
-      } catch (e: any) {
-        const msg = e?.message ?? "";
-        // Transaction already landed on-chain but DB was never updated —
-        // recover gracefully by syncing the DB using the derived PDA.
-        const alreadyProcessed =
-          msg.includes("already been processed") ||
-          msg.includes("AlreadyInUse") ||
-          msg.includes("already in use");
-        if (alreadyProcessed) {
-          await syncEscrowFunded(orderId, "recovered", escrowPDA.toBase58());
-          router.refresh();
-          return;
-        }
-        const isInsufficientSol =
-          msg.includes("Insufficient SOL") ||
-          msg.includes("no record of a prior credit") ||
-          msg.includes("Attempt to debit");
-        const isInsufficientUsdc =
-          msg.includes("Insufficient USDC") ||
-          msg.includes("No USDC") ||
-          msg.includes("insufficient funds") ||
-          msg.includes("0x1");
-        if (isInsufficientSol) setError("INSUFFICIENT_SOL");
-        else if (isInsufficientUsdc) setError("INSUFFICIENT_USDC");
-        else setError(msg.slice(0, 120) || "Transaction failed. Please try again.");
+    const sellerPubkey = new PublicKey(sellerWallet);
+    const [escrowPDA] = deriveEscrowPDA(anchorWallet.publicKey, sellerPubkey, orderId);
+
+    console.log("[EscrowActions] fund start", {
+      orderId,
+      buyer: anchorWallet.publicKey.toBase58(),
+      seller: sellerPubkey.toBase58(),
+      amount: orderAmount,
+      rpc: connection.rpcEndpoint,
+    });
+
+    // ── Phase 1: sign + broadcast ──────────────────────────────────────────
+    setLoading("fund:sending");
+    let txSig: string;
+    try {
+      txSig = await fundEscrow(anchorWallet, connection, orderId, sellerPubkey, orderAmount);
+      console.log("[EscrowActions] tx confirmed", txSig);
+    } catch (e: any) {
+      const msg: string = e?.message ?? "";
+
+      // Tx already landed (user double-clicked / previous attempt timed out client-side)
+      if (msg.includes("already been processed") || msg.includes("AlreadyInUse") || msg.includes("already in use")) {
+        console.warn("[EscrowActions] tx already on-chain — syncing DB");
+        setLoading("fund:saving");
+        await withRetry(() => syncEscrowFunded(orderId, "recovered", escrowPDA.toBase58()), 3, "syncEscrowFunded(recovered)");
+        router.refresh();
+        setLoading(null);
         return;
       }
 
-      await syncEscrowFunded(orderId, txSig, escrowPDA.toBase58());
+      const isInsufficientSol =
+        msg.includes("Insufficient SOL") ||
+        msg.includes("no record of a prior credit") ||
+        msg.includes("Attempt to debit");
+      const isInsufficientUsdc =
+        msg.includes("Insufficient USDC") ||
+        msg.includes("No USDC") ||
+        msg.includes("insufficient funds") ||
+        msg.includes("0x1");
+      const isRejected = msg.toLowerCase().includes("rejected") || msg.includes("4001");
+
+      console.error("[EscrowActions] tx failed:", msg);
+
+      if (isInsufficientSol)  setError("INSUFFICIENT_SOL");
+      else if (isInsufficientUsdc) setError("INSUFFICIENT_USDC");
+      else if (isRejected)    setError("REJECTED");
+      else setError(msg.slice(0, 140) || "Transaction failed. Please try again.");
+      setLoading(null);
+      return;
+    }
+
+    // ── Phase 2: sync DB (retry up to 3×) ──────────────────────────────────
+    setLoading("fund:saving");
+    try {
+      await withRetry(
+        () => syncEscrowFunded(orderId, txSig, escrowPDA.toBase58()),
+        3,
+        "syncEscrowFunded",
+      );
+      console.log("[EscrowActions] DB synced — order is now funded");
       router.refresh();
     } catch (e: any) {
-      setError(e?.message?.slice(0, 120) || "Transaction failed. Please try again.");
+      // Tx is on-chain but DB update failed after 3 retries.
+      // Show the tx hash so support can recover manually.
+      console.error("[EscrowActions] DB sync failed after retries:", e);
+      setError(
+        `Payment sent on-chain (tx: ${txSig.slice(0, 12)}…) but status update failed. ` +
+        `Copy the tx and contact support — your funds are safe.`,
+      );
     } finally {
       setLoading(null);
     }
@@ -172,7 +216,7 @@ export default function EscrowActions({
             </p>
 
             {/* Primary CTA: Fund escrow */}
-            {sellerWallet && (
+            {sellerWallet ? (
               connected ? (
                 <>
                   <button
@@ -186,12 +230,14 @@ export default function EscrowActions({
                       background: "#14B8A6", color: "#fff",
                       border: "none", cursor: loading ? "wait" : "pointer",
                       opacity: loading ? 0.7 : 1,
-                      transition: "background 0.15s, transform 0.1s",
+                      transition: "background 0.15s",
                       boxShadow: "0 2px 8px rgba(20,184,166,0.25)",
                     }}
                   >
-                    {loading === "fund" && <Spinner />}
-                    {loading === "fund" ? "Funding escrow…" : `Fund escrow — $${orderAmount} USDC`}
+                    {loading?.startsWith("fund") && <Spinner />}
+                    {loading === "fund:sending" ? "Waiting for wallet approval…"
+                      : loading === "fund:saving" ? "Saving payment…"
+                      : `Fund escrow — $${orderAmount} USDC`}
                   </button>
                   <p style={{ margin: "0.55rem 0 0", fontSize: "0.68rem", color: "var(--text-muted)", textAlign: "center", lineHeight: 1.4 }}>
                     🔒 Secure payment — released only after delivery
@@ -200,32 +246,27 @@ export default function EscrowActions({
               ) : (
                 <WalletMultiButton style={{ width: "100%", height: 44, borderRadius: 10, fontSize: "0.85rem" }} />
               )
+            ) : (
+              <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", lineHeight: 1.5, padding: "0.6rem 0.8rem", borderRadius: 8, background: "rgba(148,163,184,0.06)", border: "1px solid var(--card-border)" }}>
+                The freelancer hasn&apos;t connected a wallet yet — escrow funding will be available once they do.
+              </p>
             )}
 
             {/* Error message — inline, action-oriented */}
-            {error && (error === "INSUFFICIENT_SOL" || error === "INSUFFICIENT_USDC") && (
+            {error && ["INSUFFICIENT_SOL","INSUFFICIENT_USDC","REJECTED"].includes(error) && (
               <div style={{
-                marginTop: "0.85rem",
-                padding: "0.75rem 0.9rem",
-                borderRadius: 8,
-                background: "rgba(245,158,11,0.08)",
-                border: "1px solid rgba(245,158,11,0.3)",
-                fontSize: "0.74rem",
-                color: "var(--foreground)",
-                lineHeight: 1.5,
+                marginTop: "0.85rem", padding: "0.75rem 0.9rem", borderRadius: 8,
+                background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.3)",
+                fontSize: "0.74rem", color: "var(--foreground)", lineHeight: 1.5,
               }}>
-                {error === "INSUFFICIENT_SOL" ? (
-                  <>
-                    <strong>⚠️ Not enough SOL to continue.</strong>
-                    <br />
-                    You need ~0.005 SOL to fund this order. Add SOL to your wallet and try again.
-                  </>
-                ) : (
-                  <>
-                    <strong>⚠️ Not enough USDC.</strong>
-                    <br />
-                    You need ${orderAmount} USDC to fund this order. Top up your wallet and try again.
-                  </>
+                {error === "INSUFFICIENT_SOL" && (
+                  <><strong>⚠️ Not enough SOL.</strong><br />You need ~0.005 SOL for transaction fees. Add SOL to your wallet and try again.</>
+                )}
+                {error === "INSUFFICIENT_USDC" && (
+                  <><strong>⚠️ Not enough USDC.</strong><br />You need ${orderAmount} USDC to fund this order. Top up your wallet and try again.</>
+                )}
+                {error === "REJECTED" && (
+                  <><strong>Transaction cancelled.</strong><br />You rejected the request in your wallet. Click Fund escrow to try again.</>
                 )}
               </div>
             )}
@@ -506,10 +547,14 @@ export default function EscrowActions({
           </div>
         )}
 
-        {/* Generic error (only for non-balance errors — balance errors render inline above) */}
-        {error && error !== "INSUFFICIENT_SOL" && error !== "INSUFFICIENT_USDC" && (
-          <div className="rounded-xl border border-amber-200 bg-amber-50 dark:bg-amber-950/30 dark:border-amber-800 p-4 text-sm mt-3">
-            <p className="text-red-700 dark:text-red-400">{error}</p>
+        {/* Generic error — shown for unexpected failures */}
+        {error && !["INSUFFICIENT_SOL","INSUFFICIENT_USDC","REJECTED"].includes(error) && (
+          <div style={{
+            padding: "0.75rem 0.9rem", borderRadius: 8, marginTop: "0.5rem",
+            background: "rgba(239,68,68,0.06)", border: "1px solid rgba(239,68,68,0.2)",
+            fontSize: "0.74rem", color: "var(--foreground)", lineHeight: 1.5,
+          }}>
+            <strong>Something went wrong.</strong><br />{error}
           </div>
         )}
       </div>

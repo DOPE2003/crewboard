@@ -129,11 +129,20 @@ export async function syncEscrowFunded(orderId: string, txHash: string, escrowAd
 
   const order = await db.order.findUnique({
     where: { id: orderId },
-    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+    select: { buyerId: true, sellerId: true, status: true, txHash: true, gig: { select: { title: true } } },
   });
   if (!order) throw new Error("Order not found");
   if (order.buyerId !== userId) throw new Error("Only buyer can fund");
-  if (order.status !== "pending") throw new Error("Order is not pending");
+
+  // Idempotent: if already funded (e.g. DB was updated by a previous attempt
+  // that the client didn't see), treat as success instead of throwing.
+  if (order.status === "funded") {
+    revalidatePath(`/orders/${orderId}`);
+    revalidatePath("/orders");
+    return;
+  }
+
+  if (order.status !== "pending") throw new Error(`Cannot fund order in status: ${order.status}`);
 
   await db.order.update({
     where: { id: orderId },
