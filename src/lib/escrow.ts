@@ -18,10 +18,19 @@ import {
 import {
   getAssociatedTokenAddress,
   getAssociatedTokenAddressSync,
+  getAccount,
   createAssociatedTokenAccountInstruction,
   createAssociatedTokenAccountIdempotentInstruction,
+  TokenAccountNotFoundError,
 } from "@solana/spl-token";
 import type { AnchorWallet } from "@solana/wallet-adapter-react";
+
+const DEBUG = typeof window !== "undefined" && (window as any).__CREWBOARD_DEBUG__ === true;
+const log = (...args: unknown[]) => { if (DEBUG) console.log("[escrow]", ...args); };
+
+// Minimum SOL needed to cover tx fee + ATA rent (~0.00204 per ATA + ~0.000005 fee).
+// Buyer may need to create their own ATA + escrow vault ATA, so budget for 2.
+const MIN_SOL_LAMPORTS = 5_000_000; // 0.005 SOL — generous safety margin
 
 // Hardcoded to avoid import resolution issues with @solana/spl-token versions
 const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
@@ -232,23 +241,54 @@ export async function fundEscrow(
   const buyer  = wallet.publicKey;
   const amount = new BN(Math.round(amountUsd * Math.pow(10, USDC_DECIMALS)));
 
+  log("fundEscrow start", {
+    buyer: buyer.toBase58(),
+    seller: sellerPubkey.toBase58(),
+    orderId,
+    amountUsd,
+    rpc: connection.rpcEndpoint,
+  });
+
+  // ── Pre-flight balance checks (fail fast with clear errors) ──
+  const solBalance = await connection.getBalance(buyer, "confirmed");
+  log("buyer SOL balance", solBalance / 1e9);
+  if (solBalance < MIN_SOL_LAMPORTS) {
+    throw new Error(
+      `Insufficient SOL for transaction fees. You have ${(solBalance / 1e9).toFixed(4)} SOL — need at least ${(MIN_SOL_LAMPORTS / 1e9).toFixed(3)} SOL.`,
+    );
+  }
+
   const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
-
-  // Vault = ATA of (USDC_MINT, escrow_state PDA).
-  // Must match the Rust constraint:
-  //   associated_token::mint = mint, associated_token::authority = escrow_state
   const escrowTokenAccount = deriveEscrowVault(escrowState);
-
   const buyerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, buyer);
 
   const preInstructions: TransactionInstruction[] = [];
 
-  // Ensure buyer ATA exists
+  // Ensure buyer ATA exists; if it does, verify USDC balance is sufficient.
   const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
   if (!buyerAtaInfo) {
+    log("buyer USDC ATA missing — creating");
     preInstructions.push(
-      createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT)
+      createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT),
     );
+    // No USDC means we can't fund, regardless of whether ATA exists.
+    throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC to fund this escrow.`);
+  } else {
+    try {
+      const acct = await getAccount(connection, buyerTokenAccount);
+      const usdcBalance = Number(acct.amount) / Math.pow(10, USDC_DECIMALS);
+      log("buyer USDC balance", usdcBalance);
+      if (usdcBalance < amountUsd) {
+        throw new Error(
+          `Insufficient USDC. You have ${usdcBalance.toFixed(2)} USDC — need ${amountUsd} USDC.`,
+        );
+      }
+    } catch (e) {
+      if (e instanceof TokenAccountNotFoundError) {
+        throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC.`);
+      }
+      throw e;
+    }
   }
 
   // Create escrow vault ATA as a pre-instruction (idempotent).
@@ -264,23 +304,29 @@ export async function fundEscrow(
     )
   );
 
-  const txHash = await program.methods
-    .initializeEscrow(orderId, amount)
-    .accountsStrict({
-      buyer,
-      seller:                 sellerPubkey,
-      mint:                   USDC_MINT,
-      buyerTokenAccount,
-      escrowState,
-      escrowTokenAccount,
-      systemProgram:          SystemProgram.programId,
-      tokenProgram:           TOKEN_PROGRAM_ID,
-    })
-    .preInstructions(preInstructions)
-    .signers([])
-    .rpc({ commitment: "confirmed" });
+  try {
+    const txHash = await program.methods
+      .initializeEscrow(orderId, amount)
+      .accountsStrict({
+        buyer,
+        seller:                 sellerPubkey,
+        mint:                   USDC_MINT,
+        buyerTokenAccount,
+        escrowState,
+        escrowTokenAccount,
+        systemProgram:          SystemProgram.programId,
+        tokenProgram:           TOKEN_PROGRAM_ID,
+      })
+      .preInstructions(preInstructions)
+      .signers([])
+      .rpc({ commitment: "confirmed" });
 
-  return txHash;
+    log("fundEscrow confirmed", { txHash, explorer: `https://solscan.io/tx/${txHash}` });
+    return txHash;
+  } catch (e) {
+    log("fundEscrow failed", e);
+    throw e;
+  }
 }
 
 /**
