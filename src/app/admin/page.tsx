@@ -23,6 +23,10 @@ export default async function AdminDashboardPage() {
     totalUsers, activeGigs, totalOrders, completedOrders,
     totalRevenue, showcasePosts, latestUsers, pendingOrders, disputedOrders,
     activeOrdersCount, activeOrders,
+    // Funnel counts
+    funnelPending, funnelFunded, funnelAccepted, funnelDelivered, funnelCompleted,
+    // Stuck counts
+    stuckPendingAcceptance, stuckNotFunded, stuckDeliveredNotReleased,
   ] = await Promise.all([
     isOwner || isAdmin ? db.user.count()                                                          : Promise.resolve(0),
     isOwner || isAdmin ? db.gig.count({ where: { status: "active" } })                           : Promise.resolve(0),
@@ -47,6 +51,18 @@ export default async function AdminDashboardPage() {
         seller: { select: { name: true, twitterHandle: true } },
       },
     }) : Promise.resolve([]),
+    // Funnel
+    isOwner ? db.order.count({ where: { status: "pending"   } }) : Promise.resolve(0),
+    isOwner ? db.order.count({ where: { status: "funded"    } }) : Promise.resolve(0),
+    isOwner ? db.order.count({ where: { status: "accepted"  } }) : Promise.resolve(0),
+    isOwner ? db.order.count({ where: { status: "delivered" } }) : Promise.resolve(0),
+    isOwner ? db.order.count({ where: { status: "completed" } }) : Promise.resolve(0),
+    // Stuck: pending AND seller hasn't accepted (no txHash = never funded either)
+    isOwner ? db.order.count({ where: { status: "pending", txHash: null   } }) : Promise.resolve(0),
+    // Stuck: pending AND buyer funded (txHash exists) but seller never accepted → still "pending" with txHash
+    isOwner ? db.order.count({ where: { status: "pending", txHash: { not: null } } }) : Promise.resolve(0),
+    // Stuck: delivered but buyer hasn't released
+    isOwner ? db.order.count({ where: { status: "delivered" } }) : Promise.resolve(0),
   ]);
 
   const grossRevenue = (totalRevenue as any)._sum?.amount ?? 0;
@@ -173,6 +189,126 @@ export default async function AdminDashboardPage() {
             </Link>
           ))}
         </div>
+
+        {/* ── Orders Funnel — owner only ── */}
+        {isOwner && (() => {
+          const total = funnelPending + funnelFunded + funnelAccepted + funnelDelivered + funnelCompleted || 1;
+          const funnel = [
+            { label: "Created",   count: funnelPending + funnelFunded + funnelAccepted + funnelDelivered + funnelCompleted, status: null,        color: "#94a3b8" },
+            { label: "Funded",    count: funnelFunded + funnelAccepted + funnelDelivered + funnelCompleted,                 status: "funded",     color: "#f59e0b" },
+            { label: "Accepted",  count: funnelAccepted + funnelDelivered + funnelCompleted,                                status: "accepted",   color: "#6366f1" },
+            { label: "Delivered", count: funnelDelivered + funnelCompleted,                                                 status: "delivered",  color: "#3b82f6" },
+            { label: "Completed", count: funnelCompleted,                                                                   status: "completed",  color: "#22c55e" },
+          ];
+          return (
+            <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1.5rem" }}>
+              <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                  </svg>
+                  <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Orders Funnel</h2>
+                </div>
+                <Link href="/admin/orders" style={{ fontSize: "0.75rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>View all orders →</Link>
+              </div>
+              <div style={{ padding: "1.5rem", display: "flex", flexDirection: "column", gap: "0.85rem" }}>
+                {funnel.map((step, i) => {
+                  const pct = Math.round((step.count / total) * 100);
+                  const href = step.status ? `/admin/orders?status=${step.status}` : "/admin/orders";
+                  return (
+                    <Link key={step.label} href={href} style={{ textDecoration: "none", display: "block" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: 5 }}>
+                        <div style={{ width: 80, fontSize: "0.72rem", fontWeight: 600, color: "var(--text-muted)", flexShrink: 0 }}>{step.label}</div>
+                        <div style={{ flex: 1, height: 10, borderRadius: 99, background: "var(--background)", overflow: "hidden" }}>
+                          <div style={{ width: `${pct}%`, height: "100%", borderRadius: 99, background: step.color, transition: "width 0.4s" }} />
+                        </div>
+                        <div style={{ width: 64, display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                          <span style={{ fontSize: "0.88rem", fontWeight: 800, color: step.color, fontFamily: "Space Mono, monospace" }}>{step.count}</span>
+                          <span style={{ fontSize: "0.65rem", color: "var(--text-muted)" }}>{pct}%</span>
+                        </div>
+                      </div>
+                      {i < funnel.length - 1 && (
+                        <div style={{ marginLeft: 80, fontSize: "0.65rem", color: "var(--text-muted)", paddingLeft: "1rem" }}>
+                          {funnel[i].count - funnel[i + 1].count > 0 && (
+                            <span style={{ color: "#ef4444" }}>↓ {funnel[i].count - funnel[i + 1].count} dropped off here</span>
+                          )}
+                        </div>
+                      )}
+                    </Link>
+                  );
+                })}
+                <div style={{ marginTop: "0.5rem", paddingTop: "0.85rem", borderTop: "1px solid var(--card-border)", display: "flex", gap: "1.5rem", fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                  <span>Completion rate: <strong style={{ color: "#22c55e" }}>{funnelCompleted + funnelPending + funnelFunded + funnelAccepted + funnelDelivered > 0 ? Math.round((funnelCompleted / (funnelCompleted + funnelPending + funnelFunded + funnelAccepted + funnelDelivered)) * 100) : 0}%</strong></span>
+                  <span>Total ever created: <strong style={{ color: "var(--foreground)" }}>{funnelCompleted + funnelPending + funnelFunded + funnelAccepted + funnelDelivered}</strong></span>
+                </div>
+              </div>
+            </div>
+          );
+        })()}
+
+        {/* ── Stuck Orders — owner only ── */}
+        {isOwner && (
+          <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1.5rem" }}>
+            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", gap: 10 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ef4444" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Stuck Orders</h2>
+              <span style={{ fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "rgba(239,68,68,0.1)", color: "#ef4444" }}>
+                needs attention
+              </span>
+            </div>
+            <div style={{ padding: "0.5rem 0" }}>
+              {([
+                {
+                  label: "Waiting for seller to accept",
+                  sub: "Order placed, seller hasn't responded",
+                  count: stuckPendingAcceptance,
+                  color: "#f59e0b",
+                  href: "/admin/orders?status=pending",
+                },
+                {
+                  label: "Funded but seller not yet accepted",
+                  sub: "Buyer paid escrow, seller hasn't accepted yet",
+                  count: stuckNotFunded,
+                  color: "#6366f1",
+                  href: "/admin/orders?status=pending",
+                },
+                {
+                  label: "Delivered — buyer hasn't released",
+                  sub: "Seller marked done, buyer hasn't approved payment",
+                  count: stuckDeliveredNotReleased,
+                  color: "#3b82f6",
+                  href: "/admin/orders?status=delivered",
+                },
+              ] as { label: string; sub: string; count: number; color: string; href: string }[]).map((item, i, arr) => (
+                <Link key={item.label} href={item.href} style={{
+                  display: "flex", alignItems: "center", justifyContent: "space-between",
+                  padding: "1rem 1.5rem", textDecoration: "none",
+                  borderBottom: i < arr.length - 1 ? "1px solid var(--card-border)" : "none",
+                  transition: "background 0.12s",
+                }}
+                  className="stuck-row"
+                >
+                  <div>
+                    <div style={{ fontSize: "0.85rem", fontWeight: 600, color: "var(--foreground)", marginBottom: 2 }}>{item.label}</div>
+                    <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>{item.sub}</div>
+                  </div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, flexShrink: 0 }}>
+                    <span style={{
+                      fontSize: "1.2rem", fontWeight: 900, fontFamily: "Space Mono, monospace",
+                      color: item.count > 0 ? item.color : "var(--text-muted)",
+                    }}>{item.count}</span>
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ color: "var(--text-muted)" }}>
+                      <path d="M9 18l6-6-6-6"/>
+                    </svg>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <style>{`.stuck-row:hover { background: rgba(var(--foreground-rgb),0.03); }`}</style>
+          </div>
+        )}
 
         {/* Active Services — owner + admin */}
         {(isOwner || isAdmin) && (
