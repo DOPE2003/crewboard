@@ -36,10 +36,14 @@ export function parseMessageBody(body: string): MessageContent {
   if (body.startsWith("__FILE__:")) {
     try {
       const f = JSON.parse(body.slice(9));
+      // Web (MessageThread.tsx) and iOS both write the URL under the `data`
+      // key; the original `url`-only fallback returned "" for every mobile
+      // file fetch, which surfaced as empty bubbles on iOS. Accept either
+      // key so legacy and new rows both resolve.
       return {
         type: "file",
         file: {
-          url: f.url ?? "",
+          url: f.url ?? f.data ?? "",
           name: f.name ?? "file",
           size: f.size ?? 0,
           mimeType: f.type ?? "application/octet-stream",
