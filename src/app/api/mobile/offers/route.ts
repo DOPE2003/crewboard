@@ -77,13 +77,20 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
 
   try {
     const body = await req.json().catch(() => ({}));
-    const { conversationId, receiverId, title, description, amount, deliveryDays } = body as {
+    const {
+      conversationId, receiverId, title, description, amount, deliveryDays,
+      milestones, attachments, clientContact, currency,
+    } = body as {
       conversationId?: string;
       receiverId?: string;
       title?: string;
       description?: string;
       amount?: number;
       deliveryDays?: number;
+      milestones?: { title: string; description?: string; amount: number; status?: string }[];
+      attachments?: { url: string; name: string }[];
+      clientContact?: string;
+      currency?: string;
     };
 
     if (!conversationId) return err("conversationId is required.");
@@ -115,6 +122,10 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         description: description.trim(),
         amount,
         deliveryDays,
+        ...(milestones   ? { milestones }   : {}),
+        ...(attachments  ? { attachments }  : {}),
+        ...(clientContact ? { clientContact: clientContact.trim() } : {}),
+        currency: currency ?? "USD",
       },
     });
 
@@ -127,6 +138,10 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       deliveryDays: offer.deliveryDays,
       senderId: offer.senderId,
       status: "pending",
+      currency: offer.currency,
+      ...(offer.milestones   ? { milestones: offer.milestones }   : {}),
+      ...(offer.attachments  ? { attachments: offer.attachments } : {}),
+      ...(offer.clientContact ? { clientContact: offer.clientContact } : {}),
     };
 
     const message = await db.message.create({

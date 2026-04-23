@@ -113,9 +113,11 @@ export async function sendHireMessage(targetUserId: string) {
   });
 
   if (!conversation) {
+    const participantKey = [userId, targetUserId].sort().join(":");
     conversation = await db.conversation.create({
       data: {
         participants: [userId, targetUserId],
+        participantKey,
       },
     });
   }

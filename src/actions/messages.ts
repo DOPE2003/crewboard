@@ -323,15 +323,10 @@ export async function deleteConversation(conversationId: string) {
   });
   if (!conv || !conv.participants.includes(userId)) return { ok: false };
 
-  const remaining = conv.participants.filter((p) => p !== userId);
-  if (remaining.length === 0) {
-    await db.conversation.delete({ where: { id: conversationId } });
-  } else {
-    await db.conversation.update({
-      where: { id: conversationId },
-      data: { participants: remaining },
-    });
-  }
+  // Always hard-delete the whole row (and cascade messages/offers).
+  // Mutating participants to remove one user corrupts the array and causes
+  // "Conversation not found" 404s for the other participant on all platforms.
+  await db.conversation.delete({ where: { id: conversationId } });
 
   revalidatePath("/messages", "layout");
   return { ok: true };

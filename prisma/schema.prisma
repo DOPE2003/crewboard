@@ -328,6 +328,10 @@ model Offer {
   deliveryDays   Int
   status         String       @default("pending")
   orderId        String?      @unique
+  milestones     Json?
+  attachments    Json?
+  clientContact  String?
+  currency       String       @default("USD")
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
 

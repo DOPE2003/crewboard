@@ -2151,6 +2151,10 @@ export const OfferScalarFieldEnum = {
   deliveryDays: 'deliveryDays',
   status: 'status',
   orderId: 'orderId',
+  milestones: 'milestones',
+  attachments: 'attachments',
+  clientContact: 'clientContact',
+  currency: 'currency',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -2171,6 +2175,14 @@ export const JsonNullValueInput = {
 } as const
 
 export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
 
 
 export const QueryMode = {

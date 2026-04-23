@@ -47,6 +47,8 @@ export type OfferMinAggregateOutputType = {
   deliveryDays: number | null
   status: string | null
   orderId: string | null
+  clientContact: string | null
+  currency: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +64,8 @@ export type OfferMaxAggregateOutputType = {
   deliveryDays: number | null
   status: string | null
   orderId: string | null
+  clientContact: string | null
+  currency: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -77,6 +81,10 @@ export type OfferCountAggregateOutputType = {
   deliveryDays: number
   status: number
   orderId: number
+  milestones: number
+  attachments: number
+  clientContact: number
+  currency: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -104,6 +112,8 @@ export type OfferMinAggregateInputType = {
   deliveryDays?: true
   status?: true
   orderId?: true
+  clientContact?: true
+  currency?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -119,6 +129,8 @@ export type OfferMaxAggregateInputType = {
   deliveryDays?: true
   status?: true
   orderId?: true
+  clientContact?: true
+  currency?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -134,6 +146,10 @@ export type OfferCountAggregateInputType = {
   deliveryDays?: true
   status?: true
   orderId?: true
+  milestones?: true
+  attachments?: true
+  clientContact?: true
+  currency?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -236,6 +252,10 @@ export type OfferGroupByOutputType = {
   deliveryDays: number
   status: string
   orderId: string | null
+  milestones: runtime.JsonValue | null
+  attachments: runtime.JsonValue | null
+  clientContact: string | null
+  currency: string
   createdAt: Date
   updatedAt: Date
   _count: OfferCountAggregateOutputType | null
@@ -274,6 +294,10 @@ export type OfferWhereInput = {
   deliveryDays?: Prisma.IntFilter<"Offer"> | number
   status?: Prisma.StringFilter<"Offer"> | string
   orderId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  milestones?: Prisma.JsonNullableFilter<"Offer">
+  attachments?: Prisma.JsonNullableFilter<"Offer">
+  clientContact?: Prisma.StringNullableFilter<"Offer"> | string | null
+  currency?: Prisma.StringFilter<"Offer"> | string
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
@@ -293,6 +317,10 @@ export type OfferOrderByWithRelationInput = {
   deliveryDays?: Prisma.SortOrder
   status?: Prisma.SortOrder
   orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  milestones?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientContact?: Prisma.SortOrderInput | Prisma.SortOrder
+  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   conversation?: Prisma.ConversationOrderByWithRelationInput
@@ -315,6 +343,10 @@ export type OfferWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.IntFilter<"Offer"> | number
   deliveryDays?: Prisma.IntFilter<"Offer"> | number
   status?: Prisma.StringFilter<"Offer"> | string
+  milestones?: Prisma.JsonNullableFilter<"Offer">
+  attachments?: Prisma.JsonNullableFilter<"Offer">
+  clientContact?: Prisma.StringNullableFilter<"Offer"> | string | null
+  currency?: Prisma.StringFilter<"Offer"> | string
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   conversation?: Prisma.XOR<Prisma.ConversationScalarRelationFilter, Prisma.ConversationWhereInput>
@@ -334,6 +366,10 @@ export type OfferOrderByWithAggregationInput = {
   deliveryDays?: Prisma.SortOrder
   status?: Prisma.SortOrder
   orderId?: Prisma.SortOrderInput | Prisma.SortOrder
+  milestones?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientContact?: Prisma.SortOrderInput | Prisma.SortOrder
+  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.OfferCountOrderByAggregateInput
@@ -357,6 +393,10 @@ export type OfferScalarWhereWithAggregatesInput = {
   deliveryDays?: Prisma.IntWithAggregatesFilter<"Offer"> | number
   status?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   orderId?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  milestones?: Prisma.JsonNullableWithAggregatesFilter<"Offer">
+  attachments?: Prisma.JsonNullableWithAggregatesFilter<"Offer">
+  clientContact?: Prisma.StringNullableWithAggregatesFilter<"Offer"> | string | null
+  currency?: Prisma.StringWithAggregatesFilter<"Offer"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Offer"> | Date | string
 }
@@ -368,6 +408,10 @@ export type OfferCreateInput = {
   amount: number
   deliveryDays: number
   status?: string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutOffersInput
@@ -387,6 +431,10 @@ export type OfferUncheckedCreateInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -398,6 +446,10 @@ export type OfferUpdateInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutOffersNestedInput
@@ -417,6 +469,10 @@ export type OfferUncheckedUpdateInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -432,6 +488,10 @@ export type OfferCreateManyInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -443,6 +503,10 @@ export type OfferUpdateManyMutationInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -458,6 +522,10 @@ export type OfferUncheckedUpdateManyInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -488,6 +556,10 @@ export type OfferCountOrderByAggregateInput = {
   deliveryDays?: Prisma.SortOrder
   status?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  milestones?: Prisma.SortOrder
+  attachments?: Prisma.SortOrder
+  clientContact?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -508,6 +580,8 @@ export type OfferMaxOrderByAggregateInput = {
   deliveryDays?: Prisma.SortOrder
   status?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  clientContact?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -523,6 +597,8 @@ export type OfferMinOrderByAggregateInput = {
   deliveryDays?: Prisma.SortOrder
   status?: Prisma.SortOrder
   orderId?: Prisma.SortOrder
+  clientContact?: Prisma.SortOrder
+  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -697,6 +773,10 @@ export type OfferCreateWithoutSenderInput = {
   amount: number
   deliveryDays: number
   status?: string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutOffersInput
@@ -714,6 +794,10 @@ export type OfferUncheckedCreateWithoutSenderInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -735,6 +819,10 @@ export type OfferCreateWithoutReceiverInput = {
   amount: number
   deliveryDays: number
   status?: string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutOffersInput
@@ -752,6 +840,10 @@ export type OfferUncheckedCreateWithoutReceiverInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -796,6 +888,10 @@ export type OfferScalarWhereInput = {
   deliveryDays?: Prisma.IntFilter<"Offer"> | number
   status?: Prisma.StringFilter<"Offer"> | string
   orderId?: Prisma.StringNullableFilter<"Offer"> | string | null
+  milestones?: Prisma.JsonNullableFilter<"Offer">
+  attachments?: Prisma.JsonNullableFilter<"Offer">
+  clientContact?: Prisma.StringNullableFilter<"Offer"> | string | null
+  currency?: Prisma.StringFilter<"Offer"> | string
   createdAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Offer"> | Date | string
 }
@@ -823,6 +919,10 @@ export type OfferCreateWithoutConversationInput = {
   amount: number
   deliveryDays: number
   status?: string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   sender: Prisma.UserCreateNestedOneWithoutSentOffersInput
@@ -840,6 +940,10 @@ export type OfferUncheckedCreateWithoutConversationInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -877,6 +981,10 @@ export type OfferCreateWithoutOrderInput = {
   amount: number
   deliveryDays: number
   status?: string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   conversation: Prisma.ConversationCreateNestedOneWithoutOffersInput
@@ -894,6 +1002,10 @@ export type OfferUncheckedCreateWithoutOrderInput = {
   amount: number
   deliveryDays: number
   status?: string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -921,6 +1033,10 @@ export type OfferUpdateWithoutOrderInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutOffersNestedInput
@@ -938,6 +1054,10 @@ export type OfferUncheckedUpdateWithoutOrderInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -952,6 +1072,10 @@ export type OfferCreateManySenderInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -966,6 +1090,10 @@ export type OfferCreateManyReceiverInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -977,6 +1105,10 @@ export type OfferUpdateWithoutSenderInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutOffersNestedInput
@@ -994,6 +1126,10 @@ export type OfferUncheckedUpdateWithoutSenderInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1008,6 +1144,10 @@ export type OfferUncheckedUpdateManyWithoutSenderInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1019,6 +1159,10 @@ export type OfferUpdateWithoutReceiverInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   conversation?: Prisma.ConversationUpdateOneRequiredWithoutOffersNestedInput
@@ -1036,6 +1180,10 @@ export type OfferUncheckedUpdateWithoutReceiverInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1050,6 +1198,10 @@ export type OfferUncheckedUpdateManyWithoutReceiverInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1064,6 +1216,10 @@ export type OfferCreateManyConversationInput = {
   deliveryDays: number
   status?: string
   orderId?: string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: string | null
+  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1075,6 +1231,10 @@ export type OfferUpdateWithoutConversationInput = {
   amount?: Prisma.IntFieldUpdateOperationsInput | number
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   sender?: Prisma.UserUpdateOneRequiredWithoutSentOffersNestedInput
@@ -1092,6 +1252,10 @@ export type OfferUncheckedUpdateWithoutConversationInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1106,6 +1270,10 @@ export type OfferUncheckedUpdateManyWithoutConversationInput = {
   deliveryDays?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.StringFieldUpdateOperationsInput | string
   orderId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  clientContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1123,6 +1291,10 @@ export type OfferSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deliveryDays?: boolean
   status?: boolean
   orderId?: boolean
+  milestones?: boolean
+  attachments?: boolean
+  clientContact?: boolean
+  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
@@ -1142,6 +1314,10 @@ export type OfferSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryDays?: boolean
   status?: boolean
   orderId?: boolean
+  milestones?: boolean
+  attachments?: boolean
+  clientContact?: boolean
+  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
@@ -1161,6 +1337,10 @@ export type OfferSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryDays?: boolean
   status?: boolean
   orderId?: boolean
+  milestones?: boolean
+  attachments?: boolean
+  clientContact?: boolean
+  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
@@ -1180,11 +1360,15 @@ export type OfferSelectScalar = {
   deliveryDays?: boolean
   status?: boolean
   orderId?: boolean
+  milestones?: boolean
+  attachments?: boolean
+  clientContact?: boolean
+  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "conversationId" | "senderId" | "receiverId" | "title" | "description" | "amount" | "deliveryDays" | "status" | "orderId" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
+export type OfferOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "conversationId" | "senderId" | "receiverId" | "title" | "description" | "amount" | "deliveryDays" | "status" | "orderId" | "milestones" | "attachments" | "clientContact" | "currency" | "createdAt" | "updatedAt", ExtArgs["result"]["offer"]>
 export type OfferInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   conversation?: boolean | Prisma.ConversationDefaultArgs<ExtArgs>
   sender?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1223,6 +1407,10 @@ export type $OfferPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     deliveryDays: number
     status: string
     orderId: string | null
+    milestones: runtime.JsonValue | null
+    attachments: runtime.JsonValue | null
+    clientContact: string | null
+    currency: string
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["offer"]>
@@ -1662,6 +1850,10 @@ export interface OfferFieldRefs {
   readonly deliveryDays: Prisma.FieldRef<"Offer", 'Int'>
   readonly status: Prisma.FieldRef<"Offer", 'String'>
   readonly orderId: Prisma.FieldRef<"Offer", 'String'>
+  readonly milestones: Prisma.FieldRef<"Offer", 'Json'>
+  readonly attachments: Prisma.FieldRef<"Offer", 'Json'>
+  readonly clientContact: Prisma.FieldRef<"Offer", 'String'>
+  readonly currency: Prisma.FieldRef<"Offer", 'String'>
   readonly createdAt: Prisma.FieldRef<"Offer", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Offer", 'DateTime'>
 }
