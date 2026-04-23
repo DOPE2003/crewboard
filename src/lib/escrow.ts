@@ -249,13 +249,23 @@ export async function fundEscrow(
     rpc: connection.rpcEndpoint,
   });
 
-  // ── Pre-flight balance checks (fail fast with clear errors) ──
-  const solBalance = await connection.getBalance(buyer, "confirmed");
-  log("buyer SOL balance", solBalance / 1e9);
-  if (solBalance < MIN_SOL_LAMPORTS) {
-    throw new Error(
-      `Insufficient SOL for transaction fees. You have ${(solBalance / 1e9).toFixed(4)} SOL — need at least ${(MIN_SOL_LAMPORTS / 1e9).toFixed(3)} SOL.`,
-    );
+  // ── Optional pre-flight balance checks ──
+  // Wrapped in try/catch because the public Solana RPC returns 403 on
+  // browser-origin getBalance calls. If the check fails, we let the
+  // transaction proceed — the on-chain program will reject it cleanly
+  // with a real error if balances are insufficient.
+  try {
+    const solBalance = await connection.getBalance(buyer, "confirmed");
+    log("buyer SOL balance", solBalance / 1e9);
+    if (solBalance < MIN_SOL_LAMPORTS) {
+      throw new Error(
+        `Insufficient SOL for transaction fees. You have ${(solBalance / 1e9).toFixed(4)} SOL — need at least ${(MIN_SOL_LAMPORTS / 1e9).toFixed(3)} SOL.`,
+      );
+    }
+  } catch (e: any) {
+    // Re-throw our own "Insufficient SOL" error; swallow RPC errors (403, network).
+    if (e?.message?.startsWith("Insufficient SOL")) throw e;
+    log("SOL balance check skipped (RPC error):", e?.message ?? e);
   }
 
   const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
@@ -264,31 +274,30 @@ export async function fundEscrow(
 
   const preInstructions: TransactionInstruction[] = [];
 
-  // Ensure buyer ATA exists; if it does, verify USDC balance is sufficient.
-  const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
-  if (!buyerAtaInfo) {
-    log("buyer USDC ATA missing — creating");
-    preInstructions.push(
-      createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT),
-    );
-    // No USDC means we can't fund, regardless of whether ATA exists.
-    throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC to fund this escrow.`);
-  } else {
-    try {
-      const acct = await getAccount(connection, buyerTokenAccount);
-      const usdcBalance = Number(acct.amount) / Math.pow(10, USDC_DECIMALS);
-      log("buyer USDC balance", usdcBalance);
-      if (usdcBalance < amountUsd) {
-        throw new Error(
-          `Insufficient USDC. You have ${usdcBalance.toFixed(2)} USDC — need ${amountUsd} USDC.`,
-        );
-      }
-    } catch (e) {
-      if (e instanceof TokenAccountNotFoundError) {
-        throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC.`);
-      }
-      throw e;
+  // USDC ATA + balance check — also wrapped so RPC 403 doesn't block.
+  try {
+    const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
+    if (!buyerAtaInfo) {
+      log("buyer USDC ATA missing — creating");
+      preInstructions.push(
+        createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT),
+      );
+      throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC to fund this escrow.`);
     }
+    const acct = await getAccount(connection, buyerTokenAccount);
+    const usdcBalance = Number(acct.amount) / Math.pow(10, USDC_DECIMALS);
+    log("buyer USDC balance", usdcBalance);
+    if (usdcBalance < amountUsd) {
+      throw new Error(
+        `Insufficient USDC. You have ${usdcBalance.toFixed(2)} USDC — need ${amountUsd} USDC.`,
+      );
+    }
+  } catch (e: any) {
+    if (e instanceof TokenAccountNotFoundError) {
+      throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC.`);
+    }
+    if (e?.message?.startsWith("Insufficient USDC") || e?.message?.startsWith("No USDC")) throw e;
+    log("USDC balance check skipped (RPC error):", e?.message ?? e);
   }
 
   // Create escrow vault ATA as a pre-instruction (idempotent).
