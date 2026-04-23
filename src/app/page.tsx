@@ -325,9 +325,9 @@ export default async function HomePage() {
 
                 {/* Publisher row */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
-                  {/* Avatar — Superteam brand gradient */}
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, border: "2px solid var(--card-border)", background: "radial-gradient(circle at 30% 25%, #1a0000 0%, #7a0000 35%, #cc3300 65%, #e86000 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: "12px", fontWeight: 900, color: "#fff", letterSpacing: "-0.5px", fontFamily: "Inter, sans-serif", lineHeight: 1 }}>st</span>
+                  {/* Avatar — Superteam Germany circle logo */}
+                  <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, overflow: "hidden", border: "1.5px solid var(--card-border)", background: "radial-gradient(circle at 25% 30%, #1a0000 0%, #8B0000 30%, #cc2200 55%, #e65c00 75%, #f5a623 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                    <span style={{ fontSize: "13px", fontWeight: 900, color: "#fff", letterSpacing: "-1px", fontFamily: "Inter, sans-serif", lineHeight: 1, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>st</span>
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
@@ -354,9 +354,9 @@ export default async function HomePage() {
                   Content Creators Program &amp; $500 Travel Boost — Solana Summit Germany
                 </h3>
 
-                {/* Description — short, punchy */}
-                <p style={{ fontSize: "12.5px", color: "var(--text-muted)", margin: "0 0 0.85rem", lineHeight: 1.5 }}>
-                  Join Solana Summit Germany as a content creator.
+                {/* Description */}
+                <p style={{ fontSize: "12.5px", color: "var(--text-muted)", margin: "0 0 0.85rem", lineHeight: 1.6 }}>
+                  Selected creators will join Solana Summit Germany and receive exclusive on-site benefits. Some participants may also receive a $500 travel boost.
                 </p>
 
                 {/* Info row */}
@@ -396,13 +396,13 @@ export default async function HomePage() {
                 </div>
               </div>
 
-              {/* Benefit + CTA — combined, persuasive */}
+              {/* Benefit + CTA */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", paddingTop: "1.1rem", borderTop: "1px solid var(--card-border)" }}>
                 <div>
-                  <div style={{ fontSize: "1.35rem", fontWeight: 900, letterSpacing: "-0.03em", lineHeight: 1, color: "#14b8a6" }}>
-                    $500 Travel Boost
+                  <div style={{ fontSize: "1.2rem", fontWeight: 900, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#14b8a6" }}>
+                    Exclusive on-site benefits
                   </div>
-                  <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 3, fontWeight: 500 }}>+ Exclusive on-site benefits</div>
+                  <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 4, fontWeight: 400 }}>Chance to receive a $500 travel boost</div>
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 5, flexShrink: 0 }}>
                   <a
