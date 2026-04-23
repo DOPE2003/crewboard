@@ -325,10 +325,13 @@ export default async function HomePage() {
 
                 {/* Publisher row */}
                 <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
-                  {/* Avatar — Superteam Germany circle logo */}
-                  <div style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, overflow: "hidden", border: "1.5px solid var(--card-border)", background: "radial-gradient(circle at 25% 30%, #1a0000 0%, #8B0000 30%, #cc2200 55%, #e65c00 75%, #f5a623 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <span style={{ fontSize: "13px", fontWeight: 900, color: "#fff", letterSpacing: "-1px", fontFamily: "Inter, sans-serif", lineHeight: 1, textShadow: "0 1px 3px rgba(0,0,0,0.4)" }}>st</span>
-                  </div>
+                  {/* Avatar — Superteam Germany logo */}
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src="/superteam-germany.png"
+                    alt="Superteam Germany"
+                    style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, objectFit: "cover", border: "1.5px solid var(--card-border)" }}
+                  />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
                       <span style={{ fontSize: "13.5px", fontWeight: 700, color: "var(--foreground)" }}>Superteam Germany</span>
