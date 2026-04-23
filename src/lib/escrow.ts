@@ -27,6 +27,7 @@ import type { AnchorWallet } from "@solana/wallet-adapter-react";
 
 const DEBUG = typeof window !== "undefined" && (window as any).__CREWBOARD_DEBUG__ === true;
 const log = (...args: unknown[]) => { if (DEBUG) console.log("[escrow]", ...args); };
+const always = (...args: unknown[]) => console.log("[escrow]", ...args);
 
 // Minimum SOL needed to cover tx fee + ATA rent (~0.00204 per ATA + ~0.000005 fee).
 // Buyer may need to create their own ATA + escrow vault ATA, so budget for 2.
@@ -241,7 +242,7 @@ export async function fundEscrow(
   const buyer  = wallet.publicKey;
   const amount = new BN(Math.round(amountUsd * Math.pow(10, USDC_DECIMALS)));
 
-  log("fundEscrow start", {
+  always("fundEscrow start", {
     buyer: buyer.toBase58(),
     seller: sellerPubkey.toBase58(),
     orderId,
@@ -330,10 +331,24 @@ export async function fundEscrow(
       .signers([])
       .rpc({ commitment: "confirmed" });
 
-    log("fundEscrow confirmed", { txHash, explorer: `https://solscan.io/tx/${txHash}` });
+    always("tx broadcast", txHash);
+
+    // Independent verification — catches cases where .rpc() resolved but tx actually failed.
+    const statusResult = await connection
+      .getSignatureStatus(txHash, { searchTransactionHistory: true })
+      .catch(() => null);
+    always("verification", {
+      status: statusResult?.value?.confirmationStatus,
+      err: statusResult?.value?.err ?? null,
+    });
+    if (statusResult?.value?.err) {
+      throw new Error(`Transaction failed on-chain: ${JSON.stringify(statusResult.value.err)}`);
+    }
+
+    always("fundEscrow confirmed", { txHash, explorer: `https://solscan.io/tx/${txHash}` });
     return txHash;
   } catch (e) {
-    log("fundEscrow failed", e);
+    console.error("[escrow] fundEscrow failed", e);
     throw e;
   }
 }

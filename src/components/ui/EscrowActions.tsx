@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useWallet, useConnection } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { PublicKey } from "@solana/web3.js";
@@ -62,12 +62,46 @@ export default function EscrowActions({
   const [loading, setLoading] = useState<string | null>(null);
   const [error, setError] = useState("");
 
+  const fundingInProgress = useRef(false);
+  const recoveryChecked = useRef(false);
+
   const { sellerAmount, feeAmount } = calcFee(orderAmount);
 
   const anchorWallet = useMemo(() => {
     if (!publicKey || !signTransaction || !signAllTransactions) return null;
     return { publicKey, signTransaction, signAllTransactions };
   }, [publicKey, signTransaction, signAllTransactions]);
+
+  // On page load: if escrow PDA exists on-chain but DB still shows "pending",
+  // auto-sync the DB. Handles the case where a previous funding tx landed but
+  // the syncEscrowFunded call never reached the server.
+  useEffect(() => {
+    if (recoveryChecked.current) return;
+    if (!isBuyer || orderStatus !== "pending" || !sellerWallet || !anchorWallet) return;
+    recoveryChecked.current = true;
+    const check = async () => {
+      try {
+        const sellerPubkey = new PublicKey(sellerWallet);
+        const [escrowPDA] = deriveEscrowPDA(anchorWallet.publicKey, sellerPubkey, orderId);
+        const info = await connection.getAccountInfo(escrowPDA);
+        if (info) {
+          console.log("[EscrowActions] recovery: PDA found on-chain, auto-syncing DB");
+          setLoading("fund:saving");
+          await withRetry(
+            () => syncEscrowFunded(orderId, "recovered", escrowPDA.toBase58()),
+            3,
+            "recovery-sync",
+          );
+          router.refresh();
+        }
+      } catch (e) {
+        console.warn("[EscrowActions] recovery check failed (non-fatal):", e);
+      } finally {
+        setLoading(null);
+      }
+    };
+    check();
+  }, [isBuyer, orderStatus, sellerWallet, anchorWallet, orderId, connection, router]);
 
   // Whether this status requires an on-chain wallet tx
   const needsWallet =
@@ -88,8 +122,13 @@ export default function EscrowActions({
   }
 
   async function handleFundEscrow() {
+    if (fundingInProgress.current) {
+      console.warn("[EscrowActions] fund already in progress — ignoring duplicate click");
+      return;
+    }
     if (!anchorWallet) return setError("Connect your Solana wallet first");
     if (!sellerWallet) return setError("Seller has no wallet address on file");
+    fundingInProgress.current = true;
     setError("");
 
     const sellerPubkey = new PublicKey(sellerWallet);
@@ -116,9 +155,13 @@ export default function EscrowActions({
       if (msg.includes("already been processed") || msg.includes("AlreadyInUse") || msg.includes("already in use")) {
         console.warn("[EscrowActions] tx already on-chain — syncing DB");
         setLoading("fund:saving");
-        await withRetry(() => syncEscrowFunded(orderId, "recovered", escrowPDA.toBase58()), 3, "syncEscrowFunded(recovered)");
-        router.refresh();
-        setLoading(null);
+        try {
+          await withRetry(() => syncEscrowFunded(orderId, "recovered", escrowPDA.toBase58()), 3, "syncEscrowFunded(recovered)");
+          router.refresh();
+        } finally {
+          setLoading(null);
+          fundingInProgress.current = false;
+        }
         return;
       }
 
@@ -140,6 +183,7 @@ export default function EscrowActions({
       else if (isRejected)    setError("REJECTED");
       else setError(msg.slice(0, 140) || "Transaction failed. Please try again.");
       setLoading(null);
+      fundingInProgress.current = false;
       return;
     }
 
@@ -163,6 +207,7 @@ export default function EscrowActions({
       );
     } finally {
       setLoading(null);
+      fundingInProgress.current = false;
     }
   }
 
