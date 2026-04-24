@@ -217,6 +217,81 @@ pub mod crewboard_escrow {
         Ok(())
     }
 
+    /// Admin resolves a dispute — can run at any time, no waiting period.
+    /// route_to_buyer = true  → full refund to buyer (no fee — seller-fault).
+    /// route_to_buyer = false → 90 % to seller, 10 % to treasury (buyer-fault).
+    pub fn resolve_dispute(ctx: Context<ResolveDispute>, route_to_buyer: bool) -> Result<()> {
+        let escrow = &ctx.accounts.escrow_state;
+        let total = escrow.amount;
+
+        let seeds = &[
+            b"escrow",
+            escrow.buyer.as_ref(),
+            escrow.seller.as_ref(),
+            escrow.gig_id.as_bytes(),
+            &[escrow.bump],
+        ];
+        let signer_seeds = &[&seeds[..]];
+
+        if route_to_buyer {
+            token::transfer(
+                CpiContext::new_with_signer(
+                    ctx.accounts.token_program.to_account_info(),
+                    Transfer {
+                        from: ctx.accounts.escrow_token_account.to_account_info(),
+                        to:   ctx.accounts.buyer_token_account.to_account_info(),
+                        authority: ctx.accounts.escrow_state.to_account_info(),
+                    },
+                    signer_seeds,
+                ),
+                total,
+            )?;
+        } else {
+            let fee_amount    = total.checked_mul(FEE_BPS).unwrap().checked_div(BPS_DENOMINATOR).unwrap();
+            let seller_amount = total.checked_sub(fee_amount).unwrap();
+
+            token::transfer(
+                CpiContext::new_with_signer(
+                    ctx.accounts.token_program.to_account_info(),
+                    Transfer {
+                        from: ctx.accounts.escrow_token_account.to_account_info(),
+                        to:   ctx.accounts.seller_token_account.to_account_info(),
+                        authority: ctx.accounts.escrow_state.to_account_info(),
+                    },
+                    signer_seeds,
+                ),
+                seller_amount,
+            )?;
+
+            token::transfer(
+                CpiContext::new_with_signer(
+                    ctx.accounts.token_program.to_account_info(),
+                    Transfer {
+                        from: ctx.accounts.escrow_token_account.to_account_info(),
+                        to:   ctx.accounts.treasury_token_account.to_account_info(),
+                        authority: ctx.accounts.escrow_state.to_account_info(),
+                    },
+                    signer_seeds,
+                ),
+                fee_amount,
+            )?;
+        }
+
+        token::close_account(
+            CpiContext::new_with_signer(
+                ctx.accounts.token_program.to_account_info(),
+                CloseAccount {
+                    account:     ctx.accounts.escrow_token_account.to_account_info(),
+                    destination: ctx.accounts.buyer.to_account_info(),
+                    authority:   ctx.accounts.escrow_state.to_account_info(),
+                },
+                signer_seeds,
+            ),
+        )?;
+
+        Ok(())
+    }
+
     /// Admin refunds the buyer when seller goes AFK (never delivers).
     /// Conditions: is_delivered == false AND now > created_at + 14 days.
     /// Full refund — no platform fee on seller-fault refunds.
@@ -440,6 +515,73 @@ pub struct AdminForceRelease<'info> {
     pub treasury: AccountInfo<'info>,
 
     /// Treasury ATA — receives 10 %
+    #[account(
+        mut,
+        token::mint = escrow_state.mint,
+        token::authority = treasury,
+    )]
+    pub treasury_token_account: Account<'info, TokenAccount>,
+
+    pub token_program: Program<'info, Token>,
+}
+
+#[derive(Accounts)]
+pub struct ResolveDispute<'info> {
+    #[account(
+        mut,
+        address = ADMIN_PUBKEY @ EscrowError::Unauthorized,
+    )]
+    pub admin: Signer<'info>,
+
+    /// CHECK: buyer receives refund and/or rent
+    #[account(mut)]
+    pub buyer: AccountInfo<'info>,
+
+    /// CHECK: seller receives funds in non-refund path
+    pub seller: AccountInfo<'info>,
+
+    #[account(
+        mut,
+        seeds = [
+            b"escrow",
+            escrow_state.buyer.as_ref(),
+            escrow_state.seller.as_ref(),
+            escrow_state.gig_id.as_bytes(),
+        ],
+        bump = escrow_state.bump,
+        has_one = buyer  @ EscrowError::Unauthorized,
+        has_one = seller @ EscrowError::Unauthorized,
+        close = buyer,
+    )]
+    pub escrow_state: Account<'info, EscrowState>,
+
+    #[account(
+        mut,
+        address = escrow_state.escrow_token_account @ EscrowError::Unauthorized,
+    )]
+    pub escrow_token_account: Account<'info, TokenAccount>,
+
+    /// Buyer's ATA — receives full refund when route_to_buyer = true
+    #[account(
+        mut,
+        token::mint = escrow_state.mint,
+        token::authority = buyer,
+    )]
+    pub buyer_token_account: Account<'info, TokenAccount>,
+
+    /// Seller's ATA — receives 90 % when route_to_buyer = false
+    #[account(
+        mut,
+        token::mint = escrow_state.mint,
+        token::authority = seller,
+    )]
+    pub seller_token_account: Account<'info, TokenAccount>,
+
+    /// CHECK: validated against TREASURY_PUBKEY constant
+    #[account(address = TREASURY_PUBKEY @ EscrowError::Unauthorized)]
+    pub treasury: AccountInfo<'info>,
+
+    /// Treasury ATA — receives 10 % when route_to_buyer = false
     #[account(
         mut,
         token::mint = escrow_state.mint,

@@ -142,10 +142,11 @@ const IDL: Idl = {
 
 const DISCRIMINATORS = {
   release_funds:      Buffer.from([225, 88,  91, 108, 126, 52,  2,  26]),
-  // TODO: run `anchor build` and copy from target/idl/crewboard_escrow.json:
   mark_delivered:      Buffer.from([240, 118, 188, 142,  64, 85, 107,  18]),
   admin_force_release: Buffer.from([200, 234, 233, 163, 162, 108, 177, 214]),
   admin_refund:        Buffer.from([130, 120,  82, 192, 147, 208, 173,  54]),
+  // sha256("global:resolve_dispute")[0..8]
+  resolve_dispute:     Buffer.from([231,   6, 202,   6,  96, 103,  12, 230]),
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -498,8 +499,12 @@ export async function adminForceRelease(
  * NOTE: Replace DISCRIMINATORS.admin_refund after `anchor build`.
  */
 /**
- * Admin resolves a dispute — either refunds buyer or releases to seller.
- * Used by the admin dispute resolution UI.
+ * Admin resolves a dispute — no time check, runs immediately.
+ * routeToBuyer = true  → full refund to buyer (seller-fault, no fee).
+ * routeToBuyer = false → 90 % seller / 10 % treasury (buyer-fault).
+ *
+ * Calls the on-chain resolve_dispute instruction added in program v2.
+ * Admin must sign with the wallet that matches ADMIN_PUBKEY in lib.rs.
  */
 export async function resolveDispute(
   adminWallet: AnchorWallet,
@@ -509,10 +514,47 @@ export async function resolveDispute(
   sellerPubkey: PublicKey,
   routeToBuyer: boolean,
 ): Promise<string> {
-  if (routeToBuyer) {
-    return adminRefund(adminWallet, connection, orderId, buyerPubkey, sellerPubkey);
-  }
-  return adminForceRelease(adminWallet, connection, orderId, buyerPubkey, sellerPubkey);
+  const program = getProgram(adminWallet, connection);
+  const admin = adminWallet.publicKey;
+  const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+
+  const state = await (program.account as any).escrowState.fetch(escrowState);
+  const escrowTokenAccount = new PublicKey(state.escrowTokenAccount);
+
+  const instructions: TransactionInstruction[] = [];
+
+  const { address: buyerTokenAccount,   ix: buyerAtaIx   } = await ensureAta(connection, admin, buyerPubkey);
+  const { address: sellerTokenAccount,  ix: sellerAtaIx  } = await ensureAta(connection, admin, sellerPubkey);
+  const { address: treasuryTokenAccount, ix: treasuryAtaIx } = await ensureAta(connection, admin, TREASURY_WALLET);
+  if (buyerAtaIx)    instructions.push(buyerAtaIx);
+  if (sellerAtaIx)   instructions.push(sellerAtaIx);
+  if (treasuryAtaIx) instructions.push(treasuryAtaIx);
+
+  // resolve_dispute(route_to_buyer: bool) — encode bool as single byte after discriminator
+  const data = Buffer.concat([
+    DISCRIMINATORS.resolve_dispute,
+    Buffer.from([routeToBuyer ? 1 : 0]),
+  ]);
+
+  // Accounts match ResolveDispute struct in lib.rs
+  instructions.push(new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys: [
+      { pubkey: admin,                 isSigner: true,  isWritable: true  }, // 0. admin
+      { pubkey: buyerPubkey,           isSigner: false, isWritable: true  }, // 1. buyer
+      { pubkey: sellerPubkey,          isSigner: false, isWritable: false }, // 2. seller
+      { pubkey: escrowState,           isSigner: false, isWritable: true  }, // 3. escrow_state
+      { pubkey: escrowTokenAccount,    isSigner: false, isWritable: true  }, // 4. escrow_token_account
+      { pubkey: buyerTokenAccount,     isSigner: false, isWritable: true  }, // 5. buyer_token_account
+      { pubkey: sellerTokenAccount,    isSigner: false, isWritable: true  }, // 6. seller_token_account
+      { pubkey: TREASURY_WALLET,       isSigner: false, isWritable: false }, // 7. treasury
+      { pubkey: treasuryTokenAccount,  isSigner: false, isWritable: true  }, // 8. treasury_token_account
+      { pubkey: TOKEN_PROGRAM_ID,      isSigner: false, isWritable: false }, // 9. token_program
+    ],
+    data,
+  }));
+
+  return sendAndConfirm(adminWallet, connection, instructions);
 }
 
 export async function adminRefund(
