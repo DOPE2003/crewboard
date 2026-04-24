@@ -48,10 +48,11 @@ export async function updateOrderStatus(orderId: string, status: string) {
   const isSeller = order.sellerId === userId;
   if (!isBuyer && !isSeller) throw new Error("Unauthorized");
 
+  // "completed" is intentionally absent — it must only happen via
+  // syncEscrowReleased, which requires a confirmed on-chain txHash.
   const allowed: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
     accepted:  { by: "seller", from: ["pending", "funded"] },
     delivered: { by: "seller", from: ["accepted"] },
-    completed: { by: "buyer",  from: ["delivered"] },
     cancelled: { by: "both",   from: ["pending"] },
     disputed:  { by: "both",   from: ["accepted", "funded", "delivered"] },
   };
@@ -166,13 +167,16 @@ export async function syncEscrowFunded(orderId: string, txHash: string, escrowAd
 export async function syncEscrowReleased(orderId: string, txHash: string) {
   const userId = await requireUserId();
 
+  if (!txHash?.trim()) throw new Error("txHash is required");
+
   const order = await db.order.findUnique({
     where: { id: orderId },
-    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+    select: { buyerId: true, sellerId: true, status: true, escrowAddress: true, gig: { select: { title: true } } },
   });
   if (!order) throw new Error("Order not found");
   if (order.buyerId !== userId) throw new Error("Only buyer can release");
   if (order.status !== "delivered") throw new Error("Order is not delivered");
+  if (!order.escrowAddress) throw new Error("No escrow address on record — funds were never locked on-chain");
 
   await db.order.update({
     where: { id: orderId },
