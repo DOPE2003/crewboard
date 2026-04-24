@@ -84,7 +84,7 @@ export default async function HomePage() {
           alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
-          padding: "clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 4.5rem)",
+          padding: "clamp(1.2rem, 3vw, 2rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 4vw, 3rem)",
           position: "relative",
           overflow: "visible",
         }}
@@ -144,7 +144,7 @@ export default async function HomePage() {
             fontWeight: 300,
             letterSpacing: "-0.01em",
             lineHeight: 0.93,
-            marginBottom: "1.5rem",
+            marginBottom: "1rem",
             color: "var(--foreground)",
             opacity: 0,
             animation: "fadeUp 0.6s 0.25s forwards",
@@ -162,10 +162,10 @@ export default async function HomePage() {
           style={{
             color: "var(--text-muted)",
             fontSize: "0.88rem",
-            lineHeight: 1.85,
+            lineHeight: 1.7,
             maxWidth: "24rem",
             letterSpacing: "0.01em",
-            marginBottom: "1.5rem",
+            marginBottom: "1rem",
             opacity: 0,
             animation: "fadeUp 0.6s 0.58s forwards",
             position: "relative",
@@ -191,8 +191,8 @@ export default async function HomePage() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            gap: 12,
-            marginBottom: 20,
+            gap: 10,
+            marginBottom: 14,
             opacity: 0,
             animation: "fadeUp 0.6s 0.72s forwards",
             position: "relative",
@@ -221,7 +221,7 @@ export default async function HomePage() {
         {/* Trust pills */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.82s forwards",
-          position: "relative", zIndex: 1, marginBottom: 28,
+          position: "relative", zIndex: 1, marginBottom: 16,
           display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center",
         }}>
           {([
@@ -241,91 +241,73 @@ export default async function HomePage() {
           ))}
         </div>
 
-        {/* ── Featured Opportunity — inside hero ── */}
+        {/* ── Spotlight card — inside hero ── */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
           position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 660,
-          marginTop: 4,
+          width: "100%", maxWidth: 640,
         }}>
-          {/* Label */}
-          <div style={{
-            fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.2em",
-            textTransform: "uppercase" as const, color: "var(--text-muted)",
-            marginBottom: "0.6rem", textAlign: "center",
-          }}>
-            ✨ Featured Opportunity
-          </div>
-
-          {/* Card */}
           <div className="eco-hero-card" style={{
-            display: "flex", borderRadius: 16,
-            border: "1px solid rgba(20,184,166,0.22)",
+            display: "flex", borderRadius: 14,
+            border: "1px solid rgba(20,184,166,0.2)",
             background: "var(--card-bg)",
-            boxShadow: "0 6px 28px rgba(0,0,0,0.13), 0 1px 0 rgba(20,184,166,0.06) inset",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
             overflow: "hidden",
           }}>
             {/* Image strip */}
-            <div style={{ width: 130, flexShrink: 0, position: "relative", overflow: "hidden", background: "#0B0B2E" }}>
+            <div style={{ width: 120, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large"
                 alt="Solana Summit Germany"
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               />
-              <div style={{
-                position: "absolute", bottom: 8, left: 8,
-                background: "#0d9488", color: "#fff",
-                fontSize: "8px", fontWeight: 800, letterSpacing: "0.8px",
-                textTransform: "uppercase" as const,
-                padding: "3px 7px", borderRadius: 5,
-              }}>
-                Spotlight
-              </div>
             </div>
 
             {/* Content */}
-            <div style={{ padding: "0.9rem 1.1rem", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: "0.6rem", textAlign: "left" }}>
-              {/* Publisher */}
-              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{ padding: "0.8rem 1rem", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: "0.55rem", textAlign: "left" }}>
+
+              {/* Publisher + Powered by Solana */}
+              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 18, height: 18, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)" }}>Superteam Germany</span>
-                <span style={{ width: 13, height: 13, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "7px", fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: "10px", color: "#14b8a6", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0 }}>View on X ↗</a>
+                <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 17, height: 17, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--foreground)" }}>Superteam Germany</span>
+                <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "7px", fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <span style={{ width: 1, height: 10, background: "var(--card-border)", flexShrink: 0 }} />
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "10px", fontWeight: 700 }}>
+                  <span style={{ width: 6, height: 6, borderRadius: 1.5, background: "linear-gradient(135deg,#9945FF,#14F195)", flexShrink: 0, display: "inline-block" }} />
+                  <span style={{ background: "linear-gradient(90deg,#9945FF,#14F195)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Solana</span>
+                </span>
+                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: "10px", color: "#14b8a6", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0 }}>X ↗</a>
               </div>
 
               {/* Title */}
-              <div style={{ fontSize: "13px", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+              <div style={{ fontSize: "12.5px", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
                 Content Creators Program — Solana Summit Germany
               </div>
 
-              {/* Bottom row */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, paddingTop: "0.5rem", borderTop: "1px solid var(--card-border)" }}>
+              {/* Benefit + CTA */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, paddingTop: "0.45rem", borderTop: "1px solid var(--card-border)" }}>
                 <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: "12px", fontWeight: 800, color: "#14b8a6", lineHeight: 1.2 }}>Exclusive on-site benefits</div>
-                  <div style={{ fontSize: "10px", color: "var(--text-muted)", marginTop: 2 }}>+ Chance to receive a $500 travel boost</div>
+                  <div style={{ fontSize: "11.5px", fontWeight: 800, color: "#14b8a6", lineHeight: 1.2 }}>Exclusive on-site benefits</div>
+                  <div style={{ fontSize: "9.5px", color: "var(--text-muted)", marginTop: 2 }}>+ Chance to receive a $500 travel boost · Limited spots</div>
                 </div>
                 <a
                   href="https://t.co/4EFTnBjaWn"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{
-                    display: "inline-flex", alignItems: "center", gap: 5,
-                    padding: "0.48rem 0.9rem", borderRadius: 8,
+                    display: "inline-flex", alignItems: "center", gap: 4,
+                    padding: "0.44rem 0.85rem", borderRadius: 7,
                     background: "var(--foreground)", color: "var(--dropdown-bg)",
-                    fontWeight: 700, fontSize: "0.76rem", textDecoration: "none",
+                    fontWeight: 700, fontSize: "0.72rem", textDecoration: "none",
                     whiteSpace: "nowrap", flexShrink: 0,
                   }}
                 >
-                  Apply now ↗
+                  Apply ↗
                 </a>
               </div>
             </div>
-          </div>
-
-          <div style={{ fontSize: "10px", color: "var(--text-muted)", textAlign: "center", marginTop: "0.4rem", opacity: 0.7 }}>
-            Limited spots available
           </div>
         </div>
       </div>
