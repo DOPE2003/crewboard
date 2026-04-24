@@ -79,13 +79,12 @@ export default async function HomePage() {
       <div
         className="landing-hero hero-compact-mobile"
         style={{
-          minHeight: "max(100vh, 700px)",
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
-          padding: "clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(8rem, 14vw, 12rem)",
+          padding: "clamp(2rem, 5vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 4.5rem)",
           position: "relative",
           overflow: "visible",
         }}
@@ -242,207 +241,104 @@ export default async function HomePage() {
           ))}
         </div>
 
-        {/* Scroll indicator — desktop only */}
-        <div className="hidden md:flex" style={{
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 0,
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.85s forwards",
-          position: "relative",
-          zIndex: 1,
+        {/* ── Featured Opportunity — inside hero ── */}
+        <div style={{
+          opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
+          position: "relative", zIndex: 1,
+          width: "100%", maxWidth: 660,
+          marginTop: 4,
         }}>
-          <span style={{
-            fontFamily: "Inter, sans-serif",
-            fontSize: "0.42rem",
-            letterSpacing: "0.25em",
-            color: "var(--text-muted)",
-            textTransform: "uppercase" as const,
-            marginBottom: "0.5rem",
-            opacity: 0.4,
-          }}>Scroll</span>
-          <div className="scroll-line" />
-        </div>
-      </div>
-
-      {/* ── ECOSYSTEM SPOTLIGHT ── */}
-      <div style={{ padding: "clamp(1.25rem,3vw,2rem) clamp(1rem,4vw,2rem)", background: "var(--background)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-
-          {/* Section overline */}
-          <div style={{ display: "flex", alignItems: "center", gap: "0.85rem", marginBottom: "1rem" }}>
-            <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.16em", textTransform: "uppercase" as const, color: "var(--text-muted)", whiteSpace: "nowrap" }}>
-              Curated opportunity
-            </div>
-            <div style={{ flex: 1, height: 1, background: "var(--card-border)" }} />
+          {/* Label */}
+          <div style={{
+            fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.2em",
+            textTransform: "uppercase" as const, color: "var(--text-muted)",
+            marginBottom: "0.6rem", textAlign: "center",
+          }}>
+            ✨ Featured Opportunity
           </div>
 
-          {/* Banner — image left (38%), content right */}
-          <div className="eco-banner" style={{
-            display: "grid", gridTemplateColumns: "minmax(0,38%) 1fr",
-            borderRadius: 18, border: "1px solid var(--card-border)",
-            background: "var(--card-bg)", overflow: "hidden",
-            boxShadow: "0 4px 24px rgba(0,0,0,0.07)",
+          {/* Card */}
+          <div className="eco-hero-card" style={{
+            display: "flex", borderRadius: 16,
+            border: "1px solid rgba(20,184,166,0.22)",
+            background: "var(--card-bg)",
+            boxShadow: "0 6px 28px rgba(0,0,0,0.13), 0 1px 0 rgba(20,184,166,0.06) inset",
+            overflow: "hidden",
           }}>
-
-            {/* Image panel */}
-            <div style={{ position: "relative", background: "#0B0B2E", overflow: "hidden", minHeight: 240 }}>
+            {/* Image strip */}
+            <div style={{ width: 130, flexShrink: 0, position: "relative", overflow: "hidden", background: "#0B0B2E" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large"
                 alt="Solana Summit Germany"
                 style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
               />
-              {/* Spotlight badge */}
               <div style={{
-                position: "absolute", top: 14, left: 14,
-                display: "inline-flex", alignItems: "center", gap: 5,
+                position: "absolute", bottom: 8, left: 8,
                 background: "#0d9488", color: "#fff",
-                fontSize: "9.5px", fontWeight: 800, letterSpacing: "0.9px", textTransform: "uppercase" as const,
-                padding: "5px 9px", borderRadius: 7,
-                boxShadow: "0 4px 14px rgba(0,0,0,0.4)",
+                fontSize: "8px", fontWeight: 800, letterSpacing: "0.8px",
+                textTransform: "uppercase" as const,
+                padding: "3px 7px", borderRadius: 5,
               }}>
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M12 2l1.5 5L19 8l-4.5 3.5L16 17l-4-3-4 3 1.5-5.5L5 8l5.5-1z"/>
-                </svg>
                 Spotlight
               </div>
             </div>
 
-            {/* Content panel */}
-            <div style={{ padding: "1.5rem 1.75rem", display: "flex", flexDirection: "column", justifyContent: "space-between", gap: "1.1rem" }}>
-
-              <div>
-                {/* Solana kicker */}
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 6, fontSize: "9.5px", fontWeight: 800, letterSpacing: "1.2px", textTransform: "uppercase" as const, color: "var(--text-muted)", marginBottom: "0.9rem" }}>
-                  <div style={{ width: 7, height: 7, borderRadius: 2, background: "linear-gradient(135deg,#9945FF,#14F195)", flexShrink: 0 }} />
-                  Powered by{" "}
-                  <span style={{ background: "linear-gradient(90deg,#9945FF,#14F195)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", fontWeight: 900 }}>
-                    SOLANA
-                  </span>
-                  · Curated by Superteam Germany
-                </div>
-
-                {/* Publisher row */}
-                <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1rem" }}>
-                  {/* Avatar — Superteam Germany logo */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/superteam-germany.png"
-                    alt="Superteam Germany"
-                    style={{ width: 36, height: 36, borderRadius: "50%", flexShrink: 0, objectFit: "cover", border: "1.5px solid var(--card-border)" }}
-                  />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "wrap" }}>
-                      <span style={{ fontSize: "13.5px", fontWeight: 700, color: "var(--foreground)" }}>Superteam Germany</span>
-                      <span style={{ width: 15, height: 15, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "8px", fontWeight: 800, flexShrink: 0 }}>✓</span>
-                      <a
-                        href="https://x.com/SuperteamDE"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ fontSize: "11px", fontWeight: 600, color: "#14b8a6", textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 3, marginLeft: 2 }}
-                      >
-                        View on X
-                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                          <path d="M7 17L17 7M9 7h8v8"/>
-                        </svg>
-                      </a>
-                    </div>
-                    <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 1 }}>@SuperteamDE · Solana DACH</div>
-                  </div>
-                </div>
-
-                {/* Title */}
-                <h3 style={{ fontFamily: "Inter, sans-serif", fontSize: "clamp(0.95rem,2vw,1.1rem)", fontWeight: 800, color: "var(--foreground)", margin: "0 0 0.4rem", lineHeight: 1.25, letterSpacing: "-0.02em" }}>
-                  Content Creators Program &amp; $500 Travel Boost — Solana Summit Germany
-                </h3>
-
-                {/* Description */}
-                <p style={{ fontSize: "12.5px", color: "var(--text-muted)", margin: "0 0 0.85rem", lineHeight: 1.6 }}>
-                  Selected creators will join Solana Summit Germany and receive exclusive on-site benefits. Some participants may also receive a $500 travel boost.
-                </p>
-
-                {/* Info row */}
-                <div style={{ display: "flex", alignItems: "center", gap: "1.1rem", flexWrap: "wrap", marginBottom: "0.8rem" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
-                    </svg>
-                    Germany
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                    IRL Event
-                  </div>
-                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "11.5px", fontWeight: 500, color: "var(--text-muted)" }}>
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
-                    </svg>
-                    Content
-                  </div>
-                </div>
-
-                {/* Tags — max 3 */}
-                <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
-                  {(["✨ Ecosystem", "Content", "IRL"] as const).map((tag, i) => (
-                    <span key={tag} style={{
-                      fontSize: "11px", fontWeight: 600, padding: "4px 10px", borderRadius: 99,
-                      background: i === 0 ? "rgba(20,184,166,0.08)" : "var(--background)",
-                      color: i === 0 ? "#0d9488" : "var(--text-muted)",
-                      border: i === 0 ? "1px solid rgba(20,184,166,0.2)" : "1px solid var(--card-border)",
-                    }}>
-                      {tag}
-                    </span>
-                  ))}
-                </div>
+            {/* Content */}
+            <div style={{ padding: "0.9rem 1.1rem", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: "0.6rem", textAlign: "left" }}>
+              {/* Publisher */}
+              <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 18, height: 18, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--text-muted)" }}>Superteam Germany</span>
+                <span style={{ width: 13, height: 13, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "7px", fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: "10px", color: "#14b8a6", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0 }}>View on X ↗</a>
               </div>
 
-              {/* Benefit + CTA */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem", flexWrap: "wrap", paddingTop: "1.1rem", borderTop: "1px solid var(--card-border)" }}>
-                <div>
-                  <div style={{ fontSize: "1.2rem", fontWeight: 900, letterSpacing: "-0.02em", lineHeight: 1.1, color: "#14b8a6" }}>
-                    Exclusive on-site benefits
-                  </div>
-                  <div style={{ fontSize: "11px", color: "var(--text-muted)", marginTop: 4, fontWeight: 400 }}>Chance to receive a $500 travel boost</div>
+              {/* Title */}
+              <div style={{ fontSize: "13px", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+                Content Creators Program — Solana Summit Germany
+              </div>
+
+              {/* Bottom row */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, paddingTop: "0.5rem", borderTop: "1px solid var(--card-border)" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: "12px", fontWeight: 800, color: "#14b8a6", lineHeight: 1.2 }}>Exclusive on-site benefits</div>
+                  <div style={{ fontSize: "10px", color: "var(--text-muted)", marginTop: 2 }}>+ Chance to receive a $500 travel boost</div>
                 </div>
-                <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 5, flexShrink: 0 }}>
-                  <a
-                    href="https://t.co/4EFTnBjaWn"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    style={{
-                      display: "inline-flex", alignItems: "center", gap: 7,
-                      padding: "0.65rem 1.3rem", borderRadius: 10,
-                      background: "var(--foreground)", color: "var(--dropdown-bg)",
-                      fontWeight: 700, fontSize: "0.82rem", textDecoration: "none",
-                      whiteSpace: "nowrap",
-                    }}
-                  >
-                    Apply now
-                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M7 17L17 7M9 7h8v8"/>
-                    </svg>
-                  </a>
-                  <span style={{ fontSize: "10px", color: "var(--text-muted)", fontWeight: 500 }}>Limited spots available</span>
-                </div>
+                <a
+                  href="https://t.co/4EFTnBjaWn"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{
+                    display: "inline-flex", alignItems: "center", gap: 5,
+                    padding: "0.48rem 0.9rem", borderRadius: 8,
+                    background: "var(--foreground)", color: "var(--dropdown-bg)",
+                    fontWeight: 700, fontSize: "0.76rem", textDecoration: "none",
+                    whiteSpace: "nowrap", flexShrink: 0,
+                  }}
+                >
+                  Apply now ↗
+                </a>
               </div>
             </div>
           </div>
 
+          <div style={{ fontSize: "10px", color: "var(--text-muted)", textAlign: "center", marginTop: "0.4rem", opacity: 0.7 }}>
+            Limited spots available
+          </div>
         </div>
-        <style>{`
-          @media (max-width: 680px) {
-            .eco-banner { grid-template-columns: 1fr !important; }
-            .eco-banner > div:first-child { aspect-ratio: 16/9; min-height: 0 !important; }
-          }
-        `}</style>
       </div>
+      <style>{`
+        @media (max-width: 560px) {
+          .eco-hero-card { flex-direction: column !important; }
+          .eco-hero-card > div:first-child { width: 100% !important; height: 110px; }
+        }
+      `}</style>
 
       {/* ── FEATURED FREELANCERS ── */}
       {featuredFreelancers.length > 0 && (
-        <div style={{ background: "var(--background)", padding: "clamp(1.5rem,4vw,2.5rem) 0", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
+        <div style={{ background: "var(--background)", padding: "clamp(2.5rem,5vw,3.5rem) 0 clamp(1.5rem,4vw,2.5rem)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 clamp(1rem,4vw,2rem)" }}>
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>

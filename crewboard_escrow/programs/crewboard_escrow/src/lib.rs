@@ -34,6 +34,8 @@ pub mod crewboard_escrow {
         gig_id: String,
         amount: u64,
     ) -> Result<()> {
+        require!(gig_id.len() <= 64, EscrowError::GigIdTooLong);
+
         let clock = Clock::get()?;
         let escrow = &mut ctx.accounts.escrow_state;
 
@@ -368,6 +370,7 @@ pub struct ReleaseFunds<'info> {
     /// Seller's ATA — receives 90 %
     #[account(
         mut,
+        token::mint = escrow_state.mint,
         token::authority = seller,
     )]
     pub seller_token_account: Account<'info, TokenAccount>,
@@ -379,6 +382,7 @@ pub struct ReleaseFunds<'info> {
     /// Treasury ATA — receives 10 %
     #[account(
         mut,
+        token::mint = escrow_state.mint,
         token::authority = treasury,
     )]
     pub treasury_token_account: Account<'info, TokenAccount>,
@@ -426,6 +430,7 @@ pub struct AdminForceRelease<'info> {
     /// Seller's ATA — receives 90 %
     #[account(
         mut,
+        token::mint = escrow_state.mint,
         token::authority = seller,
     )]
     pub seller_token_account: Account<'info, TokenAccount>,
@@ -437,6 +442,7 @@ pub struct AdminForceRelease<'info> {
     /// Treasury ATA — receives 10 %
     #[account(
         mut,
+        token::mint = escrow_state.mint,
         token::authority = treasury,
     )]
     pub treasury_token_account: Account<'info, TokenAccount>,
@@ -484,6 +490,7 @@ pub struct AdminRefund<'info> {
     /// Buyer's ATA — receives full refund
     #[account(
         mut,
+        token::mint = escrow_state.mint,
         token::authority = buyer,
     )]
     pub buyer_token_account: Account<'info, TokenAccount>,
@@ -530,4 +537,6 @@ pub enum EscrowError {
     Unauthorized,
     #[msg("Work has already been marked as delivered")]
     AlreadyDelivered,
+    #[msg("gig_id exceeds maximum length of 64 bytes")]
+    GigIdTooLong,
 }
