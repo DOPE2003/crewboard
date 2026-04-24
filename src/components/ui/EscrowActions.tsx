@@ -500,31 +500,29 @@ export default function EscrowActions({
             <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
               The freelancer has submitted their work. Review the deliverable, then release payment to complete the order.
             </p>
-            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-              <button
-                onClick={() => handleDbAction("completed")}
-                disabled={!!loading}
-                style={{ fontSize: "0.82rem", padding: "0.65rem 1.5rem", cursor: "pointer", borderRadius: 10, background: "#22c55e", color: "#fff", border: "none", fontWeight: 600, display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 10px rgba(34,197,94,0.28)" }}
-              >
-                {loading === "completed" && <Spinner />}
-                {loading === "completed" ? "Releasing…" : "Release Payment — Mark as Completed"}
-              </button>
-              <button
-                onClick={() => handleDbAction("disputed")}
-                disabled={!!loading}
-                style={{ fontSize: "0.78rem", padding: "0.6rem 1.25rem", cursor: "pointer", borderRadius: 10, background: "rgba(239,68,68,0.08)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)", fontWeight: 500 }}
-              >
-                {loading === "disputed" ? "Opening…" : "Raise a dispute"}
-              </button>
-            </div>
-            {connected && sellerWallet && (
-              <button
-                onClick={handleReleaseFunds}
-                disabled={!!loading}
-                style={{ marginTop: 10, fontSize: "0.7rem", background: "none", border: "none", color: "#14B8A6", cursor: "pointer", padding: 0, textDecoration: "underline" }}
-              >
-                {loading === "release" ? "Releasing on-chain…" : "Release via on-chain escrow instead ↗"}
-              </button>
+            {!connected ? (
+              <div style={{ marginBottom: "0.5rem" }}>
+                <p style={{ margin: "0 0 0.6rem", fontSize: "0.72rem", color: "var(--text-muted)" }}>Connect your Solana wallet to release payment.</p>
+                <WalletMultiButton style={{ fontSize: "0.78rem", height: 38, borderRadius: 10 }} />
+              </div>
+            ) : (
+              <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
+                <button
+                  onClick={handleReleaseFunds}
+                  disabled={!!loading}
+                  style={{ fontSize: "0.82rem", padding: "0.65rem 1.5rem", cursor: "pointer", borderRadius: 10, background: "#22c55e", color: "#fff", border: "none", fontWeight: 600, display: "flex", alignItems: "center", gap: 6, boxShadow: "0 2px 10px rgba(34,197,94,0.28)" }}
+                >
+                  {loading === "release" && <Spinner />}
+                  {loading === "release" ? "Releasing…" : "Release Payment — Mark as Completed"}
+                </button>
+                <button
+                  onClick={() => handleDbAction("disputed")}
+                  disabled={!!loading}
+                  style={{ fontSize: "0.78rem", padding: "0.6rem 1.25rem", cursor: "pointer", borderRadius: 10, background: "rgba(239,68,68,0.08)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.2)", fontWeight: 500 }}
+                >
+                  {loading === "disputed" ? "Opening…" : "Raise a dispute"}
+                </button>
+              </div>
             )}
           </div>
         )}
