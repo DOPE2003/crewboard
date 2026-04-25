@@ -15,7 +15,7 @@ pub const AFK_TIMEOUT_SECS: i64 = 14 * 24 * 60 * 60;
 /// Admin wallet — the ONLY signer allowed to call admin_force_release / admin_refund.
 /// Run `solana address` to get your local keypair pubkey, then paste it here.
 /// TODO: replace with your actual admin wallet before mainnet deploy.
-pub const ADMIN_PUBKEY: Pubkey = pubkey!("At2aPsAKct5PCiDCtZcartfDxU2SmbGDKYoJfpRV46vg");
+pub const ADMIN_PUBKEY: Pubkey = pubkey!("BiBgkrFA72AAhQVZmxVAU9MDnWpg2nKdbrwa9M5pNN2a");
 
 /// Platform treasury wallet — receives 10 % on every release.
 /// Matches TREASURY_WALLET in lib/escrow.ts.
