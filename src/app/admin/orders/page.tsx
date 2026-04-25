@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/auth-utils";
+import { requireStaff } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 import { OrderActions } from "./OrderActions";
@@ -8,7 +8,7 @@ export default async function AdminOrdersPage({
 }: {
   searchParams: Promise<{ status?: string }>;
 }) {
-  await requireAdmin();
+  const role = await requireStaff();
   const { status = "all" } = await searchParams;
 
   const orders = await db.order.findMany({
@@ -101,7 +101,9 @@ export default async function AdminOrdersPage({
                         {new Date(order.createdAt).toLocaleDateString()}
                       </td>
                       <td style={{ padding: "1rem 1.25rem" }}>
-                        <OrderActions orderId={order.id} status={order.status} />
+                        {role === "support"
+                          ? <span style={{ fontSize: "0.65rem", fontWeight: 700, padding: "3px 10px", borderRadius: 99, background: (statusColors[order.status] ?? { bg: "rgba(0,0,0,0.04)" }).bg, color: (statusColors[order.status] ?? { color: "var(--text-muted)" }).color }}>{order.status.toUpperCase()}</span>
+                          : <OrderActions orderId={order.id} status={order.status} />}
                       </td>
                     </tr>
                   );

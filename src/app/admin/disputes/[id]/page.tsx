@@ -1,11 +1,11 @@
-import { requireStaff } from "@/lib/auth-utils";
+import { requireStaff, StaffRole } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import DisputeResolveActions from "@/components/admin/DisputeResolveActions";
 
 export default async function AdminDisputeDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  await requireStaff();
+  const role = await requireStaff();
   const { id } = await params;
 
   const order = await db.order.findUnique({
@@ -147,12 +147,16 @@ export default async function AdminDisputeDetailPage({ params }: { params: Promi
           </div>
         )}
 
-        {/* Resolve actions */}
+        {/* Resolve actions — admin/owner only */}
         <div style={CARD}>
           <div style={{ fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "#ef4444", marginBottom: "1rem", fontWeight: 700 }}>
             Admin Resolution
           </div>
-          {!canResolve ? (
+          {role === "support" ? (
+            <div style={{ padding: "1rem", borderRadius: 10, background: "rgba(148,163,184,0.06)", border: "1px solid rgba(148,163,184,0.2)", fontSize: "0.8rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
+              Dispute resolution requires Admin access. You can review the thread above and escalate to an admin.
+            </div>
+          ) : !canResolve ? (
             <div style={{ padding: "1rem", borderRadius: 10, background: "rgba(245,158,11,0.08)", border: "1px solid rgba(245,158,11,0.2)", fontSize: "0.8rem", color: "#f59e0b", lineHeight: 1.6 }}>
               Cannot resolve on-chain:{" "}
               {!order.escrowAddress && "no escrow address on record. "}
