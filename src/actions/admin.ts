@@ -82,23 +82,30 @@ export async function syncDisputeResolved(
     data: { status: "cancelled", txHash },
   });
 
-  const winnerId  = routeToBuyer ? order.buyerId  : order.sellerId;
-  const loserId   = routeToBuyer ? order.sellerId : order.buyerId;
-  const winLabel  = routeToBuyer ? "refunded to buyer" : "released to seller";
+  const winnerId = routeToBuyer ? order.buyerId  : order.sellerId;
+  const loserId  = routeToBuyer ? order.sellerId : order.buyerId;
+
+  const winnerBody = routeToBuyer
+    ? `Your dispute for "${order.gig.title}" has been reviewed and resolved in your favor. Your funds have been returned to your wallet.`
+    : `Your dispute for "${order.gig.title}" has been reviewed and resolved in your favor. Payment has been released to your wallet.`;
+
+  const loserBody = routeToBuyer
+    ? `Your dispute for "${order.gig.title}" has been reviewed and closed. The funds were returned to the buyer.`
+    : `Your dispute for "${order.gig.title}" has been reviewed and closed. The payment was released to the seller.`;
 
   await Promise.all([
     notifyUser({
       userId: winnerId,
       type: "order",
-      title: "Dispute Resolved — You Won",
-      body: `Admin resolved the dispute for "${order.gig.title}". Funds have been ${winLabel}.`,
+      title: "Dispute Resolved in Your Favor",
+      body: winnerBody,
       link: `/orders/${orderId}`,
     }),
     notifyUser({
       userId: loserId,
       type: "order",
       title: "Dispute Resolved",
-      body: `Admin resolved the dispute for "${order.gig.title}". Funds were ${winLabel}.`,
+      body: loserBody,
       link: `/orders/${orderId}`,
     }),
   ]);
