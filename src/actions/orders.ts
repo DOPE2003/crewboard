@@ -51,7 +51,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
   // "completed" is intentionally absent — it must only happen via
   // syncEscrowReleased, which requires a confirmed on-chain txHash.
   const allowed: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
-    accepted:  { by: "seller", from: ["pending", "funded"] },
+    accepted:  { by: "seller", from: ["funded"] },
     delivered: { by: "seller", from: ["accepted"] },
     cancelled: { by: "both",   from: ["pending"] },
     disputed:  { by: "both",   from: ["accepted", "funded", "delivered"] },

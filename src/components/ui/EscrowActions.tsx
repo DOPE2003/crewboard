@@ -316,18 +316,18 @@ export default function EscrowActions({
               </div>
             )}
 
-            {/* Secondary: Cancel — small, subtle, at bottom */}
-            <div style={{ marginTop: "0.9rem", textAlign: "center" }}>
+            {/* Cancel before funding */}
+            <div style={{ marginTop: "0.75rem", paddingTop: "0.75rem", borderTop: "1px solid rgba(20,184,166,0.12)", display: "flex", justifyContent: "flex-end" }}>
               <button
                 onClick={() => handleDbAction("cancelled")}
                 disabled={!!loading}
                 style={{
-                  background: "none", border: "none", padding: "4px 8px",
-                  fontSize: "0.7rem", color: "var(--text-muted)",
-                  cursor: loading ? "wait" : "pointer", textDecoration: "underline",
+                  padding: "0.5rem 1.1rem", borderRadius: 8, fontSize: "0.75rem", fontWeight: 600,
+                  background: "rgba(239,68,68,0.07)", border: "1px solid rgba(239,68,68,0.2)",
+                  color: "#ef4444", cursor: loading ? "wait" : "pointer",
                 }}
               >
-                {loading === "cancelled" ? "Cancelling…" : "Cancel order"}
+                {loading === "cancelled" ? "Cancelling…" : "Cancel Order"}
               </button>
             </div>
           </div>
@@ -336,26 +336,15 @@ export default function EscrowActions({
         {orderStatus === "pending" && isSeller && (
           <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.2)" }}>
             <p style={{ margin: "0 0 0.75rem", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.6 }}>
-              New order received. Accept to confirm you&apos;ll take the work — the buyer will be notified immediately.
+              New order received. Waiting for the buyer to lock funds in escrow — once funded you can accept and start working.
             </p>
-            <div style={{ display: "flex", gap: "0.6rem", flexWrap: "wrap" }}>
-              <button
-                onClick={() => handleDbAction("accepted")}
-                disabled={!!loading}
-                className="btn-primary"
-                style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", display: "flex", alignItems: "center" }}
-              >
-                {loading === "accepted" && <Spinner />}
-                {loading === "accepted" ? "Accepting…" : "Accept Order"}
-              </button>
-              <button
-                onClick={() => handleDbAction("cancelled")}
-                disabled={!!loading}
-                style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "transparent", color: "var(--text-muted)", border: "1px solid var(--card-border)", fontWeight: 500 }}
-              >
-                {loading === "cancelled" ? "Declining…" : "Decline"}
-              </button>
-            </div>
+            <button
+              onClick={() => handleDbAction("cancelled")}
+              disabled={!!loading}
+              style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "transparent", color: "var(--text-muted)", border: "1px solid var(--card-border)", fontWeight: 500 }}
+            >
+              {loading === "cancelled" ? "Declining…" : "Decline Order"}
+            </button>
           </div>
         )}
 

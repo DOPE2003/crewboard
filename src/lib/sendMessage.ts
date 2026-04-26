@@ -90,7 +90,7 @@ export async function createMessage({
 
     const [sender, recipient] = await Promise.all([
       db.user.findUnique({ where: { id: senderId }, select: { name: true, twitterHandle: true, image: true } }),
-      db.user.findUnique({ where: { id: recipientId }, select: { email: true } }),
+      db.user.findUnique({ where: { id: recipientId }, select: { email: true, lastSeenAt: true, notificationPreferences: { select: { chatAlerts: true } } } }),
     ]);
 
     const senderName  = sender?.name ?? sender?.twitterHandle ?? "Someone";
@@ -129,12 +129,19 @@ export async function createMessage({
       },
     }).catch(() => {});
 
-    // Email
+    // Email — presence-gated: skip if user was active in the last 10 minutes
     const recipientEmail = recipient?.email ?? null;
+    const chatAlertsEnabled = recipient?.notificationPreferences?.chatAlerts !== false;
+    const lastSeen = recipient?.lastSeenAt ? new Date(recipient.lastSeenAt).getTime() : 0;
+    const isOnline = Date.now() - lastSeen < 10 * 60 * 1000;
+
     if (!recipientEmail) {
-      console.warn(`[createMessage] NO EMAIL FOR USER ${recipientId} — skipping email notification`);
+      console.warn(`[createMessage] NO EMAIL FOR USER ${recipientId} — skipping email`);
+    } else if (!chatAlertsEnabled) {
+      console.log(`[createMessage] chatAlerts disabled for ${recipientId} — skipping email`);
+    } else if (isOnline) {
+      console.log(`[createMessage] Recipient online — skipping email (in-app covers it)`);
     } else {
-      console.log(`[createMessage] Sending email notification to ${recipientEmail}`);
       sendMessageNotification({
         to: recipientEmail,
         senderName,
