@@ -49,6 +49,7 @@ export async function PATCH(
       include: {
         sender:   { select: { id: true, name: true, twitterHandle: true } },
         receiver: { select: { id: true, name: true, twitterHandle: true } },
+        order:    { select: { id: true, escrowAddress: true } },
       },
     });
 
@@ -61,6 +62,57 @@ export async function PATCH(
       return err("Only the offer receiver can accept or decline.", 403);
     }
 
+    // Terminal states — no further transitions
+    if (offer.status === "declined" || offer.status === "cancelled" || offer.status === "completed") {
+      return err(`Offer is already ${offer.status}.`, 409);
+    }
+
+    // accepted → cancelled only when escrow has never been funded
+    if (status === "cancelled" && offer.status === "accepted") {
+      if (offer.order?.escrowAddress) {
+        return err(
+          "Cannot cancel after escrow has been funded — open a dispute instead.",
+          409
+        );
+      }
+      // Cancel both the offer and its linked order in one transaction
+      await db.$transaction([
+        db.offer.update({ where: { id }, data: { status: "cancelled" } }),
+        ...(offer.orderId
+          ? [db.order.update({ where: { id: offer.orderId }, data: { status: "cancelled" } })]
+          : []),
+      ]);
+
+      const senderName = offer.sender.name ?? offer.sender.twitterHandle ?? "Someone";
+
+      notifyUser({
+        userId: offer.receiverId,
+        type: "offer",
+        title: "Offer Cancelled",
+        body: `${senderName} cancelled "${offer.title}" — no escrow was funded, so no money moved.`,
+        link: `/messages/${offer.conversationId}`,
+        actionUrl: `crewboard://offer/${offer.id}`,
+      }).catch(() => {});
+
+      sendPush({
+        userId: offer.receiverId,
+        title: "Offer cancelled by client",
+        body: offer.title,
+        data: { type: "offer_cancelled", refId: offer.id, actionUrl: `crewboard://offer/${offer.id}` },
+      }).catch(() => {});
+
+      const updatedOffer = await db.offer.findUnique({
+        where: { id },
+        include: {
+          sender:   { select: { id: true, name: true, twitterHandle: true, image: true } },
+          receiver: { select: { id: true, name: true, twitterHandle: true, image: true } },
+          order:    { select: { id: true, status: true, escrowAddress: true } },
+        },
+      });
+      return ok(updatedOffer);
+    }
+
+    // Standard pending → accepted / declined / cancelled
     if (offer.status !== "pending") {
       return err(`Offer is already ${offer.status}.`, 409);
     }
