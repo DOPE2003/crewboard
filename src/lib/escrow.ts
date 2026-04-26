@@ -406,13 +406,9 @@ export async function releaseFunds(
   orderId: string,
   sellerPubkey: PublicKey,
 ): Promise<string> {
-  const program = getProgram(wallet, connection);
   const buyer  = wallet.publicKey;
   const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
-
-  // Read escrow_token_account address stored on-chain (set during fundEscrow)
-  const state = await (program.account as any).escrowState.fetch(escrowState);
-  const escrowTokenAccount = new PublicKey(state.escrowTokenAccount);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
 
   const instructions: TransactionInstruction[] = [];
 
@@ -457,12 +453,9 @@ export async function adminForceRelease(
   buyerPubkey: PublicKey,
   sellerPubkey: PublicKey,
 ): Promise<string> {
-  const program = getProgram(adminWallet, connection);
   const admin = adminWallet.publicKey;
   const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
-
-  const state = await (program.account as any).escrowState.fetch(escrowState);
-  const escrowTokenAccount = new PublicKey(state.escrowTokenAccount);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
 
   const instructions: TransactionInstruction[] = [];
 
@@ -514,12 +507,9 @@ export async function resolveDispute(
   sellerPubkey: PublicKey,
   routeToBuyer: boolean,
 ): Promise<string> {
-  const program = getProgram(adminWallet, connection);
   const admin = adminWallet.publicKey;
   const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
-
-  const state = await (program.account as any).escrowState.fetch(escrowState);
-  const escrowTokenAccount = new PublicKey(state.escrowTokenAccount);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
 
   const instructions: TransactionInstruction[] = [];
 
@@ -564,12 +554,9 @@ export async function adminRefund(
   buyerPubkey: PublicKey,
   sellerPubkey: PublicKey,
 ): Promise<string> {
-  const program = getProgram(adminWallet, connection);
   const admin = adminWallet.publicKey;
   const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
-
-  const state = await (program.account as any).escrowState.fetch(escrowState);
-  const escrowTokenAccount = new PublicKey(state.escrowTokenAccount);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
 
   const instructions: TransactionInstruction[] = [];
 

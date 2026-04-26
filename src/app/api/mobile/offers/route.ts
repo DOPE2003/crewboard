@@ -178,7 +178,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       userId: receiverId,
       title: `New offer from ${senderName}`,
       body: `${offer.title} · $${offer.amount}`,
-      data: { type: "offer", refId: offer.id },
+      data: { type: "offer", refId: offer.id, actionUrl: `crewboard://offer/${offer.id}` },
     }).catch(() => {});
 
     // Pusher

@@ -21,6 +21,9 @@ pub const ADMIN_PUBKEY: Pubkey = pubkey!("BiBgkrFA72AAhQVZmxVAU9MDnWpg2nKdbrwa9M
 /// Matches TREASURY_WALLET in lib/escrow.ts.
 pub const TREASURY_PUBKEY: Pubkey = pubkey!("Fn95Cx5iUhwVTUB6ZL3B8CmBYpbFYB2MSepa1xdeT68q");
 
+/// Mainnet USDC mint (Circle). Enforced on-chain — prevents funding with any other token.
+pub const USDC_MINT: Pubkey = pubkey!("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+
 // ─── Program ─────────────────────────────────────────────────────────────────
 
 #[program]
@@ -357,10 +360,16 @@ pub struct InitializeEscrow<'info> {
     /// CHECK: seller is a recipient — not a signer at init time
     pub seller: AccountInfo<'info>,
 
+    /// Must be the USDC mint — prevents funding with arbitrary tokens
+    #[account(address = USDC_MINT @ EscrowError::InvalidMint)]
     pub mint: Account<'info, Mint>,
 
-    /// Buyer's token account — debited at init
-    #[account(mut)]
+    /// Buyer's USDC ATA — source of funds
+    #[account(
+        mut,
+        token::mint = mint,
+        token::authority = buyer,
+    )]
     pub buyer_token_account: Account<'info, TokenAccount>,
 
     /// PDA storing escrow metadata. Seeds: ["escrow", buyer, seller, gig_id]
@@ -681,4 +690,6 @@ pub enum EscrowError {
     AlreadyDelivered,
     #[msg("gig_id exceeds maximum length of 64 bytes")]
     GigIdTooLong,
+    #[msg("Token mint must be USDC")]
+    InvalidMint,
 }

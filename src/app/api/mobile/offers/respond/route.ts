@@ -61,7 +61,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
         userId: offer.senderId,
         title: `${receiverName} declined your offer`,
         body: offer.title,
-        data: { type: "offer_declined", refId: offerId },
+        data: { type: "offer_declined", refId: offerId, actionUrl: `crewboard://offer/${offerId}` },
       }).catch(() => {});
 
       return ok({ status: "declined" as const });
@@ -110,7 +110,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       userId: offer.senderId,
       title: `${receiverName} accepted your offer`,
       body: offer.title,
-      data: { type: "offer_accepted", refId: offerId },
+      data: { type: "offer_accepted", refId: offerId, actionUrl: `crewboard://order/${order.id}` },
     }).catch(() => {});
 
     return ok({

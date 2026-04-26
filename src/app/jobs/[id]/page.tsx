@@ -41,8 +41,15 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
   };
 }
 
-export default async function JobDetailPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function JobDetailPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ applied?: string }>;
+}) {
   const { id } = await params;
+  const { applied } = await searchParams;
 
   const [job, session] = await Promise.all([
     db.job.findUnique({
@@ -79,6 +86,12 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         <Link href="/jobs" style={{ display: "inline-flex", alignItems: "center", gap: 6, color: "var(--text-muted)", fontSize: 14, textDecoration: "none", marginBottom: 24 }}>
           ← Back to Job Board
         </Link>
+
+        {applied === "1" && (
+          <div style={{ marginBottom: 20, padding: "0.85rem 1.1rem", borderRadius: 10, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.25)", fontSize: 14, color: "#22c55e", fontWeight: 600 }}>
+            Application submitted! The poster will review it and reach out if there&apos;s a match.
+          </div>
+        )}
 
         {/* Header card */}
         <div style={{ background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: "28px 28px 24px", marginBottom: 16 }}>
