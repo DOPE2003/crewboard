@@ -12,6 +12,7 @@ import BottomTabBarServer from "@/components/mobile/BottomTabBarServer";
 import { SolanaProvider } from "@/components/ui/SolanaProvider";
 import WalletAutoSave from "@/components/ui/WalletAutoSave";
 import { Analytics } from "@vercel/analytics/next";
+import { ModeProvider } from "@/components/ModeProvider";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -44,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className={`${inter.variable} antialiased`}>
       <body>
         <AuthProvider>
+          <ModeProvider>
           <LanguageProvider>
             <SolanaProvider>
               <ThemeProvider />
@@ -60,6 +62,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               </div>
             </SolanaProvider>
           </LanguageProvider>
+          </ModeProvider>
         </AuthProvider>
         <Analytics />
       </body>

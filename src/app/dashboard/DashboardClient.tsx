@@ -49,16 +49,28 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
   });
 
   const showProfileCard = mode === "working" && !profileScore.meetsThreshold;
-  const showAccelerator = mode === "working" && completedOrders.length === 0;
+  const showFreelancerAccelerator = mode === "working" && completedOrders.length === 0;
+  const showClientAccelerator = mode === "hiring" && buyerOrders.filter((o) => o.status === "completed").length === 0 && postedJobs.length === 0;
 
-  const acceleratorSteps = [
+  // Freelancer onboarding steps
+  const freelancerSteps = [
     { label: "Complete your profile",  sub: "Reach 70% to appear in talent search", cta: "Complete",     href: `/u/${dbUser.twitterHandle}`, done: profileScore.meetsThreshold },
     { label: "Add your first service", sub: "Let clients know what you offer",       cta: "Add service", href: "/gigs/new",                  done: (dbUser.gigs?.length ?? 0) > 0 },
     { label: "Send your first message",sub: "Reach out or reply to a job posting",   cta: "Open chat",   href: "/messages",                  done: totalConvoCount > 0 },
     { label: "Apply to 3 jobs",        sub: "Message clients on the job board",       cta: "Browse jobs", href: "/jobs",                      done: totalConvoCount >= 3 },
   ];
-  const accelDone     = acceleratorSteps.filter((s) => s.done).length;
-  const accelComplete = accelDone === acceleratorSteps.length;
+
+  // Client onboarding steps
+  const clientSteps = [
+    { label: "Post a job",    sub: "Describe what you need — freelancers will apply", cta: "Post Job",      href: "/jobs/new",  done: postedJobs.length > 0 },
+    { label: "Get offers",    sub: "Review applicants and reach out to talent",       cta: "Browse talent", href: "/talent",    done: sentOffers.length > 0 },
+    { label: "Fund escrow",   sub: "Lock payment on-chain to start work",             cta: "View orders",   href: "/orders",    done: buyerOrders.filter((o) => o.status !== "pending").length > 0 },
+  ];
+
+  const accelSteps = mode === "working" ? freelancerSteps : clientSteps;
+  const accelDone     = accelSteps.filter((s) => s.done).length;
+  const accelComplete = accelDone === accelSteps.length;
+  const showAccelerator = mode === "working" ? showFreelancerAccelerator : showClientAccelerator;
 
   const hiringStats = [
     { label: "Posted Jobs",    value: postedJobs.length,   href: "/jobs/mine"  },
@@ -88,24 +100,30 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
 
         {/* ── HEADER ── */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
-          <h1 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em" }}>
-            Dashboard
-          </h1>
+          <div>
+            <h1 style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em" }}>
+              {mode === "hiring" ? "Client Dashboard" : "Freelancer Dashboard"}
+            </h1>
+            <p style={{ fontSize: "0.72rem", color: "var(--text-muted)", margin: "3px 0 0" }}>
+              {mode === "hiring" ? "Manage your hires, jobs, and payments." : "Track your work, gigs, and earnings."}
+            </p>
+          </div>
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-            <div className="cb-mode-wrap">
-              <ModeToggle mode={mode} onChange={setMode} />
+            {/* Mobile-only toggle (desktop toggle is in the navbar) */}
+            <div className="cb-mode-wrap md:hidden">
+              <ModeToggle />
             </div>
             <Link href={`/u/${dbUser.twitterHandle}`} style={{ fontSize: "0.75rem", fontWeight: 600, padding: "6px 14px", borderRadius: 99, border: "1px solid var(--card-border)", color: "var(--foreground)", textDecoration: "none" }}>
               <T k="dash.viewProfile" />
             </Link>
             {mode === "working" && (
               <Link href="/gigs/new" onClick={() => setMode("working")} style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 99, background: "var(--foreground)", color: "var(--dropdown-bg)", textDecoration: "none" }}>
-                <T k="dash.postGig" />
+                + Create Gig
               </Link>
             )}
             {mode === "hiring" && (
               <Link href="/jobs/new" onClick={() => setMode("hiring")} style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 99, background: "var(--foreground)", color: "var(--dropdown-bg)", textDecoration: "none" }}>
-                Post a job
+                + Post a Job
               </Link>
             )}
           </div>
@@ -150,7 +168,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
           ) : null;
         })()}
 
-        {/* ── PROFILE COMPLETION (working only) ── */}
+        {/* ── PROFILE COMPLETION (freelancer only) ── */}
         {showProfileCard && (
           <div style={{ marginBottom: "1.5rem", borderRadius: 16, overflow: "hidden", border: "1px solid rgba(245,158,11,0.35)", background: "var(--card-bg)" }}>
             <div style={{ height: 4, background: `linear-gradient(90deg,#f59e0b ${profileScore.score}%,var(--card-border) ${profileScore.score}%)` }} />
@@ -168,7 +186,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
           </div>
         )}
 
-        {/* ── HIRING: quick-action CTAs ── */}
+        {/* ── CLIENT: quick-action CTAs ── */}
         {mode === "hiring" && (
           <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
             {[
@@ -196,23 +214,29 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
           ))}
         </div>
 
-        {/* ── FIRST JOB ACCELERATOR (working only) ── */}
+        {/* ── ONBOARDING ACCELERATOR (both modes) ── */}
         {showAccelerator && (
           <div style={{ marginBottom: "1.5rem", borderRadius: 14, border: accelComplete ? "1px solid rgba(34,197,94,0.35)" : "1px solid var(--card-border)", background: "var(--card-bg)", overflow: "hidden" }}>
             <div style={{ padding: "1rem 1.25rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "space-between", gap: "1rem" }}>
               <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: accelComplete ? "#22c55e" : "#14b8a6", marginBottom: 3 }}>First Job Accelerator</div>
-                <div style={{ fontSize: "1rem", fontWeight: 800, color: accelComplete ? "#22c55e" : "var(--foreground)" }}>{accelComplete ? "You're ready to get hired" : "Land your first job faster"}</div>
+                <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: accelComplete ? "#22c55e" : "#14b8a6", marginBottom: 3 }}>
+                  {mode === "hiring" ? "Client Quickstart" : "First Job Accelerator"}
+                </div>
+                <div style={{ fontSize: "1rem", fontWeight: 800, color: accelComplete ? "#22c55e" : "var(--foreground)" }}>
+                  {accelComplete
+                    ? (mode === "hiring" ? "You're ready to hire" : "You're ready to get hired")
+                    : (mode === "hiring" ? "Start hiring in 3 steps" : "Land your first job faster")}
+                </div>
               </div>
               <div style={{ display: "flex", gap: 4, flexShrink: 0 }}>
-                {acceleratorSteps.map((s, i) => (
+                {accelSteps.map((s, i) => (
                   <div key={i} style={{ width: 28, height: 4, borderRadius: 99, background: s.done ? (accelComplete ? "#22c55e" : "#14b8a6") : "var(--card-border)", transition: "background 0.3s" }} />
                 ))}
               </div>
             </div>
             <div style={{ padding: "0.35rem 0" }}>
-              {acceleratorSteps.map((step, i) => (
-                <Link key={i} href={step.done ? "#" : step.href} style={{ display: "flex", alignItems: "center", gap: "0.9rem", padding: "0.7rem 1.25rem", textDecoration: "none", borderBottom: i < 3 ? "1px solid var(--card-border)" : "none", opacity: step.done ? 0.6 : 1, pointerEvents: step.done ? "none" : "auto" }}>
+              {accelSteps.map((step, i) => (
+                <Link key={i} href={step.done ? "#" : step.href} style={{ display: "flex", alignItems: "center", gap: "0.9rem", padding: "0.7rem 1.25rem", textDecoration: "none", borderBottom: i < accelSteps.length - 1 ? "1px solid var(--card-border)" : "none", opacity: step.done ? 0.6 : 1, pointerEvents: step.done ? "none" : "auto" }}>
                   <div style={{ width: 22, height: 22, borderRadius: "50%", flexShrink: 0, background: step.done ? (accelComplete ? "#22c55e" : "#14b8a6") : "transparent", border: step.done ? "none" : "1.5px solid var(--card-border)", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {step.done && <svg width="11" height="11" viewBox="0 0 12 12" fill="none"><path d="M2 6l3 3 5-5" stroke="#fff" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/></svg>}
                   </div>
@@ -260,11 +284,11 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
           )}
         </div>
 
-        {/* ── HIRING: jobs + offers ── */}
+        {/* ── CLIENT: jobs + offers ── */}
         {mode === "hiring" && postedJobs.length > 0 && <PostedJobsSection jobs={postedJobs} />}
         {mode === "hiring" && sentOffers.length > 0 && <SentOffersSection offers={sentOffers as any} />}
 
-        {/* ── WORKING: earnings ── */}
+        {/* ── FREELANCER: earnings ── */}
         {mode === "working" && (
           <div style={{ borderRadius: 14, padding: "1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.85rem" }}>
@@ -292,7 +316,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
           </div>
         )}
 
-        {/* ── HIRING: earnings as buyer ── */}
+        {/* ── CLIENT: wallet / escrow summary ── */}
         {mode === "hiring" && escrowAmount > 0 && (
           <div style={{ borderRadius: 14, padding: "1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)", marginTop: "1.25rem" }}>
             <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--text-muted)", marginBottom: "0.85rem" }}>Funds in Escrow</div>
