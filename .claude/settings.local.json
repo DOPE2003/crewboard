@@ -23,7 +23,8 @@
       "Bash(git push *)",
       "Bash(ssh-keygen -t ed25519 -C \"saadaithammou05062003@gmail.com\" -f ~/.ssh/id_ed25519 -N \"\")",
       "Bash(git config *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "Bash(~/.local/node/bin/npx tsc *)"
     ]
   }
 }

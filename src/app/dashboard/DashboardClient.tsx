@@ -1,14 +1,12 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import ModeToggle from "@/components/dashboard/ModeToggle";
+import { useDashboardMode } from "@/hooks/useDashboardMode";
 import PostedJobsSection from "@/components/dashboard/PostedJobsSection";
 import SentOffersSection from "@/components/dashboard/SentOffersSection";
 import T from "@/components/ui/T";
 import { computeProfileScore } from "@/lib/profileScore";
-
-type Mode = "hiring" | "working";
 
 function msgPreview(body: string, maxLen = 40): string {
   if (body.startsWith("__GIGREQUEST__:")) {
@@ -26,17 +24,7 @@ function msgPreview(body: string, maxLen = 40): string {
 }
 
 export default function DashboardClient({ data }: { data: DashboardData }) {
-  const [mode, setMode] = useState<Mode>("working");
-
-  useEffect(() => {
-    const saved = localStorage.getItem("cb_mode") as Mode | null;
-    if (saved === "hiring" || saved === "working") setMode(saved);
-  }, []);
-
-  function handleMode(m: Mode) {
-    setMode(m);
-    localStorage.setItem("cb_mode", m);
-  }
+  const [mode, setMode] = useDashboardMode((data.dbUser.gigs?.length ?? 0) > 0);
 
   const {
     dbUser, recentConvos, activeOrders, completedOrders,
@@ -91,6 +79,11 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         <style>{`
           .active-order-row:hover { background: rgba(20,184,166,0.04) !important; }
           @keyframes tealPulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.45;transform:scale(1.5)} }
+          @media (max-width: 640px) {
+            .cb-mode-wrap { width: 100%; order: -1; }
+            .cb-mode-wrap > div { display: flex !important; width: 100%; }
+            .cb-mode-wrap > div > button { flex: 1; justify-content: center; }
+          }
         `}</style>
 
         {/* ── HEADER ── */}
@@ -99,17 +92,19 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
             Dashboard
           </h1>
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-            <ModeToggle mode={mode} onChange={handleMode} />
+            <div className="cb-mode-wrap">
+              <ModeToggle mode={mode} onChange={setMode} />
+            </div>
             <Link href={`/u/${dbUser.twitterHandle}`} style={{ fontSize: "0.75rem", fontWeight: 600, padding: "6px 14px", borderRadius: 99, border: "1px solid var(--card-border)", color: "var(--foreground)", textDecoration: "none" }}>
               <T k="dash.viewProfile" />
             </Link>
             {mode === "working" && (
-              <Link href="/gigs/new" style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 99, background: "var(--foreground)", color: "var(--dropdown-bg)", textDecoration: "none" }}>
+              <Link href="/gigs/new" onClick={() => setMode("working")} style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 99, background: "var(--foreground)", color: "var(--dropdown-bg)", textDecoration: "none" }}>
                 <T k="dash.postGig" />
               </Link>
             )}
             {mode === "hiring" && (
-              <Link href="/jobs/new" style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 99, background: "var(--foreground)", color: "var(--dropdown-bg)", textDecoration: "none" }}>
+              <Link href="/jobs/new" onClick={() => setMode("hiring")} style={{ fontSize: "0.75rem", fontWeight: 700, padding: "6px 14px", borderRadius: 99, background: "var(--foreground)", color: "var(--dropdown-bg)", textDecoration: "none" }}>
                 Post a job
               </Link>
             )}
@@ -177,12 +172,12 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         {mode === "hiring" && (
           <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", flexWrap: "wrap" }}>
             {[
-              { label: "Find Talent",  href: "/talent", icon: "👥" },
-              { label: "Post a Job",   href: "/jobs/new", icon: "📋" },
-              { label: "My Jobs",      href: "/jobs/mine", icon: "🗂️" },
-              { label: "All Orders",   href: "/orders", icon: "📦" },
+              { label: "Find Talent",  href: "/talent",    icon: "👥", mode: null       },
+              { label: "Post a Job",   href: "/jobs/new",  icon: "📋", mode: "hiring"   },
+              { label: "My Jobs",      href: "/jobs/mine", icon: "🗂️", mode: null       },
+              { label: "All Orders",   href: "/orders",    icon: "📦", mode: null       },
             ].map((a) => (
-              <Link key={a.href} href={a.href} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 16px", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--card-bg)", fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)", textDecoration: "none" }}>
+              <Link key={a.href} href={a.href} onClick={() => a.mode && setMode(a.mode as "hiring" | "working")} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "9px 16px", borderRadius: 10, border: "1px solid var(--card-border)", background: "var(--card-bg)", fontSize: "0.78rem", fontWeight: 600, color: "var(--foreground)", textDecoration: "none" }}>
                 {a.icon} {a.label}
               </Link>
             ))}

@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import { getDashboardData } from "@/actions/dashboard";
+import { setAppMode } from "@/lib/mode";
 
 type User = Awaited<ReturnType<typeof getDashboardData>>;
 
@@ -144,7 +145,7 @@ export default function DashboardDrawer() {
           {/* Post a Gig */}
           <Link
             href="/gigs/new"
-            onClick={() => setOpen(false)}
+            onClick={() => { setAppMode("working"); setOpen(false); }}
             style={{
               display: "flex", alignItems: "center", justifyContent: "center",
               padding: "0.7rem", borderRadius: 99, marginBottom: "1.5rem",
