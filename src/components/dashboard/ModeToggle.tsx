@@ -1,17 +1,9 @@
 "use client";
 
-import { useMode, type Mode } from "@/components/ModeProvider";
+import { useMode, setMode, type Mode } from "@/components/ModeProvider";
 
-export default function ModeToggle({
-  mode: propMode,
-  onChange: propOnChange,
-}: {
-  mode?: Mode;
-  onChange?: (m: Mode) => void;
-} = {}) {
-  const ctx = useMode();
-  const mode = propMode !== undefined ? propMode : ctx.mode;
-  const onChange = propOnChange ?? ctx.setMode;
+export default function ModeToggle() {
+  const { mode } = useMode();
 
   return (
     <div style={{
@@ -25,7 +17,7 @@ export default function ModeToggle({
       {(["hiring", "working"] as Mode[]).map((m) => (
         <button
           key={m}
-          onClick={() => onChange(m)}
+          onClick={() => setMode(m)}
           style={{
             padding: "5px 14px", borderRadius: 7, border: "none", cursor: "pointer",
             fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.04em",

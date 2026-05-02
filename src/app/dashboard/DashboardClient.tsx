@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useEffect } from "react";
 import ModeToggle from "@/components/dashboard/ModeToggle";
-import { useMode } from "@/components/ModeProvider";
+import { useMode, setMode } from "@/components/ModeProvider";
 import PostedJobsSection from "@/components/dashboard/PostedJobsSection";
 import SentOffersSection from "@/components/dashboard/SentOffersSection";
 import T from "@/components/ui/T";
@@ -25,7 +25,7 @@ function msgPreview(body: string, maxLen = 40): string {
 }
 
 export default function DashboardClient({ data }: { data: DashboardData }) {
-  const { mode, setMode } = useMode();
+  const { mode } = useMode();
   const hasGigs = (data.dbUser.gigs?.length ?? 0) > 0;
 
   // Apply smart default only on first visit (no saved preference)
