@@ -7,9 +7,10 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
   User, ClipboardList, MessageSquare, Heart,
-  CreditCard, Users, HelpCircle, LogOut, ChevronDown,
+  CreditCard, Users, HelpCircle, LogOut, ChevronDown, ArrowLeftRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { setAppMode, type Mode } from '@/lib/mode'
 
 interface Props {
   image: string | null
@@ -58,8 +59,20 @@ export default function NavAvatarDropdown({
   image, name, twitterHandle, role, availability, unreadCount = 0,
 }: Props) {
   const [open, setOpen] = useState(false)
+  const [mode, setModeState] = useState<Mode>('working')
   const wrapRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
+
+  useEffect(() => {
+    const saved = localStorage.getItem('cb_mode') as Mode | null
+    if (saved === 'hiring' || saved === 'working') setModeState(saved)
+  }, [])
+
+  function switchMode() {
+    const next: Mode = mode === 'working' ? 'hiring' : 'working'
+    setModeState(next)
+    setAppMode(next)
+  }
 
   useEffect(() => { setOpen(false) }, [pathname])
 
@@ -151,6 +164,28 @@ export default function NavAvatarDropdown({
                 )}
               </div>
             </div>
+          </div>
+
+          {/* Mode switcher */}
+          <div className="px-3 py-2 border-b border-gray-100 dark:border-dark-border">
+            <div className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 mb-1.5">
+              Current mode
+            </div>
+            <button
+              onClick={switchMode}
+              className="flex items-center justify-between w-full px-3 py-2 rounded-lg bg-gray-50 dark:bg-dark-hover hover:bg-gray-100 dark:hover:bg-dark-border transition-colors duration-100"
+            >
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: mode === 'working' ? '#14b8a6' : '#6366f1' }} />
+                <span className="text-sm font-semibold text-gray-800 dark:text-white">
+                  {mode === 'working' ? 'Working' : 'Hiring'}
+                </span>
+              </div>
+              <div className="flex items-center gap-1 text-[11px] font-medium text-gray-400">
+                <ArrowLeftRight size={11} />
+                Switch to {mode === 'working' ? 'Hiring' : 'Working'}
+              </div>
+            </button>
           </div>
 
           {/* Nav links */}
