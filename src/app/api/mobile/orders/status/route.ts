@@ -24,7 +24,7 @@ import { notifyUser } from "@/lib/notify";
 
 const RULES: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
   accepted:           { by: "seller", from: ["funded"] },
-  delivered:          { by: "seller", from: ["accepted", "revision_requested"] },
+  delivered:          { by: "seller", from: ["funded", "revision_requested"] },
   cancelled:          { by: "both",   from: ["pending"] },
   disputed:           { by: "both",   from: ["accepted", "funded", "delivered"] },
   revision_requested: { by: "buyer",  from: ["delivered"] },
