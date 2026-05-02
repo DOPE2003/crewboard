@@ -47,15 +47,14 @@ export default function TermsPage() {
               .legal-grid { grid-template-columns: 1fr !important; }
               .legal-toc { display: none !important; }
             }
+            .legal-toc a:hover { color: #14b8a6 !important; }
           `}</style>
 
           {/* Sticky TOC */}
           <div className="legal-toc" style={{ position: "sticky", top: "5.5rem", borderRadius: 14, border: "1px solid var(--card-border)", background: "var(--card-bg)", padding: "1.25rem", display: "flex", flexDirection: "column", gap: "0.15rem" }}>
             <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.6rem" }}>Contents</div>
             {SECTIONS.map((s, i) => (
-              <a key={i} href={`#s${i + 1}`} style={{ fontSize: "0.75rem", color: "var(--text-muted)", textDecoration: "none", padding: "3px 0", lineHeight: 1.4, transition: "color 0.15s" }}
-                onMouseEnter={e => (e.currentTarget.style.color = "#14b8a6")}
-                onMouseLeave={e => (e.currentTarget.style.color = "var(--text-muted)")}>
+              <a key={i} href={`#s${i + 1}`} style={{ fontSize: "0.75rem", color: "var(--text-muted)", textDecoration: "none", padding: "3px 0", lineHeight: 1.4, transition: "color 0.15s" }}>
                 <span style={{ color: "#14b8a6", fontWeight: 700, marginRight: 6 }}>{i + 1}.</span>{s}
               </a>
             ))}
