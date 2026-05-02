@@ -1,0 +1,607 @@
+/**
+ * Crewboard Escrow SMART CONTRACT — TypeScript Client
+ * -----------------------------------------
+ * Author: SAAD AIT HAMMOU CTO of Crewboard
+ * Project: Crewboard
+ * Year: 2026
+ *
+ * Program ID: 9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp
+ * Treasury Wallet: Fn95Cx5iUhwVTUB6ZL3B8CmBYpbFYB2MSepa1xdeT68q
+ *
+ * All rights reserved.
+ */
+import { Program, AnchorProvider, Idl, BN } from "@coral-xyz/anchor";
+import Decimal from "decimal.js";
+import {
+  Connection, PublicKey, SystemProgram,
+  Transaction, TransactionInstruction, ComputeBudgetProgram,
+} from "@solana/web3.js";
+import {
+  getAssociatedTokenAddress,
+  getAssociatedTokenAddressSync,
+  getAccount,
+  createAssociatedTokenAccountInstruction,
+  createAssociatedTokenAccountIdempotentInstruction,
+  TokenAccountNotFoundError,
+} from "@solana/spl-token";
+import type { AnchorWallet } from "@solana/wallet-adapter-react";
+
+const DEBUG = typeof window !== "undefined" && (window as any).__CREWBOARD_DEBUG__ === true;
+const log = (...args: unknown[]) => { if (DEBUG) console.log("[escrow]", ...args); };
+const always = (...args: unknown[]) => console.log("[escrow]", ...args);
+
+// Minimum SOL needed to cover tx fee + ATA rent (~0.00204 per ATA + ~0.000005 fee).
+// Buyer may need to create their own ATA + escrow vault ATA, so budget for 2.
+const MIN_SOL_LAMPORTS = 5_000_000; // 0.005 SOL — generous safety margin
+
+// Hardcoded to avoid import resolution issues with @solana/spl-token versions
+const TOKEN_PROGRAM_ID = new PublicKey("TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA");
+
+// ─── Constants ───────────────────────────────────────────────────────────────
+
+export const PROGRAM_ID = new PublicKey("9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp");
+
+// Mainnet USDC mint (Circle)
+export const USDC_MINT     = new PublicKey("EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v");
+export const USDC_DECIMALS = 6;
+
+/** Platform treasury wallet — receives 10% fee on every release.
+ *  Must match TREASURY_PUBKEY constant in lib.rs exactly. */
+export const TREASURY_WALLET = new PublicKey("Fn95Cx5iUhwVTUB6ZL3B8CmBYpbFYB2MSepa1xdeT68q");
+
+/** Fee rate in basis points (1 000 / 10 000 = 10%). */
+export const PLATFORM_FEE_BPS = 1_000;
+
+export function calcFee(grossAmount: number): { sellerAmount: number; feeAmount: number } {
+  const feeAmount    = Math.floor((grossAmount * PLATFORM_FEE_BPS) / 10_000);
+  const sellerAmount = grossAmount - feeAmount;
+  return { sellerAmount, feeAmount };
+}
+
+// ─── IDL ─────────────────────────────────────────────────────────────────────
+// Only initialize_escrow uses the Anchor client (program.methods).
+// All other instructions are built as raw TransactionInstructions to avoid
+// Anchor TS 0.30 / on-chain 0.31 IDL format mismatches.
+//
+// All discriminators are verified via sha256("global:<name>")[0..8].
+
+const IDL: Idl = {
+  address: "9tVjarHacBHFbxRoHxDeR8afbfPa5Z25Q5ZmUWGo8vXp",
+  metadata: { name: "crewboard_escrow", version: "0.1.0", spec: "0.1.0" },
+  instructions: [
+    {
+      name: "initialize_escrow",
+      discriminator: [243, 160, 77, 153, 11, 92, 48, 209],
+      accounts: [
+        { name: "buyer",                   writable: true, signer: true },
+        { name: "seller" },
+        { name: "mint" },
+        { name: "buyer_token_account",     writable: true },
+        {
+          name: "escrow_state",
+          writable: true,
+          signer: false,
+          pda: {
+            seeds: [
+              { kind: "const",   value: [101, 115, 99, 114, 111, 119] }, // b"escrow"
+              { kind: "account", path: "buyer" },
+              { kind: "account", path: "seller" },
+              { kind: "arg",     path: "gig_id" },
+            ],
+          },
+        },
+        // escrow_token_account — created by client pre-instruction (createAssociatedTokenAccountIdempotent)
+        { name: "escrow_token_account",    writable: true },
+        { name: "system_program",          address: "11111111111111111111111111111111" },
+        { name: "token_program",           address: "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA" },
+      ],
+      args: [
+        { name: "gig_id", type: "string" },
+        { name: "amount", type: "u64" },
+      ],
+    },
+  ],
+  accounts: [
+    {
+      name: "EscrowState",
+      discriminator: [19, 90, 148, 111, 55, 130, 229, 108],
+    },
+  ],
+  types: [
+    {
+      name: "EscrowState",
+      type: {
+        kind: "struct",
+        fields: [
+          { name: "buyer",                type: "pubkey" },
+          { name: "seller",               type: "pubkey" },
+          { name: "mint",                 type: "pubkey" },
+          { name: "escrow_token_account", type: "pubkey" },
+          { name: "gig_id",               type: "string" },
+          { name: "amount",               type: "u64" },
+          { name: "bump",                 type: "u8" },
+          // New fields added in the updated program:
+          { name: "created_at",           type: "i64" },
+          { name: "delivered_at",         type: "i64" },
+          { name: "is_delivered",         type: "bool" },
+        ],
+      },
+    },
+  ],
+} as unknown as Idl;
+
+// ─── Instruction discriminators ───────────────────────────────────────────────
+// sha256("global:<instruction_name>")[0..8] — all values verified programmatically.
+
+const DISCRIMINATORS = {
+  release_funds:      Buffer.from([225, 88,  91, 108, 126, 52,  2,  26]),
+  mark_delivered:      Buffer.from([240, 118, 188, 142,  64, 85, 107,  18]),
+  admin_force_release: Buffer.from([200, 234, 233, 163, 162, 108, 177, 214]),
+  admin_refund:        Buffer.from([130, 120,  82, 192, 147, 208, 173,  54]),
+  // sha256("global:resolve_dispute")[0..8]
+  resolve_dispute:     Buffer.from([231,   6, 202,   6,  96, 103,  12, 230]),
+};
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+export function getProgram(wallet: AnchorWallet, connection: Connection) {
+  const provider = new AnchorProvider(connection, wallet, { commitment: "confirmed" });
+  return new Program(IDL, provider);
+}
+
+export function deriveEscrowPDA(
+  buyerPubkey: PublicKey,
+  sellerPubkey: PublicKey,
+  orderId: string,
+) {
+  const orderIdBytes = Buffer.from(orderId, "utf8");
+  if (orderIdBytes.length > 32) {
+    throw new Error(`orderId must be <= 32 bytes (got ${orderIdBytes.length})`);
+  }
+  return PublicKey.findProgramAddressSync(
+    [
+      Buffer.from("escrow"),
+      buyerPubkey.toBuffer(),
+      sellerPubkey.toBuffer(),
+      orderIdBytes,
+    ],
+    PROGRAM_ID,
+  );
+}
+
+/**
+ * Derive the escrow vault ATA.
+ * The new program uses `init, associated_token::mint = mint, associated_token::authority = escrow_state`
+ * so the vault address is always deterministic from (mint, escrow_state_PDA).
+ * allowOwnerOffCurve = true because escrow_state is a PDA (off-curve pubkey).
+ */
+export function deriveEscrowVault(escrowStatePDA: PublicKey): PublicKey {
+  return getAssociatedTokenAddressSync(USDC_MINT, escrowStatePDA, true);
+}
+
+/** Ensure a USDC ATA exists; returns a create instruction if it doesn't. */
+async function ensureAta(
+  connection: Connection,
+  payer: PublicKey,
+  owner: PublicKey,
+): Promise<{ address: PublicKey; ix: TransactionInstruction | null }> {
+  const address = await getAssociatedTokenAddress(USDC_MINT, owner);
+  const info = await connection.getAccountInfo(address);
+  return {
+    address,
+    ix: info ? null : createAssociatedTokenAccountInstruction(payer, address, owner, USDC_MINT),
+  };
+}
+
+/** Send a signed transaction and wait for confirmation. */
+async function sendAndConfirm(
+  wallet: AnchorWallet,
+  connection: Connection,
+  instructions: TransactionInstruction[],
+): Promise<string> {
+  const tx = new Transaction();
+
+  // M-04: prepend compute budget to avoid ComputationalBudgetExceeded on mainnet
+  tx.add(ComputeBudgetProgram.setComputeUnitLimit({ units: 400_000 }));
+  tx.add(ComputeBudgetProgram.setComputeUnitPrice({ microLamports: 5_000 }));
+
+  instructions.forEach((ix) => tx.add(ix));
+
+  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash("confirmed");
+  tx.recentBlockhash = blockhash;
+  tx.feePayer = wallet.publicKey;
+
+  const signed = await wallet.signTransaction(tx);
+
+  // M-01: wrap send+confirm in try/catch with typed errors
+  try {
+    const txHash = await connection.sendRawTransaction(signed.serialize(), {
+      skipPreflight: false,
+      preflightCommitment: "confirmed",
+    });
+    await connection.confirmTransaction(
+      { signature: txHash, blockhash, lastValidBlockHeight },
+      "confirmed",
+    );
+    return txHash;
+  } catch (err: unknown) {
+    if (err instanceof Error) {
+      const msg = err.message;
+      if (msg.includes("Blockhash not found") || msg.includes("block height exceeded")) {
+        throw new Error("Transaction expired — please try again.");
+      }
+      if (msg.includes("insufficient funds") || msg.includes("0x1")) {
+        throw new Error("Insufficient balance to complete this transaction.");
+      }
+      if (msg.includes("custom program error")) {
+        throw new Error(`On-chain error: ${msg}`);
+      }
+    }
+    throw err;
+  }
+}
+
+// ─── Instructions ─────────────────────────────────────────────────────────────
+
+/**
+ * Buyer locks the full gig price into escrow.
+ *
+ * CHANGED from old version:
+ * - escrow_token_account is now a deterministic ATA owned by the escrow PDA
+ *   (no more random keypair / Signer)
+ * - associated_token_program added to accounts
+ * - rent sysvar removed (no longer in the Rust struct)
+ */
+export async function fundEscrow(
+  wallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  sellerPubkey: PublicKey,
+  amountUsd: number,
+): Promise<string> {
+  const program = getProgram(wallet, connection);
+  const buyer  = wallet.publicKey;
+
+  if (buyer.equals(sellerPubkey)) {
+    throw new Error("Buyer and seller cannot be the same wallet.");
+  }
+
+  const amount = new BN(new Decimal(amountUsd).mul(new Decimal(10).pow(USDC_DECIMALS)).toFixed(0));
+
+  always("fundEscrow start", {
+    buyer: buyer.toBase58(),
+    seller: sellerPubkey.toBase58(),
+    orderId,
+    amountUsd,
+    rpc: connection.rpcEndpoint,
+  });
+
+  // ── Optional pre-flight balance checks ──
+  // Wrapped in try/catch because the public Solana RPC returns 403 on
+  // browser-origin getBalance calls. If the check fails, we let the
+  // transaction proceed — the on-chain program will reject it cleanly
+  // with a real error if balances are insufficient.
+  try {
+    const solBalance = await connection.getBalance(buyer, "confirmed");
+    log("buyer SOL balance", solBalance / 1e9);
+    if (solBalance < MIN_SOL_LAMPORTS) {
+      throw new Error(
+        `Insufficient SOL for transaction fees. You have ${(solBalance / 1e9).toFixed(4)} SOL — need at least ${(MIN_SOL_LAMPORTS / 1e9).toFixed(3)} SOL.`,
+      );
+    }
+  } catch (e: any) {
+    // Re-throw our own "Insufficient SOL" error; swallow RPC errors (403, network).
+    if (e?.message?.startsWith("Insufficient SOL")) throw e;
+    log("SOL balance check skipped (RPC error):", e?.message ?? e);
+  }
+
+  const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
+  const buyerTokenAccount = await getAssociatedTokenAddress(USDC_MINT, buyer);
+
+  const preInstructions: TransactionInstruction[] = [];
+
+  // USDC ATA + balance check — also wrapped so RPC 403 doesn't block.
+  try {
+    const buyerAtaInfo = await connection.getAccountInfo(buyerTokenAccount);
+    if (!buyerAtaInfo) {
+      log("buyer USDC ATA missing — creating");
+      preInstructions.push(
+        createAssociatedTokenAccountInstruction(buyer, buyerTokenAccount, buyer, USDC_MINT),
+      );
+      throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC to fund this escrow.`);
+    }
+    const acct = await getAccount(connection, buyerTokenAccount);
+    const usdcBalance = Number(acct.amount) / Math.pow(10, USDC_DECIMALS);
+    log("buyer USDC balance", usdcBalance);
+    if (usdcBalance < amountUsd) {
+      throw new Error(
+        `Insufficient USDC. You have ${usdcBalance.toFixed(2)} USDC — need ${amountUsd} USDC.`,
+      );
+    }
+  } catch (e: any) {
+    if (e instanceof TokenAccountNotFoundError) {
+      throw new Error(`No USDC found in your wallet. You need ${amountUsd} USDC.`);
+    }
+    if (e?.message?.startsWith("Insufficient USDC") || e?.message?.startsWith("No USDC")) throw e;
+    log("USDC balance check skipped (RPC error):", e?.message ?? e);
+  }
+
+  // Create escrow vault ATA as a pre-instruction (idempotent).
+  // This fixes the Phantom simulation false-positive revert — the simulator
+  // now sees the ATA created by the Associated Token Program BEFORE
+  // InitializeEscrow tries to transfer into it.
+  preInstructions.push(
+    createAssociatedTokenAccountIdempotentInstruction(
+      buyer,              // payer
+      escrowTokenAccount, // ATA address
+      escrowState,        // owner (PDA — off-curve)
+      USDC_MINT,          // mint
+    )
+  );
+
+  try {
+    const txHash = await program.methods
+      .initializeEscrow(orderId, amount)
+      .accountsStrict({
+        buyer,
+        seller:                 sellerPubkey,
+        mint:                   USDC_MINT,
+        buyerTokenAccount,
+        escrowState,
+        escrowTokenAccount,
+        systemProgram:          SystemProgram.programId,
+        tokenProgram:           TOKEN_PROGRAM_ID,
+      })
+      .preInstructions(preInstructions)
+      .signers([])
+      .rpc({ commitment: "confirmed" });
+
+    always("tx broadcast", txHash);
+
+    // Independent verification — catches cases where .rpc() resolved but tx actually failed.
+    const statusResult = await connection
+      .getSignatureStatus(txHash, { searchTransactionHistory: true })
+      .catch(() => null);
+    always("verification", {
+      status: statusResult?.value?.confirmationStatus,
+      err: statusResult?.value?.err ?? null,
+    });
+    if (statusResult?.value?.err) {
+      throw new Error(`Transaction failed on-chain: ${JSON.stringify(statusResult.value.err)}`);
+    }
+
+    always("fundEscrow confirmed", { txHash, explorer: `https://solscan.io/tx/${txHash}` });
+    return txHash;
+  } catch (e) {
+    console.error("[escrow] fundEscrow failed", e);
+    throw e;
+  }
+}
+
+/**
+ * Seller marks the gig as delivered.
+ * Sets is_delivered = true and stamps delivered_at on-chain.
+ * Starts the 14-day AFK clock for admin_force_release.
+ *
+ * Accounts (must match MarkDelivered struct in lib.rs):
+ *   0. seller        — Signer, has_one check
+ *   1. escrow_state  — writable, seeds + bump + has_one = seller
+ *
+ * Discriminator verified against sha256("global:mark_delivered")[0..8].
+ */
+export async function markDelivered(
+  wallet: AnchorWallet,   // must be the seller
+  connection: Connection,
+  orderId: string,
+  buyerPubkey: PublicKey,
+): Promise<string> {
+  const seller = wallet.publicKey;
+  const [escrowState] = deriveEscrowPDA(buyerPubkey, seller, orderId);
+
+  const ix = new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys: [
+      { pubkey: seller,      isSigner: true,  isWritable: false },
+      { pubkey: escrowState, isSigner: false, isWritable: true  },
+    ],
+    data: DISCRIMINATORS.mark_delivered,
+  });
+
+  return sendAndConfirm(wallet, connection, [ix]);
+}
+
+/**
+ * Buyer approves delivery and releases funds.
+ * 90% → seller, 10% → treasury (on-chain, not client-side).
+ *
+ * Accounts (must match ReleaseFunds struct in lib.rs — 8 accounts):
+ *   0. buyer                  — Signer, writable (receives rent from closed escrow_state)
+ *   1. seller                 — NOT writable (has_one check)
+ *   2. escrow_state           — writable, seeds + bump, has_one=buyer, has_one=seller, close=buyer
+ *   3. escrow_token_account   — writable, address = escrow_state.escrow_token_account
+ *   4. seller_token_account   — writable, token::authority = seller
+ *   5. treasury               — NOT writable, address = TREASURY_PUBKEY in lib.rs  ← NEW ACCOUNT
+ *   6. treasury_token_account — writable, token::authority = treasury
+ *   7. token_program
+ */
+export async function releaseFunds(
+  wallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  sellerPubkey: PublicKey,
+): Promise<string> {
+  const buyer  = wallet.publicKey;
+  const [escrowState] = deriveEscrowPDA(buyer, sellerPubkey, orderId);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
+
+  const instructions: TransactionInstruction[] = [];
+
+  // Ensure seller ATA exists (one-time SOL cost, paid by buyer)
+  const { address: sellerTokenAccount,   ix: sellerAtaIx   } = await ensureAta(connection, buyer, sellerPubkey);
+  if (sellerAtaIx)   instructions.push(sellerAtaIx);
+
+  // Ensure treasury ATA exists (one-time SOL cost, paid by buyer)
+  const { address: treasuryTokenAccount, ix: treasuryAtaIx } = await ensureAta(connection, buyer, TREASURY_WALLET);
+  if (treasuryAtaIx) instructions.push(treasuryAtaIx);
+
+  // release_funds instruction — account order MUST exactly match ReleaseFunds struct in lib.rs
+  instructions.push(new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys: [
+      { pubkey: buyer,                isSigner: true,  isWritable: true  }, // 0. buyer
+      { pubkey: sellerPubkey,         isSigner: false, isWritable: false }, // 1. seller (NOT writable)
+      { pubkey: escrowState,          isSigner: false, isWritable: true  }, // 2. escrow_state
+      { pubkey: escrowTokenAccount,   isSigner: false, isWritable: true  }, // 3. escrow_token_account
+      { pubkey: sellerTokenAccount,   isSigner: false, isWritable: true  }, // 4. seller_token_account
+      { pubkey: TREASURY_WALLET,      isSigner: false, isWritable: false }, // 5. treasury ← NEW
+      { pubkey: treasuryTokenAccount, isSigner: false, isWritable: true  }, // 6. treasury_token_account
+      { pubkey: TOKEN_PROGRAM_ID,     isSigner: false, isWritable: false }, // 7. token_program
+    ],
+    data: DISCRIMINATORS.release_funds,
+  }));
+
+  return sendAndConfirm(wallet, connection, instructions);
+}
+
+/**
+ * Admin forces fund release after buyer goes AFK (14 days after delivery).
+ * Requires: is_delivered == true AND now > delivered_at + 14 days.
+ * Same 90/10 split as normal release.
+ *
+ * Discriminator verified against sha256("global:admin_force_release")[0..8].
+ */
+export async function adminForceRelease(
+  adminWallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  buyerPubkey: PublicKey,
+  sellerPubkey: PublicKey,
+): Promise<string> {
+  const admin = adminWallet.publicKey;
+  const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
+
+  const instructions: TransactionInstruction[] = [];
+
+  const { address: sellerTokenAccount,   ix: sellerAtaIx   } = await ensureAta(connection, admin, sellerPubkey);
+  const { address: treasuryTokenAccount, ix: treasuryAtaIx } = await ensureAta(connection, admin, TREASURY_WALLET);
+  if (sellerAtaIx)   instructions.push(sellerAtaIx);
+  if (treasuryAtaIx) instructions.push(treasuryAtaIx);
+
+  // Accounts match AdminForceRelease struct in lib.rs
+  instructions.push(new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys: [
+      { pubkey: admin,                isSigner: true,  isWritable: true  }, // 0. admin
+      { pubkey: buyerPubkey,          isSigner: false, isWritable: true  }, // 1. buyer (receives rent)
+      { pubkey: sellerPubkey,         isSigner: false, isWritable: false }, // 2. seller
+      { pubkey: escrowState,          isSigner: false, isWritable: true  }, // 3. escrow_state
+      { pubkey: escrowTokenAccount,   isSigner: false, isWritable: true  }, // 4. escrow_token_account
+      { pubkey: sellerTokenAccount,   isSigner: false, isWritable: true  }, // 5. seller_token_account
+      { pubkey: TREASURY_WALLET,      isSigner: false, isWritable: false }, // 6. treasury
+      { pubkey: treasuryTokenAccount, isSigner: false, isWritable: true  }, // 7. treasury_token_account
+      { pubkey: TOKEN_PROGRAM_ID,     isSigner: false, isWritable: false }, // 8. token_program
+    ],
+    data: DISCRIMINATORS.admin_force_release,
+  }));
+
+  return sendAndConfirm(adminWallet, connection, instructions);
+}
+
+/**
+ * Admin refunds buyer when seller goes AFK (never delivers, 14 days after creation).
+ * Requires: is_delivered == false AND now > created_at + 14 days.
+ * Full refund — no platform fee.
+ *
+ * NOTE: Replace DISCRIMINATORS.admin_refund after `anchor build`.
+ */
+/**
+ * Admin resolves a dispute — no time check, runs immediately.
+ * routeToBuyer = true  → full refund to buyer (seller-fault, no fee).
+ * routeToBuyer = false → 90 % seller / 10 % treasury (buyer-fault).
+ *
+ * Calls the on-chain resolve_dispute instruction added in program v2.
+ * Admin must sign with the wallet that matches ADMIN_PUBKEY in lib.rs.
+ */
+export async function resolveDispute(
+  adminWallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  buyerPubkey: PublicKey,
+  sellerPubkey: PublicKey,
+  routeToBuyer: boolean,
+): Promise<string> {
+  const admin = adminWallet.publicKey;
+  const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
+
+  const instructions: TransactionInstruction[] = [];
+
+  const { address: buyerTokenAccount,   ix: buyerAtaIx   } = await ensureAta(connection, admin, buyerPubkey);
+  const { address: sellerTokenAccount,  ix: sellerAtaIx  } = await ensureAta(connection, admin, sellerPubkey);
+  const { address: treasuryTokenAccount, ix: treasuryAtaIx } = await ensureAta(connection, admin, TREASURY_WALLET);
+  if (buyerAtaIx)    instructions.push(buyerAtaIx);
+  if (sellerAtaIx)   instructions.push(sellerAtaIx);
+  if (treasuryAtaIx) instructions.push(treasuryAtaIx);
+
+  // resolve_dispute(route_to_buyer: bool) — encode bool as single byte after discriminator
+  const data = Buffer.concat([
+    DISCRIMINATORS.resolve_dispute,
+    Buffer.from([routeToBuyer ? 1 : 0]),
+  ]);
+
+  // Accounts match ResolveDispute struct in lib.rs
+  instructions.push(new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys: [
+      { pubkey: admin,                 isSigner: true,  isWritable: true  }, // 0. admin
+      { pubkey: buyerPubkey,           isSigner: false, isWritable: true  }, // 1. buyer
+      { pubkey: sellerPubkey,          isSigner: false, isWritable: false }, // 2. seller
+      { pubkey: escrowState,           isSigner: false, isWritable: true  }, // 3. escrow_state
+      { pubkey: escrowTokenAccount,    isSigner: false, isWritable: true  }, // 4. escrow_token_account
+      { pubkey: buyerTokenAccount,     isSigner: false, isWritable: true  }, // 5. buyer_token_account
+      { pubkey: sellerTokenAccount,    isSigner: false, isWritable: true  }, // 6. seller_token_account
+      { pubkey: TREASURY_WALLET,       isSigner: false, isWritable: false }, // 7. treasury
+      { pubkey: treasuryTokenAccount,  isSigner: false, isWritable: true  }, // 8. treasury_token_account
+      { pubkey: TOKEN_PROGRAM_ID,      isSigner: false, isWritable: false }, // 9. token_program
+    ],
+    data,
+  }));
+
+  return sendAndConfirm(adminWallet, connection, instructions);
+}
+
+export async function adminRefund(
+  adminWallet: AnchorWallet,
+  connection: Connection,
+  orderId: string,
+  buyerPubkey: PublicKey,
+  sellerPubkey: PublicKey,
+): Promise<string> {
+  const admin = adminWallet.publicKey;
+  const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+  const escrowTokenAccount = deriveEscrowVault(escrowState);
+
+  const instructions: TransactionInstruction[] = [];
+
+  const { address: buyerTokenAccount, ix: buyerAtaIx } = await ensureAta(connection, admin, buyerPubkey);
+  if (buyerAtaIx) instructions.push(buyerAtaIx);
+
+  // Accounts match AdminRefund struct in lib.rs
+  instructions.push(new TransactionInstruction({
+    programId: PROGRAM_ID,
+    keys: [
+      { pubkey: admin,               isSigner: true,  isWritable: true  }, // 0. admin
+      { pubkey: buyerPubkey,         isSigner: false, isWritable: true  }, // 1. buyer (receives refund + rent)
+      { pubkey: sellerPubkey,        isSigner: false, isWritable: false }, // 2. seller (for PDA seeds)
+      { pubkey: escrowState,         isSigner: false, isWritable: true  }, // 3. escrow_state
+      { pubkey: escrowTokenAccount,  isSigner: false, isWritable: true  }, // 4. escrow_token_account
+      { pubkey: buyerTokenAccount,   isSigner: false, isWritable: true  }, // 5. buyer_token_account
+      { pubkey: TOKEN_PROGRAM_ID,    isSigner: false, isWritable: false }, // 6. token_program
+    ],
+    data: DISCRIMINATORS.admin_refund,
+  }));
+
+  return sendAndConfirm(adminWallet, connection, instructions);
+}

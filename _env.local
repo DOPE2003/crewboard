@@ -1,0 +1,36 @@
+AUTH_SECRET="mB0NN31Z4TjEwSEYP2qHXjT5LdmbU71EN0jBpn9hWko="
+CRON_SECRET=96d6077016820e74245457817a864b20d085ec9b126c2bbd8d95c800a73a020c
+ORDER_PENDING_EXPIRY_H=48
+ORDER_FUNDED_EXPIRY_H=72
+OWNER_USER_ID=cmm80k3fv0000pnlz1r74c89l
+AUTH_URL="http://localhost:3000"
+NEXTAUTH_URL="http://localhost:3000"
+
+TWITTER_CLIENT_ID="azVXRk01dE0tN1M5U0lwWHlrMFk6MTpjaQ"
+TWITTER_CLIENT_SECRET="2WJKd3c-nPDZPC1kF2CjPRK_hPn21pYBM9rTxZ225w-rmqIZ4I"
+
+DATABASE_URL="postgresql://neondb_owner:npg_Jo3SgtsyP7GU@ep-noisy-dawn-aiaskkke-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require"
+
+PUSHER_APP_ID="2123983"
+PUSHER_KEY="9b984fd601eee11acbbb"
+PUSHER_SECRET="a8cd320956b5c79d9907"
+PUSHER_CLUSTER="ap2"
+NEXT_PUBLIC_PUSHER_KEY="9b984fd601eee11acbbb"
+NEXT_PUBLIC_PUSHER_CLUSTER="ap2"
+NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID=f26f5f704b68c52932d1e0a9ea8a5089
+
+NEXT_PUBLIC_WORLDCOIN_APP_ID=app_6286f16b35fa95b1bad98bc2e7d4ecaf
+NEXT_PUBLIC_WORLDCOIN_ACTION=verify-human
+
+STRIPE_SECRET_KEY=sk_test_51T9uV22VrdDJXsdYQH5rST6Of5b71Vsl6KtWEJx5asPdy1dProYiDMevN7G1aPn9qoPicOw47GuSMwkG6dRArpQS00QHAF4Rkv
+STRIPE_WEBHOOK_SECRET=whsec_yvyOLl9L5BiiLTEhAvNOUIvd1QPA3CBi
+
+BLOB_READ_WRITE_TOKEN=vercel_blob_rw_sh35hAqYmC3iN1xD_vmAnS1xvOasYLuYbs6KIhjLPum3fGl
+
+# Solana mainnet RPC (Helius) — used by SolanaProvider
+NEXT_PUBLIC_SOLANA_RPC_URL=https://mainnet.helius-rpc.com/?api-key=3a32eb83-58a1-441d-89c2-15b7c7564a97
+
+RESEND_API_KEY=re_UQaKCaPA_HGAfJyAKwdUwVqaQVB8WxNaF
+# Firebase Admin SDK — service account for custom auth tokens (FCM, Firestore)
+# DO NOT commit this value to git — rotate via Firebase Console if leaked
+FIREBASE_SERVICE_ACCOUNT_JSON={"type":"service_account","project_id":"crewboard-b6b2a","private_key_id":"6c876af3f79e3ed9f09924fc8b98cf1e5e9ebeb3","private_key":"-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQDJ7lDLgM8Gm+FC\nKWnjwDocmf66+bnE816Pnpv6lNymh7nrI5fNrs9UT+EayCEnI640X3wfIUuP2g2S\n3Ol8AfZ1t9sCTXLlcZu2wkR+bheROq6/r1V6X00F6IRV9WDXh90rqLXRyZCL6U6s\nzgDeTA0DWFlwsEVgZGH0u4Ho9GT/5rfFF7np5WoHZVjZLR2NbWS13ZAHe3RL64oL\n+iOaJlIJOFVySrxDRVTdayb18oY7WZBLQnKFQ2skEEbwFKwKXhoTgLutC+GSlB4U\nqofPI8/qBY51xM2UsMheW9BZDF+2V2KWCG2DboSILT8V55vCpj6G6NQU6P6JBx10\n94SR8h9jAgMBAAECggEAXX8nULqQ4N3/FBvJyCbCoWiaHeev4KXQtE37qbAQZFj2\nuA2QZa9Zlw+vSi+8zfsC14QYm+9WJcKQQ15fC0h7XbElyjCjEOKj9yCHB0UhS2Cw\n9dcQjGsg5intUEGft9vUB7mDiiG6eFWr1G5Dz6nF4rUfIIK1dLa19lN1iK/ULfnK\ni2Qc9T1VR5MccuAc5+2kf0U1lCgVKujFfEKk07XmQQZUX+7nhfkCzWulvlSTAntC\nV1bLP0zdXgNx2AZtaOjIEFyYCzTm1lbaBEITddDZlJihAXjzOEtgOXC4h1CciYWx\n9jLh7kqcUi4lUcp6gEd5+1PxZ+d0muXls63MwxXTIQKBgQDsVIsLJk23r9mok8j8\nxpfxHq+bDm7FhBT9XfxtI0jhOmc5M6U6LO65b9RT2X3mgy3NdK7b4oWfJLHOGkOo\nQJLzKeFukf7JWWzwFg1vJVH7aCL5RT/8JasjiRvEpKx6M8NLxBMQ1DZTx6CLElIz\nHpl5haJXb87g1+4LAVCahlRhIQKBgQDavNSkhxNOsyU4HFn6AsY+1Xsih+TsV2w/\nMvCoFv7VGvWYOYGg1tQRS1vRlqv7JiaIL+efizckJZigLcsyyxhq4TJ3rpJLEEKM\neky7qSnH8RR7yVh3ThKaJC+zSk1HTNPuoTjsnx5AaXbv56khdukrc1QSY5pAxIBz\nmM5fPcl8AwKBgAilt0i7KBDWkGJItgv5wEmEU+yahJcZlCMJM1lS9zG2j1xadWtB\nhaKnYt+Gj8LFfgGMiXFmQnlmQFNIRr17T2UyXRtMoEQBz6ihRfCRLwTB9LWmQQca\n4b41IBz74Yu/JSA6lnABM9Ow9EDidLuGHRuDNkN4xdsYS49/htGApMnBAoGAesfy\nCKR1lwCCDNwFOYwjIZQNeVWUj4GHFnaOlZvK0W4/m4H0HIdaJJcLZDtSMDi6+kkB\nmBG6EwUzhf4OiGVuQFhGTt3j6lSnNllUByaueDf/yng7u0RMts9HIzm65SHf+Jvw\n6wlqHrfUdlewHUO1IJmtAGF+bYqfm8OTW+y/02cCgYBgQ6+zFuljiW5LndF511rW\nJT2rrFK8tDHPGE4nfmJ9KcmAXQ9enEZLQSO+WGEtFsY3WShLln9MBkaE+4QIKhMZ\npgBOQxSvu2Y/kMfWY4whs1wyyJeT8p8Knql3ml+QugNKINLkd1pdc15+4E2ozh9J\nEIbjWhU7LEIJjJwfki7Ubg==\n-----END PRIVATE KEY-----\n","client_email":"firebase-adminsdk-fbsvc@crewboard-b6b2a.iam.gserviceaccount.com","client_id":"115991217670014959390","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-fbsvc%40crewboard-b6b2a.iam.gserviceaccount.com","universe_domain":"googleapis.com"}

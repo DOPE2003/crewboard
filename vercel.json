@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/cancel-expired-orders",
+      "schedule": "0 * * * *"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "applinks": {
+    "apps": [],
+    "details": [
+      {
+        "appID": "2BYC239YDG.io.crewboard.mobile",
+        "paths": [
+          "/jobs/*",
+          "/gigs/*",
+          "/offer/*",
+          "/orders/*",
+          "/u/*",
+          "NOT /api/*",
+          "NOT /.well-known/*"
+        ]
+      }
+    ]
+  }
+}
