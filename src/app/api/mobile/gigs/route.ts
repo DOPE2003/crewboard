@@ -13,6 +13,7 @@ export async function GET() {
       category: true,
       tags: true,
       status: true,
+      image: true,
       createdAt: true,
       user: {
         select: { name: true, twitterHandle: true, image: true },

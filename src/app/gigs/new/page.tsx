@@ -48,6 +48,8 @@ export default function NewGigPage() {
   const [tags, setTags]               = useState<string[]>([]);
   const [loading, setLoading]         = useState(false);
   const [error, setError]             = useState("");
+  const [image, setImage]             = useState<string | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
 
   if (status === "unauthenticated") {
     router.push("/login");
@@ -97,6 +99,7 @@ export default function NewGigPage() {
         price: parseInt(price),
         deliveryDays: parseInt(deliveryDays),
         tags,
+        image,
       });
       router.push(`/gigs/${gig.id}`);
     } catch (e: any) {
@@ -196,6 +199,46 @@ export default function NewGigPage() {
           {/* ── STEP 1 ── */}
           {step === 1 && (
             <div className="pg-step-form">
+
+              <div className="pg-field">
+                <label className="pg-label">COVER IMAGE</label>
+                <p className="pg-helper">Optional. JPEG, PNG or WebP, max 5 MB. Recommended 4:3 ratio.</p>
+                {image ? (
+                  <div style={{ position: "relative", display: "inline-block" }}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={image} alt="Cover preview" style={{ width: "100%", maxWidth: 360, height: 180, objectFit: "cover", borderRadius: 10, border: "1px solid var(--card-border, #334155)", display: "block" }} />
+                    <div style={{ position: "absolute", top: 8, right: 8, display: "flex", gap: 6 }}>
+                      <label style={{ cursor: "pointer", background: "rgba(15,23,42,0.85)", color: "#e2e8f0", fontSize: 12, fontWeight: 600, padding: "5px 10px", borderRadius: 7, backdropFilter: "blur(4px)" }}>
+                        Replace
+                        <input type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }} onChange={async (e) => {
+                          const f = e.target.files?.[0]; if (!f) return;
+                          setImageUploading(true); setError("");
+                          const fd = new FormData(); fd.append("file", f);
+                          const res = await fetch("/api/upload?type=gig", { method: "POST", body: fd });
+                          const json = await res.json();
+                          if (!res.ok) { setError(json.error ?? "Upload failed."); } else { setImage(json.url); }
+                          setImageUploading(false);
+                        }} />
+                      </label>
+                      <button type="button" onClick={() => setImage(null)} style={{ background: "rgba(239,68,68,0.85)", color: "#fff", fontSize: 12, fontWeight: 600, padding: "5px 10px", borderRadius: 7, border: "none", cursor: "pointer", backdropFilter: "blur(4px)" }}>Remove</button>
+                    </div>
+                  </div>
+                ) : (
+                  <label style={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 8, border: "2px dashed var(--card-border, #334155)", borderRadius: 10, padding: "28px 20px", cursor: imageUploading ? "not-allowed" : "pointer", opacity: imageUploading ? 0.6 : 1 }}>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                    <span style={{ fontSize: 13, color: "#94a3b8", fontWeight: 500 }}>{imageUploading ? "Uploading…" : "Click to upload cover image"}</span>
+                    <input type="file" accept="image/jpeg,image/png,image/webp" style={{ display: "none" }} disabled={imageUploading} onChange={async (e) => {
+                      const f = e.target.files?.[0]; if (!f) return;
+                      setImageUploading(true); setError("");
+                      const fd = new FormData(); fd.append("file", f);
+                      const res = await fetch("/api/upload?type=gig", { method: "POST", body: fd });
+                      const json = await res.json();
+                      if (!res.ok) { setError(json.error ?? "Upload failed."); } else { setImage(json.url); }
+                      setImageUploading(false);
+                    }} />
+                  </label>
+                )}
+              </div>
 
               <div className="pg-field">
                 <label className="pg-label">TITLE <span className="pg-req">*</span></label>
@@ -334,6 +377,13 @@ export default function NewGigPage() {
               </p>
 
               <div className="pg-summary">
+                {image && (
+                  <div className="pg-summary-row">
+                    <span className="pg-summary-key">Cover</span>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={image} alt="" style={{ width: 120, height: 68, objectFit: "cover", borderRadius: 8, border: "1px solid var(--card-border, #334155)" }} />
+                  </div>
+                )}
                 <div className="pg-summary-row">
                   <span className="pg-summary-key">Title</span>
                   <span className="pg-summary-val">{title || <em className="pg-summary-empty">—</em>}</span>

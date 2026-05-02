@@ -246,6 +246,7 @@ export const GigScalarFieldEnum = {
   category: 'category',
   tags: 'tags',
   status: 'status',
+  image: 'image',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

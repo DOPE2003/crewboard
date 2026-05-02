@@ -46,7 +46,7 @@ const PUBLIC_SELECT = {
   createdAt: true,
   gigs: {
     where: { status: "active" },
-    select: { id: true, title: true, price: true, category: true, deliveryDays: true, tags: true },
+    select: { id: true, title: true, price: true, category: true, deliveryDays: true, tags: true, image: true },
     orderBy: { createdAt: "desc" as const },
   },
   reviewsReceived: {
