@@ -63,7 +63,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   try {
     [user, session] = await Promise.all([
       db.user.findFirst({
-        where: { twitterHandle: normalizedHandle },
+        where: { twitterHandle: { equals: normalizedHandle, mode: "insensitive" } },
         include: { gigs: { where: { status: "active" }, orderBy: { createdAt: "desc" } } },
       }),
       auth(),
