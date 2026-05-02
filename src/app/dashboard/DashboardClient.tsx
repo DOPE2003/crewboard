@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect } from "react";
 import ModeToggle from "@/components/dashboard/ModeToggle";
-import { useDashboardMode } from "@/hooks/useDashboardMode";
+import { useMode } from "@/components/ModeProvider";
 import PostedJobsSection from "@/components/dashboard/PostedJobsSection";
 import SentOffersSection from "@/components/dashboard/SentOffersSection";
 import T from "@/components/ui/T";
@@ -24,7 +25,15 @@ function msgPreview(body: string, maxLen = 40): string {
 }
 
 export default function DashboardClient({ data }: { data: DashboardData }) {
-  const [mode, setMode] = useDashboardMode((data.dbUser.gigs?.length ?? 0) > 0);
+  const { mode, setMode } = useMode();
+  const hasGigs = (data.dbUser.gigs?.length ?? 0) > 0;
+
+  // Apply smart default only on first visit (no saved preference)
+  useEffect(() => {
+    const saved = localStorage.getItem("cb_mode");
+    if (!saved) setMode(hasGigs ? "working" : "hiring");
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const {
     dbUser, recentConvos, activeOrders, completedOrders,
