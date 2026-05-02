@@ -10,6 +10,7 @@ import { NextRequest } from "next/server";
 import db from "@/lib/db";
 import { getMobileUser } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
+import { maskDelivery } from "../../_lib/mask-delivery";
 
 type RouteCtx = { params: Promise<{ id: string }> };
 
@@ -48,12 +49,12 @@ export async function GET(req: NextRequest, ctx: RouteCtx) {
     if (order.buyer.id !== user.sub && order.seller.id !== user.sub)
       return err("You are not a participant in this order.", 403);
 
-    return ok({
+    return ok(maskDelivery({
       ...order,
-      myRole:     order.buyer.id === user.sub ? "buyer" : "seller",
+      myRole:      order.buyer.id === user.sub ? "buyer" : "seller",
       counterpart: order.buyer.id === user.sub ? order.seller : order.buyer,
-      myReview:   order.reviews.find((r) => r.reviewerId === user.sub) ?? null,
-    });
+      myReview:    order.reviews.find((r) => r.reviewerId === user.sub) ?? null,
+    }));
   } catch (e) {
     console.error("[mobile/orders/:id]", e);
     return err("Something went wrong.", 500);

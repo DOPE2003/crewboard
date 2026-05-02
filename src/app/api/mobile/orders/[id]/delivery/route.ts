@@ -12,6 +12,7 @@ import { NextRequest } from "next/server";
 import db from "@/lib/db";
 import { getMobileUser } from "../../../_lib/auth";
 import { ok, err } from "../../../_lib/response";
+import { maskDelivery } from "../../../_lib/mask-delivery";
 
 interface DeliveryFile {
   url: string;
@@ -115,7 +116,7 @@ export async function POST(req: NextRequest, ctx: RouteCtx) {
       select: ORDER_SELECT,
     });
 
-    return ok(updated);
+    return ok(maskDelivery(updated));
   } catch (e) {
     console.error("[mobile/orders/:id/delivery]", e);
     return err("Something went wrong.", 500);

@@ -19,6 +19,7 @@ import { NextRequest } from "next/server";
 import db from "@/lib/db";
 import { getMobileUser, withMobileAuth, MobileTokenPayload } from "../_lib/auth";
 import { ok, err } from "../_lib/response";
+import { maskDelivery } from "../_lib/mask-delivery";
 import { notifyUser } from "@/lib/notify";
 import { sendPush } from "@/lib/push";
 import { rateLimit } from "../_lib/rate-limit";
@@ -60,7 +61,10 @@ async function getHandler(req: NextRequest) {
         : [],
     ]);
 
-    return ok({ sent, received });
+    const maskOrder = <T extends { order: { status: string; deliveryNote?: unknown; deliveryFiles?: unknown; deliverySubmittedAt?: unknown } | null }>(o: T): T =>
+      o.order ? { ...o, order: maskDelivery(o.order) } : o;
+
+    return ok({ sent: sent.map(maskOrder), received: received.map(maskOrder) });
   } catch (e) {
     console.error("[mobile/offers GET]", e);
     return err("Something went wrong.", 500);
