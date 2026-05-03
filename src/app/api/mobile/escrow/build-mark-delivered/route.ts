@@ -38,7 +38,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
     const order = await db.order.findUnique({
       where: { id: orderId },
       select: {
-        buyerId: true, sellerId: true, status: true,
+        buyerId: true, sellerId: true, status: true, escrowAddress: true,
         buyer:  { select: { walletAddress: true } },
         seller: { select: { walletAddress: true } },
       },
@@ -46,8 +46,8 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
     if (!order)                        return err("Order not found.", 404);
     if (order.sellerId !== user.sub)   return err("Only the seller can mark as delivered.", 403);
-    if (order.status !== "funded" && order.status !== "revision_requested") {
-      return err(`Order is ${order.status}, expected funded.`);
+    if (order.status !== "accepted" && order.status !== "revision_requested") {
+      return err(`Order is ${order.status}, expected accepted or revision_requested.`);
     }
     if (!order.seller.walletAddress)   return err("Your wallet is not linked.");
     if (!order.buyer.walletAddress)    return err("Buyer has no wallet address on file.");
@@ -56,6 +56,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       new PublicKey(order.seller.walletAddress),
       new PublicKey(order.buyer.walletAddress),
       orderId,
+      order.escrowAddress,
     );
 
     return ok({ tx, blockhashExpiry: Math.floor(Date.now() / 1000) + 60 });

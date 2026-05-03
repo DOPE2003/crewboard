@@ -395,9 +395,14 @@ export async function markDelivered(
   connection: Connection,
   orderId: string,
   buyerPubkey: PublicKey,
+  escrowAddressPDA?: string | null,
 ): Promise<string> {
   const seller = wallet.publicKey;
-  const [escrowState] = deriveEscrowPDA(buyerPubkey, seller, orderId);
+  // Prefer the stored escrow address over re-derivation — the buyer may have funded
+  // from a wallet that differs from their currently stored profile walletAddress.
+  const escrowState = escrowAddressPDA
+    ? new PublicKey(escrowAddressPDA)
+    : deriveEscrowPDA(buyerPubkey, seller, orderId)[0];
 
   const ix = new TransactionInstruction({
     programId: PROGRAM_ID,

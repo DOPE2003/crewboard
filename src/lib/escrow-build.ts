@@ -415,9 +415,14 @@ export async function buildMarkDeliveredTx(
   sellerPubkey: PublicKey,
   buyerPubkey: PublicKey,
   orderId: string,
+  escrowAddressPDA?: string | null,
 ): Promise<{ tx: string }> {
   const connection = getSolanaConnection();
-  const [escrowState] = deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId);
+  // Prefer the stored escrow address — buyer may have funded from a different wallet
+  // than what's stored in their profile, which would produce the wrong PDA.
+  const escrowState = escrowAddressPDA
+    ? new PublicKey(escrowAddressPDA)
+    : deriveEscrowPDA(buyerPubkey, sellerPubkey, orderId)[0];
 
   const ix = new TransactionInstruction({
     programId: PROGRAM_ID,

@@ -16,7 +16,8 @@ interface Props {
   isBuyer: boolean;
   isSeller: boolean;
   sellerWallet: string | null;
-  buyerWallet: string | null;   // required for seller to derive escrow PDA
+  buyerWallet: string | null;
+  escrowAddress?: string | null;  // stored PDA — avoids buyer wallet mismatch on mark_delivered
   txHash?: string | null;
 }
 
@@ -145,7 +146,7 @@ async function withRetry<T>(fn: () => Promise<T>, attempts = 3, label = ""): Pro
 }
 
 export default function EscrowActions({
-  orderId, orderStatus, orderAmount, isBuyer, isSeller, sellerWallet, buyerWallet, txHash,
+  orderId, orderStatus, orderAmount, isBuyer, isSeller, sellerWallet, buyerWallet, escrowAddress, txHash,
 }: Props) {
   const router = useRouter();
   const { connection } = useConnection();
@@ -664,7 +665,7 @@ export default function EscrowActions({
                   setError("");
                   try {
                     const buyerPubkey = new PublicKey(buyerWallet);
-                    await markDelivered(anchorWallet, connection, orderId, buyerPubkey);
+                    await markDelivered(anchorWallet, connection, orderId, buyerPubkey, escrowAddress);
                     await updateOrderStatus(orderId, "delivered");
                     router.refresh();
                   } catch (e: any) {

@@ -6,7 +6,7 @@
  *
  * Permission rules (mirror src/actions/orders.ts):
  *   accepted  — seller only, from [funded]
- *   delivered — seller only, from [accepted]   (call AFTER build-mark-delivered tx confirms)
+ *   delivered — seller only, from [accepted, revision_requested]  (call AFTER build-mark-delivered tx confirms)
  *   cancelled — buyer or seller, from [pending]
  *   disputed  — buyer or seller, from [accepted, funded, delivered]
  *
@@ -24,7 +24,7 @@ import { notifyUser } from "@/lib/notify";
 
 const RULES: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
   accepted:           { by: "seller", from: ["funded"] },
-  delivered:          { by: "seller", from: ["funded", "revision_requested"] },
+  delivered:          { by: "seller", from: ["accepted", "revision_requested"] },
   cancelled:          { by: "both",   from: ["pending"] },
   disputed:           { by: "both",   from: ["accepted", "funded", "delivered"] },
   revision_requested: { by: "buyer",  from: ["delivered"] },

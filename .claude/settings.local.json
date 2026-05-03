@@ -24,7 +24,14 @@
       "Bash(ssh-keygen -t ed25519 -C \"saadaithammou05062003@gmail.com\" -f ~/.ssh/id_ed25519 -N \"\")",
       "Bash(git config *)",
       "Bash(git commit *)",
-      "Bash(~/.local/node/bin/npx tsc *)"
+      "Bash(~/.local/node/bin/npx tsc *)",
+      "Bash(grep -E \"\\\\.\\(ts|tsx|js\\)$\")",
+      "Bash(node -e ' *)",
+      "Bash(psql 'postgresql://neondb_owner:npg_Jo3SgtsyP7GU@ep-noisy-dawn-aiaskkke-pooler.c-4.us-east-1.aws.neon.tech/neondb?sslmode=require' -c ' *)",
+      "Bash(npx tsx *)",
+      "Bash(npx ts-node *)",
+      "Bash(git pull *)",
+      "Bash(git stash *)"
     ]
   }
 }

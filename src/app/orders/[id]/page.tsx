@@ -244,6 +244,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
               isSeller={isSeller}
               sellerWallet={order.seller.walletAddress ?? null}
               buyerWallet={order.buyer.walletAddress ?? null}
+              escrowAddress={order.escrowAddress ?? null}
               txHash={order.txHash ?? null}
             />
           </div>
