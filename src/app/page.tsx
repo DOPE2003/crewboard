@@ -4,7 +4,8 @@ import { ShieldCheck, Clock, BadgeCheck } from "lucide-react";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
-import HeroSearch from "@/components/home/HeroSearch";
+import HomeModeHero from "@/components/home/HomeModeHero";
+import HomeModeHIW from "@/components/home/HomeModeHIW";
 import "@/styles/landing.css";
 
 
@@ -136,108 +137,8 @@ export default async function HomePage() {
           ✦ Now in Beta
         </div>
 
-        {/* Headline */}
-        <h1
-          className="hero-h1"
-          style={{
-            fontFamily: "Inter, sans-serif",
-            fontWeight: 300,
-            letterSpacing: "-0.01em",
-            lineHeight: 0.93,
-            marginBottom: "1rem",
-            color: "var(--foreground)",
-            opacity: 0,
-            animation: "fadeUp 0.6s 0.25s forwards",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          Hire top freelancers.<br />
-          Pay only when <span style={{ color: "#14B8A6" }}>work is done.</span>
-        </h1>
-
-        {/* Subtitle */}
-        <p
-          className="hero-subtitle"
-          style={{
-            color: "var(--text-muted)",
-            fontSize: "0.88rem",
-            lineHeight: 1.7,
-            maxWidth: "24rem",
-            letterSpacing: "0.01em",
-            marginBottom: "1rem",
-            opacity: 0,
-            animation: "fadeUp 0.6s 0.58s forwards",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          Post a job, get matched with talent, and pay securely after delivery.
-        </p>
-
-        {/* ── Search bar — mobile only (desktop uses navbar search) ── */}
-        <div className="flex md:hidden" style={{
-          opacity: 0, animation: "fadeUp 0.6s 0.65s forwards",
-          position: "relative", zIndex: 1, width: "100%",
-          justifyContent: "center",
-          marginBottom: 16,
-        }}>
-          <HeroSearch />
-        </div>
-
-        {/* Two-path CTA */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr",
-            gap: 10,
-            width: "100%",
-            maxWidth: 420,
-            marginBottom: 14,
-            opacity: 0,
-            animation: "fadeUp 0.6s 0.72s forwards",
-            position: "relative",
-            zIndex: 1,
-          }}
-        >
-          <Link
-            href={isLoggedIn ? "/jobs/new" : "/register"}
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "flex-start",
-              padding: "14px 16px", borderRadius: 12, textDecoration: "none",
-              background: "#14B8A6", color: "#0f172a",
-              border: "1px solid #14B8A6",
-              transition: "transform 0.15s, box-shadow 0.15s",
-            }}
-            className="intent-card"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6 }}>
-              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-              <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-            </svg>
-            <span style={{ fontSize: "0.85rem", fontWeight: 800, lineHeight: 1.2 }}>I&apos;m Hiring</span>
-            <span style={{ fontSize: "0.7rem", fontWeight: 500, opacity: 0.75, marginTop: 2 }}>Post a job for free</span>
-          </Link>
-          <Link
-            href={isLoggedIn ? "/jobs" : "/register"}
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "flex-start",
-              padding: "14px 16px", borderRadius: 12, textDecoration: "none",
-              background: "var(--surface)", color: "var(--foreground)",
-              border: "1px solid var(--card-border)",
-              transition: "transform 0.15s, box-shadow 0.15s, border-color 0.15s",
-            }}
-            className="intent-card"
-          >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 6, color: "#14B8A6" }}>
-              <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/>
-              <path d="M6 12H4M20 12h-2"/>
-            </svg>
-            <span style={{ fontSize: "0.85rem", fontWeight: 800, lineHeight: 1.2 }}>I&apos;m a Freelancer</span>
-            <span style={{ fontSize: "0.7rem", fontWeight: 500, color: "var(--text-muted)", marginTop: 2 }}>Find work &amp; get paid</span>
-          </Link>
-        </div>
-        <style>{`.intent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); border-color: rgba(20,184,166,0.5) !important; }`}</style>
+        {/* Mode-aware hero — headline, subtitle, CTA cards */}
+        <HomeModeHero isLoggedIn={isLoggedIn} />
 
         {/* Trust pills */}
         <div style={{
@@ -546,64 +447,8 @@ export default async function HomePage() {
             <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: 0, lineHeight: 1.5 }}>Three steps. No hassle.</p>
           </div>
 
-          <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="hiw-grid">
-            {([
-              {
-                step: "1",
-                title: "Post a job",
-                desc: "Describe what you need. It takes 2 minutes and it's free.",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-                  </svg>
-                ),
-                color: "#6366f1",
-                bg: "rgba(99,102,241,0.1)",
-              },
-              {
-                step: "2",
-                title: "Hire a freelancer",
-                desc: "Browse profiles, read reviews, and message candidates directly. Pick the best fit.",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
-                    <polyline points="16 11 18 13 22 9"/>
-                  </svg>
-                ),
-                color: "#14b8a6",
-                bg: "rgba(20,184,166,0.1)",
-              },
-              {
-                step: "3",
-                title: "Pay after delivery",
-                desc: "Your payment is held safely and only released when you approve the work. No risk.",
-                icon: (
-                  <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
-                ),
-                color: "#22c55e",
-                bg: "rgba(34,197,94,0.1)",
-              },
-            ] as { step: string; title: string; desc: string; icon: React.ReactNode; color: string; bg: string }[]).map((item, i) => (
-              <div key={item.step} className="hiw-card" style={{ display: "flex", alignItems: "flex-start", gap: "1rem", padding: "1.25rem", borderRadius: 14, background: "var(--background)", border: "1px solid var(--card-border)" }}>
-                <div style={{ width: 48, height: 48, borderRadius: 14, background: item.bg, display: "flex", alignItems: "center", justifyContent: "center", color: item.color, flexShrink: 0 }}>
-                  {item.icon}
-                </div>
-                <div>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", color: item.color, textTransform: "uppercase" as const, marginBottom: 5 }}>Step {item.step}</div>
-                  <h3 style={{ fontFamily: "Inter, sans-serif", fontWeight: 600, fontSize: "0.95rem", color: "var(--foreground)", margin: "0 0 0.3rem", letterSpacing: "-0.01em" }}>{item.title}</h3>
-                  <p style={{ color: "var(--text-muted)", fontSize: "0.82rem", lineHeight: 1.65, margin: 0 }}>{item.desc}</p>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          <div style={{ textAlign: "center", marginTop: "clamp(1.5rem,3vw,2.5rem)" }}>
-            <Link href={isLoggedIn ? "/jobs/new" : "/register"} className="btn-hero-primary" style={{ display: "inline-flex" }}>
-              Post a Job — it&apos;s free
-            </Link>
-          </div>
+          {/* Mode-aware steps + bottom CTA */}
+          <HomeModeHIW isLoggedIn={isLoggedIn} />
         </div>
         <style>{`
           .hiw-grid { grid-template-columns: repeat(3,1fr); }
