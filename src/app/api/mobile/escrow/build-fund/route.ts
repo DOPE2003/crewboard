@@ -84,7 +84,8 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
     if (!order)                      return err("Order not found.", 404);
     if (order.buyerId !== user.sub)  return err("Only the buyer can fund escrow.", 403);
-    if (order.status !== "pending")  return err(`Order is ${order.status}, expected pending.`);
+    if (!["pending", "accepted"].includes(order.status))
+      return err(`Order is ${order.status}, expected pending or accepted.`);
     if (!order.buyer.walletAddress)  return err("Your wallet is not linked. Go to Profile → Connect Wallet first.");
     if (!order.seller.walletAddress) return err("Seller has no wallet address on file.");
 

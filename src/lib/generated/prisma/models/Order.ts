@@ -29,11 +29,13 @@ export type AggregateOrder = {
 export type OrderAvgAggregateOutputType = {
   amount: number | null
   revisionCount: number | null
+  feeOverridePct: number | null
 }
 
 export type OrderSumAggregateOutputType = {
   amount: number | null
   revisionCount: number | null
+  feeOverridePct: number | null
 }
 
 export type OrderMinAggregateOutputType = {
@@ -50,6 +52,8 @@ export type OrderMinAggregateOutputType = {
   deliveryNote: string | null
   deliverySubmittedAt: Date | null
   revisionCount: number | null
+  feeOverridePct: number | null
+  campaignClaimId: string | null
 }
 
 export type OrderMaxAggregateOutputType = {
@@ -66,6 +70,8 @@ export type OrderMaxAggregateOutputType = {
   deliveryNote: string | null
   deliverySubmittedAt: Date | null
   revisionCount: number | null
+  feeOverridePct: number | null
+  campaignClaimId: string | null
 }
 
 export type OrderCountAggregateOutputType = {
@@ -85,6 +91,8 @@ export type OrderCountAggregateOutputType = {
   deliveryHistory: number
   revisionRequests: number
   revisionCount: number
+  feeOverridePct: number
+  campaignClaimId: number
   _all: number
 }
 
@@ -92,11 +100,13 @@ export type OrderCountAggregateOutputType = {
 export type OrderAvgAggregateInputType = {
   amount?: true
   revisionCount?: true
+  feeOverridePct?: true
 }
 
 export type OrderSumAggregateInputType = {
   amount?: true
   revisionCount?: true
+  feeOverridePct?: true
 }
 
 export type OrderMinAggregateInputType = {
@@ -113,6 +123,8 @@ export type OrderMinAggregateInputType = {
   deliveryNote?: true
   deliverySubmittedAt?: true
   revisionCount?: true
+  feeOverridePct?: true
+  campaignClaimId?: true
 }
 
 export type OrderMaxAggregateInputType = {
@@ -129,6 +141,8 @@ export type OrderMaxAggregateInputType = {
   deliveryNote?: true
   deliverySubmittedAt?: true
   revisionCount?: true
+  feeOverridePct?: true
+  campaignClaimId?: true
 }
 
 export type OrderCountAggregateInputType = {
@@ -148,6 +162,8 @@ export type OrderCountAggregateInputType = {
   deliveryHistory?: true
   revisionRequests?: true
   revisionCount?: true
+  feeOverridePct?: true
+  campaignClaimId?: true
   _all?: true
 }
 
@@ -254,6 +270,8 @@ export type OrderGroupByOutputType = {
   deliveryHistory: runtime.JsonValue
   revisionRequests: runtime.JsonValue
   revisionCount: number
+  feeOverridePct: number | null
+  campaignClaimId: string | null
   _count: OrderCountAggregateOutputType | null
   _avg: OrderAvgAggregateOutputType | null
   _sum: OrderSumAggregateOutputType | null
@@ -296,6 +314,8 @@ export type OrderWhereInput = {
   deliveryHistory?: Prisma.JsonFilter<"Order">
   revisionRequests?: Prisma.JsonFilter<"Order">
   revisionCount?: Prisma.IntFilter<"Order"> | number
+  feeOverridePct?: Prisma.FloatNullableFilter<"Order"> | number | null
+  campaignClaimId?: Prisma.StringNullableFilter<"Order"> | string | null
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -321,6 +341,8 @@ export type OrderOrderByWithRelationInput = {
   deliveryHistory?: Prisma.SortOrder
   revisionRequests?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrderInput | Prisma.SortOrder
+  campaignClaimId?: Prisma.SortOrderInput | Prisma.SortOrder
   buyer?: Prisma.UserOrderByWithRelationInput
   gig?: Prisma.GigOrderByWithRelationInput
   seller?: Prisma.UserOrderByWithRelationInput
@@ -349,6 +371,8 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   deliveryHistory?: Prisma.JsonFilter<"Order">
   revisionRequests?: Prisma.JsonFilter<"Order">
   revisionCount?: Prisma.IntFilter<"Order"> | number
+  feeOverridePct?: Prisma.FloatNullableFilter<"Order"> | number | null
+  campaignClaimId?: Prisma.StringNullableFilter<"Order"> | string | null
   buyer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   gig?: Prisma.XOR<Prisma.GigScalarRelationFilter, Prisma.GigWhereInput>
   seller?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -374,6 +398,8 @@ export type OrderOrderByWithAggregationInput = {
   deliveryHistory?: Prisma.SortOrder
   revisionRequests?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrderInput | Prisma.SortOrder
+  campaignClaimId?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.OrderCountOrderByAggregateInput
   _avg?: Prisma.OrderAvgOrderByAggregateInput
   _max?: Prisma.OrderMaxOrderByAggregateInput
@@ -401,6 +427,8 @@ export type OrderScalarWhereWithAggregatesInput = {
   deliveryHistory?: Prisma.JsonWithAggregatesFilter<"Order">
   revisionRequests?: Prisma.JsonWithAggregatesFilter<"Order">
   revisionCount?: Prisma.IntWithAggregatesFilter<"Order"> | number
+  feeOverridePct?: Prisma.FloatNullableWithAggregatesFilter<"Order"> | number | null
+  campaignClaimId?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
 }
 
 export type OrderCreateInput = {
@@ -417,6 +445,8 @@ export type OrderCreateInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
@@ -442,6 +472,8 @@ export type OrderUncheckedCreateInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
   offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutOrderInput
@@ -461,6 +493,8 @@ export type OrderUpdateInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
@@ -486,6 +520,8 @@ export type OrderUncheckedUpdateInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
   offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutOrderNestedInput
@@ -508,6 +544,8 @@ export type OrderCreateManyInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
 }
 
 export type OrderUpdateManyMutationInput = {
@@ -524,6 +562,8 @@ export type OrderUpdateManyMutationInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderUncheckedUpdateManyInput = {
@@ -543,6 +583,8 @@ export type OrderUncheckedUpdateManyInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderListRelationFilter = {
@@ -572,11 +614,14 @@ export type OrderCountOrderByAggregateInput = {
   deliveryHistory?: Prisma.SortOrder
   revisionRequests?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrder
+  campaignClaimId?: Prisma.SortOrder
 }
 
 export type OrderAvgOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrder
 }
 
 export type OrderMaxOrderByAggregateInput = {
@@ -593,6 +638,8 @@ export type OrderMaxOrderByAggregateInput = {
   deliveryNote?: Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrder
+  campaignClaimId?: Prisma.SortOrder
 }
 
 export type OrderMinOrderByAggregateInput = {
@@ -609,11 +656,14 @@ export type OrderMinOrderByAggregateInput = {
   deliveryNote?: Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrder
+  campaignClaimId?: Prisma.SortOrder
 }
 
 export type OrderSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
+  feeOverridePct?: Prisma.SortOrder
 }
 
 export type OrderScalarRelationFilter = {
@@ -752,6 +802,14 @@ export type OrderUncheckedUpdateManyWithoutGigNestedInput = {
   deleteMany?: Prisma.OrderScalarWhereInput | Prisma.OrderScalarWhereInput[]
 }
 
+export type NullableFloatFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
+}
+
 export type OrderCreateNestedOneWithoutReviewsInput = {
   create?: Prisma.XOR<Prisma.OrderCreateWithoutReviewsInput, Prisma.OrderUncheckedCreateWithoutReviewsInput>
   connectOrCreate?: Prisma.OrderCreateOrConnectWithoutReviewsInput
@@ -810,6 +868,8 @@ export type OrderCreateWithoutBuyerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
@@ -833,6 +893,8 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
   offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutOrderInput
@@ -862,6 +924,8 @@ export type OrderCreateWithoutSellerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
@@ -885,6 +949,8 @@ export type OrderUncheckedCreateWithoutSellerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
   offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutOrderInput
@@ -936,6 +1002,8 @@ export type OrderScalarWhereInput = {
   deliveryHistory?: Prisma.JsonFilter<"Order">
   revisionRequests?: Prisma.JsonFilter<"Order">
   revisionCount?: Prisma.IntFilter<"Order"> | number
+  feeOverridePct?: Prisma.FloatNullableFilter<"Order"> | number | null
+  campaignClaimId?: Prisma.StringNullableFilter<"Order"> | string | null
 }
 
 export type OrderUpsertWithWhereUniqueWithoutSellerInput = {
@@ -968,6 +1036,8 @@ export type OrderCreateWithoutGigInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutOrderInput
@@ -991,6 +1061,8 @@ export type OrderUncheckedCreateWithoutGigInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
   offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutOrderInput
@@ -1036,6 +1108,8 @@ export type OrderCreateWithoutReviewsInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
@@ -1060,6 +1134,8 @@ export type OrderUncheckedCreateWithoutReviewsInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutOrderInput
 }
@@ -1094,6 +1170,8 @@ export type OrderUpdateWithoutReviewsInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
@@ -1118,6 +1196,8 @@ export type OrderUncheckedUpdateWithoutReviewsInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutOrderNestedInput
 }
@@ -1136,6 +1216,8 @@ export type OrderCreateWithoutDisputesInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
@@ -1160,6 +1242,8 @@ export type OrderUncheckedCreateWithoutDisputesInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
   offer?: Prisma.OfferUncheckedCreateNestedOneWithoutOrderInput
 }
@@ -1194,6 +1278,8 @@ export type OrderUpdateWithoutDisputesInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
@@ -1218,6 +1304,8 @@ export type OrderUncheckedUpdateWithoutDisputesInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
   offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
 }
@@ -1236,6 +1324,8 @@ export type OrderCreateWithoutOfferInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   buyer: Prisma.UserCreateNestedOneWithoutBuyerOrdersInput
   gig: Prisma.GigCreateNestedOneWithoutOrdersInput
   seller: Prisma.UserCreateNestedOneWithoutSellerOrdersInput
@@ -1260,6 +1350,8 @@ export type OrderUncheckedCreateWithoutOfferInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutOrderInput
   disputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutOrderInput
 }
@@ -1294,6 +1386,8 @@ export type OrderUpdateWithoutOfferInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
@@ -1318,6 +1412,8 @@ export type OrderUncheckedUpdateWithoutOfferInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutOrderNestedInput
 }
@@ -1338,6 +1434,8 @@ export type OrderCreateManyBuyerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
 }
 
 export type OrderCreateManySellerInput = {
@@ -1356,6 +1454,8 @@ export type OrderCreateManySellerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
 }
 
 export type OrderUpdateWithoutBuyerInput = {
@@ -1372,6 +1472,8 @@ export type OrderUpdateWithoutBuyerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
@@ -1395,6 +1497,8 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
   offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutOrderNestedInput
@@ -1416,6 +1520,8 @@ export type OrderUncheckedUpdateManyWithoutBuyerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderUpdateWithoutSellerInput = {
@@ -1432,6 +1538,8 @@ export type OrderUpdateWithoutSellerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   gig?: Prisma.GigUpdateOneRequiredWithoutOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
@@ -1455,6 +1563,8 @@ export type OrderUncheckedUpdateWithoutSellerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
   offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutOrderNestedInput
@@ -1476,6 +1586,8 @@ export type OrderUncheckedUpdateManyWithoutSellerInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type OrderCreateManyGigInput = {
@@ -1494,6 +1606,8 @@ export type OrderCreateManyGigInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
+  feeOverridePct?: number | null
+  campaignClaimId?: string | null
 }
 
 export type OrderUpdateWithoutGigInput = {
@@ -1510,6 +1624,8 @@ export type OrderUpdateWithoutGigInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   buyer?: Prisma.UserUpdateOneRequiredWithoutBuyerOrdersNestedInput
   seller?: Prisma.UserUpdateOneRequiredWithoutSellerOrdersNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutOrderNestedInput
@@ -1533,6 +1649,8 @@ export type OrderUncheckedUpdateWithoutGigInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutOrderNestedInput
   offer?: Prisma.OfferUncheckedUpdateOneWithoutOrderNestedInput
   disputes?: Prisma.DisputeUncheckedUpdateManyWithoutOrderNestedInput
@@ -1554,6 +1672,8 @@ export type OrderUncheckedUpdateManyWithoutGigInput = {
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
+  feeOverridePct?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
+  campaignClaimId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1613,6 +1733,8 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
+  feeOverridePct?: boolean
+  campaignClaimId?: boolean
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1639,6 +1761,8 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
+  feeOverridePct?: boolean
+  campaignClaimId?: boolean
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1661,6 +1785,8 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
+  feeOverridePct?: boolean
+  campaignClaimId?: boolean
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
   seller?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -1683,9 +1809,11 @@ export type OrderSelectScalar = {
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
+  feeOverridePct?: boolean
+  campaignClaimId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gigId" | "buyerId" | "sellerId" | "amount" | "status" | "escrowAddress" | "txHash" | "createdAt" | "updatedAt" | "deliveryNote" | "deliveryFiles" | "deliverySubmittedAt" | "deliveryHistory" | "revisionRequests" | "revisionCount", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gigId" | "buyerId" | "sellerId" | "amount" | "status" | "escrowAddress" | "txHash" | "createdAt" | "updatedAt" | "deliveryNote" | "deliveryFiles" | "deliverySubmittedAt" | "deliveryHistory" | "revisionRequests" | "revisionCount" | "feeOverridePct" | "campaignClaimId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
@@ -1733,6 +1861,8 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     deliveryHistory: runtime.JsonValue
     revisionRequests: runtime.JsonValue
     revisionCount: number
+    feeOverridePct: number | null
+    campaignClaimId: string | null
   }, ExtArgs["result"]["order"]>
   composites: {}
 }
@@ -2178,6 +2308,8 @@ export interface OrderFieldRefs {
   readonly deliveryHistory: Prisma.FieldRef<"Order", 'Json'>
   readonly revisionRequests: Prisma.FieldRef<"Order", 'Json'>
   readonly revisionCount: Prisma.FieldRef<"Order", 'Int'>
+  readonly feeOverridePct: Prisma.FieldRef<"Order", 'Float'>
+  readonly campaignClaimId: Prisma.FieldRef<"Order", 'String'>
 }
     
 

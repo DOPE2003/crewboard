@@ -24,6 +24,61 @@ import { notifyUser } from "@/lib/notify";
 import { sendPush } from "@/lib/push";
 import { verifyEscrowVaultFunded } from "@/lib/escrow-build";
 
+async function redeemCampaignClaim(orderId: string, buyerId: string, orderAmountUsdc: number, gigTitle: string) {
+  const claim = await db.campaignClaim.findFirst({
+    where: {
+      userId: buyerId,
+      status: { in: ["pending", "qualified", "redeemed"] },
+      feeRebatesRemaining: { gt: 0 },
+      expiresAt: { gt: new Date() },
+    },
+  });
+  if (!claim) return;
+
+  const isFirst = claim.status === "pending";
+
+  await db.$transaction([
+    db.campaignClaim.update({
+      where: { id: claim.id },
+      data: {
+        status: "redeemed",
+        redeemedAt: isFirst ? new Date() : undefined,
+        firstOrderId: isFirst ? orderId : undefined,
+        feeRebatesRemaining: { decrement: 1 },
+        creditRemainingUsdc: { decrement: Math.min(orderAmountUsdc, claim.creditRemainingUsdc) },
+        ogBadgeGranted: isFirst ? true : undefined,
+      },
+    }),
+    ...(isFirst
+      ? [
+          db.user.update({
+            where: { id: buyerId },
+            data: { ogFoundingClient: true },
+          }),
+          db.order.update({
+            where: { id: orderId },
+            data: { feeOverridePct: 0, campaignClaimId: claim.id },
+          }),
+        ]
+      : [
+          db.order.update({
+            where: { id: orderId },
+            data: { feeOverridePct: 0, campaignClaimId: claim.id },
+          }),
+        ]),
+  ]);
+
+  if (isFirst) {
+    notifyUser({
+      userId: buyerId,
+      type: "system",
+      title: "Welcome, OG Founding Client!",
+      body: `$50 credit applied + 2 free hires remaining for "${gigTitle}".`,
+      actionUrl: `crewboard://order/${orderId}`,
+    }).catch(() => {});
+  }
+}
+
 async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
     const body = await req.json().catch(() => ({}));
@@ -70,6 +125,9 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       where: { id: orderId },
       data: { status: "funded", txHash, escrowAddress },
     });
+
+    // Campaign claim hook: if buyer has an active miracle claim, apply fee rebate and flip to redeemed
+    redeemCampaignClaim(orderId, order.buyerId, order.amount, order.gig.title).catch(() => {});
 
     notifyUser({
       userId: order.sellerId,

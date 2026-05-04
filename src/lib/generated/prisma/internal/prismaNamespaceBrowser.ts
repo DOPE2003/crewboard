@@ -73,7 +73,8 @@ export const ModelName = {
   DisputeEvidence: 'DisputeEvidence',
   DisputeMessage: 'DisputeMessage',
   Offer: 'Offer',
-  AdminActionLog: 'AdminActionLog'
+  AdminActionLog: 'AdminActionLog',
+  CampaignClaim: 'CampaignClaim'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -109,6 +110,7 @@ export const UserScalarFieldEnum = {
   walletAddress: 'walletAddress',
   isOG: 'isOG',
   ogGrantedAt: 'ogGrantedAt',
+  ogFoundingClient: 'ogFoundingClient',
   worldIdLevel: 'worldIdLevel',
   worldIdNullifier: 'worldIdNullifier',
   stripeVerificationId: 'stripeVerificationId',
@@ -280,7 +282,9 @@ export const OrderScalarFieldEnum = {
   deliverySubmittedAt: 'deliverySubmittedAt',
   deliveryHistory: 'deliveryHistory',
   revisionRequests: 'revisionRequests',
-  revisionCount: 'revisionCount'
+  revisionCount: 'revisionCount',
+  feeOverridePct: 'feeOverridePct',
+  campaignClaimId: 'campaignClaimId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -446,6 +450,25 @@ export const AdminActionLogScalarFieldEnum = {
 } as const
 
 export type AdminActionLogScalarFieldEnum = (typeof AdminActionLogScalarFieldEnum)[keyof typeof AdminActionLogScalarFieldEnum]
+
+
+export const CampaignClaimScalarFieldEnum = {
+  id: 'id',
+  campaign: 'campaign',
+  walletAddress: 'walletAddress',
+  userId: 'userId',
+  status: 'status',
+  creditAmountUsdc: 'creditAmountUsdc',
+  creditRemainingUsdc: 'creditRemainingUsdc',
+  feeRebatesRemaining: 'feeRebatesRemaining',
+  ogBadgeGranted: 'ogBadgeGranted',
+  claimedAt: 'claimedAt',
+  redeemedAt: 'redeemedAt',
+  firstOrderId: 'firstOrderId',
+  expiresAt: 'expiresAt'
+} as const
+
+export type CampaignClaimScalarFieldEnum = (typeof CampaignClaimScalarFieldEnum)[keyof typeof CampaignClaimScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -37,6 +37,7 @@ export async function sendPush(params: {
       apns: {
         payload: {
           aps: {
+            alert: { title: params.title, body: params.body },
             sound: "default",
             badge,
             "mutable-content": 1,

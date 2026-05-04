@@ -91,19 +91,22 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
     // Notify job owner
     const applicantName = applicant.name ?? applicant.twitterHandle ?? "Someone";
+    const notifBody = `${applicantName} applied to "${job.title}"`;
     notifyUser({
       userId: job.ownerId,
+      senderId: user.sub,
       type: "application",
-      title: `New application from ${applicantName}`,
-      body: `${job.title} at ${job.company}`,
+      title: "New application",
+      body: notifBody,
       link: `/jobs/${jobId}`,
       actionUrl: `crewboard://job/${jobId}/applications`,
+      messageId: `application:${application.id}`,
     }).catch(() => {});
 
     sendPush({
       userId: job.ownerId,
-      title: `New application from ${applicantName}`,
-      body: `${job.title} at ${job.company}`,
+      title: "New application",
+      body: notifBody,
       data: { type: "application", jobId, applicantId: user.sub, actionUrl: `crewboard://job/${jobId}/applications` },
     }).catch(() => {});
 

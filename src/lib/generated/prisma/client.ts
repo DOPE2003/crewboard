@@ -156,3 +156,8 @@ export type Offer = Prisma.OfferModel
  * 
  */
 export type AdminActionLog = Prisma.AdminActionLogModel
+/**
+ * Model CampaignClaim
+ * 
+ */
+export type CampaignClaim = Prisma.CampaignClaimModel

@@ -6,7 +6,7 @@
  *
  * Permission rules (mirror src/actions/orders.ts):
  *   accepted  — seller only, from [funded]
- *   delivered — seller only, from [accepted, revision_requested]  (call AFTER build-mark-delivered tx confirms)
+ *   delivered — seller only, from [accepted, revision_requested, funded]  (call AFTER build-mark-delivered tx confirms)
  *   cancelled — buyer or seller, from [pending]
  *   disputed  — buyer or seller, from [accepted, funded, delivered]
  *
@@ -21,10 +21,11 @@ import db from "@/lib/db";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 
 const RULES: Record<string, { by: "buyer" | "seller" | "both"; from: string[] }> = {
   accepted:           { by: "seller", from: ["funded"] },
-  delivered:          { by: "seller", from: ["accepted", "revision_requested"] },
+  delivered:          { by: "seller", from: ["accepted", "revision_requested", "funded"] },
   cancelled:          { by: "both",   from: ["pending"] },
   disputed:           { by: "both",   from: ["accepted", "funded", "delivered"] },
   revision_requested: { by: "buyer",  from: ["delivered"] },
@@ -109,12 +110,26 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
     notifyUser({
       userId: notifyId,
-      type: "order",
-      title: "Order Update",
+      type: status === "delivered" ? "delivery" : "order",
+      title: status === "delivered" ? "Work Delivered" : "Order Update",
       body: notifyBody,
       link: `/orders/${orderId}`,
       actionUrl: `crewboard://order/${orderId}`,
     }).catch(() => {});
+
+    if (status === "delivered") {
+      sendPush({
+        userId: order.buyerId,
+        title: "Work Delivered",
+        body: `${actorName} submitted delivery for "${order.gig.title}" — review and release payment.`,
+        data: {
+          type: "delivery",
+          actionUrl: `crewboard://order/${orderId}`,
+          orderId,
+          jobTitle: order.gig.title,
+        },
+      }).catch(() => {});
+    }
 
     return ok({ orderId, status });
   } catch (e) {

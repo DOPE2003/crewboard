@@ -406,7 +406,8 @@ export const ModelName = {
   DisputeEvidence: 'DisputeEvidence',
   DisputeMessage: 'DisputeMessage',
   Offer: 'Offer',
-  AdminActionLog: 'AdminActionLog'
+  AdminActionLog: 'AdminActionLog',
+  CampaignClaim: 'CampaignClaim'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -422,7 +423,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "adminActionLog"
+    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "adminActionLog" | "campaignClaim"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2128,6 +2129,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CampaignClaim: {
+      payload: Prisma.$CampaignClaimPayload<ExtArgs>
+      fields: Prisma.CampaignClaimFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CampaignClaimFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CampaignClaimFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>
+        }
+        findFirst: {
+          args: Prisma.CampaignClaimFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CampaignClaimFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>
+        }
+        findMany: {
+          args: Prisma.CampaignClaimFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>[]
+        }
+        create: {
+          args: Prisma.CampaignClaimCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>
+        }
+        createMany: {
+          args: Prisma.CampaignClaimCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CampaignClaimCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>[]
+        }
+        delete: {
+          args: Prisma.CampaignClaimDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>
+        }
+        update: {
+          args: Prisma.CampaignClaimUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>
+        }
+        deleteMany: {
+          args: Prisma.CampaignClaimDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CampaignClaimUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CampaignClaimUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>[]
+        }
+        upsert: {
+          args: Prisma.CampaignClaimUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CampaignClaimPayload>
+        }
+        aggregate: {
+          args: Prisma.CampaignClaimAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCampaignClaim>
+        }
+        groupBy: {
+          args: Prisma.CampaignClaimGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CampaignClaimGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CampaignClaimCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CampaignClaimCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -2184,6 +2259,7 @@ export const UserScalarFieldEnum = {
   walletAddress: 'walletAddress',
   isOG: 'isOG',
   ogGrantedAt: 'ogGrantedAt',
+  ogFoundingClient: 'ogFoundingClient',
   worldIdLevel: 'worldIdLevel',
   worldIdNullifier: 'worldIdNullifier',
   stripeVerificationId: 'stripeVerificationId',
@@ -2355,7 +2431,9 @@ export const OrderScalarFieldEnum = {
   deliverySubmittedAt: 'deliverySubmittedAt',
   deliveryHistory: 'deliveryHistory',
   revisionRequests: 'revisionRequests',
-  revisionCount: 'revisionCount'
+  revisionCount: 'revisionCount',
+  feeOverridePct: 'feeOverridePct',
+  campaignClaimId: 'campaignClaimId'
 } as const
 
 export type OrderScalarFieldEnum = (typeof OrderScalarFieldEnum)[keyof typeof OrderScalarFieldEnum]
@@ -2521,6 +2599,25 @@ export const AdminActionLogScalarFieldEnum = {
 } as const
 
 export type AdminActionLogScalarFieldEnum = (typeof AdminActionLogScalarFieldEnum)[keyof typeof AdminActionLogScalarFieldEnum]
+
+
+export const CampaignClaimScalarFieldEnum = {
+  id: 'id',
+  campaign: 'campaign',
+  walletAddress: 'walletAddress',
+  userId: 'userId',
+  status: 'status',
+  creditAmountUsdc: 'creditAmountUsdc',
+  creditRemainingUsdc: 'creditRemainingUsdc',
+  feeRebatesRemaining: 'feeRebatesRemaining',
+  ogBadgeGranted: 'ogBadgeGranted',
+  claimedAt: 'claimedAt',
+  redeemedAt: 'redeemedAt',
+  firstOrderId: 'firstOrderId',
+  expiresAt: 'expiresAt'
+} as const
+
+export type CampaignClaimScalarFieldEnum = (typeof CampaignClaimScalarFieldEnum)[keyof typeof CampaignClaimScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -2785,6 +2882,7 @@ export type GlobalOmitConfig = {
   disputeMessage?: Prisma.DisputeMessageOmit
   offer?: Prisma.OfferOmit
   adminActionLog?: Prisma.AdminActionLogOmit
+  campaignClaim?: Prisma.CampaignClaimOmit
 }
 
 /* Types for Logging */

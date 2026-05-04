@@ -50,6 +50,7 @@ export type UserMinAggregateOutputType = {
   walletAddress: string | null
   isOG: boolean | null
   ogGrantedAt: Date | null
+  ogFoundingClient: boolean | null
   worldIdLevel: string | null
   worldIdNullifier: string | null
   stripeVerificationId: string | null
@@ -87,6 +88,7 @@ export type UserMaxAggregateOutputType = {
   walletAddress: string | null
   isOG: boolean | null
   ogGrantedAt: Date | null
+  ogFoundingClient: boolean | null
   worldIdLevel: string | null
   worldIdNullifier: string | null
   stripeVerificationId: string | null
@@ -125,6 +127,7 @@ export type UserCountAggregateOutputType = {
   walletAddress: number
   isOG: number
   ogGrantedAt: number
+  ogFoundingClient: number
   worldIdLevel: number
   worldIdNullifier: number
   stripeVerificationId: number
@@ -173,6 +176,7 @@ export type UserMinAggregateInputType = {
   walletAddress?: true
   isOG?: true
   ogGrantedAt?: true
+  ogFoundingClient?: true
   worldIdLevel?: true
   worldIdNullifier?: true
   stripeVerificationId?: true
@@ -210,6 +214,7 @@ export type UserMaxAggregateInputType = {
   walletAddress?: true
   isOG?: true
   ogGrantedAt?: true
+  ogFoundingClient?: true
   worldIdLevel?: true
   worldIdNullifier?: true
   stripeVerificationId?: true
@@ -248,6 +253,7 @@ export type UserCountAggregateInputType = {
   walletAddress?: true
   isOG?: true
   ogGrantedAt?: true
+  ogFoundingClient?: true
   worldIdLevel?: true
   worldIdNullifier?: true
   stripeVerificationId?: true
@@ -374,6 +380,7 @@ export type UserGroupByOutputType = {
   walletAddress: string | null
   isOG: boolean
   ogGrantedAt: Date | null
+  ogFoundingClient: boolean
   worldIdLevel: string | null
   worldIdNullifier: string | null
   stripeVerificationId: string | null
@@ -436,6 +443,7 @@ export type UserWhereInput = {
   walletAddress?: Prisma.StringNullableFilter<"User"> | string | null
   isOG?: Prisma.BoolFilter<"User"> | boolean
   ogGrantedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  ogFoundingClient?: Prisma.BoolFilter<"User"> | boolean
   worldIdLevel?: Prisma.StringNullableFilter<"User"> | string | null
   worldIdNullifier?: Prisma.StringNullableFilter<"User"> | string | null
   stripeVerificationId?: Prisma.StringNullableFilter<"User"> | string | null
@@ -473,6 +481,7 @@ export type UserWhereInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionListRelationFilter
   showcasePosts?: Prisma.ShowcasePostListRelationFilter
   proWaitlist?: Prisma.XOR<Prisma.ProWaitlistNullableScalarRelationFilter, Prisma.ProWaitlistWhereInput> | null
+  campaignClaims?: Prisma.CampaignClaimListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
   emailVerifyTokens?: Prisma.EmailVerifyTokenListRelationFilter
   notificationPreferences?: Prisma.XOR<Prisma.NotificationPreferencesNullableScalarRelationFilter, Prisma.NotificationPreferencesWhereInput> | null
@@ -497,6 +506,7 @@ export type UserOrderByWithRelationInput = {
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   isOG?: Prisma.SortOrder
   ogGrantedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  ogFoundingClient?: Prisma.SortOrder
   worldIdLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeVerificationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -534,6 +544,7 @@ export type UserOrderByWithRelationInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionOrderByRelationAggregateInput
   showcasePosts?: Prisma.ShowcasePostOrderByRelationAggregateInput
   proWaitlist?: Prisma.ProWaitlistOrderByWithRelationInput
+  campaignClaims?: Prisma.CampaignClaimOrderByRelationAggregateInput
   passwordResetTokens?: Prisma.PasswordResetTokenOrderByRelationAggregateInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenOrderByRelationAggregateInput
   notificationPreferences?: Prisma.NotificationPreferencesOrderByWithRelationInput
@@ -564,6 +575,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
   isOG?: Prisma.BoolFilter<"User"> | boolean
   ogGrantedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  ogFoundingClient?: Prisma.BoolFilter<"User"> | boolean
   worldIdLevel?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
@@ -598,6 +610,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   showcaseInteractions?: Prisma.ShowcaseInteractionListRelationFilter
   showcasePosts?: Prisma.ShowcasePostListRelationFilter
   proWaitlist?: Prisma.XOR<Prisma.ProWaitlistNullableScalarRelationFilter, Prisma.ProWaitlistWhereInput> | null
+  campaignClaims?: Prisma.CampaignClaimListRelationFilter
   passwordResetTokens?: Prisma.PasswordResetTokenListRelationFilter
   emailVerifyTokens?: Prisma.EmailVerifyTokenListRelationFilter
   notificationPreferences?: Prisma.XOR<Prisma.NotificationPreferencesNullableScalarRelationFilter, Prisma.NotificationPreferencesWhereInput> | null
@@ -622,6 +635,7 @@ export type UserOrderByWithAggregationInput = {
   walletAddress?: Prisma.SortOrderInput | Prisma.SortOrder
   isOG?: Prisma.SortOrder
   ogGrantedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  ogFoundingClient?: Prisma.SortOrder
   worldIdLevel?: Prisma.SortOrderInput | Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrderInput | Prisma.SortOrder
   stripeVerificationId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -669,6 +683,7 @@ export type UserScalarWhereWithAggregatesInput = {
   walletAddress?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   isOG?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   ogGrantedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  ogFoundingClient?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   worldIdLevel?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   worldIdNullifier?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   stripeVerificationId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -708,6 +723,7 @@ export type UserCreateInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -745,6 +761,7 @@ export type UserCreateInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -769,6 +786,7 @@ export type UserUncheckedCreateInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -806,6 +824,7 @@ export type UserUncheckedCreateInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -830,6 +849,7 @@ export type UserUpdateInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -867,6 +887,7 @@ export type UserUpdateInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -891,6 +912,7 @@ export type UserUncheckedUpdateInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -928,6 +950,7 @@ export type UserUncheckedUpdateInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -952,6 +975,7 @@ export type UserCreateManyInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -991,6 +1015,7 @@ export type UserUpdateManyMutationInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1030,6 +1055,7 @@ export type UserUncheckedUpdateManyInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1077,6 +1103,7 @@ export type UserCountOrderByAggregateInput = {
   walletAddress?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
   ogGrantedAt?: Prisma.SortOrder
+  ogFoundingClient?: Prisma.SortOrder
   worldIdLevel?: Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrder
   stripeVerificationId?: Prisma.SortOrder
@@ -1119,6 +1146,7 @@ export type UserMaxOrderByAggregateInput = {
   walletAddress?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
   ogGrantedAt?: Prisma.SortOrder
+  ogFoundingClient?: Prisma.SortOrder
   worldIdLevel?: Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrder
   stripeVerificationId?: Prisma.SortOrder
@@ -1156,6 +1184,7 @@ export type UserMinOrderByAggregateInput = {
   walletAddress?: Prisma.SortOrder
   isOG?: Prisma.SortOrder
   ogGrantedAt?: Prisma.SortOrder
+  ogFoundingClient?: Prisma.SortOrder
   worldIdLevel?: Prisma.SortOrder
   worldIdNullifier?: Prisma.SortOrder
   stripeVerificationId?: Prisma.SortOrder
@@ -1542,6 +1571,22 @@ export type UserUpdateOneRequiredWithoutReceivedOffersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedOffersInput, Prisma.UserUpdateWithoutReceivedOffersInput>, Prisma.UserUncheckedUpdateWithoutReceivedOffersInput>
 }
 
+export type UserCreateNestedOneWithoutCampaignClaimsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignClaimsInput, Prisma.UserUncheckedCreateWithoutCampaignClaimsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignClaimsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneWithoutCampaignClaimsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignClaimsInput, Prisma.UserUncheckedCreateWithoutCampaignClaimsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignClaimsInput
+  upsert?: Prisma.UserUpsertWithoutCampaignClaimsInput
+  disconnect?: Prisma.UserWhereInput | boolean
+  delete?: Prisma.UserWhereInput | boolean
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCampaignClaimsInput, Prisma.UserUpdateWithoutCampaignClaimsInput>, Prisma.UserUncheckedUpdateWithoutCampaignClaimsInput>
+}
+
 export type UserCreateWithoutSavedByTalentsInput = {
   id?: string
   twitterId?: string | null
@@ -1559,6 +1604,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -1595,6 +1641,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -1619,6 +1666,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -1655,6 +1703,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -1684,6 +1733,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -1720,6 +1770,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -1744,6 +1795,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -1780,6 +1832,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -1820,6 +1873,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1856,6 +1910,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -1880,6 +1935,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1916,6 +1972,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -1951,6 +2008,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1987,6 +2045,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -2011,6 +2070,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2047,6 +2107,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2071,6 +2132,7 @@ export type UserCreateWithoutNotificationsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2107,6 +2169,7 @@ export type UserCreateWithoutNotificationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -2131,6 +2194,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2167,6 +2231,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2207,6 +2272,7 @@ export type UserUpdateWithoutNotificationsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2243,6 +2309,7 @@ export type UserUpdateWithoutNotificationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -2267,6 +2334,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2303,6 +2371,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2327,6 +2396,7 @@ export type UserCreateWithoutJobsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2363,6 +2433,7 @@ export type UserCreateWithoutJobsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -2387,6 +2458,7 @@ export type UserUncheckedCreateWithoutJobsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2423,6 +2495,7 @@ export type UserUncheckedCreateWithoutJobsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2463,6 +2536,7 @@ export type UserUpdateWithoutJobsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2499,6 +2573,7 @@ export type UserUpdateWithoutJobsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -2523,6 +2598,7 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2559,6 +2635,7 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2583,6 +2660,7 @@ export type UserCreateWithoutJobApplicationsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2619,6 +2697,7 @@ export type UserCreateWithoutJobApplicationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -2643,6 +2722,7 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2679,6 +2759,7 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2719,6 +2800,7 @@ export type UserUpdateWithoutJobApplicationsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2755,6 +2837,7 @@ export type UserUpdateWithoutJobApplicationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -2779,6 +2862,7 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2815,6 +2899,7 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -2839,6 +2924,7 @@ export type UserCreateWithoutSentMessagesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2875,6 +2961,7 @@ export type UserCreateWithoutSentMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -2899,6 +2986,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -2935,6 +3023,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -2975,6 +3064,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3011,6 +3101,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -3035,6 +3126,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3071,6 +3163,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3095,6 +3188,7 @@ export type UserCreateWithoutGigsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3131,6 +3225,7 @@ export type UserCreateWithoutGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -3155,6 +3250,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3191,6 +3287,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3231,6 +3328,7 @@ export type UserUpdateWithoutGigsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3267,6 +3365,7 @@ export type UserUpdateWithoutGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -3291,6 +3390,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3327,6 +3427,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3351,6 +3452,7 @@ export type UserCreateWithoutSavedGigsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3387,6 +3489,7 @@ export type UserCreateWithoutSavedGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -3411,6 +3514,7 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3447,6 +3551,7 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3487,6 +3592,7 @@ export type UserUpdateWithoutSavedGigsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3523,6 +3629,7 @@ export type UserUpdateWithoutSavedGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -3547,6 +3654,7 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3583,6 +3691,7 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3607,6 +3716,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3643,6 +3753,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -3667,6 +3778,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3703,6 +3815,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3732,6 +3845,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3768,6 +3882,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -3792,6 +3907,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -3828,6 +3944,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -3868,6 +3985,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3904,6 +4022,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -3928,6 +4047,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3964,6 +4084,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -3999,6 +4120,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4035,6 +4157,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -4059,6 +4182,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4095,6 +4219,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4119,6 +4244,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4155,6 +4281,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -4179,6 +4306,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4215,6 +4343,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4244,6 +4373,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4280,6 +4410,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -4304,6 +4435,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4340,6 +4472,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4380,6 +4513,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4416,6 +4550,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -4440,6 +4575,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4476,6 +4612,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4511,6 +4648,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4547,6 +4685,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -4571,6 +4710,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4607,6 +4747,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4631,6 +4772,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4667,6 +4809,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -4691,6 +4834,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4727,6 +4871,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -4767,6 +4912,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4803,6 +4949,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -4827,6 +4974,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4863,6 +5011,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -4887,6 +5036,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4923,6 +5073,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -4947,6 +5098,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -4983,6 +5135,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5023,6 +5176,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5059,6 +5213,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -5083,6 +5238,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5119,6 +5275,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5143,6 +5300,7 @@ export type UserCreateWithoutProWaitlistInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5179,6 +5337,7 @@ export type UserCreateWithoutProWaitlistInput = {
   receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -5203,6 +5362,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5239,6 +5399,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -5279,6 +5440,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5315,6 +5477,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -5339,6 +5502,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5375,6 +5539,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -5399,6 +5564,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5436,6 +5602,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
@@ -5459,6 +5626,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5496,6 +5664,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
@@ -5535,6 +5704,7 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5572,6 +5742,7 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
@@ -5595,6 +5766,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5632,6 +5804,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
@@ -5655,6 +5828,7 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5692,6 +5866,7 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
@@ -5715,6 +5890,7 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5752,6 +5928,7 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
@@ -5791,6 +5968,7 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5828,6 +6006,7 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
@@ -5851,6 +6030,7 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5888,6 +6068,7 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
@@ -5911,6 +6092,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -5948,6 +6130,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
@@ -5971,6 +6154,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6008,6 +6192,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
@@ -6047,6 +6232,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6084,6 +6270,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
@@ -6107,6 +6294,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6144,6 +6332,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
@@ -6167,6 +6356,7 @@ export type UserCreateWithoutFiledDisputesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6204,6 +6394,7 @@ export type UserCreateWithoutFiledDisputesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -6227,6 +6418,7 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6264,6 +6456,7 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6303,6 +6496,7 @@ export type UserUpdateWithoutFiledDisputesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6340,6 +6534,7 @@ export type UserUpdateWithoutFiledDisputesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -6363,6 +6558,7 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6400,6 +6596,7 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -6423,6 +6620,7 @@ export type UserCreateWithoutDisputeMessagesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6460,6 +6658,7 @@ export type UserCreateWithoutDisputeMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -6483,6 +6682,7 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6520,6 +6720,7 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6559,6 +6760,7 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6596,6 +6798,7 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -6619,6 +6822,7 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6656,6 +6860,7 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -6679,6 +6884,7 @@ export type UserCreateWithoutSentOffersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6715,6 +6921,7 @@ export type UserCreateWithoutSentOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -6739,6 +6946,7 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6775,6 +6983,7 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6804,6 +7013,7 @@ export type UserCreateWithoutReceivedOffersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6840,6 +7050,7 @@ export type UserCreateWithoutReceivedOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
@@ -6864,6 +7075,7 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   walletAddress?: string | null
   isOG?: boolean
   ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
   worldIdLevel?: string | null
   worldIdNullifier?: string | null
   stripeVerificationId?: string | null
@@ -6900,6 +7112,7 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
   showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
   proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
@@ -6940,6 +7153,7 @@ export type UserUpdateWithoutSentOffersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6976,6 +7190,7 @@ export type UserUpdateWithoutSentOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -7000,6 +7215,7 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7036,6 +7252,7 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -7071,6 +7288,7 @@ export type UserUpdateWithoutReceivedOffersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7107,6 +7325,7 @@ export type UserUpdateWithoutReceivedOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
@@ -7131,6 +7350,7 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
   ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
   worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7167,6 +7387,271 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+}
+
+export type UserCreateWithoutCampaignClaimsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutCampaignClaimsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutCampaignClaimsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignClaimsInput, Prisma.UserUncheckedCreateWithoutCampaignClaimsInput>
+}
+
+export type UserUpsertWithoutCampaignClaimsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCampaignClaimsInput, Prisma.UserUncheckedUpdateWithoutCampaignClaimsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCampaignClaimsInput, Prisma.UserUncheckedCreateWithoutCampaignClaimsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCampaignClaimsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCampaignClaimsInput, Prisma.UserUncheckedUpdateWithoutCampaignClaimsInput>
+}
+
+export type UserUpdateWithoutCampaignClaimsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUncheckedUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
   passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
@@ -7196,6 +7681,7 @@ export type UserCountOutputType = {
   receivedOffers: number
   showcaseInteractions: number
   showcasePosts: number
+  campaignClaims: number
   passwordResetTokens: number
   emailVerifyTokens: number
   filedDisputes: number
@@ -7219,6 +7705,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   receivedOffers?: boolean | UserCountOutputTypeCountReceivedOffersArgs
   showcaseInteractions?: boolean | UserCountOutputTypeCountShowcaseInteractionsArgs
   showcasePosts?: boolean | UserCountOutputTypeCountShowcasePostsArgs
+  campaignClaims?: boolean | UserCountOutputTypeCountCampaignClaimsArgs
   passwordResetTokens?: boolean | UserCountOutputTypeCountPasswordResetTokensArgs
   emailVerifyTokens?: boolean | UserCountOutputTypeCountEmailVerifyTokensArgs
   filedDisputes?: boolean | UserCountOutputTypeCountFiledDisputesArgs
@@ -7350,6 +7837,13 @@ export type UserCountOutputTypeCountShowcasePostsArgs<ExtArgs extends runtime.Ty
 /**
  * UserCountOutputType without action
  */
+export type UserCountOutputTypeCountCampaignClaimsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CampaignClaimWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
 export type UserCountOutputTypeCountPasswordResetTokensArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   where?: Prisma.PasswordResetTokenWhereInput
 }
@@ -7393,6 +7887,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   walletAddress?: boolean
   isOG?: boolean
   ogGrantedAt?: boolean
+  ogFoundingClient?: boolean
   worldIdLevel?: boolean
   worldIdNullifier?: boolean
   stripeVerificationId?: boolean
@@ -7430,6 +7925,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   showcaseInteractions?: boolean | Prisma.User$showcaseInteractionsArgs<ExtArgs>
   showcasePosts?: boolean | Prisma.User$showcasePostsArgs<ExtArgs>
   proWaitlist?: boolean | Prisma.User$proWaitlistArgs<ExtArgs>
+  campaignClaims?: boolean | Prisma.User$campaignClaimsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   emailVerifyTokens?: boolean | Prisma.User$emailVerifyTokensArgs<ExtArgs>
   notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
@@ -7455,6 +7951,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   walletAddress?: boolean
   isOG?: boolean
   ogGrantedAt?: boolean
+  ogFoundingClient?: boolean
   worldIdLevel?: boolean
   worldIdNullifier?: boolean
   stripeVerificationId?: boolean
@@ -7494,6 +7991,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   walletAddress?: boolean
   isOG?: boolean
   ogGrantedAt?: boolean
+  ogFoundingClient?: boolean
   worldIdLevel?: boolean
   worldIdNullifier?: boolean
   stripeVerificationId?: boolean
@@ -7533,6 +8031,7 @@ export type UserSelectScalar = {
   walletAddress?: boolean
   isOG?: boolean
   ogGrantedAt?: boolean
+  ogFoundingClient?: boolean
   worldIdLevel?: boolean
   worldIdNullifier?: boolean
   stripeVerificationId?: boolean
@@ -7555,7 +8054,7 @@ export type UserSelectScalar = {
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
@@ -7574,6 +8073,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   showcaseInteractions?: boolean | Prisma.User$showcaseInteractionsArgs<ExtArgs>
   showcasePosts?: boolean | Prisma.User$showcasePostsArgs<ExtArgs>
   proWaitlist?: boolean | Prisma.User$proWaitlistArgs<ExtArgs>
+  campaignClaims?: boolean | Prisma.User$campaignClaimsArgs<ExtArgs>
   passwordResetTokens?: boolean | Prisma.User$passwordResetTokensArgs<ExtArgs>
   emailVerifyTokens?: boolean | Prisma.User$emailVerifyTokensArgs<ExtArgs>
   notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
@@ -7604,6 +8104,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     showcaseInteractions: Prisma.$ShowcaseInteractionPayload<ExtArgs>[]
     showcasePosts: Prisma.$ShowcasePostPayload<ExtArgs>[]
     proWaitlist: Prisma.$ProWaitlistPayload<ExtArgs> | null
+    campaignClaims: Prisma.$CampaignClaimPayload<ExtArgs>[]
     passwordResetTokens: Prisma.$PasswordResetTokenPayload<ExtArgs>[]
     emailVerifyTokens: Prisma.$EmailVerifyTokenPayload<ExtArgs>[]
     notificationPreferences: Prisma.$NotificationPreferencesPayload<ExtArgs> | null
@@ -7627,6 +8128,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     walletAddress: string | null
     isOG: boolean
     ogGrantedAt: Date | null
+    ogFoundingClient: boolean
     worldIdLevel: string | null
     worldIdNullifier: string | null
     stripeVerificationId: string | null
@@ -8058,6 +8560,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   showcaseInteractions<T extends Prisma.User$showcaseInteractionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$showcaseInteractionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShowcaseInteractionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   showcasePosts<T extends Prisma.User$showcasePostsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$showcasePostsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ShowcasePostPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   proWaitlist<T extends Prisma.User$proWaitlistArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$proWaitlistArgs<ExtArgs>>): Prisma.Prisma__ProWaitlistClient<runtime.Types.Result.GetResult<Prisma.$ProWaitlistPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  campaignClaims<T extends Prisma.User$campaignClaimsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$campaignClaimsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CampaignClaimPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   passwordResetTokens<T extends Prisma.User$passwordResetTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$passwordResetTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PasswordResetTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   emailVerifyTokens<T extends Prisma.User$emailVerifyTokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$emailVerifyTokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EmailVerifyTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notificationPreferences<T extends Prisma.User$notificationPreferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationPreferencesArgs<ExtArgs>>): Prisma.Prisma__NotificationPreferencesClient<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
@@ -8108,6 +8611,7 @@ export interface UserFieldRefs {
   readonly walletAddress: Prisma.FieldRef<"User", 'String'>
   readonly isOG: Prisma.FieldRef<"User", 'Boolean'>
   readonly ogGrantedAt: Prisma.FieldRef<"User", 'DateTime'>
+  readonly ogFoundingClient: Prisma.FieldRef<"User", 'Boolean'>
   readonly worldIdLevel: Prisma.FieldRef<"User", 'String'>
   readonly worldIdNullifier: Prisma.FieldRef<"User", 'String'>
   readonly stripeVerificationId: Prisma.FieldRef<"User", 'String'>
@@ -8921,6 +9425,30 @@ export type User$proWaitlistArgs<ExtArgs extends runtime.Types.Extensions.Intern
    */
   include?: Prisma.ProWaitlistInclude<ExtArgs> | null
   where?: Prisma.ProWaitlistWhereInput
+}
+
+/**
+ * User.campaignClaims
+ */
+export type User$campaignClaimsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CampaignClaim
+   */
+  select?: Prisma.CampaignClaimSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CampaignClaim
+   */
+  omit?: Prisma.CampaignClaimOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CampaignClaimInclude<ExtArgs> | null
+  where?: Prisma.CampaignClaimWhereInput
+  orderBy?: Prisma.CampaignClaimOrderByWithRelationInput | Prisma.CampaignClaimOrderByWithRelationInput[]
+  cursor?: Prisma.CampaignClaimWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CampaignClaimScalarFieldEnum | Prisma.CampaignClaimScalarFieldEnum[]
 }
 
 /**

@@ -89,24 +89,30 @@ export async function POST(req: NextRequest) {
 
     sendWelcomeEmail({ to: email, name: user.name ?? handle, handle }).catch(() => {});
 
-    // Send email verification
-    const verifyToken = randomBytes(32).toString("hex");
-    await db.emailVerifyToken.create({
-      data: {
-        userId: user.id,
-        token: verifyToken,
-        expiresAt: new Date(Date.now() + VERIFY_TTL_MS),
-      },
-    });
-    const verifyUrl = `${BASE_URL}/verify-email?token=${verifyToken}`;
-    // Must be awaited — fire-and-forget gets killed by Vercel before Resend fires
-    await sendEmailVerificationEmail({ to: email, verifyUrl }).catch(() => {});
-
+    // Sign JWT immediately — user is created, must return token regardless of
+    // what happens next. Email verification is non-critical; users can resend later.
     const token = await signMobileJWT({
       sub: user.id,
       handle: user.twitterHandle,
       role: user.role,
     });
+
+    // Send email verification (awaited so Vercel doesn't kill it, but errors don't
+    // block the response — a failed send just means the user hits "resend" later).
+    try {
+      const verifyToken = randomBytes(32).toString("hex");
+      await db.emailVerifyToken.create({
+        data: {
+          userId: user.id,
+          token: verifyToken,
+          expiresAt: new Date(Date.now() + VERIFY_TTL_MS),
+        },
+      });
+      const verifyUrl = `${BASE_URL}/verify-email?token=${verifyToken}`;
+      await sendEmailVerificationEmail({ to: email, verifyUrl }).catch(() => {});
+    } catch {
+      // Non-fatal: user can request a new verification email via resend-verification
+    }
 
     return ok({ token, user: { ...user, emailVerified: false } });
   } catch (e) {

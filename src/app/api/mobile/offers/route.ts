@@ -171,11 +171,13 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
 
     const notifyPromise = notifyUser({
       userId: receiverId,
+      senderId: user.sub,
       type: "offer",
       title: "New Offer Received",
       body: `${senderName} sent you an offer: "${offer.title}" for $${offer.amount}`,
       link: `/messages/${conversationId}`,
       actionUrl: `crewboard://offer/${offer.id}`,
+      messageId: `offer:${offer.id}`,
     }).catch(() => {});
 
     const pushPromise = notifyPromise.then(() =>

@@ -31,6 +31,7 @@ model User {
   walletAddress        String?               @unique
   isOG                 Boolean               @default(false)
   ogGrantedAt          DateTime?
+  ogFoundingClient     Boolean               @default(false)
   worldIdLevel         String?
   worldIdNullifier     String?               @unique
   stripeVerificationId String?               @unique
@@ -68,6 +69,7 @@ model User {
   showcaseInteractions ShowcaseInteraction[]
   showcasePosts        ShowcasePost[]
   proWaitlist          ProWaitlist?
+  campaignClaims       CampaignClaim[]
   passwordResetTokens     PasswordResetToken[]
   emailVerifyTokens       EmailVerifyToken[]
   notificationPreferences NotificationPreferences?
@@ -235,6 +237,8 @@ model Order {
   deliveryHistory     Json      @default("[]")
   revisionRequests    Json      @default("[]")
   revisionCount       Int       @default(0)
+  feeOverridePct      Float?
+  campaignClaimId     String?
   buyer               User      @relation("BuyerOrders", fields: [buyerId], references: [id], onDelete: Cascade)
   gig                 Gig       @relation(fields: [gigId], references: [id], onDelete: Cascade)
   seller              User      @relation("SellerOrders", fields: [sellerId], references: [id], onDelete: Cascade)
@@ -416,4 +420,26 @@ model AdminActionLog {
   @@index([action])
   @@index([targetId])
   @@index([createdAt])
+}
+
+model CampaignClaim {
+  id                   String    @id @default(cuid())
+  campaign             String
+  walletAddress        String
+  userId               String?
+  status               String    @default("pending") // pending | qualified | redeemed | expired
+  creditAmountUsdc     Int       @default(5000)       // $50 in cents
+  creditRemainingUsdc  Int       @default(5000)
+  feeRebatesRemaining  Int       @default(3)
+  ogBadgeGranted       Boolean   @default(false)
+  claimedAt            DateTime  @default(now())
+  redeemedAt           DateTime?
+  firstOrderId         String?
+  expiresAt            DateTime
+  user                 User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@unique([campaign, walletAddress])
+  @@index([campaign, status])
+  @@index([userId])
+  @@map("campaign_claim")
 }

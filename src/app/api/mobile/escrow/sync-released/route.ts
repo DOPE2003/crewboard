@@ -31,7 +31,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       select: {
         buyerId: true, sellerId: true, status: true, amount: true,
         escrowAddress: true,
-        buyer:  { select: { walletAddress: true } },
+        buyer:  { select: { name: true, twitterHandle: true, walletAddress: true } },
         seller: { select: { walletAddress: true } },
         gig:    { select: { title: true } },
         offer:  { select: { id: true } },
@@ -64,29 +64,38 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       data: { status: "completed", txHash },
     });
 
-    notifyUser({
-      userId: order.sellerId,
-      type: "order",
-      title: "Payment Released!",
-      body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`,
-      link: `/orders/${orderId}`,
-      actionUrl: `crewboard://order/${orderId}`,
-    }).catch(() => {});
-
+    const buyerName = order.buyer.name ?? `@${order.buyer.twitterHandle}`;
     const offerRef = order.offer?.id ?? orderId;
+    const isSelfRelease = order.buyerId === order.sellerId;
 
-    sendPush({
-      userId: order.sellerId,
-      title: "Payment Released",
-      body: `$${order.amount} USDC released to your wallet for "${order.gig.title}"`,
-      data: {
-        type: "payment_released",
-        actionUrl: `crewboard://offer/${offerRef}`,
-        offerId: offerRef,
-        orderId,
-        jobTitle: order.gig.title,
-      },
-    }).catch(() => {});
+    if (!isSelfRelease) {
+      notifyUser({
+        userId: order.sellerId,
+        senderId: order.buyerId,
+        type: "payment",
+        title: "💸 Payment received",
+        body: `You received ${order.amount} USDC from ${buyerName} for "${order.gig.title}"`,
+        link: `/orders/${orderId}`,
+        actionUrl: `crewboard://order/${orderId}`,
+        messageId: `payment-released-${txHash}`,
+      }).catch(() => {});
+
+      sendPush({
+        userId: order.sellerId,
+        title: "💸 Payment received",
+        body: `You received ${order.amount} USDC from ${buyerName}`,
+        data: {
+          type: "payment",
+          actionUrl: `crewboard://order/${orderId}`,
+          offerId: offerRef,
+          orderId,
+          amountUSDC: String(order.amount),
+          txHash,
+          fromUserId: order.buyerId,
+          fromUserName: buyerName,
+        },
+      }).catch(() => {});
+    }
 
     return ok({ orderId, status: "completed" });
   } catch (e) {
