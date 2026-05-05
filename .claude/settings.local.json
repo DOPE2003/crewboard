@@ -31,7 +31,8 @@
       "Bash(npx tsx *)",
       "Bash(npx ts-node *)",
       "Bash(git pull *)",
-      "Bash(git stash *)"
+      "Bash(git stash *)",
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")"
     ]
   }
 }

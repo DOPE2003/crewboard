@@ -1,11 +1,26 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/lib/db";
 
 // Cache this response for 2 minutes — talent list doesn't need to be real-time
 export const revalidate = 120;
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  const q = req.nextUrl.searchParams.get("q")?.trim() ?? req.nextUrl.searchParams.get("search")?.trim() ?? "";
+
+  const where = q
+    ? {
+        OR: [
+          { name:          { contains: q, mode: "insensitive" as const } },
+          { twitterHandle: { contains: q, mode: "insensitive" as const } },
+          { userTitle:     { contains: q, mode: "insensitive" as const } },
+          { bio:           { contains: q, mode: "insensitive" as const } },
+          { skills:        { has: q } },
+        ],
+      }
+    : {};
+
   const users = await db.user.findMany({
+    where,
     select: {
       id: true,
       name: true,
@@ -27,7 +42,7 @@ export async function GET() {
       },
     },
     orderBy: { createdAt: "desc" },
-    take: 200,
+    take: q ? 50 : 200,
   });
 
   const result = users

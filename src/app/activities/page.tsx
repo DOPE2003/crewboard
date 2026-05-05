@@ -4,7 +4,15 @@ import db from '@/lib/db'
 import ActivitiesClient from './ActivitiesClient'
 import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
+const ENVELOPE_PREFIXES = ['__OFFER__:', '__GIGREQUEST__:'] as const
+
 function msgPreview(body: string, maxLen = 60): string {
+  if (body.startsWith('__OFFER__:')) {
+    try {
+      const p = JSON.parse(body.slice('__OFFER__:'.length))
+      return `📋 Offer: ${p.title} — $${p.amount}`
+    } catch { return '📋 Contract Offer' }
+  }
   if (body.startsWith('__GIGREQUEST__:')) {
     try { return 'Gig Request: ' + JSON.parse(body.slice('__GIGREQUEST__:'.length)).title }
     catch { return 'Gig Request' }
@@ -84,6 +92,18 @@ export default async function ActivitiesPage() {
       const otherId = c.participants.find(p => p !== userId) ?? ''
       const other = userMap[otherId] ?? null
       const lastMsg = c.messages[0]
+
+      // Offer/gig-request envelopes are internal protocol — they surface in the
+      // feed via their corresponding notifications. Skip those conversations so
+      // the same event doesn't appear twice (once as a raw chat row, once as a
+      // structured notification card). __FILE__: attachments are kept because
+      // they have no corresponding notification.
+      const isEnvelopeOnly = lastMsg &&
+        ENVELOPE_PREFIXES.some(p => lastMsg.body.startsWith(p)) &&
+        lastMsg.senderId !== userId // receiver sees the notif; sender has /offers
+
+      if (isEnvelopeOnly) return null
+
       let lastMessageText: string | null = null
       if (lastMsg) {
         const prefix = lastMsg.senderId === userId ? 'You: ' : ''
@@ -105,7 +125,7 @@ export default async function ActivitiesPage() {
             }
           : null,
       }
-    })
+    }).filter((c): c is NonNullable<typeof c> => c !== null)
 
     // Strip message-type notifications — message unread state is tracked via
     // conversation.unread counts. Including them here inflates the badge without

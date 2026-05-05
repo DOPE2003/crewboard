@@ -35,7 +35,7 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       where: { id: offerId },
       include: {
         sender:   { select: { name: true, twitterHandle: true } },
-        receiver: { select: { name: true, twitterHandle: true } },
+        receiver: { select: { name: true, twitterHandle: true, walletAddress: true } },
       },
     });
 
@@ -44,6 +44,16 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
     if (offer.status !== "pending") return err(`Offer is already ${offer.status}.`);
 
     const receiverName = offer.receiver.name ?? offer.receiver.twitterHandle ?? "Someone";
+
+    // Block accept if the seller (receiver) has no wallet — buyer would hit a dead
+    // end at build-fund. Fail fast here with a clear 409 so iOS can show a nudge.
+    if (action === "accept" && !offer.receiver.walletAddress?.trim()) {
+      return err("seller_wallet_missing", 409, {
+        error: "seller_wallet_missing",
+        message: `${receiverName} hasn't connected a Solana wallet yet. Ask them to connect one in their profile before you accept.`,
+        sellerHandle: receiverName,
+      });
+    }
 
     if (action === "decline") {
       await db.offer.update({ where: { id: offerId }, data: { status: "declined" } });

@@ -169,6 +169,8 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
     });
     const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
 
+    const actionUrl = `crewboard://chat/${conversationId}?offer=${offer.id}`;
+
     const notifyPromise = notifyUser({
       userId: receiverId,
       senderId: user.sub,
@@ -176,18 +178,16 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       title: "New Offer Received",
       body: `${senderName} sent you an offer: "${offer.title}" for $${offer.amount}`,
       link: `/messages/${conversationId}`,
-      actionUrl: `crewboard://offer/${offer.id}`,
+      actionUrl,
       messageId: `offer:${offer.id}`,
     }).catch(() => {});
 
-    const pushPromise = notifyPromise.then(() =>
-      sendPush({
-        userId: receiverId,
-        title: `New offer from ${senderName}`,
-        body: `${offer.title} · $${offer.amount}`,
-        data: { type: "offer", refId: offer.id, actionUrl: `crewboard://offer/${offer.id}` },
-      }).catch(() => {})
-    );
+    const pushPromise = sendPush({
+      userId: receiverId,
+      title: `New offer from ${senderName}`,
+      body: `${offer.title} · $${offer.amount}`,
+      data: { type: "offer", offerId: offer.id, conversationId, actionUrl },
+    }).catch(() => {});
 
     const pusherPromise = (async () => {
       try {

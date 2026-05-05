@@ -128,11 +128,12 @@ async function createHandler(req: NextRequest, user: MobileTokenPayload) {
 
     notifyUser({
       userId:    otherId,
-      type:      "order",
+      type:      "dispute",
       title:     "Dispute Filed",
       body:      `${actorName} filed a dispute for "${order.gig.title}"`,
-      link:      `/orders/${orderId}`,
+      link:      `/disputes/${dispute.id}`,
       actionUrl: `crewboard://dispute/${dispute.id}`,
+      messageId: `dispute:${dispute.id}`,
     }).catch(() => {});
 
     sendPush({

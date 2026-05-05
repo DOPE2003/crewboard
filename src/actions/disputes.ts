@@ -49,11 +49,12 @@ export async function openDispute(
   const otherId = order.buyerId === userId ? order.sellerId : order.buyerId;
   notifyUser({
     userId: otherId,
-    type: "order",
+    type: "dispute",
     title: "Dispute Opened",
     body: `A dispute was opened on "${order.gig.title}". Please respond.`,
     link: `/disputes/${dispute.id}`,
     actionUrl: `crewboard://dispute/${dispute.id}`,
+    messageId: `dispute:${dispute.id}`,
   }).catch(() => {});
 
   revalidatePath(`/orders/${orderId}`);
@@ -133,11 +134,12 @@ export async function adminResolveDispute(
   for (const uid of [dispute.order.buyerId, dispute.order.sellerId]) {
     notifyUser({
       userId: uid,
-      type: "order",
+      type: "dispute",
       title: "Dispute Resolved",
       body: `Your dispute for "${dispute.order.gig.title}" has been resolved: ${decision}.`,
       link: `/disputes/${disputeId}`,
       actionUrl: `crewboard://dispute/${disputeId}`,
+      messageId: `dispute_resolved:${disputeId}:${uid}`,
     }).catch(() => {});
   }
 

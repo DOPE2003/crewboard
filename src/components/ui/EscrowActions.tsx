@@ -79,6 +79,77 @@ const WALLET_META: { name: string; Logo: React.ComponentType }[] = [
   { name: "Jupiter",  Logo: JupiterLogo  },
 ];
 
+interface DisputeFormProps {
+  showDisputeForm: boolean;
+  setShowDisputeForm: (v: boolean) => void;
+  disputeReason: string;
+  setDisputeReason: (v: string) => void;
+  disputeDesc: string;
+  setDisputeDesc: (v: string) => void;
+  disputeUrl: string;
+  setDisputeUrl: (v: string) => void;
+  disputeLoading: boolean;
+  disputeErr: string;
+  onOpenDispute: () => void;
+  disabled?: boolean;
+}
+
+function DisputeForm({
+  showDisputeForm, setShowDisputeForm,
+  disputeReason, setDisputeReason,
+  disputeDesc, setDisputeDesc,
+  disputeUrl, setDisputeUrl,
+  disputeLoading, disputeErr,
+  onOpenDispute, disabled,
+}: DisputeFormProps) {
+  if (!showDisputeForm) return (
+    <button
+      onClick={() => setShowDisputeForm(true)}
+      disabled={disabled}
+      style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.25)", fontWeight: 600 }}
+    >
+      Open Dispute
+    </button>
+  );
+  return (
+    <div style={{ width: "100%", padding: "1rem", borderRadius: 10, background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#ef4444" }}>Open Dispute</span>
+        <button onClick={() => setShowDisputeForm(false)} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem", lineHeight: 1 }}>×</button>
+      </div>
+      <input
+        value={disputeReason}
+        onChange={(e) => setDisputeReason(e.target.value)}
+        placeholder="Short reason (e.g. Work not delivered)"
+        maxLength={120}
+        style={{ padding: "0.55rem 0.75rem", borderRadius: 7, border: "1px solid var(--card-border)", background: "var(--input-bg)", color: "var(--foreground)", fontSize: "0.78rem", fontFamily: "inherit" }}
+      />
+      <textarea
+        value={disputeDesc}
+        onChange={(e) => setDisputeDesc(e.target.value)}
+        placeholder="Describe the issue in detail…"
+        rows={3}
+        style={{ resize: "vertical", padding: "0.55rem 0.75rem", borderRadius: 7, border: "1px solid var(--card-border)", background: "var(--input-bg)", color: "var(--foreground)", fontSize: "0.78rem", fontFamily: "inherit" }}
+      />
+      <input
+        type="url"
+        value={disputeUrl}
+        onChange={(e) => setDisputeUrl(e.target.value)}
+        placeholder="Evidence URL (optional)"
+        style={{ padding: "0.55rem 0.75rem", borderRadius: 7, border: "1px solid var(--card-border)", background: "var(--input-bg)", color: "var(--foreground)", fontSize: "0.78rem", fontFamily: "inherit" }}
+      />
+      {disputeErr && <div style={{ fontSize: "0.72rem", color: "#ef4444" }}>{disputeErr}</div>}
+      <button
+        onClick={onOpenDispute}
+        disabled={disputeLoading || !disputeReason.trim() || !disputeDesc.trim()}
+        style={{ alignSelf: "flex-end", padding: "0.55rem 1.25rem", borderRadius: 8, background: "#ef4444", color: "#fff", border: "none", fontWeight: 700, fontSize: "0.78rem", cursor: disputeLoading || !disputeReason.trim() || !disputeDesc.trim() ? "not-allowed" : "pointer", opacity: disputeLoading || !disputeReason.trim() || !disputeDesc.trim() ? 0.6 : 1 }}
+      >
+        {disputeLoading ? "Opening…" : "Submit Dispute"}
+      </button>
+    </div>
+  );
+}
+
 function WalletPicker({ wallets, connecting, showPicker, setShowPicker, onSelect, style }: {
   wallets: { adapter: { name: string } }[];
   connecting: boolean;
@@ -277,54 +348,15 @@ export default function EscrowActions({
     }
   }
 
-  function DisputeFormInline() {
-    if (!showDisputeForm) return (
-      <button
-        onClick={() => setShowDisputeForm(true)}
-        disabled={!!loading}
-        style={{ fontSize: "0.78rem", padding: "0.6rem 1.4rem", cursor: "pointer", borderRadius: 99, background: "rgba(239,68,68,0.1)", color: "#ef4444", border: "1px solid rgba(239,68,68,0.25)", fontWeight: 600 }}
-      >
-        Open Dispute
-      </button>
-    );
-    return (
-      <div style={{ width: "100%", padding: "1rem", borderRadius: 10, background: "rgba(239,68,68,0.05)", border: "1px solid rgba(239,68,68,0.2)", display: "flex", flexDirection: "column", gap: "0.6rem" }}>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <span style={{ fontSize: "0.72rem", fontWeight: 700, color: "#ef4444" }}>Open Dispute</span>
-          <button onClick={() => setShowDisputeForm(false)} style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "1rem", lineHeight: 1 }}>×</button>
-        </div>
-        <input
-          value={disputeReason}
-          onChange={(e) => setDisputeReason(e.target.value)}
-          placeholder="Short reason (e.g. Work not delivered)"
-          maxLength={120}
-          style={{ padding: "0.55rem 0.75rem", borderRadius: 7, border: "1px solid var(--card-border)", background: "var(--input-bg)", color: "var(--foreground)", fontSize: "0.78rem", fontFamily: "inherit" }}
-        />
-        <textarea
-          value={disputeDesc}
-          onChange={(e) => setDisputeDesc(e.target.value)}
-          placeholder="Describe the issue in detail…"
-          rows={3}
-          style={{ resize: "vertical", padding: "0.55rem 0.75rem", borderRadius: 7, border: "1px solid var(--card-border)", background: "var(--input-bg)", color: "var(--foreground)", fontSize: "0.78rem", fontFamily: "inherit" }}
-        />
-        <input
-          type="url"
-          value={disputeUrl}
-          onChange={(e) => setDisputeUrl(e.target.value)}
-          placeholder="Evidence URL (optional)"
-          style={{ padding: "0.55rem 0.75rem", borderRadius: 7, border: "1px solid var(--card-border)", background: "var(--input-bg)", color: "var(--foreground)", fontSize: "0.78rem", fontFamily: "inherit" }}
-        />
-        {disputeErr && <div style={{ fontSize: "0.72rem", color: "#ef4444" }}>{disputeErr}</div>}
-        <button
-          onClick={handleOpenDispute}
-          disabled={disputeLoading || !disputeReason.trim() || !disputeDesc.trim()}
-          style={{ alignSelf: "flex-end", padding: "0.55rem 1.25rem", borderRadius: 8, background: "#ef4444", color: "#fff", border: "none", fontWeight: 700, fontSize: "0.78rem", cursor: disputeLoading || !disputeReason.trim() || !disputeDesc.trim() ? "not-allowed" : "pointer", opacity: disputeLoading || !disputeReason.trim() || !disputeDesc.trim() ? 0.6 : 1 }}
-        >
-          {disputeLoading ? "Opening…" : "Submit Dispute"}
-        </button>
-      </div>
-    );
-  }
+  const disputeFormProps: DisputeFormProps = {
+    showDisputeForm, setShowDisputeForm,
+    disputeReason, setDisputeReason,
+    disputeDesc, setDisputeDesc,
+    disputeUrl, setDisputeUrl,
+    disputeLoading, disputeErr,
+    onOpenDispute: handleOpenDispute,
+    disabled: !!loading,
+  };
 
   async function handleFundEscrow() {
     if (fundingInProgress.current) {
@@ -697,7 +729,7 @@ export default function EscrowActions({
                 Work in progress — waiting for delivery.
               </div>
             )}
-            <DisputeFormInline />
+            <DisputeForm {...disputeFormProps} />
           </div>
         )}
 
@@ -722,7 +754,7 @@ export default function EscrowActions({
                   {loading === "release" && <Spinner />}
                   {loading === "release" ? "Releasing…" : "Release Payment — Mark as Completed"}
                 </button>
-                <DisputeFormInline />
+                <DisputeForm {...disputeFormProps} />
               </div>
             )}
             {/* Request Revision */}
@@ -784,7 +816,7 @@ export default function EscrowActions({
                 <span style={{ color: "var(--text-muted)" }}>Your payout <strong style={{ color: "#2DD4BF" }}>${sellerAmount} USDC</strong></span>
               </div>
             </div>
-            <DisputeFormInline />
+            <DisputeForm {...disputeFormProps} />
           </div>
         )}
 
@@ -793,7 +825,7 @@ export default function EscrowActions({
           <div style={{ padding: "0.9rem 1rem", borderRadius: 10, background: "rgba(139,92,246,0.06)", border: "1px solid rgba(139,92,246,0.2)", fontSize: "0.73rem", color: "var(--text-muted)", lineHeight: 1.5 }}>
             Revision requested — waiting for the seller to resubmit.
             <div style={{ marginTop: "0.5rem" }}>
-              <DisputeFormInline />
+              <DisputeForm {...disputeFormProps} />
             </div>
           </div>
         )}
@@ -830,7 +862,7 @@ export default function EscrowActions({
                 {revisionLoading && <Spinner />}
                 {revisionLoading ? "Resubmitting…" : "Resubmit Work"}
               </button>
-              <DisputeFormInline />
+              <DisputeForm {...disputeFormProps} />
             </div>
           </div>
         )}

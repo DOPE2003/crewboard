@@ -156,7 +156,7 @@ interface OfferPayload {
   amount: number;
   deliveryDays: number;
   senderId: string;
-  status: "pending" | "accepted" | "declined";
+  status: "pending" | "accepted" | "declined" | "cancelled" | "disputed";
 }
 
 function parseOfferPayload(body: string): OfferPayload | null {
@@ -165,9 +165,11 @@ function parseOfferPayload(body: string): OfferPayload | null {
 }
 
 const STATUS_CONFIG = {
-  pending:  { label: "Pending",  color: "#f59e0b", bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.2)"  },
-  accepted: { label: "Accepted", color: "#14B8A6", bg: "rgba(20,184,166,0.08)",  border: "rgba(20,184,166,0.2)"  },
-  declined: { label: "Declined", color: "#ef4444", bg: "rgba(239,68,68,0.08)",   border: "rgba(239,68,68,0.2)"   },
+  pending:   { label: "Pending",   color: "#f59e0b", bg: "rgba(245,158,11,0.08)",  border: "rgba(245,158,11,0.2)"  },
+  accepted:  { label: "Accepted",  color: "#14B8A6", bg: "rgba(20,184,166,0.08)",  border: "rgba(20,184,166,0.2)"  },
+  declined:  { label: "Declined",  color: "#ef4444", bg: "rgba(239,68,68,0.08)",   border: "rgba(239,68,68,0.2)"   },
+  cancelled: { label: "Cancelled", color: "#6b7280", bg: "rgba(107,114,128,0.08)", border: "rgba(107,114,128,0.2)" },
+  disputed:  { label: "Disputed",  color: "#ef4444", bg: "rgba(239,68,68,0.08)",   border: "rgba(239,68,68,0.2)"   },
 };
 
 function OfferBubble({

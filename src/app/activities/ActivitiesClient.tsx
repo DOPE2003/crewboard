@@ -97,6 +97,12 @@ type SidebarTab = 'all' | 'messages' | 'orders' | 'payments' | 'disputes' | 'rev
 
 function previewLastMessage(body: string | null): string {
   if (!body) return 'No messages yet'
+  if (body.startsWith('__OFFER__:')) {
+    try {
+      const p = JSON.parse(body.slice('__OFFER__:'.length))
+      return `📋 Offer: ${p.title} — $${p.amount}`
+    } catch { return '📋 Contract Offer' }
+  }
   if (body.startsWith('__GIGREQUEST__:')) {
     try { return 'Service request: ' + JSON.parse(body.slice('__GIGREQUEST__:'.length)).title }
     catch { return 'Service Request' }
@@ -649,12 +655,10 @@ export default function ActivitiesClient({
                   {disputeCount > 0 && <span style={{ color: '#ef4444', fontWeight: 600 }}> · {disputeCount} dispute{disputeCount > 1 ? 's' : ''} need attention</span>}
                 </p>
               </div>
-              {hasAnyUnread && (
-                <button onClick={handleMarkAllRead} disabled={markingAll}
-                  className={`act-btn-primary${!hasAnyUnread || markingAll ? ' act-btn-primary--disabled' : ''}`}>
-                  {markingAll ? 'Marking…' : 'Mark all read'}
-                </button>
-              )}
+              <button onClick={handleMarkAllRead} disabled={markingAll || !hasAnyUnread}
+                className={`act-btn-primary${!hasAnyUnread || markingAll ? ' act-btn-primary--disabled' : ''}`}>
+                {markingAll ? 'Marking…' : 'Mark all read'}
+              </button>
             </div>
           </div>
 
