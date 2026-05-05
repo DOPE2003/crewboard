@@ -46,8 +46,8 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
 
     if (!order)                        return err("Order not found.", 404);
     if (order.sellerId !== user.sub)   return err("Only the seller can mark as delivered.", 403);
-    if (order.status !== "accepted" && order.status !== "revision_requested") {
-      return err(`Order is ${order.status}, expected accepted or revision_requested.`);
+    if (!["funded", "accepted", "revision_requested"].includes(order.status)) {
+      return err(`Order is ${order.status}, expected funded, accepted, or revision_requested.`);
     }
     if (!order.seller.walletAddress)   return err("Your wallet is not linked.");
     if (!order.buyer.walletAddress)    return err("Buyer has no wallet address on file.");
