@@ -29,12 +29,13 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ id:
 
   try {
     const body = await req.json().catch(() => ({}));
-    const coverLetter  = (body?.coverLetter  as string | undefined)?.trim() ?? "";
+    // accept both "coverLetter" (web) and "message" (iOS)
+    const coverLetter  = ((body?.coverLetter ?? body?.message) as string | undefined)?.trim() ?? "";
     const proposedRate = (body?.proposedRate as string | undefined)?.trim() || null;
     const portfolioURL = (body?.portfolioURL as string | undefined)?.trim() || null;
 
-    if (!coverLetter || coverLetter.length < 40)
-      return err("Cover letter must be at least 40 characters.");
+    if (!coverLetter || coverLetter.length < 10)
+      return err("Cover letter must be at least 10 characters.");
     if (coverLetter.length > 2000)
       return err("Cover letter must be under 2000 characters.");
 
