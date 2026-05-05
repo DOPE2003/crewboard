@@ -42,7 +42,8 @@
       "Bash(unzip -o \"Crewboard UIUX redesign.zip\")",
       "Bash(unzip -o \"Crewboard UIUX redesign \\(1\\).zip\")",
       "Bash(unzip -o \"Crewboard UIUX redesign \\(2\\).zip\")",
-      "Bash(git --version)"
+      "Bash(git --version)",
+      "Bash(git checkout *)"
     ]
   }
 }

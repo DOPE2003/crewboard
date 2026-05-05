@@ -140,26 +140,25 @@ export default async function HomePage() {
         {/* Mode-aware hero — headline, subtitle, CTA cards */}
         <HomeModeHero isLoggedIn={isLoggedIn} />
 
-        {/* Trust pills */}
+        {/* Trust stats */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.82s forwards",
-          position: "relative", zIndex: 1, marginBottom: 16,
-          display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", justifyContent: "center",
+          position: "relative", zIndex: 1, marginBottom: 20,
+          display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center",
+          paddingTop: 4,
         }}>
           {([
-            { icon: <ShieldCheck size={12} strokeWidth={2} />, label: "Secure payments" },
-            { icon: <BadgeCheck size={12} strokeWidth={2} />, label: "Verified freelancers" },
-            { icon: <Clock size={12} strokeWidth={2} />, label: "No upfront risk" },
-          ] as { icon: React.ReactNode; label: string }[]).map((t) => (
-            <span key={t.label} style={{
-              display: "inline-flex", alignItems: "center", gap: 5,
-              fontSize: "0.72rem", fontWeight: 500, color: "var(--text-muted)",
-              background: "var(--surface)", border: "1px solid var(--card-border)",
-              borderRadius: 99, padding: "4px 10px",
-            }}>
-              <span style={{ color: "#14B8A6", display: "flex", alignItems: "center" }}>{t.icon}</span>
-              {t.label}
-            </span>
+            { stat: "2,800+", label: "Vetted creatives" },
+            { stat: "$4.2M", label: "Paid via escrow" },
+            { stat: "48h", label: "Avg. match time" },
+          ] as { stat: string; label: string }[]).map((t, i) => (
+            <React.Fragment key={t.label}>
+              <div style={{ textAlign: "center" }}>
+                <div style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--foreground)", letterSpacing: "-0.02em", lineHeight: 1 }}>{t.stat}</div>
+                <div style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--text-muted)", marginTop: 3 }}>{t.label}</div>
+              </div>
+              {i < 2 && <div style={{ width: 1, height: 28, background: "var(--border)" }} />}
+            </React.Fragment>
           ))}
         </div>
 

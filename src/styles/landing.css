@@ -144,9 +144,10 @@ body.dark .glass-card {
   }
 
   .hero-h1 {
-    font-size: 28px !important;
-    font-weight: 500 !important;
-    line-height: 1.2 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
+    line-height: 1.05 !important;
+    letter-spacing: -0.03em !important;
   }
 
   .hero-beta-badge {
