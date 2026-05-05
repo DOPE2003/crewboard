@@ -32,7 +32,17 @@
       "Bash(npx ts-node *)",
       "Bash(git pull *)",
       "Bash(git stash *)",
-      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")"
+      "Bash(grep -E \"\\\\.\\(tsx|ts\\)$\")",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main status)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main log --oneline -3)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main diff --staged -- src/)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main add src/actions/disputes.ts src/app/activities/ActivitiesClient.tsx src/app/activities/page.tsx src/app/api/mobile/disputes/route.ts src/app/api/mobile/offers/respond/route.ts src/app/api/mobile/offers/route.ts src/app/api/talent/browse/route.ts src/app/messages/\\\\[id\\\\]/MessageThread.tsx src/components/ui/EscrowActions.tsx)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main commit -m ' *)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main push origin main)",
+      "Bash(unzip -o \"Crewboard UIUX redesign.zip\")",
+      "Bash(unzip -o \"Crewboard UIUX redesign \\(1\\).zip\")",
+      "Bash(unzip -o \"Crewboard UIUX redesign \\(2\\).zip\")",
+      "Bash(git --version)"
     ]
   }
 }
