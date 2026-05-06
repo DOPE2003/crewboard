@@ -166,8 +166,8 @@ export default async function HomePage() {
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
           position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 960,
-          display: "flex", gap: 12, alignItems: "stretch",
+          width: "100%", maxWidth: 620,
+          display: "flex", gap: 10, alignItems: "stretch",
         }} className="eco-highlights-row">
 
           {/* Card 1: Superteam */}
@@ -180,7 +180,7 @@ export default async function HomePage() {
             overflow: "hidden",
           }}>
             {/* Image strip */}
-            <div style={{ width: 120, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
+            <div style={{ width: 100, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large"
@@ -268,29 +268,14 @@ export default async function HomePage() {
             boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
             overflow: "hidden",
           }}>
-            {/* Image strip */}
+            {/* Image strip — Apple logo on black */}
             <div style={{
-              width: 120, flexShrink: 0, overflow: "hidden",
-              background: "linear-gradient(160deg, #0f172a 0%, #0f3d36 100%)",
+              width: 100, flexShrink: 0, overflow: "hidden",
+              background: "#000000",
               display: "flex", alignItems: "center", justifyContent: "center",
             }}>
-              <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Phone outline */}
-                <rect x="12" y="3" width="30" height="48" rx="5" fill="none" stroke="rgba(20,184,166,0.5)" strokeWidth="1.5"/>
-                <rect x="15" y="7" width="24" height="36" rx="3" fill="rgba(20,184,166,0.08)"/>
-                {/* Crewboard hex logo inside screen */}
-                <polygon points="27,13 33,16.5 33,23.5 27,27 21,23.5 21,16.5" fill="none" stroke="#14B8A6" strokeWidth="1.2" strokeLinejoin="round"/>
-                <line x1="27" y1="14.5" x2="23" y2="21" stroke="#14B8A6" strokeWidth="1" strokeLinecap="round"/>
-                <line x1="27" y1="14.5" x2="31" y2="21" stroke="#14B8A6" strokeWidth="1" strokeLinecap="round"/>
-                <line x1="23" y1="21" x2="31" y2="21" stroke="#14B8A6" strokeWidth="1" strokeLinecap="round"/>
-                <circle cx="27" cy="14.5" r="1.4" fill="#14B8A6"/>
-                <circle cx="23" cy="21" r="1.4" fill="#14B8A6"/>
-                <circle cx="31" cy="21" r="1.4" fill="#14B8A6"/>
-                {/* Bottom bar lines */}
-                <rect x="19" y="30" width="16" height="1.5" rx="0.75" fill="rgba(20,184,166,0.4)"/>
-                <rect x="19" y="33.5" width="10" height="1.5" rx="0.75" fill="rgba(20,184,166,0.25)"/>
-                {/* Home indicator */}
-                <rect x="22" y="46" width="10" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+              <svg width="44" height="44" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.74-.82-3.26-.82-1.53 0-1.53.8-2.84.84-1.32.04-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39a4.54 4.54 0 013.12-2.51c1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91a4.35 4.35 0 013.44 1.94 4.25 4.25 0 00-2.03 3.56 4.1 4.1 0 002.54 3.76 9.73 9.73 0 01-1.15 2.4zM13 3.5a3.5 3.5 0 01-.94 2.7 3.07 3.07 0 01-2.65.82A3.13 3.13 0 0110.32 4 3.58 3.58 0 0113 2.88 3.5 3.5 0 0113 3.5z"/>
               </svg>
             </div>
 
