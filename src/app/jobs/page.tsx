@@ -21,7 +21,10 @@ export default async function JobBoardPage({
   const jobs = await db.job.findMany({
     where: isMineFilter ? { ownerId: userId } : { status: "open" },
     orderBy: { createdAt: "desc" },
-    include: { owner: { select: { name: true, twitterHandle: true, image: true } } },
+    include: {
+      owner: { select: { name: true, twitterHandle: true, image: true } },
+      _count: { select: { applications: true } },
+    },
   });
 
   const openCount = jobs.length;
@@ -79,7 +82,10 @@ export default async function JobBoardPage({
             tags: j.tags,
             description: j.description,
             milestones: j.milestones,
+            status: j.status,
             createdAt: j.createdAt.toISOString(),
+            ownerId: j.ownerId,
+            applicantCount: j._count.applications,
             owner: {
               name: j.owner.name,
               twitterHandle: j.owner.twitterHandle,
@@ -87,6 +93,7 @@ export default async function JobBoardPage({
             },
           }))}
           isLoggedIn={isLoggedIn}
+          currentUserId={userId ?? null}
         />
 
       </div>

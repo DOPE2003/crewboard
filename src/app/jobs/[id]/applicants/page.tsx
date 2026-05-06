@@ -2,6 +2,7 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
+import ApplicationActions from "./ApplicationActions";
 
 export const dynamic = "force-dynamic";
 
@@ -34,7 +35,7 @@ export default async function ApplicantsPage({
     where: { id },
     select: {
       id: true, title: true, company: true, budget: true,
-      status: true, ownerId: true,
+      status: true, ownerId: true, acceptedApplicantId: true,
       applications: {
         orderBy: { createdAt: "desc" },
         include: {
@@ -124,26 +125,25 @@ export default async function ApplicantsPage({
                       </div>
                     </div>
 
-                    <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                      {/* Status badge */}
-                      <span style={{
-                        padding: "4px 12px", borderRadius: 99, fontSize: 12, fontWeight: 700,
-                        color: st.color, background: st.bg,
-                      }}>
-                        {st.label}
-                      </span>
-
-                      {/* Message button */}
+                    <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
                       <Link
                         href={`/messages?with=${app.applicant.id}`}
                         style={{
-                          padding: "6px 16px", borderRadius: 8, fontSize: 13, fontWeight: 600,
-                          background: "var(--brand)", color: "#0f172a",
+                          padding: "6px 14px", borderRadius: 8, fontSize: 13, fontWeight: 600,
+                          background: "var(--card-bg)", color: "var(--text-muted)",
+                          border: "1px solid var(--card-border)",
                           textDecoration: "none", whiteSpace: "nowrap",
                         }}
                       >
                         Message
                       </Link>
+                      <ApplicationActions
+                        appId={app.id}
+                        applicantId={app.applicant.id}
+                        applicantHandle={handle ?? ""}
+                        initialStatus={app.status}
+                        jobStatus={job.status}
+                      />
                     </div>
                   </div>
 

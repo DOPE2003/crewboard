@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { deleteJob } from "@/actions/jobs";
 
 // Per-category accent colours — give each vertical its own identity
 const CAT: Record<string, { accent: string; label: string }> = {
@@ -25,10 +26,11 @@ type Job = {
   duration: string | null; category: string;
   level: string; jobType: string; tags: string[];
   description: string; milestones: boolean; createdAt: string;
+  status: string; ownerId: string; applicantCount: number;
   owner: { name: string | null; twitterHandle: string; image: string | null };
 };
 
-function JobCard({ job, isLoggedIn, index }: { job: Job; isLoggedIn: boolean; index: number }) {
+function JobCard({ job, isLoggedIn, isOwner, index }: { job: Job; isLoggedIn: boolean; isOwner: boolean; index: number }) {
   const [hovered, setHovered] = useState(false);
   const cat   = CAT[job.category] ?? CAT.Other;
   const owner = job.owner.name ?? `@${job.owner.twitterHandle}`;
@@ -198,7 +200,7 @@ function JobCard({ job, isLoggedIn, index }: { job: Job; isLoggedIn: boolean; in
           borderTop: "1px solid var(--card-border)",
           display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10,
         }}>
-          {/* Owner */}
+          {/* Owner info */}
           <div style={{ display: "flex", alignItems: "center", gap: 7, minWidth: 0 }}>
             {job.owner.image ? (
               // eslint-disable-next-line @next/next/no-img-element
@@ -216,8 +218,7 @@ function JobCard({ job, isLoggedIn, index }: { job: Job; isLoggedIn: boolean; in
             )}
             <div style={{ minWidth: 0 }}>
               <span style={{
-                fontSize: "0.72rem", color: "var(--text-muted)",
-                fontWeight: 500,
+                fontSize: "0.72rem", color: "var(--text-muted)", fontWeight: 500,
                 overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
                 display: "block", maxWidth: 130,
               }}>
@@ -232,34 +233,107 @@ function JobCard({ job, isLoggedIn, index }: { job: Job; isLoggedIn: boolean; in
             </div>
           </div>
 
-          {/* Apply CTA */}
-          <Link
-            href={isLoggedIn ? `/jobs/${job.id}/apply` : `/login?callbackUrl=/jobs/${job.id}/apply`}
-            style={{
-              flexShrink: 0,
-              display: "inline-flex", alignItems: "center", gap: 5,
-              padding: "8px 18px", borderRadius: 10,
-              background: hovered ? cat.accent : "transparent",
-              border: `1.5px solid ${cat.accent}`,
-              color: hovered ? "#000" : cat.accent,
-              fontWeight: 700, fontSize: "0.75rem",
-              textDecoration: "none",
-              transition: "background 0.15s, color 0.15s",
-              letterSpacing: "0.02em",
-            }}
-          >
-            Apply
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M5 12h14M12 5l7 7-7 7"/>
-            </svg>
-          </Link>
+          {/* CTA — owner controls vs apply button */}
+          {isOwner ? (
+            <OwnerControls job={job} cat={cat} />
+          ) : (
+            <Link
+              href={isLoggedIn ? `/jobs/${job.id}/apply` : `/login?callbackUrl=/jobs/${job.id}/apply`}
+              style={{
+                flexShrink: 0,
+                display: "inline-flex", alignItems: "center", gap: 5,
+                padding: "8px 18px", borderRadius: 10,
+                background: hovered ? cat.accent : "transparent",
+                border: `1.5px solid ${cat.accent}`,
+                color: hovered ? "#000" : cat.accent,
+                fontWeight: 700, fontSize: "0.75rem",
+                textDecoration: "none",
+                transition: "background 0.15s, color 0.15s",
+                letterSpacing: "0.02em",
+              }}
+            >
+              Apply
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M5 12h14M12 5l7 7-7 7"/>
+              </svg>
+            </Link>
+          )}
         </div>
       </div>
     </div>
   );
 }
 
-export default function JobBoardClient({ jobs, isLoggedIn }: { jobs: Job[]; isLoggedIn: boolean }) {
+function OwnerControls({ job, cat }: { job: Job; cat: { accent: string } }) {
+  const [deleting, setDeleting] = useState(false);
+
+  async function handleDelete() {
+    if (!confirm(`Delete "${job.title}"? This cannot be undone.`)) return;
+    setDeleting(true);
+    await deleteJob(job.id);
+    window.location.reload();
+  }
+
+  return (
+    <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0, flexWrap: "wrap" }}>
+      {/* Applicants badge */}
+      <Link
+        href={`/jobs/${job.id}/applicants`}
+        style={{
+          display: "inline-flex", alignItems: "center", gap: 5,
+          padding: "6px 12px", borderRadius: 8,
+          background: job.applicantCount > 0 ? `${cat.accent}18` : "transparent",
+          border: `1.5px solid ${job.applicantCount > 0 ? cat.accent : "var(--card-border)"}`,
+          color: job.applicantCount > 0 ? cat.accent : "var(--text-muted)",
+          fontWeight: 700, fontSize: "0.72rem", textDecoration: "none",
+        }}
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+        </svg>
+        {job.applicantCount} applicant{job.applicantCount !== 1 ? "s" : ""}
+      </Link>
+      {/* Edit */}
+      <Link
+        href={`/jobs/${job.id}/edit`}
+        style={{
+          display: "inline-flex", alignItems: "center",
+          padding: "6px 10px", borderRadius: 8,
+          border: "1.5px solid var(--card-border)",
+          color: "var(--text-muted)", fontSize: "0.72rem", fontWeight: 600,
+          textDecoration: "none",
+        }}
+        title="Edit"
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+        </svg>
+      </Link>
+      {/* Delete */}
+      <button
+        onClick={handleDelete}
+        disabled={deleting}
+        title="Delete"
+        style={{
+          display: "inline-flex", alignItems: "center",
+          padding: "6px 10px", borderRadius: 8,
+          border: "1.5px solid rgba(239,68,68,0.3)",
+          background: "transparent", color: "#ef4444",
+          fontSize: "0.72rem", cursor: deleting ? "wait" : "pointer",
+        }}
+      >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+          <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+        </svg>
+      </button>
+    </div>
+  );
+}
+
+export default function JobBoardClient({ jobs, isLoggedIn, currentUserId }: { jobs: Job[]; isLoggedIn: boolean; currentUserId: string | null }) {
   const [search, setSearch] = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
@@ -401,7 +475,7 @@ export default function JobBoardClient({ jobs, isLoggedIn }: { jobs: Job[]; isLo
           gap: 14,
         }}>
           {filtered.map((job, i) => (
-            <JobCard key={job.id} job={job} isLoggedIn={isLoggedIn} index={i} />
+            <JobCard key={job.id} job={job} isLoggedIn={isLoggedIn} isOwner={currentUserId === job.ownerId} index={i} />
           ))}
         </div>
       )}

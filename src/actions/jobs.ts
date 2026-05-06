@@ -161,3 +161,82 @@ export async function deleteJob(id: string) {
   revalidatePath("/dashboard");
   return { ok: true };
 }
+
+export async function acceptApplication(appId: string): Promise<{ ok: boolean; applicantId?: string; error?: string }> {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) return { ok: false, error: "Not logged in." };
+
+  const app = await db.jobApplication.findUnique({
+    where: { id: appId },
+    include: { job: { select: { id: true, title: true, ownerId: true, status: true } } },
+  });
+  if (!app) return { ok: false, error: "Application not found." };
+  if (app.job.ownerId !== userId) return { ok: false, error: "Not your job." };
+  if (app.job.status !== "open") return { ok: false, error: "Job is no longer open." };
+
+  // Accept this application, reject all others for this job
+  await db.$transaction([
+    db.jobApplication.update({ where: { id: appId }, data: { status: "accepted" } }),
+    db.jobApplication.updateMany({
+      where: { jobId: app.jobId, id: { not: appId }, status: { not: "accepted" } },
+      data: { status: "rejected" },
+    }),
+    db.job.update({ where: { id: app.jobId }, data: { status: "in_progress", acceptedApplicantId: app.applicantId } }),
+  ]);
+
+  // Notify accepted applicant
+  notifyUser({
+    userId: app.applicantId,
+    type: "application_accepted",
+    title: "Application Accepted!",
+    body: `Your application for "${app.job.title}" was accepted. The client will send you an offer to start.`,
+    link: `/jobs/${app.jobId}`,
+    actionUrl: `crewboard://job/${app.jobId}`,
+  }).catch(() => {});
+
+  // Notify rejected applicants
+  const rejected = await db.jobApplication.findMany({
+    where: { jobId: app.jobId, id: { not: appId } },
+    select: { applicantId: true },
+  });
+  for (const r of rejected) {
+    notifyUser({
+      userId: r.applicantId,
+      type: "offer_declined",
+      title: "Application not selected",
+      body: `The position for "${app.job.title}" has been filled.`,
+      link: `/jobs`,
+    }).catch(() => {});
+  }
+
+  revalidatePath(`/jobs/${app.jobId}/applicants`);
+  revalidatePath(`/jobs/${app.jobId}`);
+  return { ok: true, applicantId: app.applicantId };
+}
+
+export async function rejectApplication(appId: string): Promise<{ ok: boolean; error?: string }> {
+  const session = await auth();
+  const userId = (session?.user as any)?.userId as string | undefined;
+  if (!userId) return { ok: false, error: "Not logged in." };
+
+  const app = await db.jobApplication.findUnique({
+    where: { id: appId },
+    include: { job: { select: { id: true, title: true, ownerId: true } } },
+  });
+  if (!app) return { ok: false, error: "Application not found." };
+  if (app.job.ownerId !== userId) return { ok: false, error: "Not your job." };
+
+  await db.jobApplication.update({ where: { id: appId }, data: { status: "rejected" } });
+
+  notifyUser({
+    userId: app.applicantId,
+    type: "offer_declined",
+    title: "Application not selected",
+    body: `Your application for "${app.job.title}" was not selected.`,
+    link: `/jobs`,
+  }).catch(() => {});
+
+  revalidatePath(`/jobs/${app.jobId}/applicants`);
+  return { ok: true };
+}
