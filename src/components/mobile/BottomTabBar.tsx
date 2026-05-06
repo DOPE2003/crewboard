@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import ProfileModal from './ProfileModal'
+import { useMode } from '@/components/ModeProvider'
 
 interface Props {
   twitterHandle?: string | null
@@ -72,14 +73,19 @@ export default function BottomTabBar({
 }: Props) {
   const pathname = usePathname()
   const [profileOpen, setProfileOpen] = useState(false)
+  const { mode } = useMode()
 
   const isProfileActive = pathname.startsWith('/u/') || pathname === '/dashboard'
 
+  const discoverHref  = mode === 'hiring' ? '/talent' : '/jobs'
+  const discoverLabel = mode === 'hiring' ? 'Find Talent' : 'Find Work'
+  const discoverMatch = (p: string) => mode === 'hiring' ? p.startsWith('/talent') : p.startsWith('/jobs')
+
   const tabsLeft = [
-    { href: '/',           label: 'Home',       icon: (a: boolean) => <HomeIcon active={a} />,       match: (p: string) => p === '/',                                       activeColor: BRAND  },
-    { href: '/talent',     label: 'Discover',   icon: (a: boolean) => <DiscoverIcon active={a} />,   match: (p: string) => p.startsWith('/talent'),                         activeColor: BRAND  },
-    { href: '/messages',   label: 'Messages',   icon: (a: boolean) => <MessagesIcon active={a} />,   match: (p: string) => p.startsWith('/messages'),                       activeColor: BRAND  },
-    { href: '/activities', label: 'Activities', icon: (a: boolean) => <BellIcon active={a} />,       match: (p: string) => p.startsWith('/activities'),                     activeColor: YELLOW },
+    { href: '/',             label: 'Home',         icon: (a: boolean) => <HomeIcon active={a} />,     match: (p: string) => p === '/',              activeColor: BRAND  },
+    { href: discoverHref,    label: discoverLabel,  icon: (a: boolean) => <DiscoverIcon active={a} />, match: discoverMatch,                          activeColor: BRAND  },
+    { href: '/messages',     label: 'Messages',     icon: (a: boolean) => <MessagesIcon active={a} />, match: (p: string) => p.startsWith('/messages'), activeColor: BRAND  },
+    { href: '/activities',   label: 'Activities',   icon: (a: boolean) => <BellIcon active={a} />,     match: (p: string) => p.startsWith('/activities'), activeColor: YELLOW },
   ]
 
   return (

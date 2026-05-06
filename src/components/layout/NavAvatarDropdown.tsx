@@ -7,10 +7,10 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
   User, ClipboardList, MessageSquare, Heart,
-  CreditCard, Users, HelpCircle, LogOut, ChevronDown, ArrowLeftRight,
+  CreditCard, Users, Briefcase, HelpCircle, LogOut, ChevronDown, ArrowLeftRight,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { setAppMode, type Mode } from '@/lib/mode'
+import { useMode, setMode } from '@/components/ModeProvider'
 
 interface Props {
   image: string | null
@@ -59,19 +59,12 @@ export default function NavAvatarDropdown({
   image, name, twitterHandle, role, availability, unreadCount = 0,
 }: Props) {
   const [open, setOpen] = useState(false)
-  const [mode, setModeState] = useState<Mode>('working')
+  const { mode } = useMode()
   const wrapRef = useRef<HTMLDivElement>(null)
   const pathname = usePathname()
 
-  useEffect(() => {
-    const saved = localStorage.getItem('cb_mode') as Mode | null
-    if (saved === 'hiring' || saved === 'working') setModeState(saved)
-  }, [])
-
   function switchMode() {
-    const next: Mode = mode === 'working' ? 'hiring' : 'working'
-    setModeState(next)
-    setAppMode(next)
+    setMode(mode === 'working' ? 'hiring' : 'working')
   }
 
   useEffect(() => { setOpen(false) }, [pathname])
@@ -212,9 +205,16 @@ export default function NavAvatarDropdown({
             <MenuLink href="/billing" icon={<CreditCard size={14} />}>
               Billing
             </MenuLink>
-            <MenuLink href="/talent" icon={<Users size={14} />}>
-              Hire Talent
-            </MenuLink>
+            {mode === 'hiring' && (
+              <MenuLink href="/talent" icon={<Users size={14} />}>
+                Find Talent
+              </MenuLink>
+            )}
+            {mode === 'working' && (
+              <MenuLink href="/gigs" icon={<Briefcase size={14} />}>
+                My Gigs
+              </MenuLink>
+            )}
             <MenuLink href="/help" icon={<HelpCircle size={14} />}>
               Help
             </MenuLink>
