@@ -6432,7 +6432,7 @@ body.dark .act-mobile-tabs { background: var(--surface); border-color: var(--bor
 .act-sidebar-btn--active { background: #f0fdf9 !important; }
 .act-sidebar-btn-label {
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 700;
   color: #111827;
 }
 body.dark .act-sidebar-btn-label { color: var(--foreground); }
