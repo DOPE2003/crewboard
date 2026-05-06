@@ -36,21 +36,30 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
   }, []);
 
   const {
-    dbUser, recentConvos, activeOrders, completedOrders,
+    dbUser, recentConvos, activeOrders, completedOrders, completedBuyerOrders,
     profileViewCount, unreadMessageCount, totalConvoCount,
     postedJobs, sentOffers, otherByConvo, userId,
   } = data;
 
-  const escrowAmount = activeOrders
-    .filter((o) => o.status === "funded")
-    .reduce((s, o) => s + o.amount, 0);
-  const grossEarned  = completedOrders.reduce((s, o) => s + o.amount, 0);
-  const totalEarned  = grossEarned - Math.floor(grossEarned * 0.10);
   const fmt = (n: number) => n === 0 ? "$0" : `$${n.toLocaleString("en-US", { maximumFractionDigits: 0 })}`;
 
   const buyerOrders  = activeOrders.filter((o) => o.buyerId  === userId);
   const sellerOrders = activeOrders.filter((o) => o.sellerId === userId);
-  const pendingRelease = sellerOrders.filter((o) => o.status === "delivered");
+
+  // Hiring wallet values
+  const totalSpent        = (completedBuyerOrders ?? []).reduce((s, o) => s + o.amount, 0);
+  const buyerEscrow       = buyerOrders.filter((o) => o.status === "funded").reduce((s, o) => s + o.amount, 0);
+  const buyerPending      = buyerOrders.filter((o) => o.status === "delivered").reduce((s, o) => s + o.amount, 0);
+
+  // Working wallet values
+  const grossEarned       = completedOrders.reduce((s, o) => s + o.amount, 0);
+  const totalEarned       = grossEarned - Math.floor(grossEarned * 0.10);
+  const sellerEscrow      = sellerOrders.filter((o) => o.status === "funded").reduce((s, o) => s + o.amount, 0);
+  const pendingRelease    = sellerOrders.filter((o) => o.status === "delivered");
+  const pendingPayout     = pendingRelease.reduce((s, o) => s + o.amount, 0);
+
+  // Keep escrowAmount for legacy references
+  const escrowAmount = buyerEscrow + sellerEscrow;
 
   const profileScore = computeProfileScore({
     bio: dbUser.bio, image: dbUser.image, skills: dbUser.skills,
@@ -104,6 +113,9 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
             .cb-mode-wrap { width: 100%; order: -1; }
             .cb-mode-wrap > div { display: flex !important; width: 100%; }
             .cb-mode-wrap > div > button { flex: 1; justify-content: center; }
+            .wallet-stat-grid { grid-template-columns: 1fr !important; }
+            .wallet-stat-grid > div { border-right: none !important; border-bottom: 1px solid var(--card-border); }
+            .wallet-stat-grid > div:last-child { border-bottom: none; }
           }
         `}</style>
 
@@ -297,40 +309,46 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
         {mode === "hiring" && postedJobs.length > 0 && <PostedJobsSection jobs={postedJobs} />}
         {mode === "hiring" && sentOffers.length > 0 && <SentOffersSection offers={sentOffers as any} />}
 
-        {/* ── FREELANCER: earnings ── */}
-        {mode === "working" && (
-          <div style={{ borderRadius: 14, padding: "1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.85rem" }}>
-              <span style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--text-muted)" }}>Earnings</span>
-              <Link href="/orders" style={{ fontSize: "0.65rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>View orders →</Link>
+        {/* ── WALLET & ESCROW SUMMARY ── */}
+        {mode === "hiring" ? (
+          <div style={{ borderRadius: 14, border: "1px solid var(--card-border)", background: "var(--card-bg)", overflow: "hidden", marginTop: "1.25rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.75rem 1.25rem", borderBottom: "1px solid var(--card-border)" }}>
+              <span style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--text-muted)" }}>Wallet & Payments</span>
+              <Link href="/billing" style={{ fontSize: "0.65rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>Billing →</Link>
             </div>
-            <div style={{ display: "flex", gap: "1.5rem", flexWrap: "wrap" }}>
-              <div>
-                <div style={{ fontSize: "0.6rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: 2 }}>Total earned</div>
-                <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "var(--foreground)", letterSpacing: "-0.02em" }}>{fmt(totalEarned)}</div>
-              </div>
-              {escrowAmount > 0 && (
-                <div>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: 2 }}>In escrow</div>
-                  <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#f59e0b", letterSpacing: "-0.02em" }}>{fmt(escrowAmount)}</div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }} className="wallet-stat-grid">
+              {[
+                { label: "Total Spent",       value: fmt(totalSpent),   color: "var(--foreground)", note: "completed orders" },
+                { label: "In Escrow",         value: fmt(buyerEscrow),  color: buyerEscrow  > 0 ? "#f59e0b" : "var(--foreground)", note: "active & funded" },
+                { label: "Pending Approval",  value: fmt(buyerPending), color: buyerPending > 0 ? "#6366f1" : "var(--foreground)", note: "awaiting your release" },
+              ].map((s, i) => (
+                <div key={s.label} style={{ padding: "1rem 1.25rem", borderRight: i < 2 ? "1px solid var(--card-border)" : "none" }}>
+                  <div style={{ fontSize: "0.58rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: 6 }}>{s.label}</div>
+                  <div style={{ fontSize: "1.4rem", fontWeight: 800, color: s.color, letterSpacing: "-0.02em", lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 4 }}>{s.note}</div>
                 </div>
-              )}
-              {pendingRelease.length > 0 && (
-                <div>
-                  <div style={{ fontSize: "0.6rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: 2 }}>Pending release</div>
-                  <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#22c55e", letterSpacing: "-0.02em" }}>{fmt(pendingRelease.reduce((s, o) => s + o.amount, 0))}</div>
-                </div>
-              )}
+              ))}
             </div>
           </div>
-        )}
-
-        {/* ── CLIENT: wallet / escrow summary ── */}
-        {mode === "hiring" && escrowAmount > 0 && (
-          <div style={{ borderRadius: 14, padding: "1rem 1.25rem", background: "var(--card-bg)", border: "1px solid var(--card-border)", marginTop: "1.25rem" }}>
-            <div style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--text-muted)", marginBottom: "0.85rem" }}>Funds in Escrow</div>
-            <div style={{ fontSize: "1.3rem", fontWeight: 800, color: "#f59e0b", letterSpacing: "-0.02em" }}>{fmt(escrowAmount)}</div>
-            <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginTop: 4 }}>Held on-chain — released when you approve delivery.</div>
+        ) : (
+          <div style={{ borderRadius: 14, border: "1px solid var(--card-border)", background: "var(--card-bg)", overflow: "hidden", marginTop: "1.25rem" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "0.75rem 1.25rem", borderBottom: "1px solid var(--card-border)" }}>
+              <span style={{ fontSize: "0.58rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase" as const, color: "var(--text-muted)" }}>Wallet & Earnings</span>
+              <Link href="/orders" style={{ fontSize: "0.65rem", color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>Orders →</Link>
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)" }} className="wallet-stat-grid">
+              {[
+                { label: "Available Earnings", value: fmt(totalEarned),  color: totalEarned   > 0 ? "#22c55e" : "var(--foreground)", note: "after 10% platform fee" },
+                { label: "Escrow Held",        value: fmt(sellerEscrow), color: sellerEscrow  > 0 ? "#f59e0b" : "var(--foreground)", note: "work in progress" },
+                { label: "Pending Payout",     value: fmt(pendingPayout),color: pendingPayout > 0 ? "#6366f1" : "var(--foreground)", note: "delivered, awaiting release" },
+              ].map((s, i) => (
+                <div key={s.label} style={{ padding: "1rem 1.25rem", borderRight: i < 2 ? "1px solid var(--card-border)" : "none" }}>
+                  <div style={{ fontSize: "0.58rem", fontWeight: 600, color: "var(--text-muted)", textTransform: "uppercase" as const, letterSpacing: "0.1em", marginBottom: 6 }}>{s.label}</div>
+                  <div style={{ fontSize: "1.4rem", fontWeight: 800, color: s.color, letterSpacing: "-0.02em", lineHeight: 1 }}>{s.value}</div>
+                  <div style={{ fontSize: "0.6rem", color: "var(--text-muted)", marginTop: 4 }}>{s.note}</div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
@@ -355,6 +373,7 @@ interface DashboardData {
   recentConvos: ConvoShape[];
   activeOrders: OrderShape[];
   completedOrders: { amount: number }[];
+  completedBuyerOrders: { amount: number }[];
   profileViewCount: number;
   unreadMessageCount: number;
   totalConvoCount: number;

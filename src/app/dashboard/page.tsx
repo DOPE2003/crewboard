@@ -14,6 +14,7 @@ export default async function DashboardPage() {
     recentConvos,
     activeOrders,
     completedOrders,
+    completedBuyerOrders,
     profileViewCount,
     unreadMessageCount,
     totalConvoCount,
@@ -42,6 +43,10 @@ export default async function DashboardPage() {
     }),
     db.order.findMany({
       where: { sellerId: userId, status: "completed" },
+      select: { amount: true },
+    }),
+    db.order.findMany({
+      where: { buyerId: userId, status: "completed" },
       select: { amount: true },
     }),
     db.notification.count({ where: { userId, type: "profile_view" } }),
@@ -90,6 +95,7 @@ export default async function DashboardPage() {
       recentConvos,
       activeOrders,
       completedOrders,
+      completedBuyerOrders,
       profileViewCount,
       unreadMessageCount,
       totalConvoCount,
