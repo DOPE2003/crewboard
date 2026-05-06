@@ -21,6 +21,7 @@ import { NextRequest } from "next/server";
 import db from "@/lib/db";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
+import { computeFreelancerLevel } from "@/lib/freelancerLevel";
 
 function fallbackImage(name?: string | null, handle?: string | null) {
   const seed = encodeURIComponent(name ?? handle ?? "?");
@@ -59,12 +60,15 @@ async function handler(req: NextRequest, _user: MobileTokenPayload) {
           twitterHandle:   true,
           image:           true,
           userTitle:       true,
+          bio:             true,
           skills:          true,
           profileComplete: true,
           createdAt:       true,
           lastSeenAt:      true,
           walletAddress:   true,
           reviewsReceived: { select: { rating: true } },
+          gigs:            { where: { status: "active" }, select: { id: true } },
+          _count:          { select: { sellerOrders: { where: { status: "completed" } } } },
         },
         orderBy: { createdAt: "desc" },
         skip: (page - 1) * limit,
@@ -77,9 +81,22 @@ async function handler(req: NextRequest, _user: MobileTokenPayload) {
     const items = users.map((u) => {
       const ratings      = u.reviewsReceived.map((r) => r.rating);
       const reviewsCount = ratings.length;
-      const rating       = reviewsCount > 0
-        ? Math.round((ratings.reduce((a, b) => a + b, 0) / reviewsCount) * 10) / 10
+      const avgRating    = reviewsCount > 0
+        ? ratings.reduce((a, b) => a + b, 0) / reviewsCount
+        : null;
+      const rating       = avgRating !== null
+        ? Math.round(avgRating * 10) / 10
         : 0;
+
+      const { level } = computeFreelancerLevel({
+        bio:             u.bio,
+        image:           u.image,
+        skills:          u.skills,
+        walletAddress:   u.walletAddress,
+        gigCount:        u.gigs.length,
+        completedOrders: u._count.sellerOrders,
+        avgRating,
+      });
 
       return {
         id:              u.id,
@@ -94,8 +111,11 @@ async function handler(req: NextRequest, _user: MobileTokenPayload) {
         joinedAt:        u.createdAt.toISOString(),
         profileComplete: u.profileComplete,
         skills:          u.skills,
+        level,
       };
     });
+
+    items.sort((a, b) => b.level - a.level);
 
     return ok(items, {
       page,

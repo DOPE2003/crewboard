@@ -13,11 +13,36 @@ import { NextRequest } from "next/server";
 import db from "@/lib/db";
 import { withMobileAuth, getMobileUser } from "../_lib/auth";
 import { ok, err } from "../_lib/response";
+import { computeFreelancerLevel } from "@/lib/freelancerLevel";
 
 function withFallbackImage<T extends { image?: string | null; name?: string | null; twitterHandle?: string | null }>(user: T): T {
   if (user.image) return user;
   const seed = encodeURIComponent(user.name ?? user.twitterHandle ?? "?");
   return { ...user, image: `https://api.dicebear.com/9.x/initials/png?seed=${seed}&backgroundColor=14b8a6&fontColor=ffffff&size=200` };
+}
+
+function computeLevel(user: {
+  bio?: string | null;
+  image?: string | null;
+  skills?: string[];
+  walletAddress?: string | null;
+  gigs: { id: string }[];
+  reviewsReceived: { rating: number }[];
+  _count: { sellerOrders: number };
+}): number {
+  const ratings = user.reviewsReceived.map((r) => r.rating);
+  const avgRating = ratings.length > 0
+    ? ratings.reduce((a, b) => a + b, 0) / ratings.length
+    : null;
+  return computeFreelancerLevel({
+    bio:             user.bio,
+    image:           user.image,
+    skills:          user.skills,
+    walletAddress:   user.walletAddress,
+    gigCount:        user.gigs.length,
+    completedOrders: user._count.sellerOrders,
+    avgRating,
+  }).level;
 }
 
 const PUBLIC_SELECT = {
@@ -79,10 +104,10 @@ export async function GET(req: NextRequest) {
       select: PUBLIC_SELECT,
     });
     if (!user) return err("User not found.", 404);
-    return ok(withFallbackImage(user));
+    return ok({ ...withFallbackImage(user), level: computeLevel(user) });
   }
 
-  // ?id= lookup — bearer token is only used for auth, not as identity — bearer token is only used for auth, not as identity
+  // ?id= lookup — bearer token is only used for auth, not as identity
   const targetId = requestedId ?? me.sub;
   const isSelf   = targetId === me.sub;
 
@@ -93,5 +118,5 @@ export async function GET(req: NextRequest) {
       : PUBLIC_SELECT,
   });
   if (!user) return err("User not found.", 404);
-  return ok(withFallbackImage(user));
+  return ok({ ...withFallbackImage(user), level: computeLevel(user) });
 }

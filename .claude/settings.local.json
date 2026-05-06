@@ -43,7 +43,21 @@
       "Bash(unzip -o \"Crewboard UIUX redesign \\(1\\).zip\")",
       "Bash(unzip -o \"Crewboard UIUX redesign \\(2\\).zip\")",
       "Bash(git --version)",
-      "Bash(git checkout *)"
+      "Bash(git checkout *)",
+      "Bash(echo \"PID: $!\")",
+      "Bash(curl -s http://localhost:3000)",
+      "Bash(npm run dev > /tmp/crewboard-dev.log 2>&1 & *)",
+      "Bash(curl -s http://localhost:3000/register)",
+      "Bash(curl -s http://localhost:3000/jobs)",
+      "Bash(curl -s http://localhost:3000/talent)",
+      "Bash(curl -s http://localhost:3000/how)",
+      "Bash(curl -s http://localhost:3000/jobs/new)",
+      "Bash(curl -s http://localhost:3000/gigs)",
+      "Bash(xargs ls -la)",
+      "Bash(awk '{print $NF}')"
+    ],
+    "additionalDirectories": [
+      "/private/tmp"
     ]
   }
 }

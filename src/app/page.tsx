@@ -138,7 +138,7 @@ export default async function HomePage() {
         </div>
 
         {/* Mode-aware hero — headline, subtitle, CTA cards */}
-        <HomeModeHero isLoggedIn={isLoggedIn} />
+        <HomeModeHero />
 
         {/* Trust stats */}
         <div style={{
