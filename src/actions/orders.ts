@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { requireUserId } from "@/lib/auth-utils";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 import { verifyEscrowVaultFunded, verifyEscrowReleased } from "@/lib/escrow-build";
 import { logAdminAction } from "@/lib/audit";
 import { createMessage } from "@/lib/sendMessage";
@@ -190,6 +191,7 @@ export async function syncEscrowFunded(orderId: string, txHash: string, escrowAd
     link: `/orders/${orderId}`,
     actionUrl: `crewboard://order/${orderId}`,
   });
+  sendPush({ userId: order.sellerId, title: "Order Funded", body: `Payment for "${order.gig.title}" is locked in escrow — start working!`, data: { type: "order_funded", orderId, actionUrl: `crewboard://order/${orderId}` } }).catch(() => {});
 
   revalidatePath(`/orders/${orderId}`);
   revalidatePath("/orders");
@@ -233,6 +235,7 @@ export async function requestRevision(orderId: string, message: string) {
     link: `/orders/${orderId}`,
     actionUrl: `crewboard://order/${orderId}`,
   });
+  sendPush({ userId: order.sellerId, title: "Revision Requested", body: `Buyer requested changes on "${order.gig.title}"`, data: { type: "revision_requested", orderId, actionUrl: `crewboard://order/${orderId}` } }).catch(() => {});
 
   revalidatePath(`/orders/${orderId}`);
   revalidatePath("/orders");
@@ -277,6 +280,7 @@ export async function resubmitWork(orderId: string, message?: string) {
     link: `/orders/${orderId}`,
     actionUrl: `crewboard://order/${orderId}`,
   });
+  sendPush({ userId: order.buyerId, title: "Work Resubmitted", body: `The seller updated their delivery for "${order.gig.title}" — please review and release payment.`, data: { type: "work_resubmitted", orderId, actionUrl: `crewboard://order/${orderId}` } }).catch(() => {});
 
   revalidatePath(`/orders/${orderId}`);
   revalidatePath("/orders");
@@ -331,6 +335,7 @@ export async function syncEscrowReleased(orderId: string, txHash: string) {
     link: `/orders/${orderId}`,
     actionUrl: `crewboard://order/${orderId}`,
   });
+  sendPush({ userId: order.sellerId, title: "💸 Payment Released!", body: `You've been paid for "${order.gig.title}" — funds are in your wallet.`, data: { type: "payment", orderId, actionUrl: `crewboard://order/${orderId}` } }).catch(() => {});
 
   revalidatePath(`/orders/${orderId}`);
   revalidatePath("/orders");

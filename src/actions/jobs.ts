@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { notifyUser } from "@/lib/notify";
+import { fanOutNewJobNotifications } from "@/lib/job-notify";
 import { computeProfileScore } from "@/lib/profileScore";
 
 export async function createJob(formData: FormData) {
@@ -32,9 +33,11 @@ export async function createJob(formData: FormData) {
     ? tagsRaw.split(",").map((t) => t.trim()).filter(Boolean)
     : [];
 
-  await db.job.create({
+  const job = await db.job.create({
     data: { title, company, budget, duration, chain, category, level, jobType, tags, description, milestones, ownerId: userId },
   });
+
+  fanOutNewJobNotifications({ id: job.id, title: job.title, company: job.company, budget: job.budget, category: job.category, ownerId: userId }).catch(() => {});
 
   revalidatePath("/jobs");
   redirect("/jobs");

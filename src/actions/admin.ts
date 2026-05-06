@@ -5,6 +5,7 @@ import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { Role } from "@/lib/generated/prisma/client";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 import { logAdminAction } from "@/lib/audit";
 
 export async function setUserRole(userId: string, newRole: Role) {
@@ -114,8 +115,10 @@ export async function syncDisputeResolved(
     : `Your dispute for "${order.gig.title}" has been reviewed and closed. The payment was released to the seller.`;
 
   await Promise.all([
-    notifyUser({ userId: winnerId, type: "order", title: "Dispute Resolved in Your Favor", body: winnerBody, link: `/orders/${orderId}` }),
-    notifyUser({ userId: loserId,  type: "order", title: "Dispute Resolved",               body: loserBody,  link: `/orders/${orderId}` }),
+    notifyUser({ userId: winnerId, type: "order", title: "Dispute Resolved in Your Favor", body: winnerBody, link: `/orders/${orderId}`, actionUrl: `crewboard://order/${orderId}` }),
+    notifyUser({ userId: loserId,  type: "order", title: "Dispute Resolved",               body: loserBody,  link: `/orders/${orderId}`, actionUrl: `crewboard://order/${orderId}` }),
+    sendPush({ userId: winnerId, title: "Dispute Resolved in Your Favor", body: winnerBody, data: { type: "dispute_resolved", orderId, actionUrl: `crewboard://order/${orderId}` } }).catch(() => {}),
+    sendPush({ userId: loserId,  title: "Dispute Resolved",               body: loserBody,  data: { type: "dispute_resolved", orderId, actionUrl: `crewboard://order/${orderId}` } }).catch(() => {}),
   ]);
 
   revalidatePath(`/orders/${orderId}`);

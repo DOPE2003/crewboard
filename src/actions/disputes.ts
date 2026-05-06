@@ -4,6 +4,7 @@ import { requireUserId, getStaffRole } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { notifyUser } from "@/lib/notify";
+import { sendPush } from "@/lib/push";
 import { logAdminAction } from "@/lib/audit";
 
 export async function openDispute(
@@ -56,6 +57,7 @@ export async function openDispute(
     actionUrl: `crewboard://dispute/${dispute.id}`,
     messageId: `dispute:${dispute.id}`,
   }).catch(() => {});
+  sendPush({ userId: otherId, title: "Dispute Opened", body: `A dispute was opened on "${order.gig.title}". Please respond.`, data: { type: "dispute_filed", disputeId: dispute.id, actionUrl: `crewboard://dispute/${dispute.id}` } }).catch(() => {});
 
   revalidatePath(`/orders/${orderId}`);
   revalidatePath("/orders");

@@ -95,7 +95,8 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
         data: { status: "rejected" },
       });
 
-      // In-app only for rejection
+      // Push + in-app for rejection
+      sendPush({ userId: app.applicantId, title: "Application not selected", body: `Your application for "${job.title}" was not selected.`, data: { type: "application_rejected", jobId, actionUrl: `crewboard://jobs` } }).catch(() => {});
       notifyUser({
         userId: app.applicantId,
         type: "offer_declined",
