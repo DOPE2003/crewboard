@@ -199,9 +199,6 @@ export default async function Navbar() {
             <span className="nav-wordmark" style={{ lineHeight: 1 }}>
               <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--text-1)", fontWeight: 700 }}>board</span>
             </span>
-            <span className="hidden sm:block" style={{ fontSize: 8.5, fontWeight: 600, letterSpacing: "0.16em", textTransform: "uppercase", color: "#14B8A6", lineHeight: 1 }}>
-              Web3 Freelancer Marketplace
-            </span>
           </div>
         </Link>
 
