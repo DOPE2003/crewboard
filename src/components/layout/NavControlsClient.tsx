@@ -183,19 +183,8 @@ export default function NavControlsClient({
   return (
     <>
       {loggedIn && (
-        <span className="hidden md:inline-flex items-center" style={{ marginRight: 4, gap: 6 }}>
+        <span className="hidden md:inline-flex items-center" style={{ marginRight: 4 }}>
           <ModeToggle />
-          <Link
-            href={mode === 'hiring' ? '/jobs/new' : '/gigs/new'}
-            style={{
-              fontSize: "0.72rem", fontWeight: 700, padding: "5px 12px",
-              borderRadius: 7, border: "none", cursor: "pointer",
-              background: "#14b8a6", color: "#fff",
-              textDecoration: "none", lineHeight: 1, whiteSpace: "nowrap",
-            }}
-          >
-            {mode === 'hiring' ? '+ Post a Job' : '+ Post a Gig'}
-          </Link>
         </span>
       )}
       {loggedIn && (

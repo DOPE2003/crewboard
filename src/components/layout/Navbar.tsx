@@ -5,7 +5,7 @@ import NavSearch from "./NavSearch";
 import NavProfileMenu from "./NavProfileMenu";
 import NavControlsClient from "./NavControlsClient";
 import NavScrollWrapper from "./NavScrollWrapper";
-import NavCategoryStrip from "./NavCategoryStrip";
+import NavInlineLinks from "./NavInlineLinks";
 
 import type { NavNotif, NavOrder } from "@/types/nav";
 
@@ -184,29 +184,41 @@ export default async function Navbar() {
         gap: "12px",
       }}>
 
-        {/* Logo */}
-        <Link href="/" className="flex items-center gap-3 shrink-0 no-underline">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" className="shrink-0" style={{ width: 36, height: 36 }}>
-            <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--text-1)" strokeWidth="2.5" strokeLinejoin="round" />
-            {/* Equilateral triangle — circumradius 11, centroid at hexagon center (24,24) */}
-            <line x1="24" y1="13" x2="14.5" y2="29.5" stroke="var(--text-1)" strokeWidth="2.2" strokeLinecap="round"/>
-            <line x1="24" y1="13" x2="33.5" y2="29.5" stroke="var(--text-1)" strokeWidth="2.2" strokeLinecap="round"/>
-            <line x1="14.5" y1="29.5" x2="33.5" y2="29.5" stroke="var(--text-1)" strokeWidth="2.2" strokeLinecap="round"/>
-            <circle cx="24" cy="13" r="3.8" fill="var(--text-1)"/>
-            <circle cx="14.5" cy="29.5" r="3.8" fill="var(--text-1)"/>
-            <circle cx="33.5" cy="29.5" r="3.8" fill="var(--text-1)"/>
+        {/* Logo — 3D sphere wordmark */}
+        <Link href="/" className="flex items-center shrink-0 no-underline" style={{ gap: 0, lineHeight: 1 }}>
+          <span className="nav-wordmark" style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>Crewb</span>
+          <svg width="26" height="26" viewBox="0 0 40 40" style={{ margin: "0 1px", display: "block", flexShrink: 0 }} xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="sphG" cx="35%" cy="28%" r="70%">
+                <stop offset="0%" stopColor="#7ee8d6"/>
+                <stop offset="42%" stopColor="#14B8A6"/>
+                <stop offset="100%" stopColor="#0b7066"/>
+              </radialGradient>
+              <radialGradient id="sphH" cx="30%" cy="22%" r="48%">
+                <stop offset="0%" stopColor="rgba(255,255,255,0.62)"/>
+                <stop offset="100%" stopColor="rgba(255,255,255,0)"/>
+              </radialGradient>
+            </defs>
+            <circle cx="20" cy="20" r="19" fill="url(#sphG)"/>
+            <ellipse cx="13.5" cy="12" rx="8" ry="5.5" fill="url(#sphH)"/>
+            <polygon points="28,20 24,13.1 16,13.1 12,20 16,26.9 24,26.9" fill="none" stroke="rgba(255,255,255,0.88)" strokeWidth="1.3" strokeLinejoin="round"/>
+            <line x1="20" y1="15.5" x2="16.2" y2="22.2" stroke="rgba(255,255,255,0.88)" strokeWidth="1.2" strokeLinecap="round"/>
+            <line x1="20" y1="15.5" x2="23.8" y2="22.2" stroke="rgba(255,255,255,0.88)" strokeWidth="1.2" strokeLinecap="round"/>
+            <line x1="16.2" y1="22.2" x2="23.8" y2="22.2" stroke="rgba(255,255,255,0.88)" strokeWidth="1.2" strokeLinecap="round"/>
+            <circle cx="20" cy="15.5" r="1.5" fill="rgba(255,255,255,0.92)"/>
+            <circle cx="16.2" cy="22.2" r="1.5" fill="rgba(255,255,255,0.92)"/>
+            <circle cx="23.8" cy="22.2" r="1.5" fill="rgba(255,255,255,0.92)"/>
           </svg>
-          <div className="flex flex-col leading-none gap-[3px]">
-            <span className="nav-wordmark" style={{ lineHeight: 1 }}>
-              <span style={{ color: "var(--text-1)", fontWeight: 300 }}>crew</span><span style={{ color: "var(--text-1)", fontWeight: 700 }}>board</span>
-            </span>
-          </div>
+          <span className="nav-wordmark" style={{ fontWeight: 800, letterSpacing: "-0.02em" }}>ard</span>
         </Link>
 
-        {/* Search — stretches to fill available space */}
-        <div className="hidden md:flex" style={{ flex: 1, minWidth: 0 }}>
+        {/* Search — fixed width */}
+        <div className="hidden md:flex" style={{ flex: "0 1 300px", minWidth: 160 }}>
           <NavSearch />
         </div>
+
+        {/* Nav links — inline after search */}
+        <NavInlineLinks />
 
         {/* Icons — far right */}
         <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0, marginLeft: "auto" }}>
@@ -237,8 +249,6 @@ export default async function Navbar() {
         </div>
 
       </div>
-
-      <NavCategoryStrip />
 
       <style>{`
         @keyframes tealPulse {
