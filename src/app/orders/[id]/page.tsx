@@ -7,6 +7,7 @@ import EscrowActions from "@/components/ui/EscrowActionsLoader";
 import { reRequestOrder } from "@/actions/orders";
 import ActionButton from "@/components/ui/ActionButton";
 import OrderTimeline from "@/components/ui/OrderTimeline";
+import EscrowState from "@/components/ui/EscrowState";
 
 function hexAlpha(hex: string, alpha: number) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -208,6 +209,17 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </div>
         )}
 
+        {/* Escrow state */}
+        <div style={{ marginBottom: "1rem" }}>
+          <EscrowState
+            status={order.status}
+            amount={order.amount}
+            txHash={order.txHash ?? null}
+            escrowAddress={order.escrowAddress ?? null}
+            isBuyer={isBuyer}
+          />
+        </div>
+
         {/* Parties */}
         <div className="order-parties-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1rem" }}>
           {[
@@ -271,7 +283,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
         {/* Timeline */}
         <div style={{ ...CARD_SM, padding: 0, overflow: "hidden" }}>
-          <OrderTimeline events={timelineEvents} currentStatus={order.status} />
+          <OrderTimeline events={timelineEvents} currentStatus={order.status} placedAt={order.createdAt} />
         </div>
 
         {/* Re-request (cancelled orders, buyer only) */}
