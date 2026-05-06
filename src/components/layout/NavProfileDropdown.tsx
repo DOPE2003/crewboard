@@ -8,6 +8,7 @@ import { getNavDropdownData } from "@/actions/nav";
 import { unlinkWallet } from "@/actions/wallet";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { useWalletModal } from "@solana/wallet-adapter-react-ui";
+import { useMode } from "@/components/ModeProvider";
 
 interface Props {
   isOpen: boolean;
@@ -133,6 +134,8 @@ export default function NavProfileDropdown({
 }: Props) {
   const [extra, setExtra]         = useState<ExtraData>(null);
   const [isDark, setIsDark]       = useState(false);
+  const { mode } = useMode();
+  const isHiring = mode === "hiring";
   const [pos, setPos]             = useState({ top: 0, right: 0 });
   const [showPro, setShowPro]     = useState(false);
   const [disconnecting, setDisconnecting] = useState(false);
@@ -363,17 +366,25 @@ export default function NavProfileDropdown({
         </Card>
 
         {/* JOBS & OFFERS */}
-        <SectionLabel icon={I.saved}>Jobs & Offers</SectionLabel>
+        <SectionLabel icon={I.saved}>{isHiring ? "Hiring" : "My Work"}</SectionLabel>
         <Card>
-          <Row icon={I.saved}        label="Saved Jobs"       href="/saved-talents" onClick={onClose} />
-          <RowDivider />
-          <Row icon={I.applications} label="My Posted Jobs"   href="/jobs?mine=1"   onClick={onClose} badge={extra?.postedJobsCount ? extra.postedJobsCount : null} />
-          <RowDivider />
-          <Row icon={I.applications} label="My Applications"  href="/jobs/applied"  onClick={onClose} badge={extra?.appliedJobsCount ? extra.appliedJobsCount : null} />
-          <RowDivider />
-          <Row icon={I.sent}         label="My Offers"        href="/offers"               onClick={onClose} />
-          <RowDivider />
-          <Row icon={I.inbox}        label="Offers Received"  href="/offers"               onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          {isHiring ? (
+            <>
+              <Row icon={I.applications} label="My Posted Jobs"  href="/jobs?mine=1"  onClick={onClose} badge={extra?.postedJobsCount ? extra.postedJobsCount : null} />
+              <RowDivider />
+              <Row icon={I.sent}         label="Sent Offers"     href="/offers"       onClick={onClose} />
+              <RowDivider />
+              <Row icon={I.saved}        label="Saved Talent"    href="/saved-talents" onClick={onClose} />
+            </>
+          ) : (
+            <>
+              <Row icon={I.applications} label="My Applications" href="/jobs/applied" onClick={onClose} badge={extra?.appliedJobsCount ? extra.appliedJobsCount : null} />
+              <RowDivider />
+              <Row icon={I.inbox}        label="Offers Received" href="/offers"       onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+              <RowDivider />
+              <Row icon={I.saved}        label="Saved Jobs"      href="/saved-talents" onClick={onClose} />
+            </>
+          )}
         </Card>
 
         {/* APP */}
