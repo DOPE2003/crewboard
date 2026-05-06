@@ -5,7 +5,6 @@ import NavSearch from "./NavSearch";
 import NavProfileMenu from "./NavProfileMenu";
 import NavControlsClient from "./NavControlsClient";
 import NavScrollWrapper from "./NavScrollWrapper";
-import NavCenterLinks from "./NavCenterLinks";
 
 import type { NavNotif, NavOrder } from "@/types/nav";
 
@@ -252,14 +251,13 @@ export default async function Navbar() {
         <div style={{
           display: "flex",
           alignItems: "center",
-          justifyContent: "space-between",
+          justifyContent: "center",
           padding: "0 24px",
           maxWidth: 1280,
           margin: "0 auto",
           width: "100%",
           gap: 0,
         }}>
-          {/* Intent-first links */}
           <Link href="/talent" className="cb-cat-link cb-intent-link" style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "11px 14px", fontSize: 12, fontWeight: 700, color: "var(--foreground, #111)", textDecoration: "none", whiteSpace: "nowrap", borderBottom: "2px solid transparent", transition: "color 0.15s, border-color 0.15s", flexShrink: 0 }}>
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
               <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
@@ -279,46 +277,6 @@ export default async function Navbar() {
             </svg>
             How it Works
           </Link>
-
-          {/* Divider */}
-          <div style={{ width: 1, height: 16, background: "var(--nav-border, #e5e7eb)", margin: "0 4px", flexShrink: 0 }} />
-
-          {/* Category browse links */}
-          {([
-            { label: "Coding & Tech",     href: "/talent?role=Coding+%26+Tech"    },
-            { label: "AI Engineer",       href: "/talent?role=AI+Engineer",        isNew: true },
-            { label: "Design",            href: "/talent?role=Graphic+%26+Design" },
-            { label: "Video & Animation", href: "/talent?role=Video+%26+Animation" },
-            { label: "Marketing",         href: "/talent?role=Social+Marketing"    },
-          ] as { label: string; href: string; isNew?: boolean }[]).map((cat) => (
-            <Link
-              key={cat.label}
-              href={cat.href}
-              className="cb-cat-link"
-              style={{
-                display: "inline-flex", alignItems: "center", gap: 6,
-                padding: "11px 14px",
-                fontSize: 12, fontWeight: 500,
-                color: "var(--text-muted, #6b7280)",
-                textDecoration: "none", whiteSpace: "nowrap",
-                borderBottom: "2px solid transparent",
-                transition: "color 0.15s, border-color 0.15s",
-                flexShrink: 0, letterSpacing: "0.01em",
-              }}
-            >
-              {cat.label}
-              {cat.isNew && (
-                <span style={{
-                  fontSize: 9, fontWeight: 700,
-                  background: "#14B8A6", color: "white",
-                  padding: "1px 5px", borderRadius: 4,
-                  letterSpacing: "0.05em", lineHeight: 1.6,
-                }}>
-                  NEW
-                </span>
-              )}
-            </Link>
-          ))}
         </div>
       </div>
 
