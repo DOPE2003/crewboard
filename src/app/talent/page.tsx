@@ -16,6 +16,15 @@ type User = {
   availability: string | null;
   minPrice: number | null;
   media: MediaItem[];
+  level?: 1 | 2 | 3 | 4 | 5;
+};
+
+const LEVEL_META: Record<number, { label: string; color: string; bg: string }> = {
+  1: { label: "Newcomer",    color: "#6b7280", bg: "rgba(107,114,128,0.12)" },
+  2: { label: "Rising",      color: "#3b82f6", bg: "rgba(59,130,246,0.12)"  },
+  3: { label: "Established", color: "#22c55e", bg: "rgba(34,197,94,0.12)"   },
+  4: { label: "Expert",      color: "#f59e0b", bg: "rgba(245,158,11,0.12)"  },
+  5: { label: "Elite",       color: "#14b8a6", bg: "rgba(20,184,166,0.15)"  },
 };
 
 const ROLES = [
@@ -313,10 +322,23 @@ function ProfileCard({ user, searchQ }: { user: User; searchQ: string }) {
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 10 }}>
           <UserAvatar src={user.image} name={user.name ?? user.twitterHandle} size={40} style={{ border: "2px solid var(--card-border)" }} />
-          <div style={{ minWidth: 0 }}>
-            <p style={{ fontSize: 14, fontWeight: 600, color: "var(--foreground)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-              {user.name ?? user.twitterHandle}
-            </p>
+          <div style={{ minWidth: 0, flex: 1 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+              <p style={{ fontSize: 14, fontWeight: 600, color: "var(--foreground)", margin: 0, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                {user.name ?? user.twitterHandle}
+              </p>
+              {user.level && (() => {
+                const meta = LEVEL_META[user.level];
+                return (
+                  <span style={{
+                    fontSize: 9, fontWeight: 700, padding: "2px 7px", borderRadius: 99,
+                    background: meta.bg, color: meta.color, whiteSpace: "nowrap", flexShrink: 0,
+                  }}>
+                    Lv{user.level} {meta.label}
+                  </span>
+                );
+              })()}
+            </div>
             <p style={{ fontSize: 11, color: "var(--text-muted)", margin: 0 }}>@{user.twitterHandle}</p>
           </div>
         </div>
