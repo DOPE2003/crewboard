@@ -15,7 +15,7 @@ export default async function NotificationsPage() {
 
   const notifications = await db.notification.findMany({
     where: { userId: session.user.userId },
-    orderBy: { createdAt: "desc" },
+    orderBy: [{ read: "asc" }, { createdAt: "desc" }],
   });
 
   const unreadCount = notifications.filter((n) => !n.read).length;

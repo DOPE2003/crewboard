@@ -376,8 +376,11 @@ export default function BillingClient({
             }}>
               <div style={{ position: "absolute", top: -30, right: -30, width: 110, height: 110, borderRadius: "50%", background: "rgba(255,255,255,0.07)", pointerEvents: "none" }} />
 
-              <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.14em", textTransform: "uppercase" as const, marginBottom: "0.4rem" }}>
+              <div style={{ fontSize: "0.55rem", fontWeight: 700, color: "rgba(255,255,255,0.55)", letterSpacing: "0.14em", textTransform: "uppercase" as const, marginBottom: "0.2rem" }}>
                 Solana Wallet
+              </div>
+              <div style={{ fontSize: "0.62rem", color: "rgba(255,255,255,0.5)", marginBottom: "0.5rem", lineHeight: 1.4 }}>
+                Only used to approve payment releases — your funds stay in your wallet until you confirm.
               </div>
 
               {/* Address or placeholder */}
@@ -395,20 +398,25 @@ export default function BillingClient({
 
               {/* ── No wallet linked → show connect CTA ── */}
               {!hasWallet && (
-                <button
-                  onClick={handleConnectWallet}
-                  style={{
-                    display: "inline-flex", alignItems: "center", gap: 7,
-                    padding: "9px 16px", borderRadius: 10,
-                    background: "rgba(255,255,255,0.15)",
-                    border: "1px solid rgba(255,255,255,0.3)",
-                    color: "#fff", fontSize: "0.78rem", fontWeight: 700,
-                    cursor: "pointer", fontFamily: "inherit",
-                    marginBottom: "0.5rem",
-                  }}
-                >
-                  Connect Wallet
-                </button>
+                <div>
+                  <button
+                    onClick={handleConnectWallet}
+                    style={{
+                      display: "inline-flex", alignItems: "center", gap: 7,
+                      padding: "9px 16px", borderRadius: 10,
+                      background: "rgba(255,255,255,0.15)",
+                      border: "1px solid rgba(255,255,255,0.3)",
+                      color: "#fff", fontSize: "0.78rem", fontWeight: 700,
+                      cursor: "pointer", fontFamily: "inherit",
+                      marginBottom: "0.4rem",
+                    }}
+                  >
+                    Connect Wallet
+                  </button>
+                  <div style={{ fontSize: "0.6rem", color: "rgba(255,255,255,0.45)", lineHeight: 1.5 }}>
+                    No crypto needed — connecting just lets you approve service fee releases.
+                  </div>
+                </div>
               )}
 
               {/* ── Wallet linked but Phantom not connected → secondary CTA for signing ── */}

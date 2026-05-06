@@ -1,45 +1,52 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
-
-const HOMEPAGE_LINKS = [
-  { label: "Browse Talent", id: "browse" },
-  { label: "How It Works",  id: "how-it-works" },
-];
-
-const INNER_LINKS = [
-  { label: "Browse Talent", href: "/talent" },
-  { label: "How It Works",  href: "/#how-it-works" },
-];
+import { useMode } from "@/components/ModeProvider";
 
 export default function NavCenterLinks() {
   const pathname = usePathname();
+  const router = useRouter();
   const isHome = pathname === "/";
+  const { mode } = useMode();
+  const isHiring = mode === "hiring";
 
   if (isHome) {
     return (
       <div className="nav-center-links">
-        {HOMEPAGE_LINKS.map(({ label, id }) => (
+        {isHiring ? (
           <button
-            key={id}
-            onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            onClick={() => document.getElementById("browse")?.scrollIntoView({ behavior: "smooth", block: "start" })}
             className="nav-center-btn"
           >
-            {label}
+            Find Talent
           </button>
-        ))}
+        ) : (
+          <button
+            onClick={() => router.push("/jobs")}
+            className="nav-center-btn"
+          >
+            Find Work
+          </button>
+        )}
+        <button
+          onClick={() => document.getElementById("how-it-works")?.scrollIntoView({ behavior: "smooth", block: "start" })}
+          className="nav-center-btn"
+        >
+          How It Works
+        </button>
       </div>
     );
   }
 
   return (
     <div className="nav-center-links">
-      {INNER_LINKS.map(({ label, href }) => (
-        <Link key={label} href={href} className="nav-center-btn nav-center-link">
-          {label}
-        </Link>
-      ))}
+      <Link href={isHiring ? "/talent" : "/jobs"} className="nav-center-btn nav-center-link">
+        {isHiring ? "Find Talent" : "Find Work"}
+      </Link>
+      <Link href="/#how-it-works" className="nav-center-btn nav-center-link">
+        How It Works
+      </Link>
     </div>
   );
 }
