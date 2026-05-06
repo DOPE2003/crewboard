@@ -1,14 +1,16 @@
 /**
  * GET  /api/mobile/jobs   — list open jobs (chain filter, pagination)
+ *                           ?mine=1 — return caller's posted jobs (auth required)
  * POST /api/mobile/jobs   — create a job (auth required)
  *
  * GET query params:
- *   ?chain=ETH            (optional, defaults to all)
+ *   ?mine=1               (return caller's own posted jobs — requires auth)
+ *   ?chain=ETH            (optional, defaults to all; ignored when mine=1)
  *   ?cursor=<jobId>       (cursor-based pagination)
  *   ?limit=<n>            (default: 20, max: 50)
  *   ?q=<search>           (search title/company/tags)
  *
- * Headers  Authorization: Bearer <token>  (required for POST, optional for GET)
+ * Headers  Authorization: Bearer <token>  (required for POST and ?mine=1)
  */
 import { NextRequest } from "next/server";
 import db from "@/lib/db";
@@ -20,11 +22,20 @@ import { fanOutNewJobNotifications } from "@/lib/job-notify";
 // ─── GET ──────────────────────────────────────────────────────────────────────
 
 export async function GET(req: NextRequest) {
-  const chain     = req.nextUrl.searchParams.get("chain");
-  const cursor    = req.nextUrl.searchParams.get("cursor");
-  const q         = req.nextUrl.searchParams.get("q")?.toLowerCase().trim();
+  const mine       = req.nextUrl.searchParams.get("mine") === "1";
+  const chain      = req.nextUrl.searchParams.get("chain");
+  const cursor     = req.nextUrl.searchParams.get("cursor");
+  const q          = req.nextUrl.searchParams.get("q")?.toLowerCase().trim();
   const limitParam = parseInt(req.nextUrl.searchParams.get("limit") ?? "20");
-  const limit     = Math.min(Math.max(1, limitParam), 50);
+  const limit      = Math.min(Math.max(1, limitParam), 50);
+
+  // ?mine=1 requires auth
+  let callerId: string | null = null;
+  if (mine) {
+    const user = await getMobileUser(req);
+    if (!user) return err("Unauthorized", 401);
+    callerId = user.sub;
+  }
 
   try {
     let cursorDate: Date | undefined;
@@ -34,7 +45,10 @@ export async function GET(req: NextRequest) {
     }
 
     const jobs = await db.job.findMany({
-      where: {
+      where: mine && callerId ? {
+        ownerId: callerId,
+        ...(cursorDate ? { createdAt: { lt: cursorDate } } : {}),
+      } : {
         status: "open",
         ...(chain && chain !== "ALL" ? { chain } : {}),
         ...(cursorDate ? { createdAt: { lt: cursorDate } } : {}),
@@ -51,6 +65,7 @@ export async function GET(req: NextRequest) {
       take: limit,
       include: {
         owner: { select: { name: true, twitterHandle: true, image: true } },
+        _count: { select: { applications: true } },
       },
     });
 
@@ -69,7 +84,10 @@ export async function GET(req: NextRequest) {
       tags: j.tags,
       description: j.description,
       milestones: j.milestones,
+      status: j.status,
       createdAt: j.createdAt.toISOString(),
+      applicantCount: j._count.applications,
+      isOwner: callerId === j.ownerId,
       owner: {
         id: j.ownerId,
         name: j.owner.name,
