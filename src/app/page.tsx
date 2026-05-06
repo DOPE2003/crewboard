@@ -177,27 +177,30 @@ export default async function HomePage() {
             border: "1px solid rgba(20,184,166,0.2)",
             background: "var(--card-bg)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
-            overflow: "hidden",
+            overflow: "hidden", textAlign: "left",
           }}>
             <div style={{ width: 80, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large" alt="Solana Summit Germany" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
             </div>
-            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 6 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 6, textAlign: "left" }}>
+              {/* Publisher row */}
+              <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "nowrap", minWidth: 0 }}>
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 14, height: 14, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)" }}>Superteam Germany</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Superteam Germany</span>
                 <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#14b8a6", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0 }}>X ↗</a>
+                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#14b8a6", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0, whiteSpace: "nowrap" }}>X ↗</a>
               </div>
-              <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+              {/* Title */}
+              <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
                 Content Creators Program — Solana Summit Germany
               </div>
+              {/* Benefit + CTA */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--card-border)" }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "#14b8a6", lineHeight: 1.2 }}>Exclusive on-site benefits</div>
-                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2 }}>$500 travel boost · Limited spots</div>
+                <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "#14b8a6", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Exclusive on-site benefits</div>
+                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>$500 travel boost · Limited spots</div>
                 </div>
                 <a href="https://t.co/4EFTnBjaWn" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", padding: "5px 10px", borderRadius: 6, background: "var(--foreground)", color: "var(--dropdown-bg)", fontWeight: 700, fontSize: 11, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
                   Apply ↗
@@ -213,7 +216,7 @@ export default async function HomePage() {
             border: "1px solid rgba(20,184,166,0.2)",
             background: "var(--card-bg)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
-            overflow: "hidden",
+            overflow: "hidden", textAlign: "left",
           }}>
             {/* Apple logo strip */}
             <div style={{
@@ -226,8 +229,9 @@ export default async function HomePage() {
               </svg>
               <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>iOS</span>
             </div>
-            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 6 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 6, textAlign: "left" }}>
+              {/* Publisher row */}
+              <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "nowrap", minWidth: 0 }}>
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 14, height: 14, flexShrink: 0 }}>
                   <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--foreground)" strokeWidth="3.5" strokeLinejoin="round"/>
                   <line x1="24" y1="13" x2="14.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
@@ -237,21 +241,23 @@ export default async function HomePage() {
                   <circle cx="14.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
                   <circle cx="33.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
                 </svg>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)" }}>Crewboard</span>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Crewboard</span>
                 <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(20,184,166,0.12)", color: "#14b8a6", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)" }}>Soon</span>
+                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(20,184,166,0.12)", color: "#14b8a6", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)", whiteSpace: "nowrap" }}>Soon</span>
               </div>
-              <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+              {/* Title */}
+              <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
                 Crewboard iOS App — Hire &amp; Find Work on the Go
               </div>
+              {/* Benefit + App Store */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--card-border)" }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "#14b8a6", lineHeight: 1.2 }}>Available on iPhone</div>
-                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2 }}>Gigs, escrow &amp; DMs · Launching soon</div>
+                <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "#14b8a6", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Available on iPhone</div>
+                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Gigs, escrow &amp; DMs · Launching soon</div>
                 </div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 5, padding: "5px 10px", borderRadius: 6, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.15)", opacity: 0.5, cursor: "not-allowed", flexShrink: 0 }}>
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.74-.82-3.26-.82-1.53 0-1.53.8-2.84.84-1.32.04-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39a4.54 4.54 0 013.12-2.51c1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91a4.35 4.35 0 013.44 1.94 4.25 4.25 0 00-2.03 3.56 4.1 4.1 0 002.54 3.76 9.73 9.73 0 01-1.15 2.4zM13 3.5a3.5 3.5 0 01-.94 2.7 3.07 3.07 0 01-2.65.82A3.13 3.13 0 0110.32 4 3.58 3.58 0 0113 2.88 3.5 3.5 0 0113 3.5z"/></svg>
-                  <span style={{ fontSize: 11, fontWeight: 700, color: "white", whiteSpace: "nowrap" }}>App Store</span>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 9px", borderRadius: 6, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.15)", opacity: 0.55, cursor: "not-allowed", flexShrink: 0 }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="white"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.74-.82-3.26-.82-1.53 0-1.53.8-2.84.84-1.32.04-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39a4.54 4.54 0 013.12-2.51c1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91a4.35 4.35 0 013.44 1.94 4.25 4.25 0 00-2.03 3.56 4.1 4.1 0 002.54 3.76 9.73 9.73 0 01-1.15 2.4zM13 3.5a3.5 3.5 0 01-.94 2.7 3.07 3.07 0 01-2.65.82A3.13 3.13 0 0110.32 4 3.58 3.58 0 0113 2.88 3.5 3.5 0 0113 3.5z"/></svg>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "white", whiteSpace: "nowrap" }}>App Store</span>
                 </div>
               </div>
             </div>
