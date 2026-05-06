@@ -251,51 +251,27 @@ export default function NavControlsClient({
       {!loggedIn && (
         <div className="hidden md:flex" style={{ alignItems: "center", gap: 8 }}>
           <Link
-            href="/register"
-            className="intent-nav-card"
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "flex-start",
-              padding: "7px 14px", borderRadius: 10, textDecoration: "none",
-              background: mode === 'hiring' ? "#14B8A6" : "var(--surface, #f8fafc)",
-              color: mode === 'hiring' ? "#0f172a" : "var(--foreground)",
-              border: mode === 'hiring' ? "1px solid #14B8A6" : "1px solid var(--card-border, #e5e7eb)",
-              boxShadow: mode === 'hiring' ? "0 2px 8px rgba(20,184,166,0.25)" : "none",
-              transition: "transform 0.15s, box-shadow 0.15s",
-              lineHeight: 1,
-            }}
-          >
-            <span style={{ fontSize: "0.75rem", fontWeight: 800 }}>I&apos;m Hiring</span>
-            <span style={{ fontSize: "0.65rem", fontWeight: 500, marginTop: 2, opacity: mode === 'hiring' ? 0.75 : 1, color: mode === 'hiring' ? undefined : "var(--text-muted)" }}>Post a job for free</span>
-          </Link>
-          <Link
-            href="/register"
-            className="intent-nav-card"
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "flex-start",
-              padding: "7px 14px", borderRadius: 10, textDecoration: "none",
-              background: mode !== 'hiring' ? "#14B8A6" : "var(--surface, #f8fafc)",
-              color: mode !== 'hiring' ? "#0f172a" : "var(--foreground)",
-              border: mode !== 'hiring' ? "1px solid #14B8A6" : "1px solid var(--card-border, #e5e7eb)",
-              boxShadow: mode !== 'hiring' ? "0 2px 8px rgba(20,184,166,0.25)" : "none",
-              transition: "transform 0.15s, box-shadow 0.15s",
-              lineHeight: 1,
-            }}
-          >
-            <span style={{ fontSize: "0.75rem", fontWeight: 800 }}>I&apos;m a Freelancer</span>
-            <span style={{ fontSize: "0.65rem", fontWeight: 500, marginTop: 2, color: mode !== 'hiring' ? undefined : "var(--text-muted)", opacity: mode !== 'hiring' ? 0.75 : 1 }}>Find work &amp; get paid</span>
-          </Link>
-          <Link
             href="/login"
             style={{
-              fontSize: 12, fontWeight: 600, padding: "5px 12px",
-              borderRadius: 99, border: "1px solid var(--card-border, #e5e7eb)",
-              color: "var(--text-muted)", background: "transparent",
-              textDecoration: "none", lineHeight: 1, whiteSpace: "nowrap",
+              fontSize: 13, fontWeight: 600, padding: "7px 18px",
+              borderRadius: 99, border: "1px solid #14B8A6",
+              color: "#14B8A6", background: "transparent",
+              textDecoration: "none", lineHeight: 1,
             }}
           >
             Log in
           </Link>
-          <style>{`.intent-nav-card:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.12) !important; border-color: rgba(20,184,166,0.5) !important; }`}</style>
+          <Link
+            href="/register"
+            style={{
+              fontSize: 13, fontWeight: 600, padding: "7px 18px",
+              borderRadius: 99, border: "none",
+              background: "#14B8A6", color: "#fff",
+              textDecoration: "none", lineHeight: 1,
+            }}
+          >
+            Join
+          </Link>
         </div>
       )}
 
