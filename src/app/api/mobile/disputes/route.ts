@@ -39,7 +39,7 @@ async function listHandler(req: NextRequest, user: MobileTokenPayload) {
     const page       = hasMore ? disputes.slice(0, limit) : disputes;
     const nextCursor = hasMore ? page[page.length - 1].id : null;
 
-    return ok({ data: page.map(formatDispute), meta: { nextCursor } });
+    return ok(page.map(formatDispute), { nextCursor });
   } catch (e) {
     console.error("[mobile/disputes GET]", e);
     return err("Something went wrong.", 500);
