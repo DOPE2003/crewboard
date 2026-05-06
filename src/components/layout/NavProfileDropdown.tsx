@@ -259,7 +259,7 @@ export default function NavProfileDropdown({
             </div>
             <div style={{ display: "flex", gap: 5, marginTop: 6, flexWrap: "wrap", alignItems: "center" }}>
               {extra?.isOG && <span style={{ background: "rgba(255,255,255,0.22)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>★ OG</span>}
-              {extra?.twitterHandle === "saad190914"
+              {(extra?.role === "OWNER" || extra?.twitterHandle === "saad190914")
                 ? <span style={{ background: "linear-gradient(135deg,rgba(20,184,166,0.6),rgba(15,118,110,0.6))", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>OWNER</span>
                 : extra?.role === "ADMIN"
                   ? <span style={{ background: "rgba(239,68,68,0.35)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>ADMIN</span>
@@ -311,8 +311,8 @@ export default function NavProfileDropdown({
       <div style={{ padding: "10px 0 12px" }}>
 
         {/* Staff dashboard shortcut */}
-        {(extra?.twitterHandle === "saad190914" || extra?.role === "ADMIN" || extra?.role === "SUPPORT") && (() => {
-          const isOwner   = extra?.twitterHandle === "saad190914";
+        {(extra?.role === "OWNER" || extra?.twitterHandle === "saad190914" || extra?.role === "ADMIN" || extra?.role === "SUPPORT") && (() => {
+          const isOwner   = extra?.role === "OWNER" || extra?.twitterHandle === "saad190914";
           const isSupport = !isOwner && extra?.role === "SUPPORT";
           const label = isOwner ? "Owner Dashboard" : isSupport ? "Support Dashboard" : "Admin Dashboard";
           const color = isOwner ? "#0f766e" : isSupport ? "#6366f1" : "#ef4444";

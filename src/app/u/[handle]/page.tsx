@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { auth } from "@/auth";
+import { computeFreelancerLevel, LEVEL_META } from "@/lib/freelancerLevel";
 import { notifyUser } from "@/lib/notify";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -90,6 +91,16 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const avgRating = reviews.length > 0
     ? (reviews.reduce((s: number, r: any) => s + r.rating, 0) / reviews.length).toFixed(1)
     : null;
+
+  const { level: freelancerLevel } = computeFreelancerLevel({
+    bio: user.bio,
+    image: user.image,
+    skills: user.skills,
+    walletAddress: user.walletAddress,
+    gigCount: (user.gigs as any[])?.length ?? 0,
+    completedOrders: completedOrdersCount,
+    avgRating: avgRating ? Number(avgRating) : null,
+  });
 
   const viewerId = (session?.user as any)?.userId as string | undefined;
 
@@ -238,6 +249,22 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                       </h1>
                       {user.isOG && <OGBadge size="lg" />}
                       {user.walletAddress && <WalletVerifiedBadge />}
+                      {(() => {
+                        const meta = LEVEL_META[freelancerLevel];
+                        return (
+                          <span style={{
+                            display: "inline-flex", alignItems: "center", gap: 4,
+                            fontSize: "11px", fontWeight: 700,
+                            padding: "3px 10px", borderRadius: 99,
+                            background: meta.bg, color: meta.color,
+                            border: `1px solid ${meta.color}33`,
+                            flexShrink: 0,
+                          }}>
+                            <span style={{ fontFamily: "Space Mono, monospace" }}>Lv{freelancerLevel}</span>
+                            {meta.label}
+                          </span>
+                        );
+                      })()}
                       {avgRating && (
                         <span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: "13px", fontWeight: 700, color: "#92400e", background: "#fef3c7", border: "1px solid #fde68a", padding: "2px 9px", borderRadius: 99, flexShrink: 0 }}>
                           ★ {avgRating}
