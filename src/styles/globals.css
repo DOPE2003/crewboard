@@ -152,19 +152,12 @@ html {
   font-family: var(--font-inter), 'Inter', sans-serif;
   -webkit-font-smoothing: antialiased;
   scroll-behavior: smooth;
-  font-size: 17px;
+  font-size: 16px;
 }
 
-/* rem scaling for large screens */
-@media (min-width: 1280px) { html { font-size: 18px; } }
-@media (min-width: 1536px) { html { font-size: 19px; } }
-@media (min-width: 1920px) { html { font-size: 20px; } }
-
-/* zoom scales EVERYTHING on every page — including hardcoded px inline styles */
-@media (min-width: 1024px) { body { zoom: 1.08; } }
-@media (min-width: 1280px) { body { zoom: 1.12; } }
-@media (min-width: 1536px) { body { zoom: 1.16; } }
-@media (min-width: 1920px) { body { zoom: 1.20; } }
+/* Modest bump at large screens — only affects rem-based sizes, safe for layout */
+@media (min-width: 1440px) { html { font-size: 17px; } }
+@media (min-width: 1920px) { html { font-size: 18px; } }
 
 body {
   background: var(--bg);
