@@ -162,13 +162,17 @@ export default async function HomePage() {
           ))}
         </div>
 
-        {/* ── Spotlight card — inside hero ── */}
+        {/* ── Spotlight cards row — inside hero ── */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
           position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 640,
-        }}>
+          width: "100%", maxWidth: 960,
+          display: "flex", gap: 12, alignItems: "stretch",
+        }} className="eco-highlights-row">
+
+          {/* Card 1: Superteam */}
           <div className="eco-hero-card" style={{
+            flex: 1, minWidth: 0,
             display: "flex", borderRadius: 14,
             border: "1px solid rgba(20,184,166,0.2)",
             background: "var(--card-bg)",
@@ -254,12 +258,102 @@ export default async function HomePage() {
               </div>
             </div>
           </div>
+
+          {/* Card 2: iOS App Coming Soon */}
+          <div className="eco-hero-card" style={{
+            flex: 1, minWidth: 0,
+            display: "flex", borderRadius: 14,
+            border: "1px solid rgba(20,184,166,0.2)",
+            background: "var(--card-bg)",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.14)",
+            overflow: "hidden",
+          }}>
+            {/* Image strip */}
+            <div style={{
+              width: 120, flexShrink: 0, overflow: "hidden",
+              background: "linear-gradient(160deg, #0f172a 0%, #0f3d36 100%)",
+              display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <svg width="54" height="54" viewBox="0 0 54 54" fill="none" xmlns="http://www.w3.org/2000/svg">
+                {/* Phone outline */}
+                <rect x="12" y="3" width="30" height="48" rx="5" fill="none" stroke="rgba(20,184,166,0.5)" strokeWidth="1.5"/>
+                <rect x="15" y="7" width="24" height="36" rx="3" fill="rgba(20,184,166,0.08)"/>
+                {/* Crewboard hex logo inside screen */}
+                <polygon points="27,13 33,16.5 33,23.5 27,27 21,23.5 21,16.5" fill="none" stroke="#14B8A6" strokeWidth="1.2" strokeLinejoin="round"/>
+                <line x1="27" y1="14.5" x2="23" y2="21" stroke="#14B8A6" strokeWidth="1" strokeLinecap="round"/>
+                <line x1="27" y1="14.5" x2="31" y2="21" stroke="#14B8A6" strokeWidth="1" strokeLinecap="round"/>
+                <line x1="23" y1="21" x2="31" y2="21" stroke="#14B8A6" strokeWidth="1" strokeLinecap="round"/>
+                <circle cx="27" cy="14.5" r="1.4" fill="#14B8A6"/>
+                <circle cx="23" cy="21" r="1.4" fill="#14B8A6"/>
+                <circle cx="31" cy="21" r="1.4" fill="#14B8A6"/>
+                {/* Bottom bar lines */}
+                <rect x="19" y="30" width="16" height="1.5" rx="0.75" fill="rgba(20,184,166,0.4)"/>
+                <rect x="19" y="33.5" width="10" height="1.5" rx="0.75" fill="rgba(20,184,166,0.25)"/>
+                {/* Home indicator */}
+                <rect x="22" y="46" width="10" height="2" rx="1" fill="rgba(255,255,255,0.2)"/>
+              </svg>
+            </div>
+
+            {/* Content */}
+            <div style={{ padding: "0.8rem 1rem", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: "0.55rem", textAlign: "left" }}>
+
+              {/* Publisher row */}
+              <div style={{ display: "flex", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 17, height: 17, flexShrink: 0 }}>
+                  <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--foreground)" strokeWidth="3" strokeLinejoin="round"/>
+                  <line x1="24" y1="13" x2="14.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="24" y1="13" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="14.5" y1="29.5" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
+                  <circle cx="24" cy="13" r="3.5" fill="var(--foreground)"/>
+                  <circle cx="14.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
+                  <circle cx="33.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
+                </svg>
+                <span style={{ fontSize: "11px", fontWeight: 600, color: "var(--foreground)" }}>Crewboard</span>
+                <span style={{ width: 12, height: 12, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: "7px", fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <span style={{ marginLeft: "auto", fontSize: "8.5px", fontWeight: 800, letterSpacing: "0.06em", textTransform: "uppercase", background: "rgba(20,184,166,0.12)", color: "#14b8a6", padding: "2px 7px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)" }}>Coming Soon</span>
+              </div>
+
+              {/* Title */}
+              <div style={{ fontSize: "12.5px", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+                Crewboard iOS App — Hire &amp; Find Work on the Go
+              </div>
+
+              {/* Benefit + App Store */}
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, paddingTop: "0.45rem", borderTop: "1px solid var(--card-border)" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: "11.5px", fontWeight: 800, color: "#14b8a6", lineHeight: 1.2 }}>Available on iPhone</div>
+                  <div style={{ fontSize: "9.5px", color: "var(--text-muted)", marginTop: 2 }}>Gigs, escrow &amp; DMs · Launching soon</div>
+                </div>
+                <div style={{ opacity: 0.45, cursor: "not-allowed", flexShrink: 0 }} title="Coming soon">
+                  <svg width="80" height="26" viewBox="0 0 120 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="120" height="40" rx="6" fill="#1a1a1a"/>
+                    <rect x="0.5" y="0.5" width="119" height="39" rx="5.5" stroke="white" strokeOpacity="0.4" strokeWidth="1"/>
+                    <path d="M17.5 7.8C18.3 7 19 5.8 19 5.8C19 5.8 17.4 6.2 16.6 7C15.8 7.8 15.3 9 15.3 9C15.3 9 16.9 8.6 17.5 7.8Z" fill="white"/>
+                    <path d="M21.5 9.5C19.8 9.5 18.5 10.4 17.5 10.4C16.5 10.4 15.2 9.5 14 9.5C11.4 9.5 9.2 12.1 9.2 16.3C9.2 20.1 11 25 13.2 25C14.1 25 15 23.7 16.2 23.7C17.4 23.7 17.9 25 19.2 25C21.4 25 23.1 21 23.6 19.2C22.2 18.3 21 17 21 15.2C21 13.8 21.9 12.5 22.8 12C21.9 10.6 21.5 9.5 21.5 9.5Z" fill="white"/>
+                    <text x="28" y="16" fill="white" fontSize="7" opacity="0.65" fontFamily="system-ui,sans-serif">Download on the</text>
+                    <text x="28" y="27" fill="white" fontSize="12" fontWeight="600" fontFamily="system-ui,sans-serif">App Store</text>
+                  </svg>
+                </div>
+              </div>
+
+              {/* Footer */}
+              <div style={{ borderTop: "1px solid var(--card-border)", paddingTop: "0.5rem", display: "flex", alignItems: "center", gap: 6 }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                <span style={{ fontSize: "9px", color: "var(--text-muted)", fontWeight: 500 }}>Secured by on-chain escrow · iOS &amp; Android</span>
+              </div>
+
+            </div>
+          </div>
+
         </div>
       </div>
       <style>{`
         @media (max-width: 560px) {
           .eco-hero-card { flex-direction: column !important; }
           .eco-hero-card > div:first-child { width: 100% !important; height: 110px; }
+        }
+        @media (max-width: 720px) {
+          .eco-highlights-row { flex-direction: column !important; }
         }
       `}</style>
 
