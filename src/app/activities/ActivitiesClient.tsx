@@ -170,7 +170,7 @@ function CtaBtn({ label, href, urgent }: { label: string; href: string; urgent?:
       onClick={e => { e.preventDefault(); e.stopPropagation(); router.push(href) }}
       style={{
         display: 'inline-flex', alignItems: 'center', gap: 4,
-        padding: '5px 13px', borderRadius: 7, fontSize: 11, fontWeight: 700,
+        padding: '6px 14px', borderRadius: 7, fontSize: 13, fontWeight: 700,
         cursor: 'pointer', flexShrink: 0, border: 'none',
         background: urgent ? '#14B8A6' : 'var(--background)',
         color: urgent ? '#fff' : '#14B8A6',
@@ -647,10 +647,10 @@ export default function ActivitiesClient({
           <div className="hidden md:block">
             <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, marginBottom: 22 }}>
               <div>
-                <h1 style={{ fontSize: 26, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 4px', letterSpacing: '-0.01em' }}>
+                <h1 style={{ fontSize: 30, fontWeight: 700, color: 'var(--foreground)', margin: '0 0 4px', letterSpacing: '-0.01em' }}>
                   Activities
                 </h1>
-                <p style={{ fontSize: 13, color: 'var(--text-muted)', margin: 0 }}>
+                <p style={{ fontSize: 15, color: 'var(--text-muted)', margin: 0 }}>
                   {totalUnread > 0 ? `${totalUnread} unread` : 'All caught up'}
                   {disputeCount > 0 && <span style={{ color: '#ef4444', fontWeight: 600 }}> · {disputeCount} dispute{disputeCount > 1 ? 's' : ''} need attention</span>}
                 </p>
@@ -676,7 +676,7 @@ export default function ActivitiesClient({
 
           {/* Tab label */}
           <div className="hidden md:block">
-            <p style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '0 0 10px' }}>
+            <p style={{ fontSize: 13, fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.08em', color: 'var(--text-muted)', margin: '0 0 12px' }}>
               {tabLabel}
             </p>
           </div>
