@@ -54,7 +54,8 @@
       "Bash(curl -s http://localhost:3000/jobs/new)",
       "Bash(curl -s http://localhost:3000/gigs)",
       "Bash(xargs ls -la)",
-      "Bash(awk '{print $NF}')"
+      "Bash(awk '{print $NF}')",
+      "Bash(git rm *)"
     ],
     "additionalDirectories": [
       "/private/tmp"
