@@ -12,7 +12,7 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
       style={{
         display: "inline-flex", alignItems: "center",
         padding: "5px 10px", fontSize: 12.5,
-        fontWeight: active ? 700 : 500,
+        fontWeight: active ? 800 : 600,
         color: active ? "var(--foreground)" : "var(--text-muted)",
         textDecoration: "none", whiteSpace: "nowrap", borderRadius: 6,
       }}

@@ -183,6 +183,7 @@ export default async function Navbar() {
         alignItems: "center",
         width: "100%",
         gap: "12px",
+        position: "relative",
       }}>
 
         <Link href="/" className="flex items-center shrink-0 no-underline" style={{ gap: 0, lineHeight: 1 }}>
@@ -194,8 +195,10 @@ export default async function Navbar() {
           <NavSearch />
         </div>
 
-        {/* Nav links — inline after search */}
-        <NavInlineLinks />
+        {/* Nav links — absolutely centred in the bar */}
+        <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+          <NavInlineLinks />
+        </div>
 
         {/* Icons — far right */}
         <div style={{ display: "flex", alignItems: "center", gap: "4px", flexShrink: 0, marginLeft: "auto" }}>
