@@ -26,7 +26,7 @@ export default function ModeToggle() {
             color: mode === m ? "#fff" : "var(--text-muted)",
           }}
         >
-          {m === "hiring" ? "Client" : "Freelancer"}
+          {m === "hiring" ? "I'M HIRING" : "I'M OFFERING"}
         </button>
       ))}
     </div>
