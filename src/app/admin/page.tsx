@@ -2,6 +2,7 @@ import { requireStaff, getStaffRole, OWNER_HANDLE } from "@/lib/auth-utils";
 import db from "@/lib/db";
 import Link from "next/link";
 import SystemNotifyForm from "@/components/admin/SystemNotifyForm";
+import OwnerEmailForm from "@/components/admin/OwnerEmailForm";
 
 export default async function AdminDashboardPage() {
   await requireStaff();
@@ -420,6 +421,20 @@ export default async function AdminDashboardPage() {
             </div>
             <div style={{ padding: "1.5rem" }}>
               <SystemNotifyForm />
+            </div>
+          </div>
+        )}
+
+        {/* Direct Email — owner only */}
+        {isOwner && (
+          <div style={{ background: "var(--card-bg)", borderRadius: 16, border: "1px solid var(--card-border)", overflow: "hidden", marginBottom: "1.5rem" }}>
+            <div style={{ padding: "1.25rem 1.5rem", borderBottom: "1px solid var(--card-border)", display: "flex", alignItems: "center", gap: 10 }}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+              <h2 style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)", margin: 0 }}>Send Email to Users</h2>
+              <span style={{ fontSize: "0.65rem", fontWeight: 700, padding: "2px 8px", borderRadius: 99, background: "rgba(20,184,166,0.1)", color: "#14b8a6" }}>owner only</span>
+            </div>
+            <div style={{ padding: "1.5rem" }}>
+              <OwnerEmailForm />
             </div>
           </div>
         )}
