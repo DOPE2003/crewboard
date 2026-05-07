@@ -73,7 +73,7 @@ function Row({
       <span style={{ width: 24, height: 24, borderRadius: 8, background: danger ? "rgba(239,68,68,0.1)" : "rgba(20,184,166,0.1)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, color: danger ? "#ef4444" : "#14B8A6" }}>
         {icon}
       </span>
-      <span style={{ flex: 1, fontSize: 14, color: danger ? "#ef4444" : "var(--foreground)", fontWeight: 500 }}>{label}</span>
+      <span style={{ flex: 1, fontSize: 14, color: danger ? "#ef4444" : "var(--foreground)", fontWeight: 700 }}>{label}</span>
       {badge != null && String(badge) !== "0" && (
         <span style={{ background: "#ef4444", color: "#fff", borderRadius: 99, fontSize: 10, fontWeight: 700, padding: "1px 7px" }}>{badge}</span>
       )}
