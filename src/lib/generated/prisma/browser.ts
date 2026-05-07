@@ -128,6 +128,11 @@ export type DisputeMessage = Prisma.DisputeMessageModel
  */
 export type Offer = Prisma.OfferModel
 /**
+ * Model SupportTicket
+ * 
+ */
+export type SupportTicket = Prisma.SupportTicketModel
+/**
  * Model AdminActionLog
  * 
  */

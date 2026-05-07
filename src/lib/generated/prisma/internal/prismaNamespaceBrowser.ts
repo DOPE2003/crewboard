@@ -73,6 +73,7 @@ export const ModelName = {
   DisputeEvidence: 'DisputeEvidence',
   DisputeMessage: 'DisputeMessage',
   Offer: 'Offer',
+  SupportTicket: 'SupportTicket',
   AdminActionLog: 'AdminActionLog',
   CampaignClaim: 'CampaignClaim'
 } as const
@@ -438,6 +439,22 @@ export const OfferScalarFieldEnum = {
 } as const
 
 export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
+
+
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subject: 'subject',
+  category: 'category',
+  body: 'body',
+  status: 'status',
+  staffNote: 'staffNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
 
 
 export const AdminActionLogScalarFieldEnum = {

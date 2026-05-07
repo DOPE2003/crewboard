@@ -487,6 +487,7 @@ export type UserWhereInput = {
   notificationPreferences?: Prisma.XOR<Prisma.NotificationPreferencesNullableScalarRelationFilter, Prisma.NotificationPreferencesWhereInput> | null
   filedDisputes?: Prisma.DisputeListRelationFilter
   disputeMessages?: Prisma.DisputeMessageListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -550,6 +551,7 @@ export type UserOrderByWithRelationInput = {
   notificationPreferences?: Prisma.NotificationPreferencesOrderByWithRelationInput
   filedDisputes?: Prisma.DisputeOrderByRelationAggregateInput
   disputeMessages?: Prisma.DisputeMessageOrderByRelationAggregateInput
+  supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -616,6 +618,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   notificationPreferences?: Prisma.XOR<Prisma.NotificationPreferencesNullableScalarRelationFilter, Prisma.NotificationPreferencesWhereInput> | null
   filedDisputes?: Prisma.DisputeListRelationFilter
   disputeMessages?: Prisma.DisputeMessageListRelationFilter
+  supportTickets?: Prisma.SupportTicketListRelationFilter
 }, "id" | "twitterId" | "twitterHandle" | "walletAddress" | "worldIdNullifier" | "stripeVerificationId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -767,6 +770,7 @@ export type UserCreateInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -830,6 +834,7 @@ export type UserUncheckedCreateInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -893,6 +898,7 @@ export type UserUpdateInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -956,6 +962,7 @@ export type UserUncheckedUpdateInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1571,6 +1578,20 @@ export type UserUpdateOneRequiredWithoutReceivedOffersNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutReceivedOffersInput, Prisma.UserUpdateWithoutReceivedOffersInput>, Prisma.UserUncheckedUpdateWithoutReceivedOffersInput>
 }
 
+export type UserCreateNestedOneWithoutSupportTicketsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSupportTicketsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSupportTicketsInput
+  upsert?: Prisma.UserUpsertWithoutSupportTicketsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportTicketsInput, Prisma.UserUpdateWithoutSupportTicketsInput>, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
+}
+
 export type UserCreateNestedOneWithoutCampaignClaimsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignClaimsInput, Prisma.UserUncheckedCreateWithoutCampaignClaimsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignClaimsInput
@@ -1647,6 +1668,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedByTalentsInput = {
@@ -1709,6 +1731,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedByTalentsInput = {
@@ -1776,6 +1799,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedTalentsInput = {
@@ -1838,6 +1862,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedTalentsInput = {
@@ -1916,6 +1941,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
@@ -1978,6 +2004,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutSavedTalentsInput = {
@@ -2051,6 +2078,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedTalentsInput = {
@@ -2113,6 +2141,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -2175,6 +2204,7 @@ export type UserCreateWithoutNotificationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -2237,6 +2267,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2315,6 +2346,7 @@ export type UserUpdateWithoutNotificationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2377,6 +2409,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutJobsInput = {
@@ -2439,6 +2472,7 @@ export type UserCreateWithoutJobsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJobsInput = {
@@ -2501,6 +2535,7 @@ export type UserUncheckedCreateWithoutJobsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJobsInput = {
@@ -2579,6 +2614,7 @@ export type UserUpdateWithoutJobsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJobsInput = {
@@ -2641,6 +2677,7 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutJobApplicationsInput = {
@@ -2703,6 +2740,7 @@ export type UserCreateWithoutJobApplicationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJobApplicationsInput = {
@@ -2765,6 +2803,7 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJobApplicationsInput = {
@@ -2843,6 +2882,7 @@ export type UserUpdateWithoutJobApplicationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJobApplicationsInput = {
@@ -2905,6 +2945,7 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -2967,6 +3008,7 @@ export type UserCreateWithoutSentMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -3029,6 +3071,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -3107,6 +3150,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -3169,6 +3213,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGigsInput = {
@@ -3231,6 +3276,7 @@ export type UserCreateWithoutGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGigsInput = {
@@ -3293,6 +3339,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGigsInput = {
@@ -3371,6 +3418,7 @@ export type UserUpdateWithoutGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGigsInput = {
@@ -3433,6 +3481,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavedGigsInput = {
@@ -3495,6 +3544,7 @@ export type UserCreateWithoutSavedGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedGigsInput = {
@@ -3557,6 +3607,7 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedGigsInput = {
@@ -3635,6 +3686,7 @@ export type UserUpdateWithoutSavedGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedGigsInput = {
@@ -3697,6 +3749,7 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBuyerOrdersInput = {
@@ -3759,6 +3812,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBuyerOrdersInput = {
@@ -3821,6 +3875,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBuyerOrdersInput = {
@@ -3888,6 +3943,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSellerOrdersInput = {
@@ -3950,6 +4006,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSellerOrdersInput = {
@@ -4028,6 +4085,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
@@ -4090,6 +4148,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutSellerOrdersInput = {
@@ -4163,6 +4222,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSellerOrdersInput = {
@@ -4225,6 +4285,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsReceivedInput = {
@@ -4287,6 +4348,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -4349,6 +4411,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -4416,6 +4479,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -4478,6 +4542,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -4556,6 +4621,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -4618,6 +4684,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsGivenInput = {
@@ -4691,6 +4758,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -4753,6 +4821,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShowcasePostsInput = {
@@ -4815,6 +4884,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShowcasePostsInput = {
@@ -4877,6 +4947,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShowcasePostsInput = {
@@ -4955,6 +5026,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShowcasePostsInput = {
@@ -5017,6 +5089,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShowcaseInteractionsInput = {
@@ -5079,6 +5152,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
@@ -5141,6 +5215,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShowcaseInteractionsInput = {
@@ -5219,6 +5294,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
@@ -5281,6 +5357,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProWaitlistInput = {
@@ -5343,6 +5420,7 @@ export type UserCreateWithoutProWaitlistInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProWaitlistInput = {
@@ -5405,6 +5483,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProWaitlistInput = {
@@ -5483,6 +5562,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProWaitlistInput = {
@@ -5545,6 +5625,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
@@ -5607,6 +5688,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
@@ -5669,6 +5751,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -5747,6 +5830,7 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
@@ -5809,6 +5893,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmailVerifyTokensInput = {
@@ -5871,6 +5956,7 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
@@ -5933,6 +6019,7 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmailVerifyTokensInput = {
@@ -6011,6 +6098,7 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
@@ -6073,6 +6161,7 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -6135,6 +6224,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -6197,6 +6287,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -6275,6 +6366,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -6337,6 +6429,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFiledDisputesInput = {
@@ -6399,6 +6492,7 @@ export type UserCreateWithoutFiledDisputesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFiledDisputesInput = {
@@ -6461,6 +6555,7 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFiledDisputesInput = {
@@ -6539,6 +6634,7 @@ export type UserUpdateWithoutFiledDisputesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFiledDisputesInput = {
@@ -6601,6 +6697,7 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDisputeMessagesInput = {
@@ -6663,6 +6760,7 @@ export type UserCreateWithoutDisputeMessagesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputeMessagesInput = {
@@ -6725,6 +6823,7 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputeMessagesInput = {
@@ -6803,6 +6902,7 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
@@ -6865,6 +6965,7 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentOffersInput = {
@@ -6927,6 +7028,7 @@ export type UserCreateWithoutSentOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentOffersInput = {
@@ -6989,6 +7091,7 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentOffersInput = {
@@ -7056,6 +7159,7 @@ export type UserCreateWithoutReceivedOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceivedOffersInput = {
@@ -7118,6 +7222,7 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceivedOffersInput = {
@@ -7196,6 +7301,7 @@ export type UserUpdateWithoutSentOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentOffersInput = {
@@ -7258,6 +7364,7 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReceivedOffersInput = {
@@ -7331,6 +7438,7 @@ export type UserUpdateWithoutReceivedOffersInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedOffersInput = {
@@ -7384,6 +7492,275 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
   savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
   sentOffers?: Prisma.OfferUncheckedUpdateManyWithoutSenderNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutSupportTicketsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+}
+
+export type UserUncheckedCreateWithoutSupportTicketsInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+}
+
+export type UserCreateOrConnectWithoutSupportTicketsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+}
+
+export type UserUpsertWithoutSupportTicketsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSupportTicketsInput, Prisma.UserUncheckedCreateWithoutSupportTicketsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSupportTicketsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSupportTicketsInput, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
+}
+
+export type UserUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSupportTicketsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUncheckedUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
   showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
   showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
   proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
@@ -7455,6 +7832,7 @@ export type UserCreateWithoutCampaignClaimsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCampaignClaimsInput = {
@@ -7517,6 +7895,7 @@ export type UserUncheckedCreateWithoutCampaignClaimsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCampaignClaimsInput = {
@@ -7595,6 +7974,7 @@ export type UserUpdateWithoutCampaignClaimsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
@@ -7657,6 +8037,7 @@ export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -7686,6 +8067,7 @@ export type UserCountOutputType = {
   emailVerifyTokens: number
   filedDisputes: number
   disputeMessages: number
+  supportTickets: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -7710,6 +8092,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   emailVerifyTokens?: boolean | UserCountOutputTypeCountEmailVerifyTokensArgs
   filedDisputes?: boolean | UserCountOutputTypeCountFiledDisputesArgs
   disputeMessages?: boolean | UserCountOutputTypeCountDisputeMessagesArgs
+  supportTickets?: boolean | UserCountOutputTypeCountSupportTicketsArgs
 }
 
 /**
@@ -7869,6 +8252,13 @@ export type UserCountOutputTypeCountDisputeMessagesArgs<ExtArgs extends runtime.
   where?: Prisma.DisputeMessageWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSupportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SupportTicketWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -7931,6 +8321,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
   filedDisputes?: boolean | Prisma.User$filedDisputesArgs<ExtArgs>
   disputeMessages?: boolean | Prisma.User$disputeMessagesArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.User$supportTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -8079,6 +8470,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   notificationPreferences?: boolean | Prisma.User$notificationPreferencesArgs<ExtArgs>
   filedDisputes?: boolean | Prisma.User$filedDisputesArgs<ExtArgs>
   disputeMessages?: boolean | Prisma.User$disputeMessagesArgs<ExtArgs>
+  supportTickets?: boolean | Prisma.User$supportTicketsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -8110,6 +8502,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     notificationPreferences: Prisma.$NotificationPreferencesPayload<ExtArgs> | null
     filedDisputes: Prisma.$DisputePayload<ExtArgs>[]
     disputeMessages: Prisma.$DisputeMessagePayload<ExtArgs>[]
+    supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -8566,6 +8959,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   notificationPreferences<T extends Prisma.User$notificationPreferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationPreferencesArgs<ExtArgs>>): Prisma.Prisma__NotificationPreferencesClient<runtime.Types.Result.GetResult<Prisma.$NotificationPreferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   filedDisputes<T extends Prisma.User$filedDisputesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filedDisputesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   disputeMessages<T extends Prisma.User$disputeMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$disputeMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputeMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  supportTickets<T extends Prisma.User$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9564,6 +9958,30 @@ export type User$disputeMessagesArgs<ExtArgs extends runtime.Types.Extensions.In
   take?: number
   skip?: number
   distinct?: Prisma.DisputeMessageScalarFieldEnum | Prisma.DisputeMessageScalarFieldEnum[]
+}
+
+/**
+ * User.supportTickets
+ */
+export type User$supportTicketsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the SupportTicket
+   */
+  select?: Prisma.SupportTicketSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the SupportTicket
+   */
+  omit?: Prisma.SupportTicketOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SupportTicketInclude<ExtArgs> | null
+  where?: Prisma.SupportTicketWhereInput
+  orderBy?: Prisma.SupportTicketOrderByWithRelationInput | Prisma.SupportTicketOrderByWithRelationInput[]
+  cursor?: Prisma.SupportTicketWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
 }
 
 /**

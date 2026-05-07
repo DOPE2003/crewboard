@@ -406,7 +406,7 @@ export default function NavProfileDropdown({
         <Card>
           <Row icon={I.privacy} label="Privacy"       href="/privacy"                      onClick={onClose} />
           <RowDivider />
-          <Row icon={I.help}    label="Help & Support" href="mailto:support@crewboard.fun"  onClick={onClose} />
+          <Row icon={I.help}    label="Help & Support"  href="/support"                     onClick={onClose} />
           <RowDivider />
           <Row icon={I.signout} label="Sign Out" onClick={async () => {
             onClose();

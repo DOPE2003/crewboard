@@ -406,6 +406,7 @@ export const ModelName = {
   DisputeEvidence: 'DisputeEvidence',
   DisputeMessage: 'DisputeMessage',
   Offer: 'Offer',
+  SupportTicket: 'SupportTicket',
   AdminActionLog: 'AdminActionLog',
   CampaignClaim: 'CampaignClaim'
 } as const
@@ -423,7 +424,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "adminActionLog" | "campaignClaim"
+    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "supportTicket" | "adminActionLog" | "campaignClaim"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2055,6 +2056,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SupportTicket: {
+      payload: Prisma.$SupportTicketPayload<ExtArgs>
+      fields: Prisma.SupportTicketFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SupportTicketFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SupportTicketFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>
+        }
+        findFirst: {
+          args: Prisma.SupportTicketFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SupportTicketFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>
+        }
+        findMany: {
+          args: Prisma.SupportTicketFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>[]
+        }
+        create: {
+          args: Prisma.SupportTicketCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>
+        }
+        createMany: {
+          args: Prisma.SupportTicketCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SupportTicketCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>[]
+        }
+        delete: {
+          args: Prisma.SupportTicketDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>
+        }
+        update: {
+          args: Prisma.SupportTicketUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>
+        }
+        deleteMany: {
+          args: Prisma.SupportTicketDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SupportTicketUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SupportTicketUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>[]
+        }
+        upsert: {
+          args: Prisma.SupportTicketUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SupportTicketPayload>
+        }
+        aggregate: {
+          args: Prisma.SupportTicketAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSupportTicket>
+        }
+        groupBy: {
+          args: Prisma.SupportTicketGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportTicketGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SupportTicketCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SupportTicketCountAggregateOutputType> | number
+        }
+      }
+    }
     AdminActionLog: {
       payload: Prisma.$AdminActionLogPayload<ExtArgs>
       fields: Prisma.AdminActionLogFieldRefs
@@ -2589,6 +2664,22 @@ export const OfferScalarFieldEnum = {
 export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
 
 
+export const SupportTicketScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  subject: 'subject',
+  category: 'category',
+  body: 'body',
+  status: 'status',
+  staffNote: 'staffNote',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  resolvedAt: 'resolvedAt'
+} as const
+
+export type SupportTicketScalarFieldEnum = (typeof SupportTicketScalarFieldEnum)[keyof typeof SupportTicketScalarFieldEnum]
+
+
 export const AdminActionLogScalarFieldEnum = {
   id: 'id',
   actorId: 'actorId',
@@ -2881,6 +2972,7 @@ export type GlobalOmitConfig = {
   disputeEvidence?: Prisma.DisputeEvidenceOmit
   disputeMessage?: Prisma.DisputeMessageOmit
   offer?: Prisma.OfferOmit
+  supportTicket?: Prisma.SupportTicketOmit
   adminActionLog?: Prisma.AdminActionLogOmit
   campaignClaim?: Prisma.CampaignClaimOmit
 }

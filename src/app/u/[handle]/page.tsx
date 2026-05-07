@@ -19,6 +19,8 @@ import CvUpload from "@/components/ui/CvUpload";
 import { blobUrl } from "@/lib/blobUrl";
 import AddEmailForm from "@/components/forms/AddEmailForm";
 import DeleteAccountButton from "@/components/ui/DeleteAccountButton";
+import WorkCalendar from "@/components/ui/WorkCalendar";
+import NewTicketButton from "@/components/ui/NewTicketButton";
 
 const AVAIL_COLOR: Record<string, string> = {
   available: "#22c55e", open: "#f59e0b", busy: "#ef4444",
@@ -75,7 +77,10 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     return <div style={{ padding: "2rem", color: "var(--text-muted)" }}>Profile not found.</div>;
   }
 
-  const [reviews, completedOrdersCount, totalEarnedAgg] = await Promise.all([
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+  const [reviews, completedOrdersCount, totalEarnedAgg, calendarOrders] = await Promise.all([
     db.review.findMany({
       where: { revieweeId: user.id },
       include: { reviewer: { select: { name: true, twitterHandle: true, image: true } } },
@@ -84,7 +89,44 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
     }),
     db.order.count({ where: { sellerId: user.id, status: "completed" } }),
     db.order.aggregate({ where: { sellerId: user.id, status: "completed" }, _sum: { amount: true } }),
+    db.order.findMany({
+      where: {
+        sellerId: user.id,
+        status: { in: ["pending", "funded", "accepted", "delivered", "completed"] },
+        createdAt: { gte: threeMonthsAgo },
+      },
+      select: {
+        status: true,
+        createdAt: true,
+        updatedAt: true,
+        deliverySubmittedAt: true,
+        gig: { select: { deliveryDays: true } },
+      },
+    }),
   ]);
+
+  // Compute calendar days
+  const bookedDaysSet = new Set<string>();
+  const workedDaysSet = new Set<string>();
+  const toDateStr = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+
+  for (const order of calendarOrders) {
+    if (["pending", "funded", "accepted", "delivered"].includes(order.status)) {
+      const start       = new Date(order.createdAt);
+      const delivDays   = (order.gig as any)?.deliveryDays ?? 7;
+      for (let i = 0; i <= delivDays; i++) {
+        const d = new Date(start);
+        d.setDate(d.getDate() + i);
+        bookedDaysSet.add(toDateStr(d));
+      }
+    } else if (order.status === "completed") {
+      const completedDate = order.deliverySubmittedAt ?? order.updatedAt;
+      workedDaysSet.add(toDateStr(new Date(completedDate)));
+    }
+  }
+  const bookedDays = Array.from(bookedDaysSet);
+  const workedDays = Array.from(workedDaysSet);
 
   const grossEarned = totalEarnedAgg._sum.amount ?? 0;
   const totalEarned = grossEarned - Math.floor(grossEarned * 0.10);
@@ -681,6 +723,30 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                 </a>
               </SectionCard>
             ) : null}
+
+            {/* Working Calendar */}
+            <SectionCard>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
+                <SectionLabel>Availability</SectionLabel>
+                {(bookedDays.length > 0 || workedDays.length > 0) && (
+                  <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: "rgba(20,184,166,0.1)", color: "#0f766e" }}>
+                    Last 3 mo
+                  </span>
+                )}
+              </div>
+              <WorkCalendar bookedDays={bookedDays} workedDays={workedDays} />
+            </SectionCard>
+
+            {/* Support Ticket — own profile only */}
+            {isOwnProfile && (
+              <SectionCard style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: "0.75rem" }}>
+                <div>
+                  <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--foreground)", marginBottom: 2 }}>Need help?</div>
+                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", lineHeight: 1.5 }}>Contact our support team</div>
+                </div>
+                <NewTicketButton compact />
+              </SectionCard>
+            )}
 
             {/* Sign out + Delete account (own profile) */}
             {isOwnProfile && (

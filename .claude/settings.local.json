@@ -55,7 +55,12 @@
       "Bash(curl -s http://localhost:3000/gigs)",
       "Bash(xargs ls -la)",
       "Bash(awk '{print $NF}')",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "mcp__claude_ai_Vercel__deploy_to_vercel",
+      "mcp__claude_ai_Vercel__list_teams",
+      "mcp__claude_ai_Vercel__list_projects",
+      "mcp__claude_ai_Vercel__list_deployments",
+      "Bash(grep -v \"^$\")"
     ],
     "additionalDirectories": [
       "/private/tmp"

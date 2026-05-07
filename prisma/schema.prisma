@@ -75,6 +75,7 @@ model User {
   notificationPreferences NotificationPreferences?
   filedDisputes        Dispute[]        @relation("FiledDisputes")
   disputeMessages      DisputeMessage[] @relation("DisputeMessages")
+  supportTickets       SupportTicket[]
 }
 
 model SavedTalent {
@@ -406,6 +407,24 @@ model Offer {
   @@index([conversationId])
   @@index([senderId])
   @@index([receiverId])
+}
+
+model SupportTicket {
+  id          String    @id @default(cuid())
+  userId      String
+  subject     String
+  category    String    @default("general")
+  body        String
+  status      String    @default("open")
+  staffNote   String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  resolvedAt  DateTime?
+  user        User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([status])
+  @@index([createdAt])
 }
 
 model AdminActionLog {
