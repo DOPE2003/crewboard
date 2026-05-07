@@ -19,8 +19,8 @@ export default function ModeToggle() {
           key={m}
           onClick={() => setMode(m)}
           style={{
-            padding: "5px 14px", borderRadius: 7, border: "none", cursor: "pointer",
-            fontSize: "0.72rem", fontWeight: 700, letterSpacing: "0.04em",
+            padding: "3px 10px", borderRadius: 6, border: "none", cursor: "pointer",
+            fontSize: "0.63rem", fontWeight: 700, letterSpacing: "0.04em",
             transition: "all 0.15s",
             background: mode === m ? "#14b8a6" : "transparent",
             color: mode === m ? "#fff" : "var(--text-muted)",
