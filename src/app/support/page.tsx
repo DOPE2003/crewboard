@@ -2,7 +2,6 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import db from "@/lib/db";
 import Link from "next/link";
-import SupportTicketModal from "@/components/ui/SupportTicketModal";
 import NewTicketButton from "@/components/ui/NewTicketButton";
 
 const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }> = {
