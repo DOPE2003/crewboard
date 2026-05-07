@@ -6469,7 +6469,7 @@ body.dark .act-sidebar-btn-label { color: var(--foreground); }
   border-radius: 9px;
   font-size: 15px;
   font-weight: 700;
-  color: var(--text-muted);
+  color: var(--foreground);
   text-decoration: none;
   transition: color 0.1s, background 0.1s;
 }
