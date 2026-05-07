@@ -626,8 +626,8 @@ body.dark .hero-float-card div[style*="rgba(0,0,0,0.1)"] { background: rgba(255,
 /* Hero section — pull up behind the fixed navbar so gradient fills from top */
 .landing-hero {
   background: radial-gradient(ellipse 120% 70% at 50% 0%, rgba(13,201,161,0.16) 0%, rgba(13,201,161,0.07) 45%, transparent 75%) !important;
-  margin-top: -104px !important;
-  padding-top: calc(104px + clamp(2rem, 5vw, 3.5rem)) !important;
+  margin-top: -64px !important;
+  padding-top: calc(64px + clamp(2rem, 5vw, 3.5rem)) !important;
 }
 
 /* .page — layout wrapper handles top padding via .main-content */
@@ -643,11 +643,11 @@ body.dark .hero-float-card div[style*="rgba(0,0,0,0.1)"] { background: rgba(255,
 
 /* ── Layout wrapper ───────────────────────────────────────── */
 .main-content {
-  padding-top: 104px; /* 64px main nav + 40px category row */
+  padding-top: 64px;
 }
 @media (max-width: 767px) {
   .main-content {
-    padding-top: 92px; /* 56px mobile nav + 36px category row */
+    padding-top: 56px;
     padding-bottom: 72px;
   }
 }
@@ -2549,8 +2549,7 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 
 .msgs-shell {
   display: flex;
-  /* main-content padding-top = 104px (64px nav + 40px category strip) */
-  height: calc(100vh - 104px);
+  height: calc(100vh - 64px);
   overflow: hidden;
   font-family: Inter, sans-serif;
   background: var(--background);
@@ -3124,8 +3123,8 @@ body.dark .talent-page-info { color: rgba(255,255,255,0.3); }
 @media (max-width: 767px) {
   /* Remove .page extra top padding for messages pages — .main-content already clears nav */
   main.page:has(.msgs-shell) { padding-top: 0 !important; }
-  /* Shell height: .main-content clears 92px (56px nav + 36px strip) from viewport top */
-  .msgs-shell { height: calc(100dvh - 92px - var(--btab-h, 56px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
+  /* Shell height: .main-content clears 56px nav from viewport top */
+  .msgs-shell { height: calc(100dvh - 56px - var(--btab-h, 56px) - env(safe-area-inset-bottom, 0px)); flex-direction: column; background: var(--background); }
   /* Sidebar full-width on mobile — !important overrides inline width:320 */
   .msgs-sidebar { width: 100% !important; height: 100%; border-right: none; }
   .msgs-empty-panel { display: none !important; }
@@ -6692,8 +6691,8 @@ body.dark .act-date-label { color: #64748b; }
     height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important;
   }
 
-  /* Messages list page scroll — matches shell height (92px total nav) */
-  .msgs-sidebar { height: calc(100dvh - 92px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important; }
+  /* Messages list page scroll — matches shell height (56px nav) */
+  .msgs-sidebar { height: calc(100dvh - 56px - var(--btab-h) - env(safe-area-inset-bottom, 0px)) !important; }
 
   /* Notifications page */
   .notif-page { padding-bottom: calc(var(--btab-h) + env(safe-area-inset-bottom, 0px) + 24px) !important; }

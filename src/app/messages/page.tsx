@@ -58,6 +58,9 @@ export default async function MessagesPage() {
     )
   );
 
+  // Redirect to most recent conversation if one exists
+  if (conversations.length > 0) redirect(`/messages/${conversations[0].id}`);
+
   const items: ConvItem[] = conversations.map((c, i) => {
     const otherId = c.participants.find((p) => p !== userId) ?? "";
     const user = userMap[otherId] ?? null;
