@@ -155,7 +155,7 @@ export default function NavControlsClient({
         const res = await fetch("/api/notifications/count", { cache: "no-store" });
         if (res.ok) {
           const { unread } = await res.json();
-          setLiveUnread(unread);
+          if (unread !== liveUnread) setLiveUnread(unread);
         }
       } catch {}
     }, 30_000);

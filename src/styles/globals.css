@@ -370,6 +370,15 @@ body.dark .nav-center-btn:hover { background: rgba(255,255,255,0.06); }
 /* Nav search input placeholder */
 .nav-search-input::placeholder { color: var(--text-muted); }
 
+/* Inline nav links */
+.nav-inline-link:hover { color: #14B8A6 !important; background: rgba(20,184,166,0.07) !important; }
+
+/* Shared pulse animation (used in navbar badge and dashboard) */
+@keyframes tealPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.45; transform: scale(1.5); }
+}
+
 /* Hero CTA buttons */
 .btn-hero-primary {
   display: inline-flex;
