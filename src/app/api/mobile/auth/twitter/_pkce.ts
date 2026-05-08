@@ -5,7 +5,7 @@ export function generateCodeVerifier(): string {
 }
 
 export function generateCodeChallenge(verifier: string): string {
-  return createHash("sha256").update(verifier).digest().toString("base64url");
+  return createHash("sha256").update(verifier).digest("base64url");
 }
 
 const secret = () => process.env.AUTH_SECRET ?? "";

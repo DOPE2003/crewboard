@@ -33,13 +33,12 @@ async function exchangeCodeForToken(
   const clientId     = process.env.TWITTER_CLIENT_ID!;
   const clientSecret = process.env.TWITTER_CLIENT_SECRET!;
 
-  const body = new URLSearchParams({
-    grant_type:    "authorization_code",
-    code,
-    redirect_uri:  redirectUri,
-    code_verifier: codeVerifier,
-    client_id:     clientId,
-  });
+  const body =
+    `grant_type=authorization_code` +
+    `&code=${encodeURIComponent(code)}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&code_verifier=${encodeURIComponent(codeVerifier)}` +
+    `&client_id=${encodeURIComponent(clientId)}`;
 
   const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
@@ -49,7 +48,7 @@ async function exchangeCodeForToken(
       "Content-Type":  "application/x-www-form-urlencoded",
       "Authorization": `Basic ${credentials}`,
     },
-    body: body.toString(),
+    body,
   });
 
   if (!res.ok) {

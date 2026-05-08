@@ -122,21 +122,17 @@ export async function GET(req: NextRequest) {
   const state          = makeSignedState(codeVerifier);
   const redirectUri    = mobileRedirectUri();
 
-  const params = new URLSearchParams({
-    response_type:         "code",
-    client_id:             clientId,
-    redirect_uri:          redirectUri,
-    scope:                 "tweet.read users.read offline.access",
-    state,
-    code_challenge:        codeChallenge,
-    code_challenge_method: "S256",
-  });
+  const authorizeUrl =
+    `https://twitter.com/i/oauth2/authorize` +
+    `?response_type=code` +
+    `&client_id=${encodeURIComponent(clientId)}` +
+    `&redirect_uri=${encodeURIComponent(redirectUri)}` +
+    `&scope=${encodeURIComponent("tweet.read users.read offline.access")}` +
+    `&state=${encodeURIComponent(state)}` +
+    `&code_challenge=${encodeURIComponent(codeChallenge)}` +
+    `&code_challenge_method=S256`;
 
-  return ok({
-    authorizeUrl: `https://twitter.com/i/oauth2/authorize?${params.toString()}`,
-    state,
-    redirectUri,
-  });
+  return ok({ authorizeUrl, state, redirectUri });
 }
 
 // ─── POST — accept access-token (legacy / custom PKCE) ───────────────────────
