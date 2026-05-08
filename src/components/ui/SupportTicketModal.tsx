@@ -2,7 +2,16 @@
 
 import { useState } from "react";
 import Modal from "./Modal";
-import { submitTicket, TICKET_CATEGORIES, type TicketCategory } from "@/actions/support";
+import { submitTicket, type TicketCategory } from "@/actions/support";
+
+const TICKET_CATEGORIES: { value: TicketCategory; label: string }[] = [
+  { value: "general",  label: "General question" },
+  { value: "order",    label: "Order / delivery issue" },
+  { value: "billing",  label: "Billing / payment" },
+  { value: "account",  label: "Account / profile" },
+  { value: "bug",      label: "Bug report" },
+  { value: "other",    label: "Something else" },
+];
 
 interface Props {
   isOpen: boolean;

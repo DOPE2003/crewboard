@@ -203,8 +203,8 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const completionPct = Math.round((completionItems.filter(i => i.done).length / completionItems.length) * 100);
   const nextItem = completionItems.find(i => !i.done);
 
-  const displayName = user.name ?? user.twitterHandle;
-  const firstName = displayName.split(" ")[0];
+  const displayName = user.name ?? user.twitterHandle ?? "";
+  const firstName = displayName.split(" ")[0] || "there";
 
   // Lowest active gig price
   const minGigPrice = user.gigs?.length > 0
