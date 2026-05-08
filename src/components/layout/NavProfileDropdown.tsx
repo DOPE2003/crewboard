@@ -270,8 +270,8 @@ export default function NavProfileDropdown({
                     ? <span style={{ background: "rgba(99,102,241,0.45)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700 }}>SUPPORT</span>
                     : null
               }
-              {twitterHandle && (
-                <Link href={`/u/${twitterHandle}`} onClick={onClose} style={{ background: "rgba(255,255,255,0.18)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700, textDecoration: "none", marginLeft: "auto" }}>
+              {(twitterHandle || extra?.twitterHandle) && (
+                <Link href={`/u/${extra?.twitterHandle ?? twitterHandle}`} style={{ background: "rgba(255,255,255,0.18)", color: "white", borderRadius: 20, padding: "2px 9px", fontSize: 10, fontWeight: 700, textDecoration: "none", marginLeft: "auto" }}>
                   View Profile →
                 </Link>
               )}
