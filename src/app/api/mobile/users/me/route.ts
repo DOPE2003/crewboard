@@ -23,6 +23,7 @@ import db from "@/lib/db";
 import { getMobileUser } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
 import { logAdminAction } from "@/lib/audit";
+import { sendAccountDeletedEmail } from "@/lib/email";
 
 export async function DELETE(req: NextRequest) {
   const caller = await getMobileUser(req);
@@ -40,11 +41,20 @@ export async function DELETE(req: NextRequest) {
   try {
     const target = await db.user.findUnique({
       where: { id: userId },
-      select: { twitterHandle: true, role: true },
+      select: { twitterHandle: true, role: true, email: true, name: true },
     });
     if (!target) return err("User not found.", 404);
     if (target.role === "OWNER") {
       return err("The owner account cannot be deleted from the app.", 403);
+    }
+
+    // Send the confirmation email BEFORE the delete transaction — once the
+    // user row is gone we have no address to send to. Wrapped in a catch so
+    // a Resend hiccup never blocks the deletion itself.
+    if (target.email) {
+      await sendAccountDeletedEmail({ to: target.email, name: target.name }).catch((e) =>
+        console.error("[mobile/users/me DELETE] confirmation email failed:", e)
+      );
     }
 
     // Same dependency order as src/actions/deleteAccount.ts.

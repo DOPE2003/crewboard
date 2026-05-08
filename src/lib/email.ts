@@ -139,6 +139,26 @@ export async function sendEmailVerificationEmail({
   `);
 }
 
+export async function sendAccountDeletedEmail({
+  to, name,
+}: { to: string; name?: string | null }) {
+  const greeting = name && name.trim().length > 0 ? `Hi ${name},` : "Hi,";
+  return send(to, "Your Crewboard account has been deleted", `
+    <h2 style="margin:0 0 10px;font-size:20px;color:#0f172a;">Account deleted</h2>
+    <p style="color:#475569;font-size:15px;line-height:1.7;margin:0 0 16px;">${greeting}</p>
+    <p style="color:#475569;font-size:15px;line-height:1.7;margin:0 0 16px;">
+      Your Crewboard account has been permanently deleted at your request. All of your data — profile, chats, offers, orders, jobs, applications, portfolio, push tokens, auth credentials, and uploaded files — has been removed from our servers.
+    </p>
+    <p style="color:#475569;font-size:15px;line-height:1.7;margin:0 0 16px;">
+      Your wallet and any on-chain funds remain entirely under your control — they are not held by Crewboard and were not affected.
+    </p>
+    <p style="color:#475569;font-size:15px;line-height:1.7;margin:0 0 24px;">
+      If you didn't request this, please contact us immediately at <a href="mailto:support@crewboard.fun" style="color:#2dd4bf;">support@crewboard.fun</a>.
+    </p>
+    <p style="margin-top:28px;font-size:13px;color:#94a3b8;">Thanks for trying Crewboard. — The Crewboard team</p>
+  `);
+}
+
 export async function sendHireNotification({
   to, buyerName, conversationId,
 }: { to: string; buyerName: string; conversationId: string }) {
