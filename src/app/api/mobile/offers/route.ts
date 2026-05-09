@@ -169,7 +169,12 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
     });
     const senderName = sender?.name ?? sender?.twitterHandle ?? "Someone";
 
-    const actionUrl = `crewboard://chat/${conversationId}?offer=${offer.id}`;
+    // Route directly to OfferDetailView, not the chat. Lands the receiver
+    // on the action they actually need (Accept / Decline / Respond) instead
+    // of dropping them in the middle of a chat thread where they have to
+    // hunt for the offer card. Matches the URL scheme used by all other
+    // offer-related notifications (respond, [id]).
+    const actionUrl = `crewboard://offer/${offer.id}`;
 
     const notifyPromise = notifyUser({
       userId: receiverId,
