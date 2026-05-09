@@ -9,6 +9,7 @@ import { sendPush } from "@/lib/push";
 import { verifyEscrowVaultFunded, verifyEscrowReleased } from "@/lib/escrow-build";
 import { logAdminAction } from "@/lib/audit";
 import { createMessage } from "@/lib/sendMessage";
+import { addOrderToPortfolio } from "@/lib/auto-portfolio";
 
 export async function createOrder(gigId: string, sellerId: string) {
   const buyerId = await requireUserId();
@@ -295,10 +296,11 @@ export async function syncEscrowReleased(orderId: string, txHash: string) {
   const order = await db.order.findUnique({
     where: { id: orderId },
     select: {
-      buyerId: true, sellerId: true, status: true, escrowAddress: true,
+      buyerId: true, sellerId: true, status: true, escrowAddress: true, amount: true,
       buyer:  { select: { walletAddress: true } },
       seller: { select: { walletAddress: true } },
-      gig:    { select: { title: true } },
+      gig:    { select: { title: true, category: true, image: true } },
+      offer:  { select: { title: true } },
     },
   });
   if (!order) throw new Error("Order not found");
@@ -326,6 +328,13 @@ export async function syncEscrowReleased(orderId: string, txHash: string) {
   });
 
   logAdminAction({ actorId: userId, action: "order.completed", targetId: orderId, metadata: { txHash } });
+
+  addOrderToPortfolio(order.sellerId, {
+    title: order.offer?.title ?? order.gig.title,
+    category: order.gig.category,
+    imageUrl: order.gig.image,
+    amount: order.amount,
+  }).catch(() => {});
 
   await notifyUser({
     userId: order.sellerId,

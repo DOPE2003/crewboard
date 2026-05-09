@@ -17,6 +17,7 @@ import { ok, err } from "../../_lib/response";
 import { notifyUser } from "@/lib/notify";
 import { sendPush } from "@/lib/push";
 import { verifyEscrowReleased } from "@/lib/escrow-build";
+import { addOrderToPortfolio } from "@/lib/auto-portfolio";
 
 async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
@@ -33,8 +34,8 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
         escrowAddress: true,
         buyer:  { select: { name: true, twitterHandle: true, walletAddress: true } },
         seller: { select: { walletAddress: true } },
-        gig:    { select: { title: true } },
-        offer:  { select: { id: true } },
+        gig:    { select: { title: true, category: true, image: true } },
+        offer:  { select: { id: true, title: true } },
       },
     });
 
@@ -63,6 +64,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       where: { id: orderId },
       data: { status: "completed", txHash },
     });
+
+    addOrderToPortfolio(order.sellerId, {
+      title: order.offer?.title ?? order.gig.title,
+      category: order.gig.category,
+      imageUrl: order.gig.image,
+      amount: order.amount,
+    }).catch(() => {});
 
     const buyerName = order.buyer.name ?? `@${order.buyer.twitterHandle}`;
     const offerRef = order.offer?.id ?? orderId;
