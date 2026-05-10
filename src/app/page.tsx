@@ -63,28 +63,24 @@ export default async function HomePage() {
       _count: { id: true },
     }).catch(() => [] as Array<{ category: string; _count: { id: number } }>),
     db.user.findMany({
-      where: {
-        profileComplete: true,
-        image: { not: null },
-        showcasePosts: { some: { mediaType: "video" } },
-      },
+      where: { profileComplete: true, image: { not: null } },
       orderBy: { createdAt: "desc" },
-      take: 6,
+      take: 18,
       select: {
         twitterHandle: true, name: true, image: true, userTitle: true, bio: true,
         availability: true, skills: true, lastSeenAt: true, walletAddress: true,
         portfolioItems: true,
         gigs: {
           where: { status: "active" },
-          select: { price: true, title: true },
+          select: { price: true, image: true, title: true },
           orderBy: { price: "asc" },
           take: 3,
         },
         showcasePosts: {
-          where: { mediaType: "video" },
+          where: { NOT: { mediaUrl: "" } },
           select: { mediaUrl: true, mediaType: true },
           orderBy: { createdAt: "desc" },
-          take: 2,
+          take: 6,
         },
         sellerOrders: { where: { status: "completed" }, select: { id: true } },
         reviewsReceived: { select: { rating: true } },
@@ -95,7 +91,21 @@ export default async function HomePage() {
     categoryCountsRaw.map((c) => [c.category, c._count.id])
   );
 
-  const featuredFreelancers = rawFeatured;
+  function profileQuality(u: any): number {
+    let s = 0;
+    if (u.walletAddress) s += 4;
+    if ((u.reviewsReceived?.length ?? 0) > 0) s += 4;
+    if ((u.sellerOrders?.length ?? 0) > 0) s += 3;
+    if (u.bio && u.bio.length > 10) s += 2;
+    if (u.lastSeenAt && Date.now() - new Date(u.lastSeenAt).getTime() < 7 * 864e5) s += 2;
+    if (u.gigs?.length > 0) s += 1;
+    if (!u.name) s -= 3;
+    return s;
+  }
+
+  const featuredFreelancers = [...rawFeatured]
+    .sort((a, b) => profileQuality(b) - profileQuality(a))
+    .slice(0, 6);
 
   return (
     <>
@@ -305,10 +315,14 @@ export default async function HomePage() {
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isVerified = !!f.walletAddress;
                 type MediaItem = { type: "image" | "video"; url: string };
-                const portfolioMedia: MediaItem[] = (f.showcasePosts ?? [])
-                  .filter((p: any) => p.mediaUrl)
-                  .map((p: any) => ({ type: p.mediaType as "image" | "video", url: p.mediaUrl as string }))
-                  .slice(0, 2);
+                const portfolioMedia: MediaItem[] = [
+                  ...(f.showcasePosts ?? [] as any[]).map((p: any) =>
+                    p.mediaUrl ? { type: p.mediaType === "video" ? "video" as const : "image" as const, url: p.mediaUrl as string } : null
+                  ).filter(Boolean) as MediaItem[],
+                  ...(Array.isArray(f.portfolioItems) ? f.portfolioItems as any[] : [])
+                    .filter((i: any) => i.mediaUrl && (i.mediaType === "image" || i.mediaType === "video"))
+                    .map((i: any) => ({ type: i.mediaType as "image" | "video", url: i.mediaUrl as string })),
+                ].slice(0, 2);
                 const cardGigs = (f.gigs ?? []) as Array<{ price: number; title: string }>;
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
                 const avgRating = reviews.length > 0
@@ -406,18 +420,12 @@ export default async function HomePage() {
 
                     {/* Portfolio media or services */}
                     {portfolioMedia.length > 0 ? (
-                      <div style={{ display: "flex", gap: 6, marginTop: 2 }}>
+                      <div style={{ display: "flex", gap: 6, borderRadius: 8, overflow: "hidden", marginTop: 2 }}>
                         {portfolioMedia.map((item, j) =>
                           item.type === "video" ? (
-                            <video
-                              key={j}
-                              src={item.url}
-                              style={{ flex: 1, minWidth: 0, height: 90, objectFit: "cover", display: "block", borderRadius: 7, background: "#000" }}
-                              autoPlay
-                              muted
-                              loop
-                              playsInline
-                            />
+                            <div key={j} style={{ flex: 1, height: 90, background: "#0a0a14", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style={{ opacity: 0.6 }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            </div>
                           ) : (
                             // eslint-disable-next-line @next/next/no-img-element
                             <img key={j} src={item.url} alt="" style={{ flex: 1, minWidth: 0, height: 90, objectFit: "cover", display: "block", borderRadius: 7 }} />
