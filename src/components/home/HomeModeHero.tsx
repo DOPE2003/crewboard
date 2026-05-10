@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useMode } from "@/components/ModeProvider";
+import { useMode, setMode } from "@/components/ModeProvider";
 import HeroSearch from "@/components/home/HeroSearch";
 
 export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
@@ -75,6 +75,7 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
         }}>
           <Link
             href="/register"
+            onClick={() => setMode("hiring")}
             style={{
               display: "flex", flexDirection: "column", alignItems: "flex-start",
               padding: "18px 20px", borderRadius: 14, textDecoration: "none",
@@ -96,6 +97,7 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
 
           <Link
             href="/login"
+            onClick={() => setMode("working")}
             style={{
               display: "flex", flexDirection: "column", alignItems: "flex-start",
               padding: "18px 20px", borderRadius: 14, textDecoration: "none",
