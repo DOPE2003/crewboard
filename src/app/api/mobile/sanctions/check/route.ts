@@ -12,9 +12,14 @@
  */
 import { NextRequest } from "next/server";
 import { ok, err } from "../../_lib/response";
+import { rateLimit, clientIp } from "../../_lib/rate-limit";
 import { screenAddress } from "@/lib/sanctions";
 
 export async function POST(req: NextRequest) {
+  if (!rateLimit(`sanctions:${clientIp(req)}`, 30, 60_000)) {
+    return err("Too many requests.", 429);
+  }
+
   try {
     const body = await req.json().catch(() => ({}));
     const { address, chain = "solana" } = body as { address?: string; chain?: string };
