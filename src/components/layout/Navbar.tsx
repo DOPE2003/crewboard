@@ -197,7 +197,7 @@ export default async function Navbar() {
 
         {/* Nav links — absolutely centred in the bar */}
         <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
-          <NavInlineLinks />
+          <NavInlineLinks isLoggedIn={!!user} />
         </div>
 
         {/* Icons — far right */}

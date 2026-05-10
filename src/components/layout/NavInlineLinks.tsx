@@ -22,17 +22,20 @@ function NavLink({ href, label, active }: { href: string; label: string; active:
   );
 }
 
-export default function NavInlineLinks() {
+export default function NavInlineLinks({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { mode } = useMode();
   const pathname = usePathname();
 
   return (
     <div className="hidden md:flex" style={{ alignItems: "center", gap: 2, flexShrink: 0 }}>
       <NavLink href="/" label="Home" active={pathname === "/"} />
-      {mode === "hiring"
-        ? <NavLink href="/talent" label="Find Talent" active={pathname === "/talent"} />
-        : <NavLink href="/jobs"   label="Find Work"   active={pathname.startsWith("/jobs")} />
-      }
+      {isLoggedIn ? (
+        mode === "hiring"
+          ? <NavLink href="/jobs/new" label="Post a Job" active={pathname === "/jobs/new"} />
+          : <NavLink href="/gigs/mine" label="My Gigs" active={pathname === "/gigs/mine"} />
+      ) : (
+        <NavLink href="/talent" label="Find Talent" active={pathname === "/talent"} />
+      )}
       <NavLink href="/how" label="How it Works" active={pathname === "/how"} />
     </div>
   );
