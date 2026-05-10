@@ -82,7 +82,7 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
               color: isClient ? "#0f172a" : "var(--foreground)",
               border: isClient ? "1px solid var(--brand)" : "1px solid var(--card-border)",
               transition: "transform 0.15s, box-shadow 0.15s",
-              boxShadow: isClient ? "0 4px 16px rgba(74,222,128,0.30)" : "none",
+              boxShadow: isClient ? "0 4px 16px rgba(20,184,166,0.30)" : "none",
             }}
             className="intent-card"
           >
@@ -103,7 +103,7 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
               color: !isClient ? "#0f172a" : "var(--foreground)",
               border: !isClient ? "1px solid var(--brand)" : "1px solid var(--card-border)",
               transition: "transform 0.15s, box-shadow 0.15s, border-color 0.15s",
-              boxShadow: !isClient ? "0 4px 16px rgba(74,222,128,0.30)" : "none",
+              boxShadow: !isClient ? "0 4px 16px rgba(20,184,166,0.30)" : "none",
             }}
             className="intent-card"
           >

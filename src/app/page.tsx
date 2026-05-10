@@ -1,4 +1,3 @@
-import React from "react";
 import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
@@ -92,8 +91,8 @@ export default async function HomePage() {
           take: 6,
         },
         showcasePosts: {
-          where: { mediaType: "image" },
-          select: { mediaUrl: true },
+          where: { NOT: { mediaUrl: "" } },
+          select: { mediaUrl: true, mediaType: true },
           orderBy: { createdAt: "desc" },
           take: 6,
         },
@@ -148,7 +147,7 @@ export default async function HomePage() {
           transform: "translateX(-50%)",
           width: "clamp(260px, 90vw, 760px)",
           height: "clamp(180px, 32vw, 380px)",
-          background: "radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.28) 0%, rgba(74,222,128,0.12) 50%, transparent 75%)",
+          background: "radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.28) 0%, rgba(20,184,166,0.12) 50%, transparent 75%)",
           filter: "blur(28px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -190,28 +189,6 @@ export default async function HomePage() {
         {/* Mode-aware hero — headline, subtitle, CTA cards */}
         <HomeModeHero isLoggedIn={isLoggedIn} />
 
-        {/* Trust stats */}
-        <div style={{
-          opacity: 0, animation: "fadeUp 0.6s 0.82s forwards",
-          position: "relative", zIndex: 1, marginBottom: 20,
-          display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap", justifyContent: "center",
-          paddingTop: 4,
-        }}>
-          {([
-            { stat: "2,800+", label: "Vetted creatives" },
-            { stat: "$4.2M", label: "Paid via escrow" },
-            { stat: "48h", label: "Avg. match time" },
-          ] as { stat: string; label: string }[]).map((t, i) => (
-            <React.Fragment key={t.label}>
-              <div style={{ textAlign: "center" }}>
-                <div style={{ fontSize: "1.25rem", fontWeight: 800, color: "var(--foreground)", letterSpacing: "-0.02em", lineHeight: 1 }}>{t.stat}</div>
-                <div style={{ fontSize: "0.75rem", fontWeight: 500, color: "var(--text-muted)", marginTop: 3 }}>{t.label}</div>
-              </div>
-              {i < 2 && <div style={{ width: 1, height: 28, background: "var(--border)" }} />}
-            </React.Fragment>
-          ))}
-        </div>
-
         {/* ── Spotlight cards row — inside hero ── */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
@@ -224,7 +201,7 @@ export default async function HomePage() {
           <div className="eco-hero-card" style={{
             flex: 1, minWidth: 0,
             display: "flex", borderRadius: 12,
-            border: "1px solid rgba(74,222,128,0.2)",
+            border: "1px solid rgba(20,184,166,0.2)",
             background: "var(--card-bg)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
             overflow: "hidden", textAlign: "left",
@@ -263,7 +240,7 @@ export default async function HomePage() {
           <div className="eco-hero-card" style={{
             flex: 1, minWidth: 0,
             display: "flex", borderRadius: 12,
-            border: "1px solid rgba(74,222,128,0.2)",
+            border: "1px solid rgba(20,184,166,0.2)",
             background: "var(--card-bg)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
             overflow: "hidden", textAlign: "left",
@@ -293,7 +270,7 @@ export default async function HomePage() {
                 </svg>
                 <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Crewboard</span>
                 <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(74,222,128,0.12)", color: "var(--brand)", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(74,222,128,0.25)", whiteSpace: "nowrap" }}>Soon</span>
+                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(20,184,166,0.12)", color: "var(--brand)", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)", whiteSpace: "nowrap" }}>Soon</span>
               </div>
               {/* Title */}
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
@@ -351,7 +328,7 @@ export default async function HomePage() {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isVerified = !!f.walletAddress;
-                const showcaseImgs: string[] = (f.showcasePosts ?? []).map((p: any) => p.mediaUrl).filter(Boolean);
+                const showcaseImgs: string[] = (f.showcasePosts ?? []).map((p: any) => p.mediaType !== "video" ? p.mediaUrl : null).filter(Boolean);
                 const gigImgs: string[] = (f.gigs ?? []).map((g: any) => g.image).filter(Boolean);
                 const portfolioImgs: string[] = (Array.isArray(f.portfolioItems) ? f.portfolioItems as any[] : []).filter((i: any) => i.mediaUrl && i.mediaType === "image").map((i: any) => i.mediaUrl);
                 const cardImages = [...showcaseImgs, ...portfolioImgs, ...gigImgs].slice(0, 6);
@@ -490,7 +467,7 @@ export default async function HomePage() {
           .ff-card:hover {
             transform: translateY(-3px) scale(1.012);
             box-shadow: 0 10px 32px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.04);
-            border-color: rgba(74,222,128,0.4) !important;
+            border-color: rgba(20,184,166,0.4) !important;
           }
           .cbadge-wrap { position: relative; display: inline-flex; align-items: center; cursor: default; }
           .cbadge-tip {
@@ -499,7 +476,7 @@ export default async function HomePage() {
             background: #0f172a; color: #e2e8f0; font-size: 11px; font-weight: 500;
             padding: 4px 9px; border-radius: 6px; white-space: nowrap;
             pointer-events: none; z-index: 99;
-            border: 1px solid rgba(74,222,128,0.25);
+            border: 1px solid rgba(20,184,166,0.25);
           }
           .cbadge-tip::after {
             content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
@@ -566,7 +543,7 @@ export default async function HomePage() {
           .cat-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            border-color: rgba(74,222,128,0.35) !important;
+            border-color: rgba(20,184,166,0.35) !important;
           }
         `}</style>
       </div>
@@ -597,7 +574,7 @@ export default async function HomePage() {
           .hiw-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-            border-color: rgba(74,222,128,0.2) !important;
+            border-color: rgba(20,184,166,0.2) !important;
           }
         `}</style>
       </div>

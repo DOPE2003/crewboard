@@ -4,10 +4,10 @@
 @variant dark (.dark &);
 
 @theme {
-  --color-primary: #22C55E;
-  --color-primary-dark: #16A34A;
-  --color-primary-light: #DCFCE7;
-  --color-primary-hover: #16A34A;
+  --color-primary: #14B8A6;
+  --color-primary-dark: #0F6E56;
+  --color-primary-light: #E1F5EE;
+  --color-primary-hover: #0d9488;
 
   --font-family-sans: 'Inter', system-ui, sans-serif;
 
@@ -22,9 +22,9 @@
 
 :root {
   /* ── Brand ── */
-  --brand: #22C55E;
-  --brand-dark: #16A34A;
-  --brand-light: #DCFCE7;
+  --brand: #14B8A6;
+  --brand-dark: #0F6E56;
+  --brand-light: #E1F5EE;
 
   /* ── Design system ── */
   --bg: #f7f8fa;
@@ -49,10 +49,10 @@
   --surface-2: #f3f4f6;
 
   /* ── Brand aliases (backward compat) ── */
-  --teal: #22C55E;
-  --teal-dark: #16A34A;
-  --teal-light: #DCFCE7;
-  --teal-hover: #16A34A;
+  --teal: #14B8A6;
+  --teal-dark: #0F6E56;
+  --teal-light: #E1F5EE;
+  --teal-hover: #0d9488;
   --green: #22c55e;
   --red: #ef4444;
   --amber: #f59e0b;
@@ -85,9 +85,9 @@
 
 body.dark {
   /* ── Brand ── */
-  --brand: #4ADE80;
-  --brand-dark: #22C55E;
-  --brand-light: rgba(74,222,128,0.12);
+  --brand: #14B8A6;
+  --brand-dark: #0d9488;
+  --brand-light: rgba(20,184,166,0.12);
 
   /* ── Design system ── */
   --bg: #09091C;
@@ -112,10 +112,10 @@ body.dark {
   --surface-2: #14143A;
 
   /* ── Brand aliases ── */
-  --teal: #4ADE80;
-  --teal-dark: #22C55E;
-  --teal-light: rgba(74,222,128,0.12);
-  --teal-hover: #22C55E;
+  --teal: #14B8A6;
+  --teal-dark: #0d9488;
+  --teal-light: rgba(20,184,166,0.12);
+  --teal-hover: #0d9488;
 
   /* ── Legacy aliases ── */
   --background: #09091C;
