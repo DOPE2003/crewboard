@@ -4,10 +4,10 @@
 @variant dark (.dark &);
 
 @theme {
-  --color-primary: #14B8A6;
-  --color-primary-dark: #0F6E56;
-  --color-primary-light: #E1F5EE;
-  --color-primary-hover: #0d9488;
+  --color-primary: #22C55E;
+  --color-primary-dark: #16A34A;
+  --color-primary-light: #DCFCE7;
+  --color-primary-hover: #16A34A;
 
   --font-family-sans: 'Inter', system-ui, sans-serif;
 
@@ -22,9 +22,9 @@
 
 :root {
   /* ── Brand ── */
-  --brand: #14B8A6;
-  --brand-dark: #0F6E56;
-  --brand-light: #E1F5EE;
+  --brand: #22C55E;
+  --brand-dark: #16A34A;
+  --brand-light: #DCFCE7;
 
   /* ── Design system ── */
   --bg: #f7f8fa;
@@ -48,11 +48,11 @@
   --surface: #ffffff;
   --surface-2: #f3f4f6;
 
-  /* ── Teal/brand aliases (backward compat) ── */
-  --teal: #14B8A6;
-  --teal-dark: #0F6E56;
-  --teal-light: #E1F5EE;
-  --teal-hover: #0d9488;
+  /* ── Brand aliases (backward compat) ── */
+  --teal: #22C55E;
+  --teal-dark: #16A34A;
+  --teal-light: #DCFCE7;
+  --teal-hover: #16A34A;
   --green: #22c55e;
   --red: #ef4444;
   --amber: #f59e0b;
@@ -85,20 +85,20 @@
 
 body.dark {
   /* ── Brand ── */
-  --brand: #14B8A6;
-  --brand-dark: #0F6E56;
-  --brand-light: rgba(20,184,166,0.12);
+  --brand: #4ADE80;
+  --brand-dark: #22C55E;
+  --brand-light: rgba(74,222,128,0.12);
 
   /* ── Design system ── */
-  --bg: #0f1117;
-  --bg-secondary: #111827;
-  --bg-tertiary: #1e293b;
+  --bg: #09091C;
+  --bg-secondary: #0F0F26;
+  --bg-tertiary: #14143A;
   --text: #f1f5f9;
   --text-muted: #94a3b8;
   --text-hint: #64748b;
-  --border: #2d3139;
-  --border-md: #363b44;
-  --border-soft: #252830;
+  --border: #1a1a38;
+  --border-md: #222244;
+  --border-soft: #141430;
   --hover: rgba(255,255,255,0.04);
 
   /* ── Semantic text scale ── */
@@ -108,25 +108,25 @@ body.dark {
   --text-4: #4b5563;
 
   /* ── Surface scale ── */
-  --surface: #1a1d24;
-  --surface-2: #22262f;
+  --surface: #0F0F26;
+  --surface-2: #14143A;
 
-  /* ── Teal/brand aliases ── */
-  --teal: #14B8A6;
-  --teal-dark: #0F6E56;
-  --teal-light: rgba(20,184,166,0.12);
-  --teal-hover: #0d9488;
+  /* ── Brand aliases ── */
+  --teal: #4ADE80;
+  --teal-dark: #22C55E;
+  --teal-light: rgba(74,222,128,0.12);
+  --teal-hover: #22C55E;
 
   /* ── Legacy aliases ── */
-  --background: #0a0f1a;
+  --background: #09091C;
   --foreground: #f1f5f9;
   --foreground-rgb: 241, 245, 249;
-  --card-bg: #111827;
-  --card: #111827;
-  --card-border: rgba(255,255,255,0.08);
-  --nav-bg: #0a0f1a;
-  --nav-border: rgba(255,255,255,0.07);
-  --dropdown-bg: #111827;
+  --card-bg: #0F0F26;
+  --card: #0F0F26;
+  --card-border: rgba(255,255,255,0.07);
+  --nav-bg: #09091C;
+  --nav-border: rgba(255,255,255,0.06);
+  --dropdown-bg: #0F0F26;
   --color-hover: rgba(255,255,255,0.04);
   --color-border: rgba(255,255,255,0.08);
   --shadow-sm: 0 1px 3px rgba(0,0,0,0.3), 0 1px 2px rgba(0,0,0,0.2);

@@ -25,9 +25,9 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
         }}
       >
         {isClient ? (
-          <>Hire the crew<br />behind the <span style={{ color: "#14B8A6" }}>work.</span></>
+          <>Hire the crew<br />behind the <span style={{ color: "var(--brand)" }}>work.</span></>
         ) : (
-          <>Find work that<br /><span style={{ color: "#14B8A6" }}>actually ships.</span></>
+          <>Find work that<br /><span style={{ color: "var(--brand)" }}>actually ships.</span></>
         )}
       </h1>
 
@@ -78,11 +78,11 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
             style={{
               display: "flex", flexDirection: "column", alignItems: "flex-start",
               padding: "18px 20px", borderRadius: 14, textDecoration: "none",
-              background: isClient ? "#14B8A6" : "var(--surface)",
+              background: isClient ? "var(--brand)" : "var(--surface)",
               color: isClient ? "#0f172a" : "var(--foreground)",
-              border: isClient ? "1px solid #14B8A6" : "1px solid var(--card-border)",
+              border: isClient ? "1px solid var(--brand)" : "1px solid var(--card-border)",
               transition: "transform 0.15s, box-shadow 0.15s",
-              boxShadow: isClient ? "0 4px 16px rgba(20,184,166,0.30)" : "none",
+              boxShadow: isClient ? "0 4px 16px rgba(74,222,128,0.30)" : "none",
             }}
             className="intent-card"
           >
@@ -99,15 +99,15 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
             style={{
               display: "flex", flexDirection: "column", alignItems: "flex-start",
               padding: "18px 20px", borderRadius: 14, textDecoration: "none",
-              background: !isClient ? "#14B8A6" : "var(--surface)",
+              background: !isClient ? "var(--brand)" : "var(--surface)",
               color: !isClient ? "#0f172a" : "var(--foreground)",
-              border: !isClient ? "1px solid #14B8A6" : "1px solid var(--card-border)",
+              border: !isClient ? "1px solid var(--brand)" : "1px solid var(--card-border)",
               transition: "transform 0.15s, box-shadow 0.15s, border-color 0.15s",
-              boxShadow: !isClient ? "0 4px 16px rgba(20,184,166,0.30)" : "none",
+              boxShadow: !isClient ? "0 4px 16px rgba(74,222,128,0.30)" : "none",
             }}
             className="intent-card"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8, color: !isClient ? "#0f172a" : "#14B8A6" }}>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8, color: !isClient ? "#0f172a" : "var(--brand)" }}>
               <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/>
               <path d="M6 12H4M20 12h-2"/>
             </svg>

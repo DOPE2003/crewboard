@@ -29,7 +29,7 @@ const BROWSE_CATEGORIES = [
   { label: "Web3 Dev", key: "Coding & Tech", color: "#6366f1", icon: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
   )},
-  { label: "Content", key: "Content Creator", color: "#14b8a6", icon: (
+  { label: "Content", key: "Content Creator", color: "var(--brand)", icon: (
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
   )},
   { label: "Social", key: "Social Marketing", color: "#ec4899", icon: (
@@ -148,7 +148,7 @@ export default async function HomePage() {
           transform: "translateX(-50%)",
           width: "clamp(260px, 90vw, 760px)",
           height: "clamp(180px, 32vw, 380px)",
-          background: "radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.28) 0%, rgba(20,184,166,0.12) 50%, transparent 75%)",
+          background: "radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.28) 0%, rgba(74,222,128,0.12) 50%, transparent 75%)",
           filter: "blur(28px)",
           pointerEvents: "none",
           zIndex: 0,
@@ -171,11 +171,11 @@ export default async function HomePage() {
             fontWeight: 600,
             letterSpacing: "0.18em",
             textTransform: "uppercase" as const,
-            color: "#0F6E56",
+            color: "var(--brand-dark)",
             marginTop: "0.5rem",
             marginBottom: "1.5rem",
             padding: "0.35rem 0.85rem",
-            border: "1px solid #14B8A6",
+            border: "1px solid var(--brand)",
             borderRadius: "999px",
             background: "transparent",
             opacity: 0,
@@ -224,7 +224,7 @@ export default async function HomePage() {
           <div className="eco-hero-card" style={{
             flex: 1, minWidth: 0,
             display: "flex", borderRadius: 12,
-            border: "1px solid rgba(20,184,166,0.2)",
+            border: "1px solid rgba(74,222,128,0.2)",
             background: "var(--card-bg)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
             overflow: "hidden", textAlign: "left",
@@ -239,8 +239,8 @@ export default async function HomePage() {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 14, height: 14, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
                 <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Superteam Germany</span>
-                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "#14b8a6", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0, whiteSpace: "nowrap" }}>X ↗</a>
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "var(--brand)", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0, whiteSpace: "nowrap" }}>X ↗</a>
               </div>
               {/* Title */}
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
@@ -249,7 +249,7 @@ export default async function HomePage() {
               {/* Benefit + CTA */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--card-border)" }}>
                 <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "#14b8a6", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Exclusive on-site benefits</div>
+                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Exclusive on-site benefits</div>
                   <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>$500 travel boost · Limited spots</div>
                 </div>
                 <a href="https://t.co/4EFTnBjaWn" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", padding: "5px 10px", borderRadius: 6, background: "var(--foreground)", color: "var(--dropdown-bg)", fontWeight: 700, fontSize: 11, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
@@ -263,7 +263,7 @@ export default async function HomePage() {
           <div className="eco-hero-card" style={{
             flex: 1, minWidth: 0,
             display: "flex", borderRadius: 12,
-            border: "1px solid rgba(20,184,166,0.2)",
+            border: "1px solid rgba(74,222,128,0.2)",
             background: "var(--card-bg)",
             boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
             overflow: "hidden", textAlign: "left",
@@ -292,8 +292,8 @@ export default async function HomePage() {
                   <circle cx="33.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
                 </svg>
                 <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Crewboard</span>
-                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "#14b8a6", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(20,184,166,0.12)", color: "#14b8a6", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)", whiteSpace: "nowrap" }}>Soon</span>
+                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(74,222,128,0.12)", color: "var(--brand)", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(74,222,128,0.25)", whiteSpace: "nowrap" }}>Soon</span>
               </div>
               {/* Title */}
               <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
@@ -302,7 +302,7 @@ export default async function HomePage() {
               {/* Benefit + App Store */}
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--card-border)" }}>
                 <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "#14b8a6", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Available on iPhone</div>
+                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Available on iPhone</div>
                   <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Gigs, escrow &amp; DMs · Launching soon</div>
                 </div>
                 <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 9px", borderRadius: 6, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.15)", opacity: 0.55, cursor: "not-allowed", flexShrink: 0 }}>
@@ -332,7 +332,7 @@ export default async function HomePage() {
             {/* Section header */}
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
               <div>
-                <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#14B8A6", marginBottom: "0.4rem" }}>
+                <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.4rem" }}>
                   Featured talent
                 </div>
                 <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
@@ -342,7 +342,7 @@ export default async function HomePage() {
                   Verified profiles with real reviews and track records
                 </p>
               </div>
-              <Link href="/talent" style={{ fontSize: "0.8rem", fontWeight: 600, color: "#14b8a6", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+              <Link href="/talent" style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--brand)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
                 Browse all →
               </Link>
             </div>
@@ -393,7 +393,7 @@ export default async function HomePage() {
                           </span>
                           {isVerified && (
                             <span className="cbadge-wrap" style={{ flexShrink: 0 }}>
-                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 15, height: 15, borderRadius: "50%", background: "#14B8A6" }}>
+                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 15, height: 15, borderRadius: "50%", background: "var(--brand)" }}>
                                 <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                                   <polyline points="20 6 9 17 4 12"/>
                                 </svg>
@@ -465,12 +465,12 @@ export default async function HomePage() {
                     {/* Price footer */}
                     <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 9, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
                       <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: "#14B8A6", letterSpacing: "-0.01em" }}>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: "var(--brand)", letterSpacing: "-0.01em" }}>
                           From ${minPrice != null ? minPrice : 50}
                         </span>
                         <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>/ project</span>
                       </div>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: "#14B8A6", whiteSpace: "nowrap" }}>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "var(--brand)", whiteSpace: "nowrap" }}>
                         View profile →
                       </span>
                     </div>
@@ -490,7 +490,7 @@ export default async function HomePage() {
           .ff-card:hover {
             transform: translateY(-3px) scale(1.012);
             box-shadow: 0 10px 32px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.04);
-            border-color: rgba(20,184,166,0.4) !important;
+            border-color: rgba(74,222,128,0.4) !important;
           }
           .cbadge-wrap { position: relative; display: inline-flex; align-items: center; cursor: default; }
           .cbadge-tip {
@@ -499,7 +499,7 @@ export default async function HomePage() {
             background: #0f172a; color: #e2e8f0; font-size: 11px; font-weight: 500;
             padding: 4px 9px; border-radius: 6px; white-space: nowrap;
             pointer-events: none; z-index: 99;
-            border: 1px solid rgba(20,184,166,0.25);
+            border: 1px solid rgba(74,222,128,0.25);
           }
           .cbadge-tip::after {
             content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
@@ -512,7 +512,7 @@ export default async function HomePage() {
 
       {featuredFreelancers.length === 0 && (
         <div style={{ textAlign: "center", padding: "3rem", color: "var(--text-muted)", fontSize: "0.85rem", borderTop: "1px solid var(--card-border)" }}>
-          No freelancers yet — <Link href="/register" style={{ color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>be the first to join</Link>.
+          No freelancers yet — <Link href="/register" style={{ color: "var(--brand)", textDecoration: "none", fontWeight: 600 }}>be the first to join</Link>.
         </div>
       )}
 
@@ -526,7 +526,7 @@ export default async function HomePage() {
               </h2>
               <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: 0 }}>Find the right specialist fast.</p>
             </div>
-            <Link href="/gigs" style={{ fontSize: "0.8rem", fontWeight: 600, color: "#14b8a6", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+            <Link href="/gigs" style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--brand)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
               See all →
             </Link>
           </div>
@@ -566,7 +566,7 @@ export default async function HomePage() {
           .cat-card:hover {
             transform: translateY(-3px);
             box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-            border-color: rgba(20,184,166,0.35) !important;
+            border-color: rgba(74,222,128,0.35) !important;
           }
         `}</style>
       </div>
@@ -576,7 +576,7 @@ export default async function HomePage() {
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#14B8A6", marginBottom: "0.4rem" }}>
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.4rem" }}>
               Simple process
             </div>
             <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: "0 0 0.4rem", letterSpacing: "-0.02em" }}>
@@ -597,7 +597,7 @@ export default async function HomePage() {
           .hiw-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-            border-color: rgba(20,184,166,0.2) !important;
+            border-color: rgba(74,222,128,0.2) !important;
           }
         `}</style>
       </div>
