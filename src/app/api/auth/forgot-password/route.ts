@@ -15,11 +15,11 @@ export async function POST(req: NextRequest) {
 
     const user = await db.user.findUnique({
       where: { email: email.toLowerCase().trim() },
-      select: { id: true, email: true, passwordHash: true },
+      select: { id: true, email: true },
     });
 
     // Always return success to avoid leaking whether an email exists
-    if (!user || !user.email || !user.passwordHash) {
+    if (!user || !user.email) {
       return NextResponse.json({ ok: true });
     }
 
