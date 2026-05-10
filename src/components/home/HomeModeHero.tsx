@@ -60,6 +60,29 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
         <HeroSearch />
       </div>
 
+      {isLoggedIn && (
+        <Link
+          href={isClient ? "/talent" : "/jobs"}
+          style={{
+            display: "inline-flex", alignItems: "center", gap: 8,
+            padding: "12px 28px", borderRadius: 12, textDecoration: "none",
+            background: "var(--brand)", color: "#0f172a",
+            fontWeight: 800, fontSize: "0.95rem", letterSpacing: "-0.01em",
+            boxShadow: "0 4px 16px rgba(20,184,166,0.35)",
+            transition: "transform 0.15s, box-shadow 0.15s",
+            marginBottom: 14,
+            opacity: 0, animation: "fadeUp 0.6s 0.72s forwards",
+            position: "relative", zIndex: 1,
+          }}
+          className="hero-cta-btn"
+        >
+          {isClient ? "Find Talent" : "Browse Jobs"}
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+          </svg>
+        </Link>
+      )}
+
       {!isLoggedIn && (
         <div style={{
           display: "grid",
@@ -118,7 +141,10 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
           </Link>
         </div>
       )}
-      <style>{`.intent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; border-color: rgba(20,184,166,0.5) !important; }`}</style>
+      <style>{`
+        .intent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; border-color: rgba(20,184,166,0.5) !important; }
+        .hero-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(20,184,166,0.45) !important; }
+      `}</style>
     </>
   );
 }
