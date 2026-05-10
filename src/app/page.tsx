@@ -6,20 +6,6 @@ import HomeModeHero from "@/components/home/HomeModeHero";
 import HomeModeHIW from "@/components/home/HomeModeHIW";
 import "@/styles/landing.css";
 
-const PORTFOLIO_GRADS = [
-  "linear-gradient(135deg,#0d0821 0%,#2a4a0a 100%)",
-  "linear-gradient(135deg,#150827 0%,#0a2a18 100%)",
-  "linear-gradient(135deg,#0a1030 0%,#1a4a1a 100%)",
-  "linear-gradient(135deg,#1a0533 0%,#0a1f10 100%)",
-  "linear-gradient(135deg,#070c20 0%,#1a3a14 100%)",
-  "linear-gradient(135deg,#0b1a40 0%,#243d0e 100%)",
-  "linear-gradient(135deg,#1c0a30 0%,#0a2d18 100%)",
-  "linear-gradient(135deg,#091a35 0%,#1a3310 100%)",
-  "linear-gradient(135deg,#120830 0%,#0a2218 100%)",
-  "linear-gradient(135deg,#0a0f20 0%,#2a4a0a 100%)",
-  "linear-gradient(135deg,#14052a 0%,#0a1f10 100%)",
-  "linear-gradient(135deg,#0c0828 0%,#1a3d14 100%)",
-];
 
 const BROWSE_CATEGORIES = [
   { label: "Graphic Design", key: "Graphic & Design", color: "#f59e0b", icon: (
@@ -86,9 +72,9 @@ export default async function HomePage() {
         portfolioItems: true,
         gigs: {
           where: { status: "active" },
-          select: { price: true, image: true },
+          select: { price: true, image: true, title: true },
           orderBy: { price: "asc" },
-          take: 6,
+          take: 3,
         },
         showcasePosts: {
           where: { NOT: { mediaUrl: "" } },
@@ -324,14 +310,20 @@ export default async function HomePage() {
               </Link>
             </div>
             <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="ff-grid">
-              {featuredFreelancers.map((f: any, cardIndex: number) => {
+              {featuredFreelancers.map((f: any) => {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isVerified = !!f.walletAddress;
-                const showcaseImgs: string[] = (f.showcasePosts ?? []).map((p: any) => p.mediaType !== "video" ? p.mediaUrl : null).filter(Boolean);
-                const gigImgs: string[] = (f.gigs ?? []).map((g: any) => g.image).filter(Boolean);
-                const portfolioImgs: string[] = (Array.isArray(f.portfolioItems) ? f.portfolioItems as any[] : []).filter((i: any) => i.mediaUrl && i.mediaType === "image").map((i: any) => i.mediaUrl);
-                const cardImages = [...showcaseImgs, ...portfolioImgs, ...gigImgs].slice(0, 6);
+                type MediaItem = { type: "image" | "video"; url: string };
+                const portfolioMedia: MediaItem[] = [
+                  ...(f.showcasePosts ?? [] as any[]).map((p: any) =>
+                    p.mediaUrl ? { type: p.mediaType === "video" ? "video" as const : "image" as const, url: p.mediaUrl as string } : null
+                  ).filter(Boolean) as MediaItem[],
+                  ...(Array.isArray(f.portfolioItems) ? f.portfolioItems as any[] : [])
+                    .filter((i: any) => i.mediaUrl && (i.mediaType === "image" || i.mediaType === "video"))
+                    .map((i: any) => ({ type: i.mediaType as "image" | "video", url: i.mediaUrl as string })),
+                ].slice(0, 2);
+                const cardGigs = (f.gigs ?? []) as Array<{ price: number; title: string }>;
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
                 const avgRating = reviews.length > 0
                   ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
@@ -426,18 +418,30 @@ export default async function HomePage() {
                       </div>
                     ) : null}
 
-                    {/* Portfolio grid */}
-                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 4, borderRadius: 8, overflow: "hidden", marginTop: 2 }}>
-                      {Array.from({ length: 6 }).map((_, j) => {
-                        const imgUrl = cardImages[j];
-                        return imgUrl ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img key={j} src={imgUrl} alt="" style={{ width: "100%", height: 52, objectFit: "cover", display: "block" }} />
-                        ) : (
-                          <div key={j} style={{ height: 52, background: PORTFOLIO_GRADS[((cardIndex * 2) + j) % PORTFOLIO_GRADS.length] }} />
-                        );
-                      })}
-                    </div>
+                    {/* Portfolio media or services */}
+                    {portfolioMedia.length > 0 ? (
+                      <div style={{ display: "flex", gap: 6, borderRadius: 8, overflow: "hidden", marginTop: 2 }}>
+                        {portfolioMedia.map((item, j) =>
+                          item.type === "video" ? (
+                            <div key={j} style={{ flex: 1, height: 90, background: "#0a0a14", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
+                              <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style={{ opacity: 0.6 }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
+                            </div>
+                          ) : (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img key={j} src={item.url} alt="" style={{ flex: 1, minWidth: 0, height: 90, objectFit: "cover", display: "block", borderRadius: 7 }} />
+                          )
+                        )}
+                      </div>
+                    ) : cardGigs.length > 0 ? (
+                      <div style={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 4 }}>
+                        {cardGigs.map((g, j) => (
+                          <div key={j} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "5px 8px", borderRadius: 7, background: "var(--background)", border: "1px solid var(--card-border)" }}>
+                            <span style={{ fontSize: 11, fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "75%" }}>{g.title}</span>
+                            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--brand)", flexShrink: 0 }}>${g.price}</span>
+                          </div>
+                        ))}
+                      </div>
+                    ) : null}
 
                     {/* Price footer */}
                     <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 9, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
