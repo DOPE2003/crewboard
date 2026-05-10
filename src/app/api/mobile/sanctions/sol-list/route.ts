@@ -8,8 +8,8 @@
  * 200:  { data: { addresses: string[] } }
  */
 import { NextRequest } from "next/server";
-import { withMobileAuth, MobileTokenPayload } from "../../../_lib/auth";
-import { ok, err } from "../../../_lib/response";
+import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
+import { ok, err } from "../../_lib/response";
 import db from "@/lib/db";
 
 async function handler(_req: NextRequest, _user: MobileTokenPayload) {
