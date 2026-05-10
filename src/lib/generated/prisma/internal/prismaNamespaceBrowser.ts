@@ -75,6 +75,8 @@ export const ModelName = {
   Offer: 'Offer',
   SupportTicket: 'SupportTicket',
   AdminActionLog: 'AdminActionLog',
+  OfacSdnEntry: 'OfacSdnEntry',
+  SanctionsBlock: 'SanctionsBlock',
   CampaignClaim: 'CampaignClaim'
 } as const
 
@@ -467,6 +469,28 @@ export const AdminActionLogScalarFieldEnum = {
 } as const
 
 export type AdminActionLogScalarFieldEnum = (typeof AdminActionLogScalarFieldEnum)[keyof typeof AdminActionLogScalarFieldEnum]
+
+
+export const OfacSdnEntryScalarFieldEnum = {
+  address: 'address',
+  syncedAt: 'syncedAt'
+} as const
+
+export type OfacSdnEntryScalarFieldEnum = (typeof OfacSdnEntryScalarFieldEnum)[keyof typeof OfacSdnEntryScalarFieldEnum]
+
+
+export const SanctionsBlockScalarFieldEnum = {
+  id: 'id',
+  address: 'address',
+  chain: 'chain',
+  reason: 'reason',
+  source: 'source',
+  userUid: 'userUid',
+  context: 'context',
+  checkedAt: 'checkedAt'
+} as const
+
+export type SanctionsBlockScalarFieldEnum = (typeof SanctionsBlockScalarFieldEnum)[keyof typeof SanctionsBlockScalarFieldEnum]
 
 
 export const CampaignClaimScalarFieldEnum = {

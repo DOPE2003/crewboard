@@ -408,6 +408,8 @@ export const ModelName = {
   Offer: 'Offer',
   SupportTicket: 'SupportTicket',
   AdminActionLog: 'AdminActionLog',
+  OfacSdnEntry: 'OfacSdnEntry',
+  SanctionsBlock: 'SanctionsBlock',
   CampaignClaim: 'CampaignClaim'
 } as const
 
@@ -424,7 +426,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "supportTicket" | "adminActionLog" | "campaignClaim"
+    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "supportTicket" | "adminActionLog" | "ofacSdnEntry" | "sanctionsBlock" | "campaignClaim"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2204,6 +2206,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    OfacSdnEntry: {
+      payload: Prisma.$OfacSdnEntryPayload<ExtArgs>
+      fields: Prisma.OfacSdnEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.OfacSdnEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.OfacSdnEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.OfacSdnEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.OfacSdnEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>
+        }
+        findMany: {
+          args: Prisma.OfacSdnEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>[]
+        }
+        create: {
+          args: Prisma.OfacSdnEntryCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>
+        }
+        createMany: {
+          args: Prisma.OfacSdnEntryCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.OfacSdnEntryCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>[]
+        }
+        delete: {
+          args: Prisma.OfacSdnEntryDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>
+        }
+        update: {
+          args: Prisma.OfacSdnEntryUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>
+        }
+        deleteMany: {
+          args: Prisma.OfacSdnEntryDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.OfacSdnEntryUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.OfacSdnEntryUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>[]
+        }
+        upsert: {
+          args: Prisma.OfacSdnEntryUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$OfacSdnEntryPayload>
+        }
+        aggregate: {
+          args: Prisma.OfacSdnEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateOfacSdnEntry>
+        }
+        groupBy: {
+          args: Prisma.OfacSdnEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfacSdnEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.OfacSdnEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.OfacSdnEntryCountAggregateOutputType> | number
+        }
+      }
+    }
+    SanctionsBlock: {
+      payload: Prisma.$SanctionsBlockPayload<ExtArgs>
+      fields: Prisma.SanctionsBlockFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SanctionsBlockFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SanctionsBlockFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>
+        }
+        findFirst: {
+          args: Prisma.SanctionsBlockFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SanctionsBlockFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>
+        }
+        findMany: {
+          args: Prisma.SanctionsBlockFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>[]
+        }
+        create: {
+          args: Prisma.SanctionsBlockCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>
+        }
+        createMany: {
+          args: Prisma.SanctionsBlockCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SanctionsBlockCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>[]
+        }
+        delete: {
+          args: Prisma.SanctionsBlockDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>
+        }
+        update: {
+          args: Prisma.SanctionsBlockUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>
+        }
+        deleteMany: {
+          args: Prisma.SanctionsBlockDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SanctionsBlockUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SanctionsBlockUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>[]
+        }
+        upsert: {
+          args: Prisma.SanctionsBlockUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanctionsBlockPayload>
+        }
+        aggregate: {
+          args: Prisma.SanctionsBlockAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSanctionsBlock>
+        }
+        groupBy: {
+          args: Prisma.SanctionsBlockGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SanctionsBlockGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SanctionsBlockCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SanctionsBlockCountAggregateOutputType> | number
+        }
+      }
+    }
     CampaignClaim: {
       payload: Prisma.$CampaignClaimPayload<ExtArgs>
       fields: Prisma.CampaignClaimFieldRefs
@@ -2692,6 +2842,28 @@ export const AdminActionLogScalarFieldEnum = {
 export type AdminActionLogScalarFieldEnum = (typeof AdminActionLogScalarFieldEnum)[keyof typeof AdminActionLogScalarFieldEnum]
 
 
+export const OfacSdnEntryScalarFieldEnum = {
+  address: 'address',
+  syncedAt: 'syncedAt'
+} as const
+
+export type OfacSdnEntryScalarFieldEnum = (typeof OfacSdnEntryScalarFieldEnum)[keyof typeof OfacSdnEntryScalarFieldEnum]
+
+
+export const SanctionsBlockScalarFieldEnum = {
+  id: 'id',
+  address: 'address',
+  chain: 'chain',
+  reason: 'reason',
+  source: 'source',
+  userUid: 'userUid',
+  context: 'context',
+  checkedAt: 'checkedAt'
+} as const
+
+export type SanctionsBlockScalarFieldEnum = (typeof SanctionsBlockScalarFieldEnum)[keyof typeof SanctionsBlockScalarFieldEnum]
+
+
 export const CampaignClaimScalarFieldEnum = {
   id: 'id',
   campaign: 'campaign',
@@ -2974,6 +3146,8 @@ export type GlobalOmitConfig = {
   offer?: Prisma.OfferOmit
   supportTicket?: Prisma.SupportTicketOmit
   adminActionLog?: Prisma.AdminActionLogOmit
+  ofacSdnEntry?: Prisma.OfacSdnEntryOmit
+  sanctionsBlock?: Prisma.SanctionsBlockOmit
   campaignClaim?: Prisma.CampaignClaimOmit
 }
 

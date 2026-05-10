@@ -441,6 +441,26 @@ model AdminActionLog {
   @@index([createdAt])
 }
 
+// Local mirror of OFAC SDN crypto addresses — refreshed every 6h by the sync-ofac cron
+model OfacSdnEntry {
+  address  String   @id
+  syncedAt DateTime @default(now())
+}
+
+model SanctionsBlock {
+  id        String   @id @default(cuid())
+  address   String
+  chain     String   @default("solana")
+  reason    String
+  source    String
+  userUid   String?
+  context   String?
+  checkedAt DateTime @default(now())
+
+  @@index([address])
+  @@index([checkedAt])
+}
+
 model CampaignClaim {
   id                   String    @id @default(cuid())
   campaign             String

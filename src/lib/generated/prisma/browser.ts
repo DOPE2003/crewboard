@@ -138,6 +138,16 @@ export type SupportTicket = Prisma.SupportTicketModel
  */
 export type AdminActionLog = Prisma.AdminActionLogModel
 /**
+ * Model OfacSdnEntry
+ * 
+ */
+export type OfacSdnEntry = Prisma.OfacSdnEntryModel
+/**
+ * Model SanctionsBlock
+ * 
+ */
+export type SanctionsBlock = Prisma.SanctionsBlockModel
+/**
  * Model CampaignClaim
  * 
  */

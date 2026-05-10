@@ -32,6 +32,7 @@ import db              from "@/lib/db";
 import { buildFundTx } from "@/lib/escrow-build";
 import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
+import { screenAddress } from "@/lib/sanctions";
 
 async function handler(req: NextRequest, user: MobileTokenPayload) {
   try {
@@ -88,6 +89,16 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       return err(`Order is ${order.status}, expected pending or accepted.`);
     if (!order.buyer.walletAddress)  return err("Your wallet is not linked. Go to Profile → Connect Wallet first.");
     if (!order.seller.walletAddress) return err("Seller has no wallet address on file.");
+
+    // Sanctions gate — check seller wallet before building the on-chain tx
+    const sanctions = await screenAddress(
+      order.seller.walletAddress,
+      "solana",
+      { userUid: order.sellerId, trigger: "escrow_fund" },
+    );
+    if (sanctions.blocked) {
+      return err("This freelancer's wallet is on a sanctions list. Funding cannot proceed.", 451);
+    }
 
     const buyerPubkey  = new PublicKey(order.buyer.walletAddress);
     const sellerPubkey = new PublicKey(order.seller.walletAddress);
