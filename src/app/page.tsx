@@ -1,6 +1,5 @@
 import React from "react";
 import Link from "next/link";
-import { ShieldCheck, Clock, BadgeCheck } from "lucide-react";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
@@ -8,6 +7,41 @@ import HomeModeHero from "@/components/home/HomeModeHero";
 import HomeModeHIW from "@/components/home/HomeModeHIW";
 import "@/styles/landing.css";
 
+const PORTFOLIO_GRADS = [
+  "linear-gradient(135deg,#0d0821 0%,#2a4a0a 100%)",
+  "linear-gradient(135deg,#150827 0%,#0a2a18 100%)",
+  "linear-gradient(135deg,#0a1030 0%,#1a4a1a 100%)",
+  "linear-gradient(135deg,#1a0533 0%,#0a1f10 100%)",
+  "linear-gradient(135deg,#070c20 0%,#1a3a14 100%)",
+  "linear-gradient(135deg,#0b1a40 0%,#243d0e 100%)",
+  "linear-gradient(135deg,#1c0a30 0%,#0a2d18 100%)",
+  "linear-gradient(135deg,#091a35 0%,#1a3310 100%)",
+  "linear-gradient(135deg,#120830 0%,#0a2218 100%)",
+  "linear-gradient(135deg,#0a0f20 0%,#2a4a0a 100%)",
+  "linear-gradient(135deg,#14052a 0%,#0a1f10 100%)",
+  "linear-gradient(135deg,#0c0828 0%,#1a3d14 100%)",
+];
+
+const BROWSE_CATEGORIES = [
+  { label: "Graphic Design", key: "Graphic & Design", color: "#f59e0b", icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+  )},
+  { label: "Web3 Dev", key: "Coding & Tech", color: "#6366f1", icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+  )},
+  { label: "Content", key: "Content Creator", color: "#14b8a6", icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+  )},
+  { label: "Social", key: "Social Marketing", color: "#ec4899", icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+  )},
+  { label: "Motion", key: "Video & Animation", color: "#f97316", icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+  )},
+  { label: "AI Engineer", key: "AI Engineer", color: "#8b5cf6", icon: (
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
+  )},
+];
 
 export default async function HomePage() {
   const session = await auth();
@@ -37,23 +71,33 @@ export default async function HomePage() {
     memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
   }));
 
-  const rawFeatured = await db.user.findMany({
-    where: { profileComplete: true, image: { not: null } },
-    orderBy: { createdAt: "desc" },
-    take: 18,
-    select: {
-      twitterHandle: true, name: true, image: true, userTitle: true, bio: true,
-      availability: true, skills: true, lastSeenAt: true, walletAddress: true,
-      gigs: {
-        where: { status: "active" },
-        select: { price: true },
-        orderBy: { price: "asc" },
-        take: 1,
+  const [categoryCountsRaw, rawFeatured] = await Promise.all([
+    db.gig.groupBy({
+      by: ["category"],
+      where: { status: "active" },
+      _count: { id: true },
+    }).catch(() => [] as Array<{ category: string; _count: { id: number } }>),
+    db.user.findMany({
+      where: { profileComplete: true, image: { not: null } },
+      orderBy: { createdAt: "desc" },
+      take: 18,
+      select: {
+        twitterHandle: true, name: true, image: true, userTitle: true, bio: true,
+        availability: true, skills: true, lastSeenAt: true, walletAddress: true,
+        gigs: {
+          where: { status: "active" },
+          select: { price: true },
+          orderBy: { price: "asc" },
+          take: 1,
+        },
+        sellerOrders: { where: { status: "completed" }, select: { id: true } },
+        reviewsReceived: { select: { rating: true } },
       },
-      sellerOrders: { where: { status: "completed" }, select: { id: true } },
-      reviewsReceived: { select: { rating: true } },
-    },
-  }).catch(() => []);
+    }).catch(() => []),
+  ]);
+  const categoryCountMap: Record<string, number> = Object.fromEntries(
+    categoryCountsRaw.map((c) => [c.category, c._count.id])
+  );
 
   function profileQuality(u: any): number {
     let s = 0;
@@ -70,7 +114,6 @@ export default async function HomePage() {
   const featuredFreelancers = [...rawFeatured]
     .sort((a, b) => profileQuality(b) - profileQuality(a))
     .slice(0, 6);
-
 
   return (
     <>
@@ -297,10 +340,9 @@ export default async function HomePage() {
               </Link>
             </div>
             <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="ff-grid">
-              {featuredFreelancers.map((f: any) => {
+              {featuredFreelancers.map((f: any, cardIndex: number) => {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
-                const isAvail = f.availability === "available";
                 const isVerified = !!f.walletAddress;
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
                 const avgRating = reviews.length > 0
@@ -330,7 +372,7 @@ export default async function HomePage() {
                         <span style={{
                           position: "absolute", bottom: 1, right: 1, width: 9, height: 9,
                           borderRadius: "50%", border: "2px solid var(--surface)",
-                          background: isAvail ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#94a3b8",
+                          background: f.availability === "available" ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#94a3b8",
                         }} />
                       </div>
                       <div style={{ minWidth: 0, flex: 1, paddingTop: 1 }}>
@@ -396,23 +438,36 @@ export default async function HomePage() {
                       </div>
                     ) : null}
 
+                    {/* Portfolio grid */}
+                    <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 4, borderRadius: 8, overflow: "hidden", marginTop: 2 }}>
+                      {Array.from({ length: 6 }).map((_, j) => (
+                        <div
+                          key={j}
+                          style={{
+                            height: 52,
+                            background: PORTFOLIO_GRADS[((cardIndex * 2) + j) % PORTFOLIO_GRADS.length],
+                          }}
+                        />
+                      ))}
+                    </div>
+
                     {/* Price footer */}
-                    <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 9, display: "flex", alignItems: "baseline", gap: 4 }}>
-                      <span style={{ fontSize: 14, fontWeight: 700, color: "#14B8A6", letterSpacing: "-0.01em" }}>
-                        From ${minPrice != null ? minPrice : 50}
+                    <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 9, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
+                      <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                        <span style={{ fontSize: 14, fontWeight: 700, color: "#14B8A6", letterSpacing: "-0.01em" }}>
+                          From ${minPrice != null ? minPrice : 50}
+                        </span>
+                        <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>/ project</span>
+                      </div>
+                      <span style={{ fontSize: 11, fontWeight: 600, color: "#14B8A6", whiteSpace: "nowrap" }}>
+                        View profile →
                       </span>
-                      <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>/ project</span>
                     </div>
                   </Link>
                 );
               })}
             </div>
 
-          {featuredFreelancers.length === 0 && (
-            <div style={{ textAlign: "center", padding: "3rem", color: "var(--text-muted)", fontSize: "0.85rem" }}>
-              No freelancers yet — <Link href="/register" style={{ color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>be the first to join</Link>.
-            </div>
-          )}
         </div>
         <style>{`
           .ff-grid { grid-template-columns: repeat(3,1fr); }
@@ -443,6 +498,67 @@ export default async function HomePage() {
         `}</style>
       </div>
       )}
+
+      {featuredFreelancers.length === 0 && (
+        <div style={{ textAlign: "center", padding: "3rem", color: "var(--text-muted)", fontSize: "0.85rem", borderTop: "1px solid var(--card-border)" }}>
+          No freelancers yet — <Link href="/register" style={{ color: "#14b8a6", textDecoration: "none", fontWeight: 600 }}>be the first to join</Link>.
+        </div>
+      )}
+
+      {/* ── BROWSE BY CATEGORY ── */}
+      <div style={{ background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", padding: "clamp(2.5rem,5vw,3.5rem) clamp(1rem,4vw,2rem)", position: "relative", zIndex: 1 }}>
+        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
+            <div>
+              <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: "0 0 0.25rem", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
+                Browse by Category
+              </h2>
+              <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: 0 }}>Find the right specialist fast.</p>
+            </div>
+            <Link href="/gigs" style={{ fontSize: "0.8rem", fontWeight: 600, color: "#14b8a6", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
+              See all →
+            </Link>
+          </div>
+
+          <div style={{ display: "grid", gap: "clamp(0.65rem,1.5vw,1rem)" }} className="cat-grid">
+            {BROWSE_CATEGORIES.map((cat) => {
+              const count = categoryCountMap[cat.key] ?? 0;
+              return (
+                <Link
+                  key={cat.label}
+                  href={`/gigs?category=${encodeURIComponent(cat.key)}`}
+                  style={{
+                    display: "flex", flexDirection: "column", gap: 10,
+                    padding: "1rem 1.1rem", borderRadius: 14,
+                    background: "var(--background)", border: "1px solid var(--card-border)",
+                    textDecoration: "none", color: "inherit",
+                    transition: "box-shadow 0.18s, transform 0.18s, border-color 0.18s",
+                  }}
+                  className="cat-card"
+                >
+                  <div style={{ width: 40, height: 40, borderRadius: 10, background: `${cat.color}1a`, border: `1px solid ${cat.color}33`, display: "flex", alignItems: "center", justifyContent: "center", color: cat.color }}>
+                    {cat.icon}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", marginBottom: 3, letterSpacing: "-0.01em" }}>{cat.label}</div>
+                    <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500 }}>{count > 0 ? `${count} gigs` : "Explore"}</div>
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+        <style>{`
+          .cat-grid { grid-template-columns: repeat(6,1fr); }
+          @media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(3,1fr); } }
+          @media (max-width: 500px) { .cat-grid { grid-template-columns: repeat(2,1fr); } }
+          .cat-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            border-color: rgba(20,184,166,0.35) !important;
+          }
+        `}</style>
+      </div>
 
       {/* ── HOW IT WORKS ── */}
       <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
