@@ -1,0 +1,27 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git rebase *)",
+      "Bash(xargs ls)",
+      "mcp__claude_ai_Vercel__get_deployment_build_logs",
+      "Bash(git log *)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(curl -s \"https://api.github.com/repos/0xB10C/ofac-sanctioned-digital-currency-addresses/contents/\")",
+      "Bash(curl -s \"https://api.github.com/repos/0xB10C/ofac-sanctioned-digital-currency-addresses/git/trees/lists?recursive=1\")",
+      "Bash(curl -s \"https://api.github.com/repos/0xB10C/ofac-sanctioned-digital-currency-addresses/contents/?ref=lists\")",
+      "Bash(grep -E \"\\\\.\\(ts|tsx\\)$\")",
+      "Bash(grep -E \"^/Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/page.tsx$\")",
+      "Bash(git revert *)",
+      "Bash(mkdir -p /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/api/mobile/sanctions/sol-list)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main diff --stat)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main diff prisma/schema.prisma src/app/api/mobile/escrow/build-fund/route.ts vercel.json src/app/page.tsx)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main diff src/app/page.tsx)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main add src/app/api/mobile/sanctions/sol-list/route.ts)",
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main commit -m 'fix\\(sanctions\\): correct relative import path in sol-list route *)"
+    ],
+    "additionalDirectories": [
+      "/Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/api/mobile/sanctions"
+    ]
+  }
+}

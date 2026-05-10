@@ -6,8 +6,6 @@ import Link from 'next/link'
 import { Bell } from 'lucide-react'
 import NavMobileMenu from './NavMobileMenu'
 import ThemeToggle from '@/components/ui/ThemeToggle'
-import ModeToggle from '@/components/dashboard/ModeToggle'
-import { useMode } from '@/components/ModeProvider'
 import { cn } from '@/lib/utils'
 import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
@@ -175,18 +173,12 @@ export default function NavControlsClient({
     return () => window.removeEventListener('keydown', handler)
   }, [])
 
-  const { mode } = useMode()
   const totalBadge = totalUnread + liveUnread + activeCount
   const isActive = pathname === '/activities'
   const isMsgs = pathname === '/messages' || pathname.startsWith('/messages/')
 
   return (
     <>
-      {loggedIn && (
-        <span className="hidden md:inline-flex items-center" style={{ marginRight: 4 }}>
-          <ModeToggle />
-        </span>
-      )}
       {loggedIn && (
         <Link
           href="/activities"

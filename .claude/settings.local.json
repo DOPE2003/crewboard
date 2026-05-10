@@ -60,7 +60,10 @@
       "mcp__claude_ai_Vercel__list_teams",
       "mcp__claude_ai_Vercel__list_projects",
       "mcp__claude_ai_Vercel__list_deployments",
-      "Bash(grep -v \"^$\")"
+      "Bash(grep -v \"^$\")",
+      "mcp__claude_ai_Vercel__get_runtime_logs",
+      "Bash(find /Users/mohsinkhan/Desktop/CREWBOARD -maxdepth 2 -type d \\\\\\( -name \"mobile\" -o -name \"app\" -o -name \"expo\" -o -name \"react-native\" \\\\\\) 2>/dev/null)",
+      "Read(//Users/mohsinkhan/Desktop/CREWBOARD/**)"
     ],
     "additionalDirectories": [
       "/private/tmp"

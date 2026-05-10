@@ -61,26 +61,68 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
       </div>
 
       {isLoggedIn && (
-        <Link
-          href={isClient ? "/talent" : "/jobs"}
-          style={{
-            display: "inline-flex", alignItems: "center", gap: 8,
-            padding: "12px 28px", borderRadius: 12, textDecoration: "none",
-            background: "var(--brand)", color: "#0f172a",
-            fontWeight: 800, fontSize: "0.95rem", letterSpacing: "-0.01em",
-            boxShadow: "0 4px 16px rgba(20,184,166,0.35)",
-            transition: "transform 0.15s, box-shadow 0.15s",
-            marginBottom: 14,
-            opacity: 0, animation: "fadeUp 0.6s 0.72s forwards",
-            position: "relative", zIndex: 1,
-          }}
-          className="hero-cta-btn"
-        >
-          {isClient ? "Find Talent" : "Browse Jobs"}
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-            <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-          </svg>
-        </Link>
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: "1fr 1fr",
+          gap: 12,
+          width: "100%",
+          maxWidth: 460,
+          marginBottom: 14,
+          opacity: 0,
+          animation: "fadeUp 0.6s 0.72s forwards",
+          position: "relative",
+          zIndex: 1,
+        }}>
+          <Link
+            href="/talent"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "18px 20px", borderRadius: 14, textDecoration: "none",
+              background: "var(--surface)",
+              border: "1px solid var(--card-border)",
+              transition: "transform 0.15s, box-shadow 0.15s",
+            }}
+            className="hero-action-card"
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.2 }}>Find Freelancers</span>
+              <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-muted)" }}>Build your own crew</span>
+            </div>
+            <div style={{
+              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+              background: "#14B8A6", display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </div>
+          </Link>
+
+          <Link
+            href="/jobs"
+            style={{
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+              padding: "18px 20px", borderRadius: 14, textDecoration: "none",
+              background: "var(--surface)",
+              border: "1px solid var(--card-border)",
+              transition: "transform 0.15s, box-shadow 0.15s",
+            }}
+            className="hero-action-card"
+          >
+            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+              <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.2 }}>Find Jobs</span>
+              <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-muted)" }}>Get hired by Web3 Crew</span>
+            </div>
+            <div style={{
+              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+              background: "#f97316", display: "flex", alignItems: "center", justifyContent: "center",
+            }}>
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
+              </svg>
+            </div>
+          </Link>
+        </div>
       )}
 
       {!isLoggedIn && (
@@ -143,7 +185,7 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
       )}
       <style>{`
         .intent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; border-color: rgba(20,184,166,0.5) !important; }
-        .hero-cta-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(20,184,166,0.45) !important; }
+        .hero-action-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; border-color: rgba(20,184,166,0.4) !important; }
       `}</style>
     </>
   );
