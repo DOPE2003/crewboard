@@ -109,7 +109,7 @@ export default async function HomePage() {
           alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
-          padding: "clamp(1.2rem, 3vw, 2rem) clamp(1rem, 4vw, 2rem) clamp(2rem, 4vw, 3rem)",
+          padding: "clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(2.5rem, 5vw, 4rem)",
           position: "relative",
           overflow: "visible",
         }}
@@ -169,7 +169,7 @@ export default async function HomePage() {
           opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
           position: "relative", zIndex: 1,
           width: "100%", maxWidth: 520,
-          display: "flex", gap: 10, alignItems: "stretch",
+          display: "flex", gap: 12, alignItems: "stretch",
         }} className="eco-highlights-row">
 
           {/* Card 1: Superteam */}
