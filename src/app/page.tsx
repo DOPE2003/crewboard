@@ -56,6 +56,8 @@ export default async function HomePage() {
     memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
   }));
 
+  const VIDEO_HANDLES = ["alphaeth", "0xmambich", "mehdi"];
+
   const [categoryCountsRaw, rawFeatured] = await Promise.all([
     db.gig.groupBy({
       by: ["category"],
@@ -63,9 +65,7 @@ export default async function HomePage() {
       _count: { id: true },
     }).catch(() => [] as Array<{ category: string; _count: { id: number } }>),
     db.user.findMany({
-      where: { profileComplete: true, image: { not: null } },
-      orderBy: { createdAt: "desc" },
-      take: 18,
+      where: { twitterHandle: { in: VIDEO_HANDLES }, profileComplete: true, image: { not: null } },
       select: {
         twitterHandle: true, name: true, image: true, userTitle: true, bio: true,
         availability: true, skills: true, lastSeenAt: true, walletAddress: true,
@@ -91,21 +91,10 @@ export default async function HomePage() {
     categoryCountsRaw.map((c) => [c.category, c._count.id])
   );
 
-  function profileQuality(u: any): number {
-    let s = 0;
-    if (u.walletAddress) s += 4;
-    if ((u.reviewsReceived?.length ?? 0) > 0) s += 4;
-    if ((u.sellerOrders?.length ?? 0) > 0) s += 3;
-    if (u.bio && u.bio.length > 10) s += 2;
-    if (u.lastSeenAt && Date.now() - new Date(u.lastSeenAt).getTime() < 7 * 864e5) s += 2;
-    if (u.gigs?.length > 0) s += 1;
-    if (!u.name) s -= 3;
-    return s;
-  }
-
-  const featuredFreelancers = [...rawFeatured]
-    .sort((a, b) => profileQuality(b) - profileQuality(a))
-    .slice(0, 6);
+  const handleOrder = Object.fromEntries(VIDEO_HANDLES.map((h, i) => [h, i]));
+  const featuredFreelancers = [...rawFeatured].sort(
+    (a: any, b: any) => (handleOrder[a.twitterHandle] ?? 99) - (handleOrder[b.twitterHandle] ?? 99)
+  );
 
   return (
     <>
@@ -296,13 +285,13 @@ export default async function HomePage() {
             <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
               <div>
                 <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.4rem" }}>
-                  Featured talent
+                  Creator showcase
                 </div>
                 <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-                  Top freelancers, ready to hire
+                  Top video creators
                 </h2>
                 <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: "0.35rem 0 0", lineHeight: 1.5 }}>
-                  Verified profiles with real reviews and track records
+                  Real portfolio videos from verified talent on Crewboard
                 </p>
               </div>
               <Link href="/talent" style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--brand)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
@@ -314,14 +303,18 @@ export default async function HomePage() {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isVerified = !!f.walletAddress;
-                type MediaItem = { type: "image" | "video"; url: string };
+                type MediaItem = { type: "image" | "video"; url: string; proxyUrl: string };
+                const toProxy = (url: string) =>
+                  url.includes("private.blob.vercel-storage.com")
+                    ? `/api/blob/serve?url=${encodeURIComponent(url)}`
+                    : url;
                 const portfolioMedia: MediaItem[] = [
-                  ...(f.showcasePosts ?? [] as any[]).map((p: any) =>
-                    p.mediaUrl ? { type: p.mediaType === "video" ? "video" as const : "image" as const, url: p.mediaUrl as string } : null
-                  ).filter(Boolean) as MediaItem[],
                   ...(Array.isArray(f.portfolioItems) ? f.portfolioItems as any[] : [])
-                    .filter((i: any) => i.mediaUrl && (i.mediaType === "image" || i.mediaType === "video"))
-                    .map((i: any) => ({ type: i.mediaType as "image" | "video", url: i.mediaUrl as string })),
+                    .filter((i: any) => i.mediaUrl && i.mediaType === "video")
+                    .map((i: any) => ({ type: "video" as const, url: i.mediaUrl as string, proxyUrl: toProxy(i.mediaUrl) })),
+                  ...(f.showcasePosts ?? [] as any[])
+                    .filter((p: any) => p.mediaUrl)
+                    .map((p: any) => ({ type: p.mediaType === "video" ? "video" as const : "image" as const, url: p.mediaUrl as string, proxyUrl: toProxy(p.mediaUrl) })),
                 ].slice(0, 2);
                 const cardGigs = (f.gigs ?? []) as Array<{ price: number; title: string }>;
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
@@ -420,15 +413,21 @@ export default async function HomePage() {
 
                     {/* Portfolio media or services */}
                     {portfolioMedia.length > 0 ? (
-                      <div style={{ display: "flex", gap: 6, borderRadius: 8, overflow: "hidden", marginTop: 2 }}>
+                      <div style={{ display: "flex", gap: 6, marginTop: 2 }}>
                         {portfolioMedia.map((item, j) =>
                           item.type === "video" ? (
-                            <div key={j} style={{ flex: 1, height: 90, background: "#0a0a14", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                              <svg width="22" height="22" viewBox="0 0 24 24" fill="white" style={{ opacity: 0.6 }}><polygon points="5 3 19 12 5 21 5 3"/></svg>
-                            </div>
+                            <video
+                              key={j}
+                              src={item.proxyUrl}
+                              muted
+                              autoPlay
+                              loop
+                              playsInline
+                              style={{ flex: 1, minWidth: 0, height: 110, objectFit: "cover", display: "block", borderRadius: 7 }}
+                            />
                           ) : (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img key={j} src={item.url} alt="" style={{ flex: 1, minWidth: 0, height: 90, objectFit: "cover", display: "block", borderRadius: 7 }} />
+                            <img key={j} src={item.proxyUrl} alt="" style={{ flex: 1, minWidth: 0, height: 110, objectFit: "cover", display: "block", borderRadius: 7 }} />
                           )
                         )}
                       </div>
