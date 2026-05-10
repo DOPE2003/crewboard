@@ -556,30 +556,18 @@ export default async function HomePage() {
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.4rem" }}>
-              Simple process
+            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.6rem" }}>
+              Simple Process
             </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: "0 0 0.4rem", letterSpacing: "-0.02em" }}>
-              How it works
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: "clamp(1.6rem,3.2vw,2.2rem)", color: "var(--foreground)", margin: "0 0 0.55rem", letterSpacing: "-0.03em" }}>
+              Get work done in 3 simple steps
             </h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: 0, lineHeight: 1.5 }}>Three steps. No hassle.</p>
+            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: 0, lineHeight: 1.5 }}>Fast, secure, and built for Web3 teams.</p>
           </div>
 
           {/* Mode-aware steps + bottom CTA */}
           <HomeModeHIW isLoggedIn={isLoggedIn} />
         </div>
-        <style>{`
-          .hiw-grid { grid-template-columns: repeat(3,1fr); }
-          @media (max-width: 700px) { .hiw-grid { grid-template-columns: 1fr; } }
-          .hiw-card {
-            transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
-          }
-          .hiw-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0,0,0,0.07);
-            border-color: rgba(20,184,166,0.2) !important;
-          }
-        `}</style>
       </div>
 
     </main>

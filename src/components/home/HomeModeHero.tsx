@@ -85,7 +85,7 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
             className="hero-action-card"
           >
             <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.2 }}>Find Freelancers</span>
+              <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.2 }}>Find Talent</span>
               <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-muted)" }}>Build your own crew</span>
             </div>
             <div style={{
