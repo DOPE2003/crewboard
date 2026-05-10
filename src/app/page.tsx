@@ -84,11 +84,18 @@ export default async function HomePage() {
       select: {
         twitterHandle: true, name: true, image: true, userTitle: true, bio: true,
         availability: true, skills: true, lastSeenAt: true, walletAddress: true,
+        portfolioItems: true,
         gigs: {
           where: { status: "active" },
-          select: { price: true },
+          select: { price: true, image: true },
           orderBy: { price: "asc" },
-          take: 1,
+          take: 6,
+        },
+        showcasePosts: {
+          where: { mediaType: "image" },
+          select: { mediaUrl: true },
+          orderBy: { createdAt: "desc" },
+          take: 6,
         },
         sellerOrders: { where: { status: "completed" }, select: { id: true } },
         reviewsReceived: { select: { rating: true } },
@@ -344,6 +351,10 @@ export default async function HomePage() {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
                 const isVerified = !!f.walletAddress;
+                const showcaseImgs: string[] = (f.showcasePosts ?? []).map((p: any) => p.mediaUrl).filter(Boolean);
+                const gigImgs: string[] = (f.gigs ?? []).map((g: any) => g.image).filter(Boolean);
+                const portfolioImgs: string[] = (Array.isArray(f.portfolioItems) ? f.portfolioItems as any[] : []).filter((i: any) => i.mediaUrl && i.mediaType === "image").map((i: any) => i.mediaUrl);
+                const cardImages = [...showcaseImgs, ...portfolioImgs, ...gigImgs].slice(0, 6);
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
                 const avgRating = reviews.length > 0
                   ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
@@ -440,15 +451,15 @@ export default async function HomePage() {
 
                     {/* Portfolio grid */}
                     <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 4, borderRadius: 8, overflow: "hidden", marginTop: 2 }}>
-                      {Array.from({ length: 6 }).map((_, j) => (
-                        <div
-                          key={j}
-                          style={{
-                            height: 52,
-                            background: PORTFOLIO_GRADS[((cardIndex * 2) + j) % PORTFOLIO_GRADS.length],
-                          }}
-                        />
-                      ))}
+                      {Array.from({ length: 6 }).map((_, j) => {
+                        const imgUrl = cardImages[j];
+                        return imgUrl ? (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img key={j} src={imgUrl} alt="" style={{ width: "100%", height: 52, objectFit: "cover", display: "block" }} />
+                        ) : (
+                          <div key={j} style={{ height: 52, background: PORTFOLIO_GRADS[((cardIndex * 2) + j) % PORTFOLIO_GRADS.length] }} />
+                        );
+                      })}
                     </div>
 
                     {/* Price footer */}
