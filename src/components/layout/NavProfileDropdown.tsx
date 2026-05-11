@@ -336,11 +336,32 @@ export default function NavProfileDropdown({
           );
         })()}
 
-        {/* WALLET & PAYMENTS */}
-        <SectionLabel icon={I.wallet}>Wallet & Payments</SectionLabel>
+        {/* ── WORKSPACE (top priority) ── */}
+        <SectionLabel icon={I.orders}>Workspace</SectionLabel>
+        <Card>
+          <Row icon={I.orders} label="My Orders" href="/orders" onClick={onClose} />
+          <RowDivider />
+          <Row icon={I.sent}  label="Sent Offers" href="/offers" onClick={onClose} />
+          <RowDivider />
+          <Row icon={I.inbox} label="Received Offers" href="/offers" onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <RowDivider />
+          {isHiring ? (
+            <Row icon={I.saved} label="Saved Talent" href="/saved-talents" onClick={onClose} />
+          ) : (
+            <Row icon={I.saved} label="Saved Jobs" href="/saved-talents" onClick={onClose} />
+          )}
+          <RowDivider />
+          {isHiring ? (
+            <Row icon={I.applications} label="My Posted Jobs" href="/jobs?mine=1" onClick={onClose} badge={extra?.postedJobsCount ? extra.postedJobsCount : null} />
+          ) : (
+            <Row icon={I.applications} label="My Applications" href="/jobs/applied" onClick={onClose} badge={extra?.appliedJobsCount ? extra.appliedJobsCount : null} />
+          )}
+        </Card>
+
+        {/* ── PAYMENTS ── */}
+        <SectionLabel icon={I.wallet}>Payments</SectionLabel>
         <Card>
           <Row icon={I.wallet} label="Wallet Overview" onClick={() => {
-            // DB is source of truth — no Phantom check needed to view the page
             if (!extra?.walletAddress) { setWalletMsg(true); setTimeout(() => setWalletMsg(false), 3000); }
             else { onClose(); window.location.href = "/billing"; }
           }} />
@@ -350,72 +371,39 @@ export default function NavProfileDropdown({
             </div>
           )}
           <RowDivider />
-          <Row icon={I.history}    label="Payment History"  href="/payments" onClick={onClose} />
+          <Row icon={I.history}  label="Payment History" href="/payments" onClick={onClose} />
           <RowDivider />
-          <Row icon={I.dispute}    label="Disputes"         href="/orders"   onClick={onClose} />
+          <Row icon={I.dispute}  label="Disputes"        href="/orders"   onClick={onClose} />
           <RowDivider />
           {extra?.walletAddress ? (
-            <Row icon={I.disconnect} label={disconnecting ? "Disconnecting…" : "Disconnect Wallet"}
-              onClick={handleDisconnectWallet} danger />
+            <Row icon={I.disconnect} label={disconnecting ? "Disconnecting…" : "Disconnect Wallet"} onClick={handleDisconnectWallet} danger />
           ) : (
-            <Row icon={I.wallet} label="Connect Wallet" onClick={() => {
-              onClose();
-              // Open the wallet adapter modal — works across all browsers
-              setWalletModalVisible(true);
-            }} />
+            <Row icon={I.wallet} label="Connect Wallet" onClick={() => { onClose(); setWalletModalVisible(true); }} />
           )}
         </Card>
 
-        {/* JOBS & OFFERS */}
-        <SectionLabel icon={I.saved}>{isHiring ? "Hiring" : "My Work"}</SectionLabel>
+        {/* ── SETTINGS ── */}
+        <SectionLabel icon={I.appSettings}>Settings</SectionLabel>
         <Card>
-          {isHiring ? (
-            <>
-              <Row icon={I.orders}       label="Orders"          href="/orders"       onClick={onClose} />
-              <RowDivider />
-              <Row icon={I.applications} label="My Posted Jobs"  href="/jobs?mine=1"  onClick={onClose} badge={extra?.postedJobsCount ? extra.postedJobsCount : null} />
-              <RowDivider />
-              <Row icon={I.sent}         label="Sent Offers"     href="/offers"       onClick={onClose} />
-              <RowDivider />
-              <Row icon={I.saved}        label="Saved Talent"    href="/saved-talents" onClick={onClose} />
-            </>
-          ) : (
-            <>
-              <Row icon={I.orders}       label="Orders"          href="/orders"       onClick={onClose} />
-              <RowDivider />
-              <Row icon={I.applications} label="My Applications" href="/jobs/applied" onClick={onClose} badge={extra?.appliedJobsCount ? extra.appliedJobsCount : null} />
-              <RowDivider />
-              <Row icon={I.inbox}        label="Offers Received" href="/offers"       onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
-              <RowDivider />
-              <Row icon={I.saved}        label="Saved Jobs"      href="/saved-talents" onClick={onClose} />
-            </>
-          )}
-        </Card>
-
-        {/* APP */}
-        <SectionLabel icon={I.appSettings}>App</SectionLabel>
-        <Card>
+          <Row icon={I.bell} label="Notifications" href="/notifications" onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <RowDivider />
+          <Row icon={I.globe} label="Language" rightEl={<span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>EN</span>} onClick={() => {}} />
+          <RowDivider />
           <div onClick={toggleDark} style={{ cursor: "pointer" }}>
             <Row icon={I.moon} label="Dark Mode" toggle toggleOn={isDark} />
           </div>
           <RowDivider />
-          <Row icon={I.globe} label="Language" rightEl={<span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>EN</span>} onClick={() => {}} />
+          <Row icon={I.privacy} label="Privacy"       href="/privacy"  onClick={onClose} />
           <RowDivider />
-          <Row icon={I.bell}  label="Notifications" href="/notifications" onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <Row icon={I.help}    label="Help & Support" href="/support"  onClick={onClose} />
           <RowDivider />
-          <Row icon={I.ai}    label="Crew Assistant" onClick={() => setShowPro(true)} rightEl={<span style={{ fontSize: 9, background: "#ccfbf1", color: "#0f766e", fontWeight: 700, padding: "2px 7px", borderRadius: 99 }}>SOON</span>} />
+          <Row icon={I.ai} label="Crew Assistant" onClick={() => setShowPro(true)} rightEl={<span style={{ fontSize: 9, background: "#ccfbf1", color: "#0f766e", fontWeight: 700, padding: "2px 7px", borderRadius: 99 }}>SOON</span>} />
         </Card>
 
-        {/* ACCOUNT */}
-        <SectionLabel icon={I.account}>Account</SectionLabel>
+        {/* ── SIGN OUT ── */}
         <Card>
-          <Row icon={I.privacy} label="Privacy"       href="/privacy"                      onClick={onClose} />
-          <RowDivider />
-          <Row icon={I.help}    label="Help & Support"  href="/support"                     onClick={onClose} />
-          <RowDivider />
           <Row icon={I.signout} label="Sign Out" onClick={async () => {
             onClose();
-            // Disconnect wallet so it doesn't auto-link to the next user
             try { await disconnect(); } catch { /* ignore */ }
             try { localStorage.removeItem("walletName"); } catch { /* ignore */ }
             signOut({ callbackUrl: "/login" });
