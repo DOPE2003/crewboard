@@ -127,7 +127,7 @@ export default async function HomePage() {
     skills: u.skills ?? [],
     bio: u.bio,
     ordersCompleted: (u.sellerOrders as Array<{ amount: number }> ?? []).length,
-    totalEarned: (u.sellerOrders as Array<{ amount: number }>).reduce((s: number, o: { amount: number }) => s + o.amount, 0),
+    totalEarned: (u.sellerOrders as Array<{ amount: number }> ?? []).reduce((s: number, o: { amount: number }) => s + (Number(o.amount) || 0), 0),
     memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
   }));
 
@@ -378,7 +378,7 @@ export default async function HomePage() {
                   ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
                   : null;
                 const totalEarned = (f.sellerOrders as Array<{ amount: number }> ?? [])
-                  .reduce((s: number, o: { amount: number }) => s + o.amount, 0);
+                  .reduce((s: number, o: { amount: number }) => s + (Number(o.amount) || 0), 0);
                 return (
                   <div
                     key={f.twitterHandle}
@@ -480,7 +480,7 @@ export default async function HomePage() {
                           <span className="stats-row-label">Rating</span>
                         </div>
                         <div className="stats-row-item">
-                          <span className="stats-row-val">${totalEarned >= 1000 ? `${(totalEarned/1000).toFixed(1)}k` : totalEarned}</span>
+                          <span className="stats-row-val">${totalEarned >= 1000 ? `${(totalEarned/1000).toFixed(1)}k` : totalEarned > 0 ? totalEarned : "—"}</span>
                           <span className="stats-row-label">Earned</span>
                         </div>
                         <div className="stats-row-item">
