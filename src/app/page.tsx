@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
-import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
 import HomeModeHero from "@/components/home/HomeModeHero";
 import HomeModeHIW from "@/components/home/HomeModeHIW";
 import "@/styles/landing.css";
@@ -31,30 +30,6 @@ const BROWSE_CATEGORIES = [
 export default async function HomePage() {
   const session = await auth();
   const isLoggedIn = !!session?.user;
-
-  const rawProfiles = await db.user.findMany({
-    where: { profileComplete: true, image: { not: null } },
-    orderBy: { createdAt: "desc" },
-    take: 20,
-    select: {
-      twitterHandle: true, name: true, image: true, userTitle: true,
-      availability: true, skills: true, bio: true, createdAt: true,
-      sellerOrders: { where: { status: "completed" }, select: { amount: true } },
-    },
-  }).catch(() => []);
-
-  const floatingProfiles = rawProfiles.map((u: any) => ({
-    twitterHandle: u.twitterHandle,
-    name: u.name,
-    image: u.image,
-    role: u.userTitle,
-    availability: u.availability,
-    skills: u.skills,
-    bio: u.bio,
-    ordersCompleted: (u.sellerOrders as Array<{ amount: number }> ?? []).length,
-    totalEarned: (u.sellerOrders as Array<{ amount: number }>).reduce((s: number, o: { amount: number }) => s + o.amount, 0),
-    memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
-  }));
 
   const VIDEO_HANDLES = ["alphaeth", "0xmambich", "mehdi"];
 
@@ -109,33 +84,33 @@ export default async function HomePage() {
           alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
-          padding: "clamp(2rem, 4vw, 3.5rem) clamp(1rem, 4vw, 2rem) clamp(2.5rem, 5vw, 4rem)",
+          padding: "clamp(2.5rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem)",
           position: "relative",
-          overflow: "visible",
+          overflow: "hidden",
+          background: "var(--surface)",
         }}
       >
-        {/* Glow — desktop only */}
-        <div className="hidden md:block" style={{
+        {/* Teal radial blob — mimics the iOS app welcome screen */}
+        <div style={{
           position: "absolute",
-          top: "12%",
+          top: "-30%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "clamp(260px, 90vw, 760px)",
-          height: "clamp(180px, 32vw, 380px)",
-          background: "radial-gradient(ellipse at 50% 50%, rgba(45,212,191,0.28) 0%, rgba(20,184,166,0.12) 50%, transparent 75%)",
-          filter: "blur(28px)",
+          width: "clamp(320px, 90vw, 720px)",
+          height: "clamp(320px, 60vw, 580px)",
+          background: "radial-gradient(ellipse at 50% 35%, rgba(45,212,191,0.42) 0%, rgba(20,184,166,0.22) 38%, rgba(16,185,129,0.08) 62%, transparent 80%)",
           pointerEvents: "none",
           zIndex: 0,
         }} />
-
-        {/* Floating profile cards — desktop only */}
-        <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
-          <div style={{ pointerEvents: "auto" }}>
-            {floatingProfiles.length >= 2 && (
-              <HeroFloatingProfiles profiles={floatingProfiles} />
-            )}
-          </div>
-        </div>
+        {/* White fade overlay — keeps text crisp over blob */}
+        <div style={{
+          position: "absolute",
+          top: 0, left: 0, right: 0,
+          height: "55%",
+          background: "linear-gradient(to bottom, var(--surface) 0%, transparent 100%)",
+          pointerEvents: "none",
+          zIndex: 0,
+        }} />
 
         {/* Beta badge */}
         <div
@@ -143,162 +118,68 @@ export default async function HomePage() {
           style={{
             fontFamily: "Inter, sans-serif",
             fontWeight: 600,
-            letterSpacing: "0.18em",
+            fontSize: "0.7rem",
+            letterSpacing: "0.12em",
             textTransform: "uppercase" as const,
-            color: "var(--brand-dark)",
-            marginTop: "0.5rem",
-            marginBottom: "1.5rem",
-            padding: "0.35rem 0.85rem",
-            border: "1px solid var(--brand)",
+            color: "var(--brand)",
+            marginTop: "0.25rem",
+            marginBottom: "1.4rem",
+            padding: "0.3rem 0.9rem",
+            border: "1px solid rgba(20,184,166,0.4)",
             borderRadius: "999px",
-            background: "transparent",
+            background: "rgba(20,184,166,0.08)",
             opacity: 0,
             animation: "fadeUp 0.6s 0.1s forwards",
             position: "relative",
             zIndex: 1,
           }}
         >
-          ✦ Now in Beta
+          Now in Beta
         </div>
 
-        {/* Mode-aware hero — headline, subtitle, CTA cards */}
+        {/* Mode-aware hero — headline, subtitle, CTA buttons */}
         <HomeModeHero isLoggedIn={isLoggedIn} />
 
-        {/* ── Spotlight cards row — inside hero ── */}
+        {/* ── Category chip strip — mirrors the app's horizontal filter row ── */}
         <div style={{
-          opacity: 0, animation: "fadeUp 0.6s 0.9s forwards",
+          opacity: 0, animation: "fadeUp 0.6s 0.88s forwards",
           position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 520,
-          display: "flex", gap: 12, alignItems: "stretch",
-        }} className="eco-highlights-row">
-
-          {/* Card 1: Superteam */}
-          <div className="eco-hero-card" style={{
-            flex: 1, minWidth: 0,
-            display: "flex", borderRadius: 12,
-            border: "1px solid rgba(20,184,166,0.2)",
-            background: "var(--card-bg)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
-            overflow: "hidden", textAlign: "left",
-          }}>
-            <div style={{ width: 80, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large" alt="Solana Summit Germany" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
-            </div>
-            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 6, textAlign: "left" }}>
-              {/* Publisher row */}
-              <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "nowrap", minWidth: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 14, height: 14, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Superteam Germany</span>
-                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "var(--brand)", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0, whiteSpace: "nowrap" }}>X ↗</a>
-              </div>
-              {/* Title */}
-              <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
-                Content Creators Program — Solana Summit Germany
-              </div>
-              {/* Benefit + CTA */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--card-border)" }}>
-                <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Exclusive on-site benefits</div>
-                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>$500 travel boost · Limited spots</div>
-                </div>
-                <a href="https://t.co/4EFTnBjaWn" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", padding: "5px 10px", borderRadius: 6, background: "var(--foreground)", color: "var(--dropdown-bg)", fontWeight: 700, fontSize: 11, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
-                  Apply ↗
-                </a>
-              </div>
-            </div>
-          </div>
-
-          {/* Card 2: iOS App Coming Soon */}
-          <div className="eco-hero-card" style={{
-            flex: 1, minWidth: 0,
-            display: "flex", borderRadius: 12,
-            border: "1px solid rgba(20,184,166,0.2)",
-            background: "var(--card-bg)",
-            boxShadow: "0 4px 20px rgba(0,0,0,0.10)",
-            overflow: "hidden", textAlign: "left",
-          }}>
-            {/* Apple logo strip */}
-            <div style={{
-              width: 80, flexShrink: 0,
-              background: "linear-gradient(160deg, #1c1c1e 0%, #0a0a0a 60%, #0f1520 100%)",
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 6,
-            }}>
-              <svg width="28" height="34" viewBox="0 0 384 512" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-              </svg>
-              <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>iOS</span>
-            </div>
-            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 6, textAlign: "left" }}>
-              {/* Publisher row */}
-              <div style={{ display: "flex", alignItems: "center", gap: 5, flexWrap: "nowrap", minWidth: 0 }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 14, height: 14, flexShrink: 0 }}>
-                  <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--foreground)" strokeWidth="3.5" strokeLinejoin="round"/>
-                  <line x1="24" y1="13" x2="14.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="24" y1="13" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="14.5" y1="29.5" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
-                  <circle cx="24" cy="13" r="3.5" fill="var(--foreground)"/>
-                  <circle cx="14.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
-                  <circle cx="33.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
-                </svg>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Crewboard</span>
-                <span style={{ width: 11, height: 11, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.05em", textTransform: "uppercase", background: "rgba(20,184,166,0.12)", color: "var(--brand)", padding: "2px 6px", borderRadius: 99, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)", whiteSpace: "nowrap" }}>Soon</span>
-              </div>
-              {/* Title */}
-              <div style={{ fontSize: 11.5, fontWeight: 800, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em", textAlign: "left" }}>
-                Crewboard iOS App — Hire &amp; Find Work on the Go
-              </div>
-              {/* Benefit + App Store */}
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--card-border)" }}>
-                <div style={{ flex: 1, minWidth: 0, textAlign: "left" }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 800, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Available on iPhone</div>
-                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Gigs, escrow &amp; DMs · Launching soon</div>
-                </div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 9px", borderRadius: 6, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.15)", opacity: 0.55, cursor: "not-allowed", flexShrink: 0 }}>
-                  <svg width="9" height="11" viewBox="0 0 384 512" fill="white"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "white", whiteSpace: "nowrap" }}>App Store</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
+          width: "100%", maxWidth: 560, marginTop: 28,
+          display: "flex", gap: 8, alignItems: "center",
+          justifyContent: "center", flexWrap: "wrap",
+        }}>
+          {BROWSE_CATEGORIES.map((cat, i) => (
+            <Link
+              key={cat.label}
+              href={`/gigs?category=${encodeURIComponent(cat.key)}`}
+              className="hero-chip"
+              style={{ animationDelay: `${0.88 + i * 0.05}s` }}
+            >
+              <span style={{ color: cat.color }}>{cat.icon}</span>
+              {cat.label}
+            </Link>
+          ))}
+          <Link href="/gigs" className="hero-chip hero-chip-all">
+            All categories →
+          </Link>
         </div>
+
       </div>
-      <style>{`
-        @media (max-width: 560px) {
-          .eco-hero-card { flex-direction: column !important; }
-          .eco-hero-card > div:first-child { width: 100% !important; height: 110px; }
-        }
-        @media (max-width: 720px) {
-          .eco-highlights-row { flex-direction: column !important; }
-        }
-      `}</style>
 
       {/* ── FEATURED FREELANCERS ── */}
       {featuredFreelancers.length > 0 && (
-        <div style={{ background: "var(--background)", padding: "clamp(2.5rem,5vw,3.5rem) 0 clamp(1.5rem,4vw,2.5rem)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
+        <div style={{ background: "var(--bg-secondary)", padding: "clamp(2.5rem,5vw,3.5rem) 0 clamp(2rem,4vw,3rem)", borderTop: "1px solid var(--border)", position: "relative", zIndex: 1 }}>
           <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 clamp(1rem,4vw,2rem)" }}>
-            {/* Section header */}
-            <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
+            {/* Section header — mirrors app's "Top Freelancers · See all" */}
+            <div className="section-header">
               <div>
-                <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.4rem" }}>
-                  Creator showcase
-                </div>
-                <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: 0, letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-                  Top video creators
-                </h2>
-                <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: "0.35rem 0 0", lineHeight: 1.5 }}>
-                  Real portfolio videos from verified talent on Crewboard
-                </p>
+                <h2 className="section-title">Top Freelancers</h2>
+                <p className="section-subtitle">Browse verified talent on Crewboard</p>
               </div>
-              <Link href="/talent" style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--brand)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
-                Browse all →
-              </Link>
+              <Link href="/talent" className="section-see-all">See all →</Link>
             </div>
-            <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1.25rem)" }} className="ff-grid">
+
+            <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1rem)" }} className="ff-grid">
               {featuredFreelancers.map((f: any) => {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
@@ -315,179 +196,151 @@ export default async function HomePage() {
                   ...(f.showcasePosts ?? [] as any[])
                     .filter((p: any) => p.mediaUrl)
                     .map((p: any) => ({ type: p.mediaType === "video" ? "video" as const : "image" as const, url: p.mediaUrl as string, proxyUrl: toProxy(p.mediaUrl) })),
-                ].slice(0, 2);
-                const cardGigs = (f.gigs ?? []) as Array<{ price: number; title: string }>;
+                ].slice(0, 1);
                 const reviews: { rating: number }[] = f.reviewsReceived ?? [];
                 const avgRating = reviews.length > 0
                   ? reviews.reduce((s: number, r: { rating: number }) => s + r.rating, 0) / reviews.length
                   : null;
-                const activeRecently = f.lastSeenAt
-                  ? (Date.now() - new Date(f.lastSeenAt).getTime()) < 7 * 864e5
-                  : false;
+                const totalEarned = (f.sellerOrders as Array<{ amount: number }> ?? [])
+                  .reduce((s: number, o: { amount: number }) => s + o.amount, 0);
                 return (
-                  <Link
+                  <div
                     key={f.twitterHandle}
-                    href={`/u/${f.twitterHandle}`}
                     style={{
-                      background: "var(--surface)", border: "1px solid var(--card-border)",
-                      borderRadius: 14, padding: "14px 14px 12px",
-                      textDecoration: "none", color: "inherit",
-                      display: "flex", flexDirection: "column", gap: 8,
-                      transition: "box-shadow 0.18s, transform 0.18s, border-color 0.18s",
+                      background: "var(--surface)", border: "1px solid var(--border)",
+                      borderRadius: 16, overflow: "hidden",
+                      display: "flex", flexDirection: "column",
+                      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+                      transition: "box-shadow 0.2s, transform 0.2s, border-color 0.2s",
                     }}
                     className="ff-card"
                   >
-                    {/* Header: avatar left, name/role right */}
-                    <div style={{ display: "flex", alignItems: "flex-start", gap: 10 }}>
-                      <div style={{ position: "relative", width: 40, height: 40, flexShrink: 0 }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={f.image} alt="" style={{ width: 40, height: 40, borderRadius: "50%", objectFit: "cover", display: "block" }} />
-                        <span style={{
-                          position: "absolute", bottom: 1, right: 1, width: 9, height: 9,
-                          borderRadius: "50%", border: "2px solid var(--surface)",
-                          background: f.availability === "available" ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#94a3b8",
-                        }} />
-                      </div>
-                      <div style={{ minWidth: 0, flex: 1, paddingTop: 1 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                          <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {f.name ?? f.twitterHandle}
-                          </span>
-                          {isVerified && (
-                            <span className="cbadge-wrap" style={{ flexShrink: 0 }}>
-                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 15, height: 15, borderRadius: "50%", background: "var(--brand)" }}>
+                    {/* Portfolio media / avatar banner */}
+                    <div style={{ position: "relative", width: "100%", height: 160, background: "#f0f0f2", flexShrink: 0, overflow: "hidden" }}>
+                      {portfolioMedia.length > 0 ? (
+                        portfolioMedia[0].type === "video" ? (
+                          <video
+                            src={portfolioMedia[0].proxyUrl}
+                            muted autoPlay loop playsInline
+                            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+                          />
+                        ) : (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img src={portfolioMedia[0].proxyUrl} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+                        )
+                      ) : (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={f.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "blur(8px) scale(1.1)", opacity: 0.6 }} />
+                      )}
+                      {/* Rating badge overlay — mirrors app */}
+                      {avgRating !== null && (
+                        <div style={{
+                          position: "absolute", bottom: 10, right: 10,
+                          background: "rgba(0,0,0,0.72)", backdropFilter: "blur(4px)",
+                          borderRadius: 999, padding: "4px 10px",
+                          display: "flex", alignItems: "center", gap: 4,
+                          fontSize: 12, fontWeight: 700, color: "#fff",
+                        }}>
+                          ⭐ {avgRating.toFixed(1)}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Card body */}
+                    <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
+                      {/* Avatar + name row */}
+                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                        <div style={{ position: "relative", flexShrink: 0 }}>
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={f.image} alt="" style={{ width: 42, height: 42, borderRadius: "50%", objectFit: "cover", display: "block", border: "2px solid var(--surface)", boxShadow: "0 0 0 1px var(--border)" }} />
+                          <span style={{
+                            position: "absolute", bottom: 1, right: 1, width: 10, height: 10,
+                            borderRadius: "50%", border: "2px solid var(--surface)",
+                            background: f.availability === "available" ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#d1d5db",
+                          }} />
+                        </div>
+                        <div style={{ minWidth: 0, flex: 1 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
+                            <span style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", letterSpacing: "-0.02em" }}>
+                              {f.name ?? f.twitterHandle}
+                            </span>
+                            {isVerified && (
+                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 16, height: 16, borderRadius: "50%", background: "var(--brand)", flexShrink: 0 }}>
                                 <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                                   <polyline points="20 6 9 17 4 12"/>
                                 </svg>
                               </span>
-                              <span className="cbadge-tip">Verified identity</span>
-                            </span>
-                          )}
-                        </div>
-                        <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                          {f.userTitle ?? "Freelancer"}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Status badges */}
-                    <div style={{ display: "flex", alignItems: "center", gap: 4, flexWrap: "wrap" }}>
-                      {avgRating !== null ? (
-                        <>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#92400e", background: "#fef3c7", borderRadius: 99, padding: "2px 7px" }}>
-                            ⭐ {avgRating.toFixed(1)}
-                          </span>
-                          <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 500 }}>
-                            {completedCount} job{completedCount !== 1 ? "s" : ""}
-                          </span>
-                          {activeRecently && (
-                            <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#15803d", background: "rgba(34,197,94,0.12)", borderRadius: 99, padding: "2px 7px" }}>
-                              <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", flexShrink: 0, display: "inline-block" }} />
-                              Active
-                            </span>
-                          )}
-                        </>
-                      ) : (
-                        <>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "var(--text-muted)", background: "var(--background)", border: "1px solid var(--card-border)", borderRadius: 99, padding: "2px 7px" }}>
-                            ⭐ New
-                          </span>
-                          <span style={{ display: "inline-flex", alignItems: "center", gap: 3, fontSize: 10, fontWeight: 600, color: "#15803d", background: "rgba(34,197,94,0.12)", borderRadius: 99, padding: "2px 7px" }}>
-                            <span style={{ width: 5, height: 5, borderRadius: "50%", background: "#22c55e", flexShrink: 0, display: "inline-block" }} />
-                            Available
-                          </span>
-                        </>
-                      )}
-                    </div>
-
-                    {/* Skill tags */}
-                    {(f.skills as string[] | null)?.length ? (
-                      <div style={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-                        {(f.skills as string[]).slice(0, 3).map((skill: string) => (
-                          <span key={skill} style={{ fontSize: 10, fontWeight: 500, color: "var(--text-muted)", background: "var(--background)", border: "1px solid var(--card-border)", borderRadius: 6, padding: "2px 7px", whiteSpace: "nowrap" }}>
-                            {skill}
-                          </span>
-                        ))}
-                      </div>
-                    ) : null}
-
-                    {/* Portfolio media or services */}
-                    {portfolioMedia.length > 0 ? (
-                      <div style={{ display: "flex", gap: 6, marginTop: 2 }}>
-                        {portfolioMedia.map((item, j) =>
-                          item.type === "video" ? (
-                            <video
-                              key={j}
-                              src={item.proxyUrl}
-                              muted
-                              autoPlay
-                              loop
-                              playsInline
-                              style={{ flex: 1, minWidth: 0, height: 110, objectFit: "cover", display: "block", borderRadius: 7 }}
-                            />
-                          ) : (
-                            // eslint-disable-next-line @next/next/no-img-element
-                            <img key={j} src={item.proxyUrl} alt="" style={{ flex: 1, minWidth: 0, height: 110, objectFit: "cover", display: "block", borderRadius: 7 }} />
-                          )
-                        )}
-                      </div>
-                    ) : cardGigs.length > 0 ? (
-                      <div style={{ marginTop: 2, display: "flex", flexDirection: "column", gap: 4 }}>
-                        {cardGigs.map((g, j) => (
-                          <div key={j} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "5px 8px", borderRadius: 7, background: "var(--background)", border: "1px solid var(--card-border)" }}>
-                            <span style={{ fontSize: 11, fontWeight: 500, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "75%" }}>{g.title}</span>
-                            <span style={{ fontSize: 11, fontWeight: 700, color: "var(--brand)", flexShrink: 0 }}>${g.price}</span>
+                            )}
                           </div>
-                        ))}
+                          <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {f.userTitle ?? "Freelancer"}
+                          </div>
+                        </div>
                       </div>
-                    ) : null}
 
-                    {/* Price footer */}
-                    <div style={{ marginTop: "auto", borderTop: "1px solid var(--card-border)", paddingTop: 9, display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8 }}>
-                      <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                        <span style={{ fontSize: 14, fontWeight: 700, color: "var(--brand)", letterSpacing: "-0.01em" }}>
-                          From ${minPrice != null ? minPrice : 50}
-                        </span>
-                        <span style={{ fontSize: 10, color: "var(--text-muted)", fontWeight: 400 }}>/ project</span>
+                      {/* X handle */}
+                      {f.twitterHandle && (
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0, opacity: 0.65 }}>
+                            <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                          </svg>
+                          @{f.twitterHandle}
+                        </div>
+                      )}
+
+                      {/* Skill chips */}
+                      {(f.skills as string[] | null)?.length ? (
+                        <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
+                          {(f.skills as string[]).slice(0, 3).map((skill: string) => (
+                            <span key={skill} className="skill-chip">{skill}</span>
+                          ))}
+                        </div>
+                      ) : null}
+
+                      {/* Stats row — mirrors app (Rating | Earned | Orders) */}
+                      <div className="stats-row">
+                        <div className="stats-row-item">
+                          <span className="stats-row-val">{avgRating !== null ? `⭐ ${avgRating.toFixed(1)}` : "New"}</span>
+                          <span className="stats-row-label">Rating</span>
+                        </div>
+                        <div className="stats-row-item">
+                          <span className="stats-row-val">${totalEarned >= 1000 ? `${(totalEarned/1000).toFixed(1)}k` : totalEarned}</span>
+                          <span className="stats-row-label">Earned</span>
+                        </div>
+                        <div className="stats-row-item">
+                          <span className="stats-row-val">{completedCount}</span>
+                          <span className="stats-row-label">Orders</span>
+                        </div>
                       </div>
-                      <span style={{ fontSize: 11, fontWeight: 600, color: "var(--brand)", whiteSpace: "nowrap" }}>
-                        View profile →
-                      </span>
+
+                      {/* From price */}
+                      {minPrice != null && (
+                        <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500 }}>
+                          From <span style={{ color: "var(--foreground)", fontWeight: 700 }}>${minPrice}</span>
+                        </div>
+                      )}
+
+                      {/* CTA button — mirrors app's "Show Portfolio" black pill */}
+                      <Link href={`/u/${f.twitterHandle}`} className="card-btn-dark" style={{ marginTop: "auto" }}>
+                        View Profile
+                      </Link>
                     </div>
-                  </Link>
+                  </div>
                 );
               })}
             </div>
-
+          </div>
+          <style>{`
+            .ff-grid { grid-template-columns: repeat(3,1fr); }
+            @media (max-width: 900px) { .ff-grid { grid-template-columns: repeat(2,1fr); } }
+            @media (max-width: 500px) { .ff-grid { grid-template-columns: 1fr; } }
+            .ff-card:hover {
+              transform: translateY(-4px);
+              box-shadow: 0 12px 36px rgba(0,0,0,0.10) !important;
+              border-color: rgba(20,184,166,0.3) !important;
+            }
+          `}</style>
         </div>
-        <style>{`
-          .ff-grid { grid-template-columns: repeat(3,1fr); }
-          @media (max-width: 900px) { .ff-grid { grid-template-columns: repeat(2,1fr); } }
-          @media (max-width: 500px) { .ff-grid { grid-template-columns: 1fr; } }
-          .ff-card {
-            transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s;
-          }
-          .ff-card:hover {
-            transform: translateY(-3px) scale(1.012);
-            box-shadow: 0 10px 32px rgba(0,0,0,0.09), 0 2px 8px rgba(0,0,0,0.04);
-            border-color: rgba(20,184,166,0.4) !important;
-          }
-          .cbadge-wrap { position: relative; display: inline-flex; align-items: center; cursor: default; }
-          .cbadge-tip {
-            display: none; position: absolute; bottom: calc(100% + 6px); left: 50%;
-            transform: translateX(-50%);
-            background: #0f172a; color: #e2e8f0; font-size: 11px; font-weight: 500;
-            padding: 4px 9px; border-radius: 6px; white-space: nowrap;
-            pointer-events: none; z-index: 99;
-            border: 1px solid rgba(20,184,166,0.25);
-          }
-          .cbadge-tip::after {
-            content: ""; position: absolute; top: 100%; left: 50%; transform: translateX(-50%);
-            border: 4px solid transparent; border-top-color: #0f172a;
-          }
-          .cbadge-wrap:hover .cbadge-tip { display: block; }
-        `}</style>
-      </div>
       )}
 
       {featuredFreelancers.length === 0 && (
@@ -497,21 +350,17 @@ export default async function HomePage() {
       )}
 
       {/* ── BROWSE BY CATEGORY ── */}
-      <div style={{ background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", padding: "clamp(2.5rem,5vw,3.5rem) clamp(1rem,4vw,2rem)", position: "relative", zIndex: 1 }}>
+      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", padding: "clamp(2.5rem,5vw,3.5rem) clamp(1rem,4vw,2rem)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem", marginBottom: "clamp(1.5rem,3vw,2rem)" }}>
+          <div className="section-header">
             <div>
-              <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "clamp(1.3rem,2.8vw,1.75rem)", color: "var(--foreground)", margin: "0 0 0.25rem", letterSpacing: "-0.02em", lineHeight: 1.2 }}>
-                Browse by Category
-              </h2>
-              <p style={{ color: "var(--text-muted)", fontSize: "0.83rem", margin: 0 }}>Find the right specialist fast.</p>
+              <h2 className="section-title">Browse by Category</h2>
+              <p className="section-subtitle">Find the right specialist fast.</p>
             </div>
-            <Link href="/gigs" style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--brand)", textDecoration: "none", display: "flex", alignItems: "center", gap: 5, whiteSpace: "nowrap" }}>
-              See all →
-            </Link>
+            <Link href="/gigs" className="section-see-all">See all →</Link>
           </div>
 
-          <div style={{ display: "grid", gap: "clamp(0.65rem,1.5vw,1rem)" }} className="cat-grid">
+          <div style={{ display: "grid", gap: "clamp(0.65rem,1.5vw,0.875rem)" }} className="cat-grid">
             {BROWSE_CATEGORIES.map((cat) => {
               const count = categoryCountMap[cat.key] ?? 0;
               return (
@@ -519,19 +368,20 @@ export default async function HomePage() {
                   key={cat.label}
                   href={`/gigs?category=${encodeURIComponent(cat.key)}`}
                   style={{
-                    display: "flex", flexDirection: "column", gap: 10,
-                    padding: "1rem 1.1rem", borderRadius: 14,
-                    background: "var(--background)", border: "1px solid var(--card-border)",
+                    display: "flex", flexDirection: "column", gap: 12,
+                    padding: "1.1rem 1rem", borderRadius: 14,
+                    background: "var(--surface)", border: "1px solid var(--border)",
                     textDecoration: "none", color: "inherit",
+                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
                     transition: "box-shadow 0.18s, transform 0.18s, border-color 0.18s",
                   }}
                   className="cat-card"
                 >
-                  <div style={{ width: 40, height: 40, borderRadius: 10, background: `${cat.color}1a`, border: `1px solid ${cat.color}33`, display: "flex", alignItems: "center", justifyContent: "center", color: cat.color }}>
+                  <div style={{ width: 42, height: 42, borderRadius: 12, background: `${cat.color}18`, display: "flex", alignItems: "center", justifyContent: "center", color: cat.color }}>
                     {cat.icon}
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", marginBottom: 3, letterSpacing: "-0.01em" }}>{cat.label}</div>
+                    <div style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", marginBottom: 2, letterSpacing: "-0.02em" }}>{cat.label}</div>
                     <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500 }}>{count > 0 ? `${count} gigs` : "Explore"}</div>
                   </div>
                 </Link>
@@ -552,20 +402,16 @@ export default async function HomePage() {
       </div>
 
       {/* ── HOW IT WORKS ── */}
-      <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--card-bg)", borderTop: "1px solid var(--card-border)", position: "relative", zIndex: 1 }}>
+      <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--bg-secondary)", borderTop: "1px solid var(--border)", position: "relative", zIndex: 1 }}>
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
 
           <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <div style={{ fontSize: "0.65rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "var(--brand)", marginBottom: "0.6rem" }}>
-              Simple Process
-            </div>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: "clamp(1.6rem,3.2vw,2.2rem)", color: "var(--foreground)", margin: "0 0 0.55rem", letterSpacing: "-0.03em" }}>
-              Get work done in 3 simple steps
+            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: "clamp(1.6rem,3.2vw,2.25rem)", color: "var(--foreground)", margin: "0 0 0.5rem", letterSpacing: "-0.04em" }}>
+              How it works
             </h2>
             <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: 0, lineHeight: 1.5 }}>Fast, secure, and built for Web3 teams.</p>
           </div>
 
-          {/* Mode-aware steps + bottom CTA */}
           <HomeModeHIW isLoggedIn={isLoggedIn} />
         </div>
       </div>

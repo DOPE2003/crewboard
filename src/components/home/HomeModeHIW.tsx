@@ -145,73 +145,31 @@ export default function HomeModeHIW({ isLoggedIn }: { isLoggedIn: boolean }) {
 
   return (
     <>
-      {/* ── Numbered step timeline ── */}
-      <div style={{
-        display: "flex", alignItems: "center", justifyContent: "center",
-        maxWidth: 620, margin: "0 auto 2.5rem",
-        padding: "0 1rem",
-      }}>
-        {steps.map((s, i) => (
-          <div key={s.step} style={{ display: "flex", alignItems: "center", flex: i < steps.length - 1 ? "1" : "0" }}>
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%",
-              background: "#14B8A6", color: "#fff",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontWeight: 700, fontSize: "0.9rem", flexShrink: 0,
-              boxShadow: "0 2px 8px rgba(20,184,166,0.35)",
-            }}>
-              {s.step}
-            </div>
-            {i < steps.length - 1 && (
-              <div style={{
-                flex: 1,
-                borderTop: "2px dashed rgba(20,184,166,0.45)",
-                margin: "0 6px",
-              }} />
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* ── Cards ── */}
-      <div style={{ display: "grid", gap: "1.25rem" }} className="hiw-grid">
+      {/* ── Cards — mirrors the app's Offer Details step timeline style ── */}
+      <div style={{ display: "grid", gap: "1rem" }} className="hiw-grid">
         {steps.map((item) => (
           <div
             key={item.step}
             className="hiw-card"
             style={{
               display: "flex", flexDirection: "column",
-              padding: "1.75rem 1.5rem",
+              padding: "1.5rem",
               borderRadius: 16,
-              background: "var(--background)",
-              border: "1px solid var(--card-border)",
+              background: "var(--surface)",
+              border: "1px solid var(--border)",
+              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
             }}
           >
-            {/* Icon */}
-            <div style={{
-              width: 52, height: 52, borderRadius: "50%",
-              background: item.iconBg,
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: item.iconColor,
-              marginBottom: "1.1rem",
-            }}>
-              {item.icon}
-            </div>
-
-            {/* Step label */}
-            <div style={{
-              fontSize: "0.6rem", fontWeight: 700,
-              letterSpacing: "0.14em", textTransform: "uppercase",
-              color: "#14B8A6", marginBottom: "0.35rem",
-            }}>
-              Step {item.step}
+            {/* Step number — black circle (mirrors app step indicators) */}
+            <div className="hiw-step-num" style={{ marginBottom: "1rem" }}>
+              {item.step}
             </div>
 
             {/* Title */}
             <h3 style={{
               fontFamily: "Inter, sans-serif", fontWeight: 700,
-              fontSize: "1.05rem", color: "var(--foreground)",
-              margin: "0 0 0.55rem", letterSpacing: "-0.02em",
+              fontSize: "1rem", color: "var(--foreground)",
+              margin: "0 0 0.45rem", letterSpacing: "-0.02em",
             }}>
               {item.title}
             </h3>
@@ -219,29 +177,21 @@ export default function HomeModeHIW({ isLoggedIn }: { isLoggedIn: boolean }) {
             {/* Description */}
             <p style={{
               color: "var(--text-muted)", fontSize: "0.83rem",
-              lineHeight: 1.65, margin: "0 0 1.25rem", flex: 1,
+              lineHeight: 1.65, margin: "0 0 1rem", flex: 1,
             }}>
               {item.desc}
             </p>
 
-            {/* Badge */}
+            {/* Badge — pill tag (matches app's "Free to post", "Secure payments") */}
             <div style={{
               display: "inline-flex", alignItems: "center", gap: 5,
-              fontSize: "0.75rem", fontWeight: 600,
-              color: item.badgeColor,
-              border: `1px solid ${item.badgeColor}33`,
-              borderRadius: 99, padding: "4px 10px",
+              fontSize: "0.73rem", fontWeight: 600,
+              color: item.badgeColor === "#f97316" ? "#ea580c" : "var(--brand)",
+              background: item.badgeColor === "#f97316" ? "rgba(249,115,22,0.08)" : "rgba(20,184,166,0.08)",
+              border: `1px solid ${item.badgeColor === "#f97316" ? "rgba(249,115,22,0.25)" : "rgba(20,184,166,0.25)"}`,
+              borderRadius: 999, padding: "4px 11px",
               width: "fit-content",
             }}>
-              {item.badgeColor === "#f97316" ? (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-                </svg>
-              ) : (
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-                </svg>
-              )}
               {item.badge}
             </div>
           </div>
@@ -252,18 +202,19 @@ export default function HomeModeHIW({ isLoggedIn }: { isLoggedIn: boolean }) {
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "center",
         flexWrap: "wrap", gap: "1rem 2.5rem",
-        marginTop: "2.5rem",
+        marginTop: "2rem",
         padding: "1rem 1.5rem",
-        borderRadius: 12,
-        background: "var(--surface, rgba(0,0,0,0.025))",
-        border: "1px solid var(--card-border)",
+        borderRadius: 14,
+        background: "var(--surface)",
+        border: "1px solid var(--border)",
+        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
       }}>
         {TRUST_ITEMS.map((t) => (
           <div key={t.label} style={{
             display: "flex", alignItems: "center", gap: 7,
             fontSize: "0.82rem", fontWeight: 500, color: "var(--text-muted)",
           }}>
-            <span style={{ color: "var(--text-muted)", opacity: 0.7 }}>{t.icon}</span>
+            <span style={{ color: "var(--brand)", opacity: 0.9 }}>{t.icon}</span>
             {t.label}
           </div>
         ))}
@@ -273,7 +224,7 @@ export default function HomeModeHIW({ isLoggedIn }: { isLoggedIn: boolean }) {
         .hiw-grid { grid-template-columns: repeat(3, 1fr); }
         @media (max-width: 700px) { .hiw-grid { grid-template-columns: 1fr; } }
         .hiw-card { transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s; }
-        .hiw-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.08); border-color: rgba(20,184,166,0.25) !important; }
+        .hiw-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.07); border-color: rgba(20,184,166,0.3) !important; }
       `}</style>
     </>
   );

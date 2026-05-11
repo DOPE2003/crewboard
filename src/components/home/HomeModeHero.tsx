@@ -14,9 +14,9 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
         style={{
           fontFamily: "Inter, sans-serif",
           fontWeight: 800,
-          letterSpacing: "-0.03em",
+          letterSpacing: "-0.04em",
           lineHeight: 1.0,
-          marginBottom: "2rem",
+          marginBottom: "1.1rem",
           color: "var(--foreground)",
           opacity: 0,
           animation: "fadeUp 0.6s 0.25s forwards",
@@ -35,158 +35,80 @@ export default function HomeModeHero({ isLoggedIn }: { isLoggedIn: boolean }) {
         className="hero-subtitle"
         style={{
           color: "var(--text-muted)",
-          fontSize: "1.05rem",
+          fontSize: "1rem",
           lineHeight: 1.6,
-          maxWidth: "30rem",
+          maxWidth: "28rem",
           letterSpacing: "-0.01em",
-          marginBottom: "2.25rem",
+          marginBottom: "2rem",
           opacity: 0,
-          animation: "fadeUp 0.6s 0.58s forwards",
+          animation: "fadeUp 0.6s 0.42s forwards",
           position: "relative",
           zIndex: 1,
         }}
       >
         {isClient
-          ? "A curated marketplace for production teams. Browse verified talent, lock a budget, and pay securely when the work is delivered."
+          ? "The Web3 Freelance Marketplace. Browse verified talent, lock a budget, and pay securely when the work is delivered."
           : "Browse real jobs from real productions. Get matched, get paid — secured by escrow so you never chase an invoice."}
       </p>
 
+      {/* Mobile search */}
       <div className="flex md:hidden" style={{
-        opacity: 0, animation: "fadeUp 0.6s 0.65s forwards",
+        opacity: 0, animation: "fadeUp 0.6s 0.52s forwards",
         position: "relative", zIndex: 1, width: "100%",
-        justifyContent: "center",
-        marginBottom: 16,
+        justifyContent: "center", marginBottom: 16,
       }}>
         <HeroSearch />
       </div>
 
-      {isLoggedIn && (
+      {/* ── CTA buttons ── */}
+      {isLoggedIn ? (
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 16,
-          width: "100%",
-          maxWidth: 480,
-          marginBottom: 36,
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.72s forwards",
-          position: "relative",
-          zIndex: 1,
+          display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12,
+          width: "100%", maxWidth: 420,
+          opacity: 0, animation: "fadeUp 0.6s 0.62s forwards",
+          position: "relative", zIndex: 1,
         }}>
-          <Link
-            href="/talent"
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "18px 20px", borderRadius: 14, textDecoration: "none",
-              background: "var(--surface)",
-              border: "1px solid var(--card-border)",
-              transition: "transform 0.15s, box-shadow 0.15s",
-            }}
-            className="hero-action-card"
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.2 }}>Find Talent</span>
-              <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-muted)" }}>Build your own crew</span>
-            </div>
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
-              background: "#14B8A6", display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </div>
+          <Link href="/talent" className="hero-pill-btn hero-pill-teal">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+            </svg>
+            Find Talent
           </Link>
-
-          <Link
-            href="/jobs"
-            style={{
-              display: "flex", alignItems: "center", justifyContent: "space-between",
-              padding: "18px 20px", borderRadius: 14, textDecoration: "none",
-              background: "var(--surface)",
-              border: "1px solid var(--card-border)",
-              transition: "transform 0.15s, box-shadow 0.15s",
-            }}
-            className="hero-action-card"
-          >
-            <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-              <span style={{ fontSize: "1rem", fontWeight: 800, color: "var(--foreground)", lineHeight: 1.2 }}>Find Jobs</span>
-              <span style={{ fontSize: "0.78rem", fontWeight: 500, color: "var(--text-muted)" }}>Get hired by Web3 Crew</span>
-            </div>
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
-              background: "#f97316", display: "flex", alignItems: "center", justifyContent: "center",
-            }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>
-              </svg>
-            </div>
+          <Link href="/jobs" className="hero-pill-btn hero-pill-dark">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
+            </svg>
+            Find Work
           </Link>
         </div>
-      )}
-
-      {!isLoggedIn && (
+      ) : (
         <div style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: 16,
-          width: "100%",
-          maxWidth: 480,
-          marginBottom: 36,
-          opacity: 0,
-          animation: "fadeUp 0.6s 0.72s forwards",
-          position: "relative",
-          zIndex: 1,
+          display: "flex", flexDirection: "column", alignItems: "center", gap: 10,
+          width: "100%", maxWidth: 360,
+          opacity: 0, animation: "fadeUp 0.6s 0.62s forwards",
+          position: "relative", zIndex: 1,
         }}>
           <Link
             href="/register"
             onClick={() => setMode("hiring")}
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "flex-start",
-              padding: "18px 20px", borderRadius: 14, textDecoration: "none",
-              background: isClient ? "var(--brand)" : "var(--surface)",
-              color: isClient ? "#0f172a" : "var(--foreground)",
-              border: isClient ? "1px solid var(--brand)" : "1px solid var(--card-border)",
-              transition: "transform 0.15s, box-shadow 0.15s",
-              boxShadow: isClient ? "0 4px 16px rgba(20,184,166,0.30)" : "none",
-            }}
-            className="intent-card"
+            className="hero-pill-btn hero-pill-teal"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8 }}>
-              <rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/>
-              <line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/>
-            </svg>
-            <span style={{ fontSize: "1rem", fontWeight: 800, lineHeight: 1.2 }}>I&apos;m Hiring</span>
-            <span style={{ fontSize: "0.8rem", fontWeight: 500, opacity: isClient ? 0.72 : 1, color: isClient ? undefined : "var(--text-muted)", marginTop: 4 }}>Post a job for free</span>
+            Sign Up — It&apos;s Free
           </Link>
-
-          <Link
-            href="/login"
-            onClick={() => setMode("working")}
-            style={{
-              display: "flex", flexDirection: "column", alignItems: "flex-start",
-              padding: "18px 20px", borderRadius: 14, textDecoration: "none",
-              background: !isClient ? "var(--brand)" : "var(--surface)",
-              color: !isClient ? "#0f172a" : "var(--foreground)",
-              border: !isClient ? "1px solid var(--brand)" : "1px solid var(--card-border)",
-              transition: "transform 0.15s, box-shadow 0.15s, border-color 0.15s",
-              boxShadow: !isClient ? "0 4px 16px rgba(20,184,166,0.30)" : "none",
-            }}
-            className="intent-card"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 8, color: !isClient ? "#0f172a" : "var(--brand)" }}>
-              <path d="M20 7H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="2"/>
-              <path d="M6 12H4M20 12h-2"/>
-            </svg>
-            <span style={{ fontSize: "1rem", fontWeight: 800, lineHeight: 1.2 }}>I&apos;m a Freelancer</span>
-            <span style={{ fontSize: "0.8rem", fontWeight: 500, color: !isClient ? undefined : "var(--text-muted)", opacity: !isClient ? 0.72 : 1, marginTop: 4 }}>Find work &amp; get paid</span>
+          <Link href="/login" className="hero-pill-btn hero-pill-outline">
+            I already have an account
           </Link>
+          <div style={{ display: "flex", gap: 10, width: "100%" }}>
+            <Link href="/login" className="hero-pill-btn hero-pill-dark" style={{ flex: 1 }}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0 }}>
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              Sign in with X
+            </Link>
+          </div>
         </div>
       )}
-      <style>{`
-        .intent-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15) !important; border-color: rgba(20,184,166,0.5) !important; }
-        .hero-action-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.12) !important; border-color: rgba(20,184,166,0.4) !important; }
-      `}</style>
     </>
   );
 }
