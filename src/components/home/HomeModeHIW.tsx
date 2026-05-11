@@ -1,230 +1,196 @@
 "use client";
 import Link from "next/link";
 import { useMode } from "@/components/ModeProvider";
-import type { ReactNode } from "react";
 
-interface Step {
-  step: string;
-  title: string;
-  desc: string;
-  icon: ReactNode;
-  iconBg: string;
-  iconColor: string;
-  badge: string;
-  badgeColor: string;
-}
-
-const CLIENT_STEPS: Step[] = [
+const CLIENT_STEPS = [
   {
     step: "1",
-    title: "Post a job",
-    desc: "Describe what you need. It takes 2 minutes and it's free.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
-        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
-      </svg>
-    ),
-    iconBg: "rgba(20,184,166,0.13)",
-    iconColor: "#14B8A6",
-    badge: "Free to post",
-    badgeColor: "#14B8A6",
+    title: "Post your job & set budget",
+    desc: "Create your project and lock funds in escrow so talent knows the budget is real.",
+    bg: "#d1fae5",
+    numBg: "#10b981",
+    numColor: "#fff",
   },
   {
     step: "2",
-    title: "Hire a freelancer",
-    desc: "Browse profiles, read reviews, and message candidates directly. Pick the best fit.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-    ),
-    iconBg: "rgba(99,132,200,0.13)",
-    iconColor: "#6384C8",
-    badge: "Verified talent",
-    badgeColor: "#14B8A6",
+    title: "Find & hire talent",
+    desc: "Browse verified freelancers or crews and choose the right fit for your project.",
+    bg: "#ffe4cc",
+    numBg: "#f97316",
+    numColor: "#fff",
   },
   {
     step: "3",
-    title: "Pay after delivery",
-    desc: "Your payment is held safely and only released when you approve the work. No risk.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="20 6 9 17 4 12"/>
-      </svg>
-    ),
-    iconBg: "rgba(249,115,22,0.13)",
-    iconColor: "#f97316",
-    badge: "Secure payments",
-    badgeColor: "#f97316",
+    title: "Collaborate & track progress",
+    desc: "Work together inside the platform. Chat, share files, and manage milestones easily.",
+    bg: "#fef9c3",
+    numBg: "#eab308",
+    numColor: "#fff",
+  },
+  {
+    step: "4",
+    title: "Approve & release payment",
+    desc: "Review the work and release funds instantly when everything is completed.",
+    bg: "#ede9fe",
+    numBg: "#8b5cf6",
+    numColor: "#fff",
   },
 ];
 
-const FREELANCER_STEPS: Step[] = [
+const FREELANCER_STEPS = [
   {
     step: "1",
-    title: "Create your gig",
-    desc: "Set up your profile and list your services. Show clients exactly what you offer.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2"/>
-        <line x1="12" y1="8" x2="12" y2="16"/>
-        <line x1="8" y1="12" x2="16" y2="12"/>
-      </svg>
-    ),
-    iconBg: "rgba(20,184,166,0.13)",
-    iconColor: "#14B8A6",
-    badge: "Free to join",
-    badgeColor: "#14B8A6",
+    title: "Create your profile & list services",
+    desc: "Set up your profile, add your skills, and list what you offer. Free to join.",
+    bg: "#d1fae5",
+    numBg: "#10b981",
+    numColor: "#fff",
   },
   {
     step: "2",
-    title: "Get hired",
+    title: "Get discovered & hired",
     desc: "Clients find you through the talent directory or job board. Chat and agree on scope.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-        <circle cx="12" cy="7" r="4"/>
-      </svg>
-    ),
-    iconBg: "rgba(99,132,200,0.13)",
-    iconColor: "#6384C8",
-    badge: "Verified clients",
-    badgeColor: "#14B8A6",
+    bg: "#ffe4cc",
+    numBg: "#f97316",
+    numColor: "#fff",
   },
   {
     step: "3",
-    title: "Deliver & earn",
+    title: "Do the work",
+    desc: "Complete the project on time. Communicate with your client through built-in DMs.",
+    bg: "#fef9c3",
+    numBg: "#eab308",
+    numColor: "#fff",
+  },
+  {
+    step: "4",
+    title: "Deliver & get paid instantly",
     desc: "Submit your work. Once the client approves, payment is released directly to your wallet.",
-    icon: (
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <line x1="12" y1="1" x2="12" y2="23"/>
-        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
-      </svg>
-    ),
-    iconBg: "rgba(249,115,22,0.13)",
-    iconColor: "#f97316",
-    badge: "Secure payments",
-    badgeColor: "#f97316",
+    bg: "#ede9fe",
+    numBg: "#8b5cf6",
+    numColor: "#fff",
   },
 ];
 
 const TRUST_ITEMS = [
-  {
-    label: "Verified professionals",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Secure payments",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
-        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
-      </svg>
-    ),
-  },
-  {
-    label: "Direct communication",
-    icon: (
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-    ),
-  },
+  { label: "Verified professionals" },
+  { label: "Secure escrow payments" },
+  { label: "Direct communication" },
 ];
 
 export default function HomeModeHIW({ isLoggedIn }: { isLoggedIn: boolean }) {
   const { mode } = useMode();
-  const isClient = mode === "hiring";
-  const steps = isClient ? CLIENT_STEPS : FREELANCER_STEPS;
+  const steps = mode === "hiring" ? CLIENT_STEPS : FREELANCER_STEPS;
 
   return (
     <>
-      {/* ── Cards — mirrors the app's Offer Details step timeline style ── */}
-      <div style={{ display: "grid", gap: "1rem" }} className="hiw-grid">
+      {/* 2×2 colorful grid — mirrors the iOS app exactly */}
+      <div style={{ display: "grid", gap: "clamp(0.75rem,1.5vw,1rem)" }} className="hiw-grid">
         {steps.map((item) => (
           <div
             key={item.step}
             className="hiw-card"
             style={{
-              display: "flex", flexDirection: "column",
-              padding: "1.5rem",
-              borderRadius: 16,
-              background: "var(--surface)",
-              border: "1px solid var(--border)",
-              boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+              position: "relative",
+              padding: "clamp(1.25rem,2.5vw,1.75rem)",
+              borderRadius: 20,
+              background: item.bg,
+              border: "none",
+              minHeight: 190,
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "flex-end",
             }}
           >
-            {/* Step number — black circle (mirrors app step indicators) */}
-            <div className="hiw-step-num" style={{ marginBottom: "1rem" }}>
+            {/* Step number — top right, colored circle */}
+            <div style={{
+              position: "absolute",
+              top: "clamp(14px,2vw,20px)",
+              right: "clamp(14px,2vw,20px)",
+              width: 34,
+              height: 34,
+              borderRadius: "50%",
+              background: item.numBg,
+              color: item.numColor,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              fontWeight: 800,
+              fontSize: "0.95rem",
+              flexShrink: 0,
+              boxShadow: `0 4px 12px ${item.numBg}55`,
+            }}>
               {item.step}
             </div>
 
-            {/* Title */}
+            {/* Title — big, bold, bottom-aligned */}
             <h3 style={{
-              fontFamily: "Inter, sans-serif", fontWeight: 700,
-              fontSize: "1rem", color: "var(--foreground)",
-              margin: "0 0 0.45rem", letterSpacing: "-0.02em",
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(1.1rem,2vw,1.3rem)",
+              color: "#0a0a0a",
+              margin: "0 0 0.5rem",
+              letterSpacing: "-0.03em",
+              lineHeight: 1.2,
+              maxWidth: "85%",
             }}>
               {item.title}
             </h3>
 
             {/* Description */}
             <p style={{
-              color: "var(--text-muted)", fontSize: "0.83rem",
-              lineHeight: 1.65, margin: "0 0 1rem", flex: 1,
+              color: "rgba(0,0,0,0.55)",
+              fontSize: "0.83rem",
+              lineHeight: 1.6,
+              margin: 0,
             }}>
               {item.desc}
             </p>
-
-            {/* Badge — pill tag (matches app's "Free to post", "Secure payments") */}
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 5,
-              fontSize: "0.73rem", fontWeight: 600,
-              color: item.badgeColor === "#f97316" ? "#ea580c" : "var(--brand)",
-              background: item.badgeColor === "#f97316" ? "rgba(249,115,22,0.08)" : "rgba(20,184,166,0.08)",
-              border: `1px solid ${item.badgeColor === "#f97316" ? "rgba(249,115,22,0.25)" : "rgba(20,184,166,0.25)"}`,
-              borderRadius: 999, padding: "4px 11px",
-              width: "fit-content",
-            }}>
-              {item.badge}
-            </div>
           </div>
         ))}
       </div>
 
-      {/* ── Trust bar ── */}
+      {/* Trust bar */}
       <div style={{
         display: "flex", alignItems: "center", justifyContent: "center",
         flexWrap: "wrap", gap: "1rem 2.5rem",
-        marginTop: "2rem",
+        marginTop: "1.75rem",
         padding: "1rem 1.5rem",
         borderRadius: 14,
         background: "var(--surface)",
         border: "1px solid var(--border)",
-        boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
       }}>
         {TRUST_ITEMS.map((t) => (
           <div key={t.label} style={{
             display: "flex", alignItems: "center", gap: 7,
             fontSize: "0.82rem", fontWeight: 500, color: "var(--text-muted)",
           }}>
-            <span style={{ color: "var(--brand)", opacity: 0.9 }}>{t.icon}</span>
+            <span style={{
+              width: 6, height: 6, borderRadius: "50%",
+              background: "var(--brand)", flexShrink: 0, display: "inline-block",
+            }} />
             {t.label}
           </div>
         ))}
+        {!isLoggedIn && (
+          <Link href="/register" style={{
+            display: "inline-flex", alignItems: "center",
+            padding: "7px 18px", borderRadius: 999,
+            background: "#0a0a0a", color: "#fff",
+            fontSize: "0.82rem", fontWeight: 600,
+            textDecoration: "none", letterSpacing: "-0.01em",
+            transition: "opacity 0.15s",
+          }}>
+            Get started free →
+          </Link>
+        )}
       </div>
 
       <style>{`
-        .hiw-grid { grid-template-columns: repeat(3, 1fr); }
-        @media (max-width: 700px) { .hiw-grid { grid-template-columns: 1fr; } }
-        .hiw-card { transition: box-shadow 0.18s, transform 0.18s, border-color 0.18s; }
-        .hiw-card:hover { transform: translateY(-3px); box-shadow: 0 8px 28px rgba(0,0,0,0.07); border-color: rgba(20,184,166,0.3) !important; }
+        .hiw-grid { grid-template-columns: repeat(2, 1fr); }
+        @media (max-width: 600px) { .hiw-grid { grid-template-columns: 1fr; } }
+        .hiw-card { transition: transform 0.18s, box-shadow 0.18s; cursor: default; }
+        .hiw-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(0,0,0,0.10); }
       `}</style>
     </>
   );

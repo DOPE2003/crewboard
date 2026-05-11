@@ -8,24 +8,65 @@ import "@/styles/landing.css";
 
 
 const BROWSE_CATEGORIES = [
-  { label: "Graphic Design", key: "Graphic & Design", color: "#f59e0b", icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/><circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/><circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/><circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
-  )},
-  { label: "Web3 Dev", key: "Coding & Tech", color: "#6366f1", icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-  )},
-  { label: "Content", key: "Content Creator", color: "var(--brand)", icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-  )},
-  { label: "Social", key: "Social Marketing", color: "#ec4899", icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-  )},
-  { label: "Motion", key: "Video & Animation", color: "#f97316", icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
-  )},
-  { label: "AI Engineer", key: "AI Engineer", color: "#8b5cf6", icon: (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><line x1="9" y1="1" x2="9" y2="4"/><line x1="15" y1="1" x2="15" y2="4"/><line x1="9" y1="20" x2="9" y2="23"/><line x1="15" y1="20" x2="15" y2="23"/><line x1="20" y1="9" x2="23" y2="9"/><line x1="20" y1="14" x2="23" y2="14"/><line x1="1" y1="9" x2="4" y2="9"/><line x1="1" y1="14" x2="4" y2="14"/></svg>
-  )},
+  {
+    label: "Graphic Design", key: "Graphic & Design",
+    iconColor: "#e91e8c", iconBg: "#fde8f3",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
+        <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
+        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
+        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
+        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Web3 Dev", key: "Coding & Tech",
+    iconColor: "#2563eb", iconBg: "#dbeafe",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Content Creator", key: "Content Creator",
+    iconColor: "#ea580c", iconBg: "#ffedd5",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Social Marketing", key: "Social Marketing",
+    iconColor: "#7c3aed", iconBg: "#ede9fe",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+      </svg>
+    ),
+  },
+  {
+    label: "Motion Graphic", key: "Video & Animation",
+    iconColor: "#16a34a", iconBg: "#dcfce7",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <circle cx="12" cy="12" r="10"/>
+        <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/>
+      </svg>
+    ),
+  },
+  {
+    label: "AI Engineer", key: "AI Engineer",
+    iconColor: "#ca8a04", iconBg: "#fef9c3",
+    icon: (
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/>
+      </svg>
+    ),
+  },
 ];
 
 export default async function HomePage() {
@@ -188,7 +229,7 @@ export default async function HomePage() {
               className="hero-chip"
               style={{ animationDelay: `${0.88 + i * 0.05}s` }}
             >
-              <span style={{ color: cat.color }}>{cat.icon}</span>
+              <span style={{ color: cat.iconColor }}>{cat.icon}</span>
               {cat.label}
             </Link>
           ))}
@@ -495,7 +536,7 @@ export default async function HomePage() {
             <Link href="/gigs" className="section-see-all">See all →</Link>
           </div>
 
-          <div style={{ display: "grid", gap: "clamp(0.65rem,1.5vw,0.875rem)" }} className="cat-grid">
+          <div style={{ display: "grid", gap: "clamp(0.75rem,1.5vw,1rem)" }} className="cat-grid">
             {BROWSE_CATEGORIES.map((cat) => {
               const count = categoryCountMap[cat.key] ?? 0;
               return (
@@ -503,21 +544,29 @@ export default async function HomePage() {
                   key={cat.label}
                   href={`/gigs?category=${encodeURIComponent(cat.key)}`}
                   style={{
-                    display: "flex", flexDirection: "column", gap: 12,
-                    padding: "1.1rem 1rem", borderRadius: 14,
+                    display: "flex", flexDirection: "row", alignItems: "center", gap: 14,
+                    padding: "1rem 1.1rem", borderRadius: 16,
                     background: "var(--surface)", border: "1px solid var(--border)",
                     textDecoration: "none", color: "inherit",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.04)",
+                    boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
                     transition: "box-shadow 0.18s, transform 0.18s, border-color 0.18s",
                   }}
                   className="cat-card"
                 >
-                  <div style={{ width: 42, height: 42, borderRadius: 12, background: `${cat.color}18`, display: "flex", alignItems: "center", justifyContent: "center", color: cat.color }}>
+                  {/* Circular pastel icon — matches iOS app exactly */}
+                  <div style={{
+                    width: 52, height: 52, borderRadius: "50%", flexShrink: 0,
+                    background: cat.iconBg,
+                    display: "flex", alignItems: "center", justifyContent: "center",
+                    color: cat.iconColor,
+                  }}>
                     {cat.icon}
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)", marginBottom: 2, letterSpacing: "-0.02em" }}>{cat.label}</div>
-                    <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 500 }}>{count > 0 ? `${count} gigs` : "Explore"}</div>
+                    <div style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", marginBottom: 3, letterSpacing: "-0.02em" }}>{cat.label}</div>
+                    <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
+                      {count > 0 ? `${count}+ Talents` : "Explore"}
+                    </div>
                   </div>
                 </Link>
               );
@@ -525,12 +574,12 @@ export default async function HomePage() {
           </div>
         </div>
         <style>{`
-          .cat-grid { grid-template-columns: repeat(6,1fr); }
-          @media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(3,1fr); } }
-          @media (max-width: 500px) { .cat-grid { grid-template-columns: repeat(2,1fr); } }
+          .cat-grid { grid-template-columns: repeat(3,1fr); }
+          @media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(2,1fr); } }
+          @media (max-width: 480px) { .cat-grid { grid-template-columns: 1fr; } }
           .cat-card:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
             border-color: rgba(20,184,166,0.35) !important;
           }
         `}</style>
