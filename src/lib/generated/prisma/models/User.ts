@@ -44,6 +44,7 @@ export type UserMinAggregateOutputType = {
   role: $Enums.Role | null
   bio: string | null
   availability: string | null
+  responseTime: string | null
   profileComplete: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -82,6 +83,7 @@ export type UserMaxAggregateOutputType = {
   role: $Enums.Role | null
   bio: string | null
   availability: string | null
+  responseTime: string | null
   profileComplete: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -121,6 +123,8 @@ export type UserCountAggregateOutputType = {
   skills: number
   bio: number
   availability: number
+  unavailableDays: number
+  responseTime: number
   profileComplete: number
   createdAt: number
   updatedAt: number
@@ -170,6 +174,7 @@ export type UserMinAggregateInputType = {
   role?: true
   bio?: true
   availability?: true
+  responseTime?: true
   profileComplete?: true
   createdAt?: true
   updatedAt?: true
@@ -208,6 +213,7 @@ export type UserMaxAggregateInputType = {
   role?: true
   bio?: true
   availability?: true
+  responseTime?: true
   profileComplete?: true
   createdAt?: true
   updatedAt?: true
@@ -247,6 +253,8 @@ export type UserCountAggregateInputType = {
   skills?: true
   bio?: true
   availability?: true
+  unavailableDays?: true
+  responseTime?: true
   profileComplete?: true
   createdAt?: true
   updatedAt?: true
@@ -374,6 +382,8 @@ export type UserGroupByOutputType = {
   skills: string[]
   bio: string | null
   availability: string | null
+  unavailableDays: string[]
+  responseTime: string | null
   profileComplete: boolean
   createdAt: Date
   updatedAt: Date
@@ -437,6 +447,8 @@ export type UserWhereInput = {
   skills?: Prisma.StringNullableListFilter<"User">
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
+  unavailableDays?: Prisma.StringNullableListFilter<"User">
+  responseTime?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -501,6 +513,8 @@ export type UserOrderByWithRelationInput = {
   skills?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
+  unavailableDays?: Prisma.SortOrder
+  responseTime?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -572,6 +586,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   skills?: Prisma.StringNullableListFilter<"User">
   bio?: Prisma.StringNullableFilter<"User"> | string | null
   availability?: Prisma.StringNullableFilter<"User"> | string | null
+  unavailableDays?: Prisma.StringNullableListFilter<"User">
+  responseTime?: Prisma.StringNullableFilter<"User"> | string | null
   profileComplete?: Prisma.BoolFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
@@ -632,6 +648,8 @@ export type UserOrderByWithAggregationInput = {
   skills?: Prisma.SortOrder
   bio?: Prisma.SortOrderInput | Prisma.SortOrder
   availability?: Prisma.SortOrderInput | Prisma.SortOrder
+  unavailableDays?: Prisma.SortOrder
+  responseTime?: Prisma.SortOrderInput | Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -680,6 +698,8 @@ export type UserScalarWhereWithAggregatesInput = {
   skills?: Prisma.StringNullableListFilter<"User">
   bio?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   availability?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  unavailableDays?: Prisma.StringNullableListFilter<"User">
+  responseTime?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   profileComplete?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
@@ -720,6 +740,8 @@ export type UserCreateInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -784,6 +806,8 @@ export type UserUncheckedCreateInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -848,6 +872,8 @@ export type UserUpdateInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -912,6 +938,8 @@ export type UserUncheckedUpdateInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -976,6 +1004,8 @@ export type UserCreateManyInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1016,6 +1046,8 @@ export type UserUpdateManyMutationInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1056,6 +1088,8 @@ export type UserUncheckedUpdateManyInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1104,6 +1138,8 @@ export type UserCountOrderByAggregateInput = {
   skills?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
+  unavailableDays?: Prisma.SortOrder
+  responseTime?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1147,6 +1183,7 @@ export type UserMaxOrderByAggregateInput = {
   role?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
+  responseTime?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1185,6 +1222,7 @@ export type UserMinOrderByAggregateInput = {
   role?: Prisma.SortOrder
   bio?: Prisma.SortOrder
   availability?: Prisma.SortOrder
+  responseTime?: Prisma.SortOrder
   profileComplete?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -1231,6 +1269,10 @@ export type UserCreateskillsInput = {
   set: string[]
 }
 
+export type UserCreateunavailableDaysInput = {
+  set: string[]
+}
+
 export type StringFieldUpdateOperationsInput = {
   set?: string
 }
@@ -1244,6 +1286,11 @@ export type EnumRoleFieldUpdateOperationsInput = {
 }
 
 export type UserUpdateskillsInput = {
+  set?: string[]
+  push?: string | string[]
+}
+
+export type UserUpdateunavailableDaysInput = {
   set?: string[]
   push?: string | string[]
 }
@@ -1619,6 +1666,8 @@ export type UserCreateWithoutSavedByTalentsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1682,6 +1731,8 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1750,6 +1801,8 @@ export type UserCreateWithoutSavedTalentsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1813,6 +1866,8 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -1892,6 +1947,8 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1955,6 +2012,8 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2029,6 +2088,8 @@ export type UserUpdateWithoutSavedTalentsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2092,6 +2153,8 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2155,6 +2218,8 @@ export type UserCreateWithoutNotificationsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2218,6 +2283,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2297,6 +2364,8 @@ export type UserUpdateWithoutNotificationsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2360,6 +2429,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2423,6 +2494,8 @@ export type UserCreateWithoutJobsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2486,6 +2559,8 @@ export type UserUncheckedCreateWithoutJobsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2565,6 +2640,8 @@ export type UserUpdateWithoutJobsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2628,6 +2705,8 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2691,6 +2770,8 @@ export type UserCreateWithoutJobApplicationsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2754,6 +2835,8 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -2833,6 +2916,8 @@ export type UserUpdateWithoutJobApplicationsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2896,6 +2981,8 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -2959,6 +3046,8 @@ export type UserCreateWithoutSentMessagesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3022,6 +3111,8 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3101,6 +3192,8 @@ export type UserUpdateWithoutSentMessagesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3164,6 +3257,8 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3227,6 +3322,8 @@ export type UserCreateWithoutGigsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3290,6 +3387,8 @@ export type UserUncheckedCreateWithoutGigsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3369,6 +3468,8 @@ export type UserUpdateWithoutGigsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3432,6 +3533,8 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3495,6 +3598,8 @@ export type UserCreateWithoutSavedGigsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3558,6 +3663,8 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3637,6 +3744,8 @@ export type UserUpdateWithoutSavedGigsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3700,6 +3809,8 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -3763,6 +3874,8 @@ export type UserCreateWithoutBuyerOrdersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3826,6 +3939,8 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3894,6 +4009,8 @@ export type UserCreateWithoutSellerOrdersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -3957,6 +4074,8 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4036,6 +4155,8 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4099,6 +4220,8 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4173,6 +4296,8 @@ export type UserUpdateWithoutSellerOrdersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4236,6 +4361,8 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4299,6 +4426,8 @@ export type UserCreateWithoutReviewsReceivedInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4362,6 +4491,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4430,6 +4561,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4493,6 +4626,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4572,6 +4707,8 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4635,6 +4772,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4709,6 +4848,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4772,6 +4913,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -4835,6 +4978,8 @@ export type UserCreateWithoutShowcasePostsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4898,6 +5043,8 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -4977,6 +5124,8 @@ export type UserUpdateWithoutShowcasePostsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5040,6 +5189,8 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5103,6 +5254,8 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5166,6 +5319,8 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5245,6 +5400,8 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5308,6 +5465,8 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5371,6 +5530,8 @@ export type UserCreateWithoutProWaitlistInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5434,6 +5595,8 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5513,6 +5676,8 @@ export type UserUpdateWithoutProWaitlistInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5576,6 +5741,8 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5639,6 +5806,8 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5702,6 +5871,8 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5781,6 +5952,8 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5844,6 +6017,8 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -5907,6 +6082,8 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -5970,6 +6147,8 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6049,6 +6228,8 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6112,6 +6293,8 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6175,6 +6358,8 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6238,6 +6423,8 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6317,6 +6504,8 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6380,6 +6569,8 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6443,6 +6634,8 @@ export type UserCreateWithoutFiledDisputesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6506,6 +6699,8 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6585,6 +6780,8 @@ export type UserUpdateWithoutFiledDisputesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6648,6 +6845,8 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6711,6 +6910,8 @@ export type UserCreateWithoutDisputeMessagesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6774,6 +6975,8 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -6853,6 +7056,8 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6916,6 +7121,8 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -6979,6 +7186,8 @@ export type UserCreateWithoutSentOffersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7042,6 +7251,8 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7110,6 +7321,8 @@ export type UserCreateWithoutReceivedOffersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7173,6 +7386,8 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7252,6 +7467,8 @@ export type UserUpdateWithoutSentOffersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7315,6 +7532,8 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7389,6 +7608,8 @@ export type UserUpdateWithoutReceivedOffersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7452,6 +7673,8 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7515,6 +7738,8 @@ export type UserCreateWithoutSupportTicketsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7578,6 +7803,8 @@ export type UserUncheckedCreateWithoutSupportTicketsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7657,6 +7884,8 @@ export type UserUpdateWithoutSupportTicketsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7720,6 +7949,8 @@ export type UserUncheckedUpdateWithoutSupportTicketsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7783,6 +8014,8 @@ export type UserCreateWithoutCampaignClaimsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7846,6 +8079,8 @@ export type UserUncheckedCreateWithoutCampaignClaimsInput = {
   skills?: Prisma.UserCreateskillsInput | string[]
   bio?: string | null
   availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
   profileComplete?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -7925,6 +8160,8 @@ export type UserUpdateWithoutCampaignClaimsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -7988,6 +8225,8 @@ export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
   skills?: Prisma.UserUpdateskillsInput | string[]
   bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -8271,6 +8510,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   skills?: boolean
   bio?: boolean
   availability?: boolean
+  unavailableDays?: boolean
+  responseTime?: boolean
   profileComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -8336,6 +8577,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   skills?: boolean
   bio?: boolean
   availability?: boolean
+  unavailableDays?: boolean
+  responseTime?: boolean
   profileComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -8376,6 +8619,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   skills?: boolean
   bio?: boolean
   availability?: boolean
+  unavailableDays?: boolean
+  responseTime?: boolean
   profileComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -8416,6 +8661,8 @@ export type UserSelectScalar = {
   skills?: boolean
   bio?: boolean
   availability?: boolean
+  unavailableDays?: boolean
+  responseTime?: boolean
   profileComplete?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -8445,7 +8692,7 @@ export type UserSelectScalar = {
   humanVerified?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "unavailableDays" | "responseTime" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
@@ -8515,6 +8762,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     skills: string[]
     bio: string | null
     availability: string | null
+    unavailableDays: string[]
+    responseTime: string | null
     profileComplete: boolean
     createdAt: Date
     updatedAt: Date
@@ -8999,6 +9248,8 @@ export interface UserFieldRefs {
   readonly skills: Prisma.FieldRef<"User", 'String[]'>
   readonly bio: Prisma.FieldRef<"User", 'String'>
   readonly availability: Prisma.FieldRef<"User", 'String'>
+  readonly unavailableDays: Prisma.FieldRef<"User", 'String[]'>
+  readonly responseTime: Prisma.FieldRef<"User", 'String'>
   readonly profileComplete: Prisma.FieldRef<"User", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>

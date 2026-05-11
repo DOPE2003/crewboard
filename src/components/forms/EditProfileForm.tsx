@@ -35,9 +35,10 @@ const ROLE_SKILLS: Record<string, string[]> = {
 };
 
 const AVAILABILITY_OPTIONS = [
-  { value: "available", label: "Available", color: "rgba(120,255,180,0.8)" },
-  { value: "open",      label: "Open to offers", color: "rgba(255,200,80,0.8)" },
-  { value: "busy",      label: "Busy", color: "rgba(255,100,100,0.8)" },
+  { value: "available", label: "Available",           color: "rgba(120,255,180,0.8)" },
+  { value: "open",      label: "Limited Availability", color: "rgba(255,200,80,0.8)" },
+  { value: "busy",      label: "Busy",                 color: "rgba(255,100,100,0.8)" },
+  { value: "vacation",  label: "Vacation",             color: "rgba(148,163,184,0.8)" },
 ];
 
 interface Props {

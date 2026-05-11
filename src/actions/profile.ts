@@ -59,6 +59,33 @@ export async function removeBannerImage() {
   return { success: true };
 }
 
+export async function updateAvailabilitySettings({
+  unavailableDays,
+  responseTime,
+  availability,
+}: {
+  unavailableDays?: string[];
+  responseTime?: string | null;
+  availability?: string;
+}): Promise<{ ok: true } | { error: string }> {
+  try {
+    const session = await auth();
+    const userId = (session?.user as any)?.userId as string | undefined;
+    if (!userId) return { error: "Not authenticated." };
+
+    const data: Record<string, any> = {};
+    if (unavailableDays !== undefined) data.unavailableDays = unavailableDays;
+    if (responseTime !== undefined)    data.responseTime    = responseTime ?? null;
+    if (availability  !== undefined)   data.availability    = availability;
+
+    const updated = await db.user.update({ where: { id: userId }, data, select: { twitterHandle: true } });
+    revalidatePath(`/u/${updated.twitterHandle}`);
+    return { ok: true };
+  } catch (e: any) {
+    return { error: e?.message ?? "Failed to save." };
+  }
+}
+
 export async function saveBannerHeight(height: number) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;

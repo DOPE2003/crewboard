@@ -25,6 +25,8 @@ model User {
   skills               String[]
   bio                  String?
   availability         String?
+  unavailableDays      String[]  @default([])
+  responseTime         String?
   profileComplete      Boolean               @default(false)
   createdAt            DateTime              @default(now())
   updatedAt            DateTime              @updatedAt

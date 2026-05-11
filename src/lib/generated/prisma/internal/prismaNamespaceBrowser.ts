@@ -107,6 +107,8 @@ export const UserScalarFieldEnum = {
   skills: 'skills',
   bio: 'bio',
   availability: 'availability',
+  unavailableDays: 'unavailableDays',
+  responseTime: 'responseTime',
   profileComplete: 'profileComplete',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',

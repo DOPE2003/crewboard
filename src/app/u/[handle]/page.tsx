@@ -20,13 +20,14 @@ import { blobUrl } from "@/lib/blobUrl";
 import AddEmailForm from "@/components/forms/AddEmailForm";
 import DeleteAccountButton from "@/components/ui/DeleteAccountButton";
 import WorkCalendar from "@/components/ui/WorkCalendar";
+import AvailabilityCalendarEditor from "@/components/ui/AvailabilityCalendarEditor";
 import NewTicketButton from "@/components/ui/NewTicketButton";
 
 const AVAIL_COLOR: Record<string, string> = {
-  available: "#22c55e", open: "#f59e0b", busy: "#ef4444",
+  available: "#22c55e", open: "#f59e0b", busy: "#ef4444", vacation: "#94a3b8",
 };
 const AVAIL_LABEL: Record<string, string> = {
-  available: "Available now", open: "Open to offers", busy: "Currently busy",
+  available: "Available now", open: "Limited availability", busy: "Currently busy", vacation: "On vacation",
 };
 
 function Stars({ rating }: { rating: number }) {
@@ -172,6 +173,26 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
   const isOwnProfile = viewerId === user.id;
   const canMessage = !!viewerId && !isOwnProfile;
   const avail = user.availability ?? "available";
+  const unavailableDays: string[] = Array.isArray(user.unavailableDays) ? user.unavailableDays : [];
+
+  // Compute next available date label
+  function nextAvailableLabel(): string {
+    if (avail === "vacation") return "On vacation — not taking new work";
+    if (avail === "busy")     return "Currently busy with active orders";
+    const blocked = new Set(unavailableDays);
+    const now = new Date();
+    for (let i = 0; i < 14; i++) {
+      const d = new Date(now);
+      d.setDate(d.getDate() + i);
+      if (!blocked.has(toDateStr(d))) {
+        if (i === 0) return "Available today";
+        if (i === 1) return "Next slot: Tomorrow";
+        return `Next slot: ${d.toLocaleDateString("en-US", { weekday: "long" })}`;
+      }
+    }
+    return "Limited availability over next 2 weeks";
+  }
+  const nextSlotLabel = nextAvailableLabel();
 
   let isSaved = false;
   if (viewerId && !isOwnProfile) {
@@ -724,17 +745,58 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
               </SectionCard>
             ) : null}
 
-            {/* Working Calendar */}
+            {/* Availability */}
             <SectionCard>
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "0.75rem" }}>
                 <SectionLabel>Availability</SectionLabel>
-                {(bookedDays.length > 0 || workedDays.length > 0) && (
-                  <span style={{ fontSize: "0.6rem", fontWeight: 700, padding: "2px 7px", borderRadius: 99, background: "rgba(20,184,166,0.1)", color: "#0f766e" }}>
-                    Last 3 mo
-                  </span>
+                <span style={{
+                  display: "inline-flex", alignItems: "center", gap: 4,
+                  fontSize: "0.6rem", fontWeight: 700, padding: "3px 8px", borderRadius: 99,
+                  background: avail === "available" ? "rgba(34,197,94,0.1)"
+                    : avail === "vacation" ? "rgba(148,163,184,0.1)"
+                    : avail === "busy" ? "rgba(239,68,68,0.08)"
+                    : "rgba(245,158,11,0.08)",
+                  color: AVAIL_COLOR[avail] ?? "#94a3b8",
+                  border: `1px solid ${AVAIL_COLOR[avail] ?? "#94a3b8"}30`,
+                }}>
+                  <span style={{ width: 5, height: 5, borderRadius: "50%", background: AVAIL_COLOR[avail] ?? "#94a3b8", flexShrink: 0 }} />
+                  {AVAIL_LABEL[avail] ?? avail}
+                </span>
+              </div>
+
+              {/* Summary hints */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 5, marginBottom: "0.85rem" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                    <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+                  </svg>
+                  {nextSlotLabel}
+                </div>
+                {user.responseTime && (
+                  <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0 }}>
+                      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    Usually responds {user.responseTime}
+                  </div>
                 )}
               </div>
-              <WorkCalendar bookedDays={bookedDays} workedDays={workedDays} />
+
+              {isOwnProfile ? (
+                <AvailabilityCalendarEditor
+                  initialUnavailableDays={unavailableDays}
+                  initialResponseTime={user.responseTime ?? null}
+                  initialAvailability={avail}
+                  bookedDays={bookedDays}
+                  workedDays={workedDays}
+                />
+              ) : (
+                <WorkCalendar
+                  bookedDays={bookedDays}
+                  workedDays={workedDays}
+                  unavailableDays={unavailableDays}
+                />
+              )}
             </SectionCard>
 
             {/* Support Ticket — own profile only */}
