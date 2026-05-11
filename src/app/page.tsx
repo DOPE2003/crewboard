@@ -2,6 +2,7 @@ import Link from "next/link";
 import { auth } from "@/auth";
 import db from "@/lib/db";
 import HomeModeHero from "@/components/home/HomeModeHero";
+import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
 import HomeModeHIW from "@/components/home/HomeModeHIW";
 import "@/styles/landing.css";
 
@@ -33,7 +34,7 @@ export default async function HomePage() {
 
   const VIDEO_HANDLES = ["alphaeth", "0xmambich", "mehdi"];
 
-  const [categoryCountsRaw, rawFeatured] = await Promise.all([
+  const [categoryCountsRaw, rawFeatured, rawProfiles] = await Promise.all([
     db.gig.groupBy({
       by: ["category"],
       where: { status: "active" },
@@ -61,10 +62,33 @@ export default async function HomePage() {
         reviewsReceived: { select: { rating: true } },
       },
     }).catch(() => []),
+    db.user.findMany({
+      where: { profileComplete: true, image: { not: null } },
+      orderBy: { createdAt: "desc" },
+      take: 20,
+      select: {
+        twitterHandle: true, name: true, image: true, userTitle: true,
+        availability: true, skills: true, bio: true, createdAt: true,
+        sellerOrders: { where: { status: "completed" }, select: { amount: true } },
+      },
+    }).catch(() => []),
   ]);
   const categoryCountMap: Record<string, number> = Object.fromEntries(
     categoryCountsRaw.map((c) => [c.category, c._count.id])
   );
+
+  const floatingProfiles = rawProfiles.map((u: any) => ({
+    twitterHandle: u.twitterHandle,
+    name: u.name,
+    image: u.image,
+    role: u.userTitle,
+    availability: u.availability,
+    skills: u.skills ?? [],
+    bio: u.bio,
+    ordersCompleted: (u.sellerOrders as Array<{ amount: number }> ?? []).length,
+    totalEarned: (u.sellerOrders as Array<{ amount: number }>).reduce((s: number, o: { amount: number }) => s + o.amount, 0),
+    memberSince: new Date(u.createdAt).toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+  }));
 
   const handleOrder = Object.fromEntries(VIDEO_HANDLES.map((h, i) => [h, i]));
   const featuredFreelancers = [...rawFeatured].sort(
@@ -86,7 +110,7 @@ export default async function HomePage() {
           textAlign: "center",
           padding: "clamp(2.5rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem)",
           position: "relative",
-          overflow: "hidden",
+          overflow: "visible",
           background: "var(--surface)",
         }}
       >
@@ -111,6 +135,15 @@ export default async function HomePage() {
           pointerEvents: "none",
           zIndex: 0,
         }} />
+
+        {/* Rotating profile cards — desktop only, 3 left + 3 right */}
+        {floatingProfiles.length >= 6 && (
+          <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
+            <div style={{ pointerEvents: "auto" }}>
+              <HeroFloatingProfiles profiles={floatingProfiles} />
+            </div>
+          </div>
+        )}
 
         {/* Beta badge */}
         <div
