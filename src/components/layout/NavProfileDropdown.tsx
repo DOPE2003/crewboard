@@ -109,6 +109,7 @@ function RowDivider() {
 /* ── Icons ── */
 const I = {
   wallet:       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>,
+  orders:       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><polyline points="8 21 12 17 16 21"/></svg>,
   history:      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>,
   dispute:      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>,
   disconnect:   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>,
@@ -370,6 +371,8 @@ export default function NavProfileDropdown({
         <Card>
           {isHiring ? (
             <>
+              <Row icon={I.orders}       label="Orders"          href="/orders"       onClick={onClose} />
+              <RowDivider />
               <Row icon={I.applications} label="My Posted Jobs"  href="/jobs?mine=1"  onClick={onClose} badge={extra?.postedJobsCount ? extra.postedJobsCount : null} />
               <RowDivider />
               <Row icon={I.sent}         label="Sent Offers"     href="/offers"       onClick={onClose} />
@@ -378,6 +381,8 @@ export default function NavProfileDropdown({
             </>
           ) : (
             <>
+              <Row icon={I.orders}       label="Orders"          href="/orders"       onClick={onClose} />
+              <RowDivider />
               <Row icon={I.applications} label="My Applications" href="/jobs/applied" onClick={onClose} badge={extra?.appliedJobsCount ? extra.appliedJobsCount : null} />
               <RowDivider />
               <Row icon={I.inbox}        label="Offers Received" href="/offers"       onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
