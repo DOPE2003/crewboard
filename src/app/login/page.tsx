@@ -106,7 +106,7 @@ function LoginForm() {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/images/logo-animated.svg" alt="Crewboard" />
           <div>
-            <div className="auth-left-wordmark">crewboard</div>
+            <div className="auth-left-wordmark"><span>crew</span>board</div>
             <div className="auth-left-wordmark-sub">Web3 Talent Marketplace</div>
           </div>
         </div>
@@ -145,9 +145,44 @@ function LoginForm() {
         {/* Footer */}
         <div className="auth-left-footer">
           © 2026 Crewboard
-          <span style={{ color: "#d1d5db" }}>·</span>
-          <svg width="14" height="14" viewBox="0 0 646 96" fill="#9ca3af"><text y="80" fontSize="80" fontFamily="sans-serif">◎</text></svg>
+          <span style={{ color: "#e5e7eb" }}>·</span>
+          <svg width="12" height="12" viewBox="0 0 101 88" fill="none" style={{ opacity: 0.5 }}>
+            <path d="M100.48 69.3817L83.8068 86.8015C83.4444 87.1799 83.0058 87.4816 82.5185 87.6878C82.0312 87.894 81.5055 88.0003 80.9743 88H1.93563C1.55849 88 1.18957 87.8894 0.874202 87.6813C0.558829 87.4732 0.31074 87.1764 0.163028 86.8288C0.0153167 86.4812 -0.0305934 86.0977 0.0321229 85.7243C0.0948392 85.3508 0.263695 85.0027 0.518197 84.7209L17.2154 67.3011C17.5778 66.9227 18.0164 66.621 18.5037 66.4148C18.991 66.2086 19.5167 66.1023 20.0479 66.1026H99.0866C99.4637 66.1026 99.8326 66.2132 100.148 66.4213C100.463 66.6294 100.711 66.9262 100.859 67.2738C101.007 67.6214 101.053 68.0049 100.99 68.3783C100.927 68.7518 100.758 69.0999 100.504 69.3817H100.48Z" fill="#9ca3af"/>
+          </svg>
           Built on Solana
+        </div>
+
+        {/* App mockup */}
+        <div className="auth-app-mockup">
+          <div className="auth-app-mockup-header">
+            <div className="auth-app-mockup-logo-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <polygon points="12 2 19 7 19 17 12 22 5 17 5 7 12 2"/>
+              </svg>
+            </div>
+            <div className="auth-app-mockup-brand">
+              crewboard
+              <span>Web3 Talent Marketplace</span>
+            </div>
+          </div>
+          <div className="auth-app-mockup-body">
+            <div className="auth-app-mockup-card">
+              <div className="auth-app-mockup-user">
+                <div className="auth-app-mockup-avatar">AE</div>
+                <div>
+                  <div className="auth-app-mockup-name">Al Eagle</div>
+                  <div className="auth-app-mockup-role">Smart Contract Developer</div>
+                </div>
+              </div>
+              <div className="auth-app-mockup-rate">$80 / hr</div>
+              <div className="auth-app-mockup-chips">
+                {["Solidity", "Rust", "Web3"].map(s => (
+                  <span key={s} className="auth-app-mockup-chip">{s}</span>
+                ))}
+              </div>
+              <button className="auth-app-mockup-btn">Hire</button>
+            </div>
+          </div>
         </div>
       </div>
 
