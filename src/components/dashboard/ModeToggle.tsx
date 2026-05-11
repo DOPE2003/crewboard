@@ -3,8 +3,8 @@
 import { useMode, setMode, type Mode } from "@/components/ModeProvider";
 
 const OPTIONS: { mode: Mode; label: string; hint: string }[] = [
-  { mode: "hiring",  label: "HIRE",      hint: "Post jobs & find talent" },
-  { mode: "working", label: "FREELANCE", hint: "Browse jobs & get paid"  },
+  { mode: "hiring",  label: "I'm Hiring",      hint: "Post jobs & find talent" },
+  { mode: "working", label: "I'm a Freelancer", hint: "Browse jobs & get paid"  },
 ];
 
 export default function ModeToggle() {
@@ -30,16 +30,16 @@ export default function ModeToggle() {
             title={o.hint}
             style={{
               display: "flex", flexDirection: "column", alignItems: "center",
-              padding: "4px 10px", borderRadius: 6, border: "none", cursor: "pointer",
+              padding: "8px 18px", borderRadius: 8, border: "none", cursor: "pointer",
               transition: "all 0.15s",
               background: active ? "#14b8a6" : "transparent",
               color: active ? "#fff" : "var(--text-muted)",
             }}
           >
-            <span style={{ fontSize: "0.63rem", fontWeight: 800, letterSpacing: "0.04em", lineHeight: 1.2 }}>
+            <span style={{ fontSize: "0.82rem", fontWeight: 700, letterSpacing: "-0.01em", lineHeight: 1.3, whiteSpace: "nowrap" }}>
               {o.label}
             </span>
-            <span style={{ fontSize: "0.52rem", fontWeight: 500, opacity: active ? 0.85 : 0.7, lineHeight: 1.2, whiteSpace: "nowrap" }}>
+            <span style={{ fontSize: "0.58rem", fontWeight: 500, opacity: active ? 0.85 : 0.65, lineHeight: 1.2, whiteSpace: "nowrap" }}>
               {o.hint}
             </span>
           </button>

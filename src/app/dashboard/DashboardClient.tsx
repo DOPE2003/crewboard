@@ -130,8 +130,7 @@ export default function DashboardClient({ data }: { data: DashboardData }) {
             </p>
           </div>
           <div style={{ display: "flex", gap: "0.5rem", alignItems: "center", flexWrap: "wrap" }}>
-            {/* Mobile-only toggle (desktop toggle is in the navbar) */}
-            <div className="cb-mode-wrap md:hidden">
+            <div className="cb-mode-wrap">
               <ModeToggle />
             </div>
             <Link href={`/u/${dbUser.twitterHandle}`} style={{ fontSize: "0.75rem", fontWeight: 600, padding: "6px 14px", borderRadius: 99, border: "1px solid var(--card-border)", color: "var(--foreground)", textDecoration: "none" }}>
