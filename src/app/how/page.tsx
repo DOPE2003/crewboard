@@ -275,6 +275,83 @@ export default async function HowPage() {
           </div>
         </div>
 
+        {/* ── Platform Fees & Payment Transparency ── */}
+        <div style={{
+          margin: "0 0 3rem",
+          padding: "1.75rem 2rem",
+          borderRadius: 16,
+          background: "rgba(20,184,166,0.04)",
+          border: "1px solid rgba(20,184,166,0.18)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: "1.25rem" }}>
+            <div style={{ width: 36, height: 36, borderRadius: 10, background: "rgba(20,184,166,0.12)", display: "flex", alignItems: "center", justifyContent: "center", color: "#14b8a6", flexShrink: 0 }}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+            </div>
+            <div>
+              <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.14em", textTransform: "uppercase", color: "#14b8a6" }}>Transparent Pricing</div>
+              <div style={{ fontSize: "1rem", fontWeight: 700, color: "var(--foreground)" }}>How platform fees work</div>
+            </div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: "1.25rem" }}>
+            {/* Client fee */}
+            <div style={{ background: "var(--card-bg)", borderRadius: 12, padding: "1.1rem 1.25rem", border: "1px solid var(--card-border)" }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#3b82f6", marginBottom: 8 }}>For Clients</div>
+              <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.65, marginBottom: 10 }}>
+                Crewboard charges a <strong style={{ color: "var(--foreground)" }}>10% platform fee on top</strong> of the service price. You see the full total before confirming.
+              </div>
+              <div style={{ background: "rgba(59,130,246,0.05)", border: "1px solid rgba(59,130,246,0.15)", borderRadius: 9, padding: "10px 12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: 4 }}>
+                  <span>Service price</span><strong style={{ color: "var(--foreground)" }}>$100</strong>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: 4 }}>
+                  <span>Platform fee (10%)</span><strong>+$10</strong>
+                </div>
+                <div style={{ height: 1, background: "rgba(59,130,246,0.12)", margin: "6px 0" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", fontWeight: 800 }}>
+                  <span style={{ color: "var(--foreground)" }}>You pay</span><span style={{ color: "#3b82f6" }}>$110</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Freelancer receives */}
+            <div style={{ background: "var(--card-bg)", borderRadius: 12, padding: "1.1rem 1.25rem", border: "1px solid var(--card-border)" }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#14b8a6", marginBottom: 8 }}>For Freelancers</div>
+              <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.65, marginBottom: 10 }}>
+                Freelancers receive <strong style={{ color: "var(--foreground)" }}>the full service amount</strong>. No deductions from your earnings — the fee is paid by the client.
+              </div>
+              <div style={{ background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.15)", borderRadius: 9, padding: "10px 12px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: 4 }}>
+                  <span>Service price</span><strong style={{ color: "var(--foreground)" }}>$100</strong>
+                </div>
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.78rem", color: "var(--text-muted)", marginBottom: 4 }}>
+                  <span>Platform deduction</span><strong style={{ color: "#22c55e" }}>$0</strong>
+                </div>
+                <div style={{ height: 1, background: "rgba(20,184,166,0.12)", margin: "6px 0" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.85rem", fontWeight: 800 }}>
+                  <span style={{ color: "var(--foreground)" }}>You receive</span><span style={{ color: "#14b8a6" }}>$100</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Escrow */}
+            <div style={{ background: "var(--card-bg)", borderRadius: 12, padding: "1.1rem 1.25rem", border: "1px solid var(--card-border)" }}>
+              <div style={{ fontSize: "0.7rem", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.1em", color: "#8b5cf6", marginBottom: 8 }}>Escrow Security</div>
+              <div style={{ fontSize: "0.82rem", color: "var(--text-muted)", lineHeight: 1.65 }}>
+                Client funds are locked in a <strong style={{ color: "var(--foreground)" }}>Solana smart contract</strong> — visible to both parties, released only when work is approved. Neither side can take funds unilaterally.
+              </div>
+              <div style={{ marginTop: 10, display: "flex", alignItems: "center", gap: 6, fontSize: "0.76rem", fontWeight: 700, color: "#8b5cf6" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                </svg>
+                Non-custodial · On-chain · Dispute protected
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* Trust section */}
         <div style={{ borderTop: "1px solid var(--card-border)", paddingTop: "2.5rem" }}>
           <div style={{ fontSize: "0.6rem", fontWeight: 700, letterSpacing: "0.18em", textTransform: "uppercase", color: "#14b8a6", marginBottom: "0.5rem", textAlign: "center" }}>

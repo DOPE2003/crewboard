@@ -339,22 +339,16 @@ export default function NavProfileDropdown({
         {/* ── WORKSPACE (top priority) ── */}
         <SectionLabel icon={I.orders}>Workspace</SectionLabel>
         <Card>
-          <Row icon={I.orders} label="My Orders" href="/orders" onClick={onClose} />
+          <Row icon={I.orders} label="My Orders"       href="/orders"  onClick={onClose} />
           <RowDivider />
-          <Row icon={I.sent}  label="Sent Offers" href="/offers" onClick={onClose} />
+          <Row icon={I.sent}   label="Sent Offers"     href="/offers"  onClick={onClose} />
           <RowDivider />
-          <Row icon={I.inbox} label="Received Offers" href="/offers" onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <Row icon={I.inbox}  label="Received Offers" href="/offers"  onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
           <RowDivider />
           {isHiring ? (
             <Row icon={I.saved} label="Saved Talent" href="/saved-talents" onClick={onClose} />
           ) : (
-            <Row icon={I.saved} label="Saved Jobs" href="/saved-talents" onClick={onClose} />
-          )}
-          <RowDivider />
-          {isHiring ? (
-            <Row icon={I.applications} label="My Posted Jobs" href="/jobs?mine=1" onClick={onClose} badge={extra?.postedJobsCount ? extra.postedJobsCount : null} />
-          ) : (
-            <Row icon={I.applications} label="My Applications" href="/jobs/applied" onClick={onClose} badge={extra?.appliedJobsCount ? extra.appliedJobsCount : null} />
+            <Row icon={I.saved} label="Saved Jobs"   href="/saved-talents" onClick={onClose} />
           )}
         </Card>
 
@@ -371,34 +365,39 @@ export default function NavProfileDropdown({
             </div>
           )}
           <RowDivider />
-          <Row icon={I.history}  label="Payment History" href="/payments" onClick={onClose} />
+          <Row icon={I.history} label="Payment History" href="/payments" onClick={onClose} />
           <RowDivider />
-          <Row icon={I.dispute}  label="Disputes"        href="/orders"   onClick={onClose} />
-          <RowDivider />
-          {extra?.walletAddress ? (
-            <Row icon={I.disconnect} label={disconnecting ? "Disconnecting…" : "Disconnect Wallet"} onClick={handleDisconnectWallet} danger />
-          ) : (
-            <Row icon={I.wallet} label="Connect Wallet" onClick={() => { onClose(); setWalletModalVisible(true); }} />
-          )}
+          <Row icon={I.dispute} label="Disputes"        href="/orders"   onClick={onClose} />
         </Card>
 
         {/* ── SETTINGS ── */}
         <SectionLabel icon={I.appSettings}>Settings</SectionLabel>
         <Card>
-          <Row icon={I.bell} label="Notifications" href="/notifications" onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <Row icon={I.bell}    label="Notifications" href="/notifications" onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
           <RowDivider />
-          <Row icon={I.globe} label="Language" rightEl={<span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>EN</span>} onClick={() => {}} />
+          <Row icon={I.account} label="Account Settings" href={twitterHandle ? `/u/${twitterHandle}` : "/dashboard"} onClick={onClose} />
+          <RowDivider />
+          <Row icon={I.globe}   label="Language" rightEl={<span style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 600 }}>EN</span>} onClick={() => {}} />
           <RowDivider />
           <div onClick={toggleDark} style={{ cursor: "pointer" }}>
             <Row icon={I.moon} label="Dark Mode" toggle toggleOn={isDark} />
           </div>
           <RowDivider />
-          <Row icon={I.privacy} label="Privacy"       href="/privacy"  onClick={onClose} />
+          <Row icon={I.privacy} label="Privacy"      href="/privacy" onClick={onClose} />
           <RowDivider />
-          <Row icon={I.help}    label="Help & Support" href="/support"  onClick={onClose} />
-          <RowDivider />
-          <Row icon={I.ai} label="Crew Assistant" onClick={() => setShowPro(true)} rightEl={<span style={{ fontSize: 9, background: "#ccfbf1", color: "#0f766e", fontWeight: 700, padding: "2px 7px", borderRadius: 99 }}>SOON</span>} />
+          <Row icon={I.help}    label="Help & Support" href="/support" onClick={onClose} />
         </Card>
+
+        {/* ── WALLET ── */}
+        {(extra?.walletAddress || !extra?.walletAddress) && (
+          <Card>
+            {extra?.walletAddress ? (
+              <Row icon={I.disconnect} label={disconnecting ? "Disconnecting…" : "Disconnect Wallet"} onClick={handleDisconnectWallet} danger />
+            ) : (
+              <Row icon={I.wallet} label="Connect Wallet" onClick={() => { onClose(); setWalletModalVisible(true); }} />
+            )}
+          </Card>
+        )}
 
         {/* ── SIGN OUT ── */}
         <Card>

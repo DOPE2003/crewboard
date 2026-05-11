@@ -18,7 +18,15 @@
       "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main diff prisma/schema.prisma src/app/api/mobile/escrow/build-fund/route.ts vercel.json src/app/page.tsx)",
       "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main diff src/app/page.tsx)",
       "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main add src/app/api/mobile/sanctions/sol-list/route.ts)",
-      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main commit -m 'fix\\(sanctions\\): correct relative import path in sol-list route *)"
+      "Bash(git -C /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main commit -m 'fix\\(sanctions\\): correct relative import path in sol-list route *)",
+      "Bash(grep -r \"getMobileUser\\\\|withMobileAuth\" /Users/mahsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/api/mobile --include=\"*.ts\" -l | wc -l)",
+      "Read(//Users/mahsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/api/**)",
+      "Bash(vercel whoami *)",
+      "WebFetch(domain:www.figma.com)",
+      "Bash(npx next *)",
+      "Bash(grep -rn 'Earned\\\\|earned\\\\|NaN\\\\|toFixed\\\\|toLocaleString\\\\|formatCurrency\\\\|$NaN' /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main/src '--include=*.tsx' '--include=*.ts' -l)",
+      "Bash(grep -n 'Earned\\\\|earned\\\\|NaN\\\\|$NaN\\\\|totalEarned\\\\|total_earned' /Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/page.tsx)",
+      "Bash(grep -E \"\\\\.\\(tsx?|jsx?\\)$\")"
     ],
     "additionalDirectories": [
       "/Users/mohsinkhan/Desktop/CREWBOARD/crewboard-main/src/app/api/mobile/sanctions"

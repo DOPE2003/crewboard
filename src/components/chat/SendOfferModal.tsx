@@ -16,6 +16,7 @@ export default function SendOfferModal({ isOpen, onClose, conversationId, receiv
   const [description, setDescription] = useState("");
   const [amount, setAmount] = useState("");
   const [deliveryDays, setDeliveryDays] = useState("");
+  const [paymentType, setPaymentType] = useState<"single" | "milestone">("single");
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -136,6 +137,40 @@ export default function SendOfferModal({ isOpen, onClose, conversationId, receiv
                 rows={4}
                 style={{ ...inputStyle, resize: "vertical" }}
               />
+            </div>
+
+            {/* Payment type */}
+            <div>
+              <label style={labelStyle}>Payment Type</label>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+                {(["single", "milestone"] as const).map(pt => {
+                  const active = paymentType === pt;
+                  return (
+                    <button
+                      key={pt}
+                      type="button"
+                      onClick={() => setPaymentType(pt)}
+                      style={{
+                        padding: "9px 12px", borderRadius: 10, cursor: "pointer", fontFamily: "inherit",
+                        border: `1px solid ${active ? "rgba(20,184,166,0.5)" : "var(--card-border)"}`,
+                        background: active ? "rgba(20,184,166,0.08)" : "var(--background)",
+                        color: active ? "#14B8A6" : "var(--text-muted)",
+                        fontWeight: active ? 700 : 500, fontSize: "0.8rem",
+                        display: "flex", flexDirection: "column", alignItems: "flex-start", gap: 2,
+                        transition: "all 0.12s",
+                      }}
+                    >
+                      <span style={{ fontWeight: 700 }}>{pt === "single" ? "Single Payment" : "Milestones"}</span>
+                      <span style={{ fontSize: "0.66rem", opacity: 0.7 }}>{pt === "single" ? "Pay in full upfront" : "Split into stages"}</span>
+                    </button>
+                  );
+                })}
+              </div>
+              {paymentType === "milestone" && (
+                <div style={{ marginTop: 8, padding: "8px 12px", borderRadius: 8, background: "rgba(245,158,11,0.06)", border: "1px solid rgba(245,158,11,0.2)", fontSize: "0.72rem", color: "#d97706" }}>
+                  Milestone schedules are agreed in chat. Set the total budget below.
+                </div>
+              )}
             </div>
 
             {/* Amount + Delivery side by side */}

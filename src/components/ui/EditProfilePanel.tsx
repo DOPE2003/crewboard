@@ -82,12 +82,16 @@ export default function EditProfilePanel({ initialRole, initialSkills, initialBi
         type="button"
         onClick={() => setOpen(true)}
         style={{
-          fontSize: "0.78rem", fontWeight: 600, padding: "7px 16px", borderRadius: 8,
-          border: "1px solid #e2e8f0", background: "#fff", color: "#0f172a",
-          display: "flex", alignItems: "center", gap: 6, cursor: "pointer",
+          fontSize: "0.82rem", fontWeight: 700, padding: "9px 20px", borderRadius: 10,
+          border: "none", background: "#14B8A6", color: "#fff",
+          display: "flex", alignItems: "center", gap: 7, cursor: "pointer",
+          boxShadow: "0 2px 8px rgba(20,184,166,0.3)",
+          transition: "background 0.15s, box-shadow 0.15s",
         }}
+        onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.background = "#0d9488"; }}
+        onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.background = "#14B8A6"; }}
       >
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
           <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
           <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4z"/>
         </svg>

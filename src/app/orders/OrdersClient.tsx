@@ -3,7 +3,7 @@
 import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 
-type FilterKey = "all" | "active" | "waiting" | "overdue" | "completed" | "disputes" | "cancelled";
+type FilterKey = "all" | "active" | "waiting" | "completed" | "disputes" | "cancelled";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -152,11 +152,6 @@ const NAV_CFG: { key: FilterKey; label: string; icon: React.ReactNode; accent?: 
     accent: "#f59e0b",
   },
   {
-    key: "overdue", label: "Overdue",
-    icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
-    accent: "#f59e0b",
-  },
-  {
     key: "completed", label: "Completed",
     icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>,
   },
@@ -180,7 +175,6 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
     all:       orders.length,
     active:    orders.filter(o => ["pending","funded","accepted","delivered"].includes(o.status)).length,
     waiting:   orders.filter(o => isWaitingForMe(o.status, o.role, o.deliveryDeadline)).length,
-    overdue:   orders.filter(o => isOverdue(o)).length,
     completed: orders.filter(o => o.status === "completed").length,
     disputes:  orders.filter(o => o.status === "disputed").length,
     cancelled: orders.filter(o => o.status === "cancelled").length,
@@ -191,7 +185,6 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
     switch (filter) {
       case "active":    list = orders.filter(o => ["pending","funded","accepted","delivered"].includes(o.status)); break;
       case "waiting":   list = orders.filter(o => isWaitingForMe(o.status, o.role, o.deliveryDeadline)); break;
-      case "overdue":   list = orders.filter(o => isOverdue(o)); break;
       case "completed": list = orders.filter(o => o.status === "completed"); break;
       case "disputes":  list = orders.filter(o => o.status === "disputed"); break;
       case "cancelled": list = orders.filter(o => o.status === "cancelled"); break;
@@ -262,7 +255,7 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
                     fontSize: "0.58rem", fontWeight: 700, padding: "1px 6px", borderRadius: 99,
                     background: isActive
                       ? "rgba(20,184,166,0.15)"
-                      : item.key === "waiting" || item.key === "overdue"
+                      : item.key === "waiting"
                         ? "rgba(245,158,11,0.1)"
                         : item.key === "disputes"
                           ? "rgba(239,68,68,0.08)"
@@ -324,7 +317,7 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
               <span style={{ fontSize: "0.92rem", fontWeight: 800, color: "var(--foreground)" }}>
                 {activeCfg.label}
               </span>
-              {(filter === "waiting" || filter === "overdue") && filtered.length > 0 && (
+              {filter === "waiting" && filtered.length > 0 && (
                 <span style={{ fontSize: "0.7rem", color: "#f59e0b", fontWeight: 600, marginLeft: 8 }}>
                   {filtered.length} need{filtered.length === 1 ? "s" : ""} attention
                 </span>
@@ -524,7 +517,6 @@ function EmptyState({ filter }: { filter: FilterKey }) {
     all:       { title: "No orders yet",              sub: "Orders you place or receive will appear here.", link: { href: "/talent", label: "Browse talent →" } },
     active:    { title: "No active orders",           sub: "Start by hiring a freelancer or posting a service.", link: { href: "/talent", label: "Browse talent →" } },
     waiting:   { title: "Nothing needs your action",  sub: "You're all caught up." },
-    overdue:   { title: "No overdue orders",          sub: "All deliveries are on track." },
     completed: { title: "No completed orders yet",    sub: "Completed orders appear here once paid out." },
     disputes:  { title: "No disputes",                sub: "Disputes are raised when buyer and seller disagree." },
     cancelled: { title: "No cancelled orders",        sub: "Cancelled orders will appear here." },

@@ -29,7 +29,7 @@ export default async function OffersPage() {
 
   return (
     <main className="page" style={{ background: "var(--background)", minHeight: "100vh" }}>
-      <div style={{ maxWidth: 900, width: "100%", margin: "0 auto", padding: "2rem 1.5rem" }}>
+      <div style={{ maxWidth: 1100, width: "100%", margin: "0 auto", padding: "2rem 1.25rem" }}>
 
         <div style={{ marginBottom: "1.75rem" }}>
           <div style={{ fontSize: "0.55rem", letterSpacing: "0.18em", textTransform: "uppercase", color: "#14B8A6", fontWeight: 700, marginBottom: 5 }}>
