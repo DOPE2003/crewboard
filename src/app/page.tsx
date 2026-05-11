@@ -197,6 +197,108 @@ export default async function HomePage() {
           </Link>
         </div>
 
+        {/* ── Spotlight cards — Superteam + iOS App ── */}
+        <div style={{
+          opacity: 0, animation: "fadeUp 0.6s 1.05s forwards",
+          position: "relative", zIndex: 1,
+          width: "100%", maxWidth: 600,
+          marginTop: 24,
+          display: "flex", gap: 16, alignItems: "stretch",
+        }} className="spotlight-row">
+
+          {/* Card 1: Superteam Germany */}
+          <div style={{
+            flex: 1, minWidth: 0,
+            display: "flex",
+            borderRadius: 10,
+            border: "1px solid var(--border)",
+            background: "var(--surface)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
+            overflow: "hidden",
+          }}>
+            <div style={{ width: 76, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large" alt="Solana Summit Germany" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+            </div>
+            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 5 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, minWidth: 0 }}>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 14, height: 14, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
+                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Superteam Germany</span>
+                <span style={{ width: 12, height: 12, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "var(--brand)", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0 }}>X ↗</a>
+              </div>
+              <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+                Content Creators Program — Solana Summit Germany
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--border)" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 700, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Exclusive on-site benefits</div>
+                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>$500 travel boost · Limited spots</div>
+                </div>
+                <a href="https://t.co/4EFTnBjaWn" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", padding: "5px 10px", borderRadius: 6, background: "var(--foreground)", color: "var(--surface)", fontWeight: 700, fontSize: 11, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
+                  Apply ↗
+                </a>
+              </div>
+            </div>
+          </div>
+
+          {/* Card 2: iOS App Coming Soon */}
+          <div style={{
+            flex: 1, minWidth: 0,
+            display: "flex",
+            borderRadius: 10,
+            border: "1px solid var(--border)",
+            background: "var(--surface)",
+            boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
+            overflow: "hidden",
+          }}>
+            <div style={{
+              width: 76, flexShrink: 0,
+              background: "linear-gradient(160deg, #1c1c1e 0%, #0a0a0a 60%, #0f1520 100%)",
+              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5,
+            }}>
+              <svg width="26" height="32" viewBox="0 0 384 512" fill="white" xmlns="http://www.w3.org/2000/svg">
+                <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
+              </svg>
+              <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>iOS</span>
+            </div>
+            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 5 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, minWidth: 0 }}>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 14, height: 14, flexShrink: 0 }}>
+                  <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--foreground)" strokeWidth="3.5" strokeLinejoin="round"/>
+                  <line x1="24" y1="13" x2="14.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="24" y1="13" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
+                  <line x1="14.5" y1="29.5" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
+                  <circle cx="24" cy="13" r="3.5" fill="var(--foreground)"/>
+                  <circle cx="14.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
+                  <circle cx="33.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
+                </svg>
+                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Crewboard</span>
+                <span style={{ width: 12, height: 12, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
+                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.04em", textTransform: "uppercase", background: "rgba(20,184,166,0.1)", color: "var(--brand)", padding: "2px 7px", borderRadius: 6, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)", whiteSpace: "nowrap" }}>Soon</span>
+              </div>
+              <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
+                Crewboard iOS App — Hire &amp; Find Work on the Go
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--border)" }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
+                  <div style={{ fontSize: 10.5, fontWeight: 700, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Available on iPhone</div>
+                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Gigs, escrow &amp; DMs · Launching soon</div>
+                </div>
+                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 9px", borderRadius: 6, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.12)", opacity: 0.5, cursor: "not-allowed", flexShrink: 0 }}>
+                  <svg width="9" height="11" viewBox="0 0 384 512" fill="white"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
+                  <span style={{ fontSize: 10, fontWeight: 700, color: "white", whiteSpace: "nowrap" }}>App Store</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <style>{`
+          @media (max-width: 600px) { .spotlight-row { flex-direction: column !important; } }
+        `}</style>
+
       </div>
 
       {/* ── FEATURED FREELANCERS ── */}
