@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
   User, ClipboardList, MessageSquare, Heart,
-  CreditCard, Users, Briefcase, HelpCircle, LogOut, ChevronDown, ArrowLeftRight,
+  CreditCard, Users, Briefcase, HelpCircle, LogOut, ChevronDown, ArrowLeftRight, LayoutDashboard,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useMode, setMode } from '@/components/ModeProvider'
@@ -183,6 +183,9 @@ export default function NavAvatarDropdown({
 
           {/* Nav links */}
           <div className="p-1.5">
+            <MenuLink href="/dashboard" icon={<LayoutDashboard size={14} />}>
+              Dashboard
+            </MenuLink>
             <MenuLink href={twitterHandle ? `/u/${twitterHandle}` : '/dashboard'} icon={<User size={14} />}>
               My Profile
             </MenuLink>

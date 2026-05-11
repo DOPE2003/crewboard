@@ -34,7 +34,7 @@ export default function NavInlineLinks({ isLoggedIn }: { isLoggedIn: boolean }) 
           ? <NavLink href="/jobs/new" label="Post a Job" active={pathname === "/jobs/new"} />
           : <NavLink href="/gigs/mine" label="My Gigs" active={pathname === "/gigs/mine"} />
       ) : (
-        <NavLink href="/talent" label="Find Talent" active={pathname === "/talent"} />
+        <NavLink href="/dashboard" label="Dashboard" active={pathname === "/dashboard"} />
       )}
       <NavLink href="/how" label="How it Works" active={pathname === "/how"} />
     </div>
