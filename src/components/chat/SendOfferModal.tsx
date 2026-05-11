@@ -172,9 +172,9 @@ export default function SendOfferModal({ isOpen, onClose, conversationId, receiv
 
             {/* Fee breakdown preview */}
             {title.trim() && Number(amount) > 0 && (() => {
-              const gross = Math.max(1, Math.round(Number(amount)));
-              const fee = Math.floor((gross * 1_000) / 10_000);
-              const net = gross - fee;
+              const servicePrice = Math.max(1, Math.round(Number(amount)));
+              const platformFee  = Math.floor((servicePrice * 1_000) / 10_000);
+              const totalPayment = servicePrice + platformFee;
               return (
                 <div style={{
                   padding: "14px 16px", borderRadius: 12,
@@ -194,21 +194,24 @@ export default function SendOfferModal({ isOpen, onClose, conversationId, receiv
                   </div>
                   <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
-                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Client Pays</span>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)" }}>${gross}</span>
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Service Price</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)" }}>${servicePrice}</span>
                     </div>
                     <div style={{ height: 1, background: "rgba(20,184,166,0.15)", margin: "2px 0" }} />
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
-                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Crewboard Fee <span style={{ fontSize: 10 }}>(10%)</span></span>
-                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>−${fee}</span>
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Platform Fee <span style={{ fontSize: 10 }}>(10%)</span></span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>+${platformFee}</span>
                     </div>
                     <div style={{ height: 1, background: "rgba(20,184,166,0.15)", margin: "2px 0" }} />
                     <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
-                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)" }}>Freelancer Receives</span>
-                      <span style={{ fontSize: 17, fontWeight: 800, color: "#14B8A6" }}>${net}</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)" }}>Total Payment</span>
+                      <span style={{ fontSize: 17, fontWeight: 800, color: "#14B8A6" }}>${totalPayment}</span>
                     </div>
                   </div>
-                  <div style={{ marginTop: 10, display: "flex", alignItems: "flex-start", gap: 6, padding: "7px 10px", borderRadius: 8, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.1)" }}>
+                  <div style={{ marginTop: 8, fontSize: 11, color: "#14B8A6", fontWeight: 600, textAlign: "center" }}>
+                    Freelancer receives full amount.
+                  </div>
+                  <div style={{ marginTop: 8, display: "flex", alignItems: "flex-start", gap: 6, padding: "7px 10px", borderRadius: 8, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.1)" }}>
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
                       <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                     </svg>

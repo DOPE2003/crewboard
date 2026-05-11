@@ -126,15 +126,8 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             <div style={{ textAlign: "right" }}>
               <div style={{ fontFamily: "Inter, sans-serif", fontWeight: 700, fontSize: "1.4rem", color: "#2DD4BF" }}>${order.amount} USDC</div>
               {isSeller ? (
-                <div style={{ fontSize: "0.63rem", color: "var(--text-muted)", marginTop: 3, lineHeight: 1.5 }}>
-                  {(() => {
-                    const fee = Math.floor((order.amount * 1_000) / 10_000);
-                    const net = order.amount - fee;
-                    return (
-                      <>You receive <strong style={{ color: "#2DD4BF" }}>${net}</strong>{" "}
-                      <span>(10% fee: ${fee})</span></>
-                    );
-                  })()}
+                <div style={{ fontSize: "0.63rem", color: "#14b8a6", marginTop: 3, fontWeight: 600 }}>
+                  You receive the full amount.
                 </div>
               ) : (
                 <div style={{ fontSize: "0.65rem", color: "var(--text-muted)", marginTop: 2 }}>
@@ -166,28 +159,32 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
         {/* Payment Breakdown */}
         {(() => {
-          const fee = Math.floor((order.amount * 1_000) / 10_000);
-          const net = order.amount - fee;
+          const servicePrice = order.amount;
+          const platformFee  = Math.floor((servicePrice * 1_000) / 10_000);
+          const totalPayment = servicePrice + platformFee;
           return (
             <div style={CARD_SM}>
               <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.9rem" }}>Payment Breakdown</div>
               <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>Client Pays</span>
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "var(--foreground)" }}>${order.amount} USDC</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>Service Price</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "var(--foreground)" }}>${servicePrice} USDC</span>
                 </div>
                 <div style={{ height: "1px", background: "var(--card-border)", margin: "2px 0" }} />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>Crewboard Fee <span style={{ fontSize: "0.68rem" }}>(10%)</span></span>
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>−${fee} USDC</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>Platform Fee <span style={{ fontSize: "0.68rem" }}>(10%)</span></span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>+${platformFee} USDC</span>
                 </div>
                 <div style={{ height: "1px", background: "var(--card-border)", margin: "2px 0" }} />
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "var(--foreground)" }}>Freelancer Receives</span>
-                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "1.1rem", fontWeight: 800, color: "#2DD4BF" }}>${net} USDC</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "var(--foreground)" }}>Total Payment</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "1.1rem", fontWeight: 800, color: "#2DD4BF" }}>${totalPayment} USDC</span>
                 </div>
               </div>
-              <div style={{ marginTop: "0.85rem", display: "flex", alignItems: "flex-start", gap: 8, padding: "0.6rem 0.8rem", borderRadius: 8, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.12)" }}>
+              <div style={{ marginTop: "0.75rem", fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "#14b8a6", fontWeight: 600, textAlign: "center" }}>
+                Freelancer receives full amount.
+              </div>
+              <div style={{ marginTop: "0.75rem", display: "flex", alignItems: "flex-start", gap: 8, padding: "0.6rem 0.8rem", borderRadius: 8, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.12)" }}>
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
                   <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
                 </svg>

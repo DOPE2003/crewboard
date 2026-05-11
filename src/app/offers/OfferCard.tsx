@@ -32,9 +32,9 @@ export default function OfferCard({ offer: initialOffer, type }: { offer: any; t
   const counterpart = type === "sent" ? offer.receiver : offer.sender;
   const displayName = counterpart?.name ?? counterpart?.twitterHandle ?? "Unknown";
 
-  const gross = offer.amount;
-  const fee   = Math.floor((gross * 1_000) / 10_000);
-  const net   = gross - fee;
+  const servicePrice = offer.amount;
+  const platformFee  = Math.floor((servicePrice * 1_000) / 10_000);
+  const totalPayment = servicePrice + platformFee;
 
   const isPendingReceived = offer.status === "pending" && type === "received";
 
@@ -152,15 +152,15 @@ export default function OfferCard({ offer: initialOffer, type }: { offer: any; t
         background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.09)",
       }}>
         <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
-          Pays&nbsp;<strong style={{ color: "var(--foreground)", fontWeight: 700 }}>${gross}</strong>
+          Service&nbsp;<strong style={{ color: "var(--foreground)", fontWeight: 700 }}>${servicePrice}</strong>
         </span>
         <span style={{ fontSize: 10, color: "var(--text-muted)", opacity: 0.4 }}>·</span>
         <span style={{ fontSize: 11, color: "var(--text-muted)" }}>
-          Fee&nbsp;<strong style={{ fontWeight: 600 }}>−${fee}</strong>
+          Fee&nbsp;<strong style={{ fontWeight: 600 }}>+${platformFee}</strong>
         </span>
         <span style={{ fontSize: 10, color: "var(--text-muted)", opacity: 0.4 }}>·</span>
         <span style={{ fontSize: 11, color: "var(--foreground)", fontWeight: 700 }}>
-          Receives&nbsp;<strong style={{ color: "#14B8A6" }}>${net}</strong>
+          Total&nbsp;<strong style={{ color: "#14B8A6" }}>${totalPayment}</strong>
         </span>
         <span style={{ marginLeft: "auto", display: "flex", alignItems: "center", gap: 4 }}>
           <svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
