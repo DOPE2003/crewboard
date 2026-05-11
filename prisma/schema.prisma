@@ -235,6 +235,7 @@ model Order {
   deliveryNote        String?
   deliveryFiles       Json?
   deliverySubmittedAt DateTime?
+  deliveryDeadline    DateTime?
   deliveryHistory     Json      @default("[]")
   revisionRequests    Json      @default("[]")
   revisionCount       Int       @default(0)

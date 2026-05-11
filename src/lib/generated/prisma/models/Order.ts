@@ -51,6 +51,7 @@ export type OrderMinAggregateOutputType = {
   updatedAt: Date | null
   deliveryNote: string | null
   deliverySubmittedAt: Date | null
+  deliveryDeadline: Date | null
   revisionCount: number | null
   feeOverridePct: number | null
   campaignClaimId: string | null
@@ -69,6 +70,7 @@ export type OrderMaxAggregateOutputType = {
   updatedAt: Date | null
   deliveryNote: string | null
   deliverySubmittedAt: Date | null
+  deliveryDeadline: Date | null
   revisionCount: number | null
   feeOverridePct: number | null
   campaignClaimId: string | null
@@ -88,6 +90,7 @@ export type OrderCountAggregateOutputType = {
   deliveryNote: number
   deliveryFiles: number
   deliverySubmittedAt: number
+  deliveryDeadline: number
   deliveryHistory: number
   revisionRequests: number
   revisionCount: number
@@ -122,6 +125,7 @@ export type OrderMinAggregateInputType = {
   updatedAt?: true
   deliveryNote?: true
   deliverySubmittedAt?: true
+  deliveryDeadline?: true
   revisionCount?: true
   feeOverridePct?: true
   campaignClaimId?: true
@@ -140,6 +144,7 @@ export type OrderMaxAggregateInputType = {
   updatedAt?: true
   deliveryNote?: true
   deliverySubmittedAt?: true
+  deliveryDeadline?: true
   revisionCount?: true
   feeOverridePct?: true
   campaignClaimId?: true
@@ -159,6 +164,7 @@ export type OrderCountAggregateInputType = {
   deliveryNote?: true
   deliveryFiles?: true
   deliverySubmittedAt?: true
+  deliveryDeadline?: true
   deliveryHistory?: true
   revisionRequests?: true
   revisionCount?: true
@@ -267,6 +273,7 @@ export type OrderGroupByOutputType = {
   deliveryNote: string | null
   deliveryFiles: runtime.JsonValue | null
   deliverySubmittedAt: Date | null
+  deliveryDeadline: Date | null
   deliveryHistory: runtime.JsonValue
   revisionRequests: runtime.JsonValue
   revisionCount: number
@@ -311,6 +318,7 @@ export type OrderWhereInput = {
   deliveryNote?: Prisma.StringNullableFilter<"Order"> | string | null
   deliveryFiles?: Prisma.JsonNullableFilter<"Order">
   deliverySubmittedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  deliveryDeadline?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   deliveryHistory?: Prisma.JsonFilter<"Order">
   revisionRequests?: Prisma.JsonFilter<"Order">
   revisionCount?: Prisma.IntFilter<"Order"> | number
@@ -338,6 +346,7 @@ export type OrderOrderByWithRelationInput = {
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryFiles?: Prisma.SortOrderInput | Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryHistory?: Prisma.SortOrder
   revisionRequests?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
@@ -368,6 +377,7 @@ export type OrderWhereUniqueInput = Prisma.AtLeast<{
   deliveryNote?: Prisma.StringNullableFilter<"Order"> | string | null
   deliveryFiles?: Prisma.JsonNullableFilter<"Order">
   deliverySubmittedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  deliveryDeadline?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   deliveryHistory?: Prisma.JsonFilter<"Order">
   revisionRequests?: Prisma.JsonFilter<"Order">
   revisionCount?: Prisma.IntFilter<"Order"> | number
@@ -395,6 +405,7 @@ export type OrderOrderByWithAggregationInput = {
   deliveryNote?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryFiles?: Prisma.SortOrderInput | Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrderInput | Prisma.SortOrder
+  deliveryDeadline?: Prisma.SortOrderInput | Prisma.SortOrder
   deliveryHistory?: Prisma.SortOrder
   revisionRequests?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
@@ -424,6 +435,7 @@ export type OrderScalarWhereWithAggregatesInput = {
   deliveryNote?: Prisma.StringNullableWithAggregatesFilter<"Order"> | string | null
   deliveryFiles?: Prisma.JsonNullableWithAggregatesFilter<"Order">
   deliverySubmittedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
+  deliveryDeadline?: Prisma.DateTimeNullableWithAggregatesFilter<"Order"> | Date | string | null
   deliveryHistory?: Prisma.JsonWithAggregatesFilter<"Order">
   revisionRequests?: Prisma.JsonWithAggregatesFilter<"Order">
   revisionCount?: Prisma.IntWithAggregatesFilter<"Order"> | number
@@ -442,6 +454,7 @@ export type OrderCreateInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -469,6 +482,7 @@ export type OrderUncheckedCreateInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -490,6 +504,7 @@ export type OrderUpdateInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -517,6 +532,7 @@ export type OrderUncheckedUpdateInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -541,6 +557,7 @@ export type OrderCreateManyInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -559,6 +576,7 @@ export type OrderUpdateManyMutationInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -580,6 +598,7 @@ export type OrderUncheckedUpdateManyInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -611,6 +630,7 @@ export type OrderCountOrderByAggregateInput = {
   deliveryNote?: Prisma.SortOrder
   deliveryFiles?: Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrder
+  deliveryDeadline?: Prisma.SortOrder
   deliveryHistory?: Prisma.SortOrder
   revisionRequests?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
@@ -637,6 +657,7 @@ export type OrderMaxOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrder
+  deliveryDeadline?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
   feeOverridePct?: Prisma.SortOrder
   campaignClaimId?: Prisma.SortOrder
@@ -655,6 +676,7 @@ export type OrderMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
   deliveryNote?: Prisma.SortOrder
   deliverySubmittedAt?: Prisma.SortOrder
+  deliveryDeadline?: Prisma.SortOrder
   revisionCount?: Prisma.SortOrder
   feeOverridePct?: Prisma.SortOrder
   campaignClaimId?: Prisma.SortOrder
@@ -865,6 +887,7 @@ export type OrderCreateWithoutBuyerInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -890,6 +913,7 @@ export type OrderUncheckedCreateWithoutBuyerInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -921,6 +945,7 @@ export type OrderCreateWithoutSellerInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -946,6 +971,7 @@ export type OrderUncheckedCreateWithoutSellerInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -999,6 +1025,7 @@ export type OrderScalarWhereInput = {
   deliveryNote?: Prisma.StringNullableFilter<"Order"> | string | null
   deliveryFiles?: Prisma.JsonNullableFilter<"Order">
   deliverySubmittedAt?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
+  deliveryDeadline?: Prisma.DateTimeNullableFilter<"Order"> | Date | string | null
   deliveryHistory?: Prisma.JsonFilter<"Order">
   revisionRequests?: Prisma.JsonFilter<"Order">
   revisionCount?: Prisma.IntFilter<"Order"> | number
@@ -1033,6 +1060,7 @@ export type OrderCreateWithoutGigInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1058,6 +1086,7 @@ export type OrderUncheckedCreateWithoutGigInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1105,6 +1134,7 @@ export type OrderCreateWithoutReviewsInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1131,6 +1161,7 @@ export type OrderUncheckedCreateWithoutReviewsInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1167,6 +1198,7 @@ export type OrderUpdateWithoutReviewsInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1193,6 +1225,7 @@ export type OrderUncheckedUpdateWithoutReviewsInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1213,6 +1246,7 @@ export type OrderCreateWithoutDisputesInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1239,6 +1273,7 @@ export type OrderUncheckedCreateWithoutDisputesInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1275,6 +1310,7 @@ export type OrderUpdateWithoutDisputesInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1301,6 +1337,7 @@ export type OrderUncheckedUpdateWithoutDisputesInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1321,6 +1358,7 @@ export type OrderCreateWithoutOfferInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1347,6 +1385,7 @@ export type OrderUncheckedCreateWithoutOfferInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1383,6 +1422,7 @@ export type OrderUpdateWithoutOfferInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1409,6 +1449,7 @@ export type OrderUncheckedUpdateWithoutOfferInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1431,6 +1472,7 @@ export type OrderCreateManyBuyerInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1451,6 +1493,7 @@ export type OrderCreateManySellerInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1469,6 +1512,7 @@ export type OrderUpdateWithoutBuyerInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1494,6 +1538,7 @@ export type OrderUncheckedUpdateWithoutBuyerInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1517,6 +1562,7 @@ export type OrderUncheckedUpdateManyWithoutBuyerInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1535,6 +1581,7 @@ export type OrderUpdateWithoutSellerInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1560,6 +1607,7 @@ export type OrderUncheckedUpdateWithoutSellerInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1583,6 +1631,7 @@ export type OrderUncheckedUpdateManyWithoutSellerInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1603,6 +1652,7 @@ export type OrderCreateManyGigInput = {
   deliveryNote?: string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Date | string | null
+  deliveryDeadline?: Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: number
@@ -1621,6 +1671,7 @@ export type OrderUpdateWithoutGigInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1646,6 +1697,7 @@ export type OrderUncheckedUpdateWithoutGigInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1669,6 +1721,7 @@ export type OrderUncheckedUpdateManyWithoutGigInput = {
   deliveryNote?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   deliveryFiles?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   deliverySubmittedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  deliveryDeadline?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   deliveryHistory?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionRequests?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   revisionCount?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1730,6 +1783,7 @@ export type OrderSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   deliveryNote?: boolean
   deliveryFiles?: boolean
   deliverySubmittedAt?: boolean
+  deliveryDeadline?: boolean
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
@@ -1758,6 +1812,7 @@ export type OrderSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryNote?: boolean
   deliveryFiles?: boolean
   deliverySubmittedAt?: boolean
+  deliveryDeadline?: boolean
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
@@ -1782,6 +1837,7 @@ export type OrderSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   deliveryNote?: boolean
   deliveryFiles?: boolean
   deliverySubmittedAt?: boolean
+  deliveryDeadline?: boolean
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
@@ -1806,6 +1862,7 @@ export type OrderSelectScalar = {
   deliveryNote?: boolean
   deliveryFiles?: boolean
   deliverySubmittedAt?: boolean
+  deliveryDeadline?: boolean
   deliveryHistory?: boolean
   revisionRequests?: boolean
   revisionCount?: boolean
@@ -1813,7 +1870,7 @@ export type OrderSelectScalar = {
   campaignClaimId?: boolean
 }
 
-export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gigId" | "buyerId" | "sellerId" | "amount" | "status" | "escrowAddress" | "txHash" | "createdAt" | "updatedAt" | "deliveryNote" | "deliveryFiles" | "deliverySubmittedAt" | "deliveryHistory" | "revisionRequests" | "revisionCount" | "feeOverridePct" | "campaignClaimId", ExtArgs["result"]["order"]>
+export type OrderOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "gigId" | "buyerId" | "sellerId" | "amount" | "status" | "escrowAddress" | "txHash" | "createdAt" | "updatedAt" | "deliveryNote" | "deliveryFiles" | "deliverySubmittedAt" | "deliveryDeadline" | "deliveryHistory" | "revisionRequests" | "revisionCount" | "feeOverridePct" | "campaignClaimId", ExtArgs["result"]["order"]>
 export type OrderInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   buyer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   gig?: boolean | Prisma.GigDefaultArgs<ExtArgs>
@@ -1858,6 +1915,7 @@ export type $OrderPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     deliveryNote: string | null
     deliveryFiles: runtime.JsonValue | null
     deliverySubmittedAt: Date | null
+    deliveryDeadline: Date | null
     deliveryHistory: runtime.JsonValue
     revisionRequests: runtime.JsonValue
     revisionCount: number
@@ -2305,6 +2363,7 @@ export interface OrderFieldRefs {
   readonly deliveryNote: Prisma.FieldRef<"Order", 'String'>
   readonly deliveryFiles: Prisma.FieldRef<"Order", 'Json'>
   readonly deliverySubmittedAt: Prisma.FieldRef<"Order", 'DateTime'>
+  readonly deliveryDeadline: Prisma.FieldRef<"Order", 'DateTime'>
   readonly deliveryHistory: Prisma.FieldRef<"Order", 'Json'>
   readonly revisionRequests: Prisma.FieldRef<"Order", 'Json'>
   readonly revisionCount: Prisma.FieldRef<"Order", 'Int'>

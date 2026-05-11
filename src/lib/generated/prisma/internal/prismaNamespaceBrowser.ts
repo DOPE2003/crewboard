@@ -283,6 +283,7 @@ export const OrderScalarFieldEnum = {
   deliveryNote: 'deliveryNote',
   deliveryFiles: 'deliveryFiles',
   deliverySubmittedAt: 'deliverySubmittedAt',
+  deliveryDeadline: 'deliveryDeadline',
   deliveryHistory: 'deliveryHistory',
   revisionRequests: 'revisionRequests',
   revisionCount: 'revisionCount',

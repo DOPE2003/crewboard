@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 
-type FilterKey = "all" | "active" | "waiting" | "completed" | "disputes" | "cancelled";
+type FilterKey = "all" | "active" | "waiting" | "overdue" | "completed" | "disputes" | "cancelled";
 
 // ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -28,8 +28,8 @@ function escrowLabel(status: string): { text: string; color: string } {
 }
 
 function statusLabel(status: string, role: "buyer" | "seller"): string {
-  if (status === "pending")   return role === "buyer" ? "Awaiting acceptance"       : "New order — action needed";
-  if (status === "funded")    return role === "buyer" ? "Escrow locked"             : "Funded — accept to start";
+  if (status === "pending")   return role === "buyer" ? "Awaiting acceptance"         : "New order — action needed";
+  if (status === "funded")    return role === "buyer" ? "Escrow locked"               : "Funded — accept to start";
   if (status === "accepted")  return "In progress";
   if (status === "delivered") return role === "buyer" ? "Delivered — release payment" : "Awaiting approval";
   if (status === "completed") return "Completed";
@@ -49,26 +49,42 @@ function statusColor(status: string, role: "buyer" | "seller"): string {
   return map[status] ?? "#94a3b8";
 }
 
-function primaryCta(status: string, role: "buyer" | "seller", orderId: string): { label: string; href: string; urgent: boolean } | null {
-  const href = `/orders/${orderId}`;
-  if (status === "pending"   && role === "seller") return { label: "Accept Order",       href, urgent: true  };
-  if (status === "pending"   && role === "buyer")  return { label: "View Order",         href, urgent: false };
-  if (status === "funded"    && role === "seller") return { label: "Accept & Start",     href, urgent: true  };
-  if (status === "funded"    && role === "buyer")  return { label: "View Progress",      href, urgent: false };
-  if (status === "accepted"  && role === "seller") return { label: "Submit Delivery",    href, urgent: false };
-  if (status === "accepted"  && role === "buyer")  return { label: "View Progress",      href, urgent: false };
-  if (status === "delivered" && role === "buyer")  return { label: "Review & Release",   href, urgent: true  };
-  if (status === "delivered" && role === "seller") return { label: "View Delivery",      href, urgent: false };
-  if (status === "completed")                      return { label: "View Order",         href, urgent: false };
-  if (status === "disputed")                       return { label: "View Dispute",       href, urgent: true  };
-  return null;
+function isOverdue(order: any): boolean {
+  if (order.status !== "accepted") return false;
+  if (!order.deliveryDeadline) return false;
+  return new Date(order.deliveryDeadline).getTime() < Date.now();
 }
 
-function isWaitingForMe(status: string, role: "buyer" | "seller"): boolean {
+function isWaitingForMe(status: string, role: "buyer" | "seller", deliveryDeadline?: string | null): boolean {
   if (role === "buyer"  && status === "delivered") return true;
   if (role === "seller" && (status === "pending" || status === "funded" || status === "accepted")) return true;
   if (status === "disputed") return true;
+  if (role === "buyer" && status === "accepted" && deliveryDeadline && new Date(deliveryDeadline).getTime() < Date.now()) return true;
   return false;
+}
+
+function primaryCta(
+  status: string,
+  role: "buyer" | "seller",
+  orderId: string,
+  deliveryDeadline?: string | null,
+): { label: string; href: string; urgent: boolean } | null {
+  const href = `/orders/${orderId}`;
+  if (status === "accepted" && deliveryDeadline && new Date(deliveryDeadline).getTime() < Date.now()) {
+    if (role === "seller") return { label: "Deliver Now",  href, urgent: true };
+    if (role === "buyer")  return { label: "Take Action",  href, urgent: true };
+  }
+  if (status === "pending"   && role === "seller") return { label: "Accept Order",     href, urgent: true  };
+  if (status === "pending"   && role === "buyer")  return { label: "View Order",       href, urgent: false };
+  if (status === "funded"    && role === "seller") return { label: "Accept & Start",   href, urgent: true  };
+  if (status === "funded"    && role === "buyer")  return { label: "View Progress",    href, urgent: false };
+  if (status === "accepted"  && role === "seller") return { label: "Submit Delivery",  href, urgent: false };
+  if (status === "accepted"  && role === "buyer")  return { label: "View Progress",    href, urgent: false };
+  if (status === "delivered" && role === "buyer")  return { label: "Review & Release", href, urgent: true  };
+  if (status === "delivered" && role === "seller") return { label: "View Delivery",    href, urgent: false };
+  if (status === "completed")                      return { label: "View Order",       href, urgent: false };
+  if (status === "disputed")                       return { label: "View Dispute",     href, urgent: true  };
+  return null;
 }
 
 function stepIndex(status: string, hasEscrow: boolean): number {
@@ -79,14 +95,49 @@ function stepIndex(status: string, hasEscrow: boolean): number {
   return idx >= 0 ? idx + 1 : 0;
 }
 
-// ── Nav icons ─────────────────────────────────────────────────────────────────
+// ── Countdown badge ───────────────────────────────────────────────────────────
 
-const NAV_CFG: {
-  key: FilterKey;
-  label: string;
-  icon: React.ReactNode;
-  accent?: string;
-}[] = [
+function CountdownBadge({ deadline }: { deadline: string | Date | null }) {
+  const [, setTick] = useState(0);
+  useEffect(() => {
+    const id = setInterval(() => setTick(t => t + 1), 60_000);
+    return () => clearInterval(id);
+  }, []);
+
+  if (!deadline) return null;
+  const ms = new Date(deadline).getTime() - Date.now();
+
+  if (ms <= 0) {
+    const abs = Math.abs(ms);
+    const days = Math.floor(abs / 86_400_000);
+    const hrs  = Math.floor((abs % 86_400_000) / 3_600_000);
+    const mins = Math.floor((abs % 3_600_000) / 60_000);
+    const text = days > 0 ? `${days}d ${hrs}h overdue` : hrs > 0 ? `${hrs}h ${mins}m overdue` : `${mins}m overdue`;
+    return (
+      <span style={{
+        fontSize: "9px", fontWeight: 700, color: "#f59e0b",
+        background: "rgba(245,158,11,0.1)", padding: "2px 6px", borderRadius: 4,
+      }}>
+        {text}
+      </span>
+    );
+  }
+
+  if (ms < 86_400_000) {
+    const hrs  = Math.floor(ms / 3_600_000);
+    const mins = Math.floor((ms % 3_600_000) / 60_000);
+    const text = hrs > 0 ? `${hrs}h ${mins}m left` : `${mins}m left`;
+    return <span style={{ fontSize: "9px", fontWeight: 600, color: "#f59e0b" }}>{text}</span>;
+  }
+
+  const days = Math.floor(ms / 86_400_000);
+  const hrs  = Math.floor((ms % 86_400_000) / 3_600_000);
+  return <span style={{ fontSize: "9px", color: "var(--text-muted)" }}>{days}d {hrs}h left</span>;
+}
+
+// ── Nav config ────────────────────────────────────────────────────────────────
+
+const NAV_CFG: { key: FilterKey; label: string; icon: React.ReactNode; accent?: string }[] = [
   {
     key: "all", label: "All Orders",
     icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>,
@@ -98,6 +149,11 @@ const NAV_CFG: {
   {
     key: "waiting", label: "Waiting For Me",
     icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>,
+    accent: "#f59e0b",
+  },
+  {
+    key: "overdue", label: "Overdue",
+    icon: <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>,
     accent: "#f59e0b",
   },
   {
@@ -115,7 +171,7 @@ const NAV_CFG: {
   },
 ];
 
-// ── Main client component ─────────────────────────────────────────────────────
+// ── Main component ────────────────────────────────────────────────────────────
 
 export default function OrdersClient({ orders }: { orders: any[] }) {
   const [filter, setFilter] = useState<FilterKey>("all");
@@ -123,7 +179,8 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
   const counts = useMemo(() => ({
     all:       orders.length,
     active:    orders.filter(o => ["pending","funded","accepted","delivered"].includes(o.status)).length,
-    waiting:   orders.filter(o => isWaitingForMe(o.status, o.role)).length,
+    waiting:   orders.filter(o => isWaitingForMe(o.status, o.role, o.deliveryDeadline)).length,
+    overdue:   orders.filter(o => isOverdue(o)).length,
     completed: orders.filter(o => o.status === "completed").length,
     disputes:  orders.filter(o => o.status === "disputed").length,
     cancelled: orders.filter(o => o.status === "cancelled").length,
@@ -133,16 +190,17 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
     let list: any[];
     switch (filter) {
       case "active":    list = orders.filter(o => ["pending","funded","accepted","delivered"].includes(o.status)); break;
-      case "waiting":   list = orders.filter(o => isWaitingForMe(o.status, o.role)); break;
+      case "waiting":   list = orders.filter(o => isWaitingForMe(o.status, o.role, o.deliveryDeadline)); break;
+      case "overdue":   list = orders.filter(o => isOverdue(o)); break;
       case "completed": list = orders.filter(o => o.status === "completed"); break;
       case "disputes":  list = orders.filter(o => o.status === "disputed"); break;
       case "cancelled": list = orders.filter(o => o.status === "cancelled"); break;
       default:          list = [...orders];
     }
     return list.sort((a, b) => {
-      const aw = isWaitingForMe(a.status, a.role) ? 0 : 1;
-      const bw = isWaitingForMe(b.status, b.role) ? 0 : 1;
-      if (aw !== bw) return aw - bw;
+      const ap = isOverdue(a) ? 0 : isWaitingForMe(a.status, a.role, a.deliveryDeadline) ? 1 : 2;
+      const bp = isOverdue(b) ? 0 : isWaitingForMe(b.status, b.role, b.deliveryDeadline) ? 1 : 2;
+      if (ap !== bp) return ap - bp;
       return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
     });
   }, [orders, filter]);
@@ -164,13 +222,10 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
         <aside
           className="ord-sidebar"
           style={{
-            width: 210,
-            flexShrink: 0,
+            width: 210, flexShrink: 0,
             borderRight: "1px solid var(--card-border)",
             padding: "1.25rem 0.5rem 2rem",
-            position: "sticky",
-            top: "5rem",
-            alignSelf: "flex-start",
+            position: "sticky", top: "5rem", alignSelf: "flex-start",
           }}
         >
           <div style={{
@@ -193,14 +248,11 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
                 onClick={() => setFilter(item.key)}
                 style={{
                   width: "100%", display: "flex", alignItems: "center", gap: 8,
-                  padding: "0.5rem 0.6rem", borderRadius: 8,
-                  border: "none",
+                  padding: "0.5rem 0.6rem", borderRadius: 8, border: "none",
                   background: isActive ? "rgba(20,184,166,0.08)" : "transparent",
-                  color: fg,
-                  fontFamily: "inherit",
+                  color: fg, fontFamily: "inherit",
                   fontSize: "0.8rem", fontWeight: isActive ? 700 : 500,
-                  cursor: "pointer", textAlign: "left",
-                  transition: "background 0.1s",
+                  cursor: "pointer", textAlign: "left", transition: "background 0.1s",
                 }}
               >
                 <span style={{ flexShrink: 0, opacity: isActive ? 1 : 0.65 }}>{item.icon}</span>
@@ -210,7 +262,7 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
                     fontSize: "0.58rem", fontWeight: 700, padding: "1px 6px", borderRadius: 99,
                     background: isActive
                       ? "rgba(20,184,166,0.15)"
-                      : item.key === "waiting"
+                      : item.key === "waiting" || item.key === "overdue"
                         ? "rgba(245,158,11,0.1)"
                         : item.key === "disputes"
                           ? "rgba(239,68,68,0.08)"
@@ -228,7 +280,7 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
         {/* ── Content ──────────────────────────────────────────── */}
         <div style={{ flex: 1, minWidth: 0, padding: "1.25rem 1.25rem 3rem" }}>
 
-          {/* Mobile scrollable tabs */}
+          {/* Mobile tabs */}
           <div
             className="ord-mob-tabs"
             style={{ display: "none", gap: 6, marginBottom: "1rem", overflowX: "auto", paddingBottom: 2 }}
@@ -272,7 +324,7 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
               <span style={{ fontSize: "0.92rem", fontWeight: 800, color: "var(--foreground)" }}>
                 {activeCfg.label}
               </span>
-              {filter === "waiting" && filtered.length > 0 && (
+              {(filter === "waiting" || filter === "overdue") && filtered.length > 0 && (
                 <span style={{ fontSize: "0.7rem", color: "#f59e0b", fontWeight: 600, marginLeft: 8 }}>
                   {filtered.length} need{filtered.length === 1 ? "s" : ""} attention
                 </span>
@@ -299,18 +351,19 @@ export default function OrdersClient({ orders }: { orders: any[] }) {
   );
 }
 
-// ── Order Card ─────────────────────────────────────────────────────────────────
+// ── Order Card ────────────────────────────────────────────────────────────────
 
 function OrderCard({ order }: { order: any }) {
   const { role, other } = order;
   const hasEscrow  = !!order.txHash;
-  const color      = statusColor(order.status, role);
+  const overdue    = isOverdue(order);
+  const color      = overdue ? "#f59e0b" : statusColor(order.status, role);
   const label      = statusLabel(order.status, role);
   const escrow     = escrowLabel(order.status);
-  const cta        = primaryCta(order.status, role, order.id);
+  const cta        = primaryCta(order.status, role, order.id, order.deliveryDeadline);
   const stepIdx    = stepIndex(order.status, hasEscrow);
   const totalSteps = hasEscrow ? 5 : 4;
-  const isUrgent   = cta?.urgent ?? false;
+  const isUrgent   = (cta?.urgent ?? false) || overdue;
   const otherName  = other?.name ?? other?.twitterHandle ?? "Unknown";
 
   const platformFee  = Math.floor((order.amount * 1_000) / 10_000);
@@ -319,19 +372,22 @@ function OrderCard({ order }: { order: any }) {
   return (
     <div style={{
       borderRadius: 12,
-      border: `1px solid ${isUrgent ? `${color}45` : "var(--card-border)"}`,
+      border: `1px solid ${overdue ? "rgba(245,158,11,0.35)" : isUrgent ? `${color}45` : "var(--card-border)"}`,
       background: "var(--card-bg)",
       overflow: "hidden",
     }}>
 
-      {/* Urgent banner */}
-      {isUrgent && (
+      {/* Top banner */}
+      {(isUrgent || overdue) && (
         <div style={{
-          background: `${color}0d`, borderBottom: `1px solid ${color}25`,
+          background: overdue ? "rgba(245,158,11,0.07)" : `${color}0d`,
+          borderBottom: `1px solid ${overdue ? "rgba(245,158,11,0.2)" : `${color}25`}`,
           padding: "4px 14px", display: "flex", alignItems: "center", gap: 6,
         }}>
-          <span style={{ width: 5, height: 5, borderRadius: "50%", background: color, flexShrink: 0 }} />
-          <span style={{ fontSize: "10px", fontWeight: 700, color }}>{label}</span>
+          <span style={{ width: 5, height: 5, borderRadius: "50%", background: overdue ? "#f59e0b" : color, flexShrink: 0 }} />
+          <span style={{ fontSize: "10px", fontWeight: 700, color: overdue ? "#f59e0b" : color }}>
+            {overdue ? "Delivery overdue — action needed" : label}
+          </span>
         </div>
       )}
 
@@ -352,7 +408,7 @@ function OrderCard({ order }: { order: any }) {
         {/* Body */}
         <div style={{ flex: 1, minWidth: 0 }}>
 
-          {/* Row 1: Title + amounts */}
+          {/* Title + amounts */}
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 8 }}>
             <div style={{
               fontSize: "13px", fontWeight: 700, color: "var(--foreground)",
@@ -366,7 +422,7 @@ function OrderCard({ order }: { order: any }) {
             </div>
           </div>
 
-          {/* Row 2: Role + counterpart */}
+          {/* Role + counterpart */}
           <div style={{ display: "flex", alignItems: "center", gap: 6, marginTop: 5, flexWrap: "wrap" }}>
             <span style={{
               fontSize: "9px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em",
@@ -385,9 +441,9 @@ function OrderCard({ order }: { order: any }) {
             )}
           </div>
 
-          {/* Row 3: Status + escrow + progress step */}
+          {/* Status + escrow + progress */}
           <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 7, flexWrap: "wrap" }}>
-            {!isUrgent && (
+            {!isUrgent && !overdue && (
               <span style={{
                 display: "inline-flex", alignItems: "center", gap: 3,
                 padding: "2px 7px", borderRadius: 99,
@@ -419,8 +475,7 @@ function OrderCard({ order }: { order: any }) {
                 height: "100%",
                 width: `${(stepIdx / totalSteps) * 100}%`,
                 background: stepIdx === totalSteps ? "#22c55e" : color,
-                borderRadius: 99,
-                transition: "width 0.3s",
+                borderRadius: 99, transition: "width 0.3s",
               }} />
             </div>
           )}
@@ -433,9 +488,14 @@ function OrderCard({ order }: { order: any }) {
         padding: "0.5rem 1rem",
         display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8,
       }}>
-        <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
-          Updated {timeAgo(order.updatedAt)}
-        </span>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <span style={{ fontSize: "10px", color: "var(--text-muted)" }}>
+            Updated {timeAgo(order.updatedAt)}
+          </span>
+          {order.status === "accepted" && order.deliveryDeadline && (
+            <CountdownBadge deadline={order.deliveryDeadline} />
+          )}
+        </div>
         {cta && (
           <Link
             href={cta.href}
@@ -443,8 +503,8 @@ function OrderCard({ order }: { order: any }) {
               display: "inline-flex", alignItems: "center", gap: 4,
               padding: "5px 13px", borderRadius: 7, fontSize: "11px", fontWeight: 700,
               textDecoration: "none",
-              background: isUrgent ? color : "transparent",
-              color: isUrgent ? "#fff" : color,
+              background: (isUrgent || overdue) ? color : "transparent",
+              color: (isUrgent || overdue) ? "#fff" : color,
               border: `1px solid ${color}`,
               flexShrink: 0,
             }}
@@ -461,12 +521,13 @@ function OrderCard({ order }: { order: any }) {
 
 function EmptyState({ filter }: { filter: FilterKey }) {
   const msgs: Record<FilterKey, { title: string; sub: string; link?: { href: string; label: string } }> = {
-    all:       { title: "No orders yet",             sub: "Orders you place or receive will appear here.", link: { href: "/talent", label: "Browse talent →" } },
-    active:    { title: "No active orders",          sub: "Start by hiring a freelancer or posting a service.", link: { href: "/talent", label: "Browse talent →" } },
-    waiting:   { title: "Nothing needs your action", sub: "You're all caught up." },
-    completed: { title: "No completed orders yet",   sub: "Completed orders appear here once paid out." },
-    disputes:  { title: "No disputes",               sub: "Disputes are raised when buyer and seller disagree." },
-    cancelled: { title: "No cancelled orders",       sub: "Cancelled orders will appear here." },
+    all:       { title: "No orders yet",              sub: "Orders you place or receive will appear here.", link: { href: "/talent", label: "Browse talent →" } },
+    active:    { title: "No active orders",           sub: "Start by hiring a freelancer or posting a service.", link: { href: "/talent", label: "Browse talent →" } },
+    waiting:   { title: "Nothing needs your action",  sub: "You're all caught up." },
+    overdue:   { title: "No overdue orders",          sub: "All deliveries are on track." },
+    completed: { title: "No completed orders yet",    sub: "Completed orders appear here once paid out." },
+    disputes:  { title: "No disputes",                sub: "Disputes are raised when buyer and seller disagree." },
+    cancelled: { title: "No cancelled orders",        sub: "Cancelled orders will appear here." },
   };
   const m = msgs[filter];
   return (

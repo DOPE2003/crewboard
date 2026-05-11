@@ -4,10 +4,11 @@ import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
 import ReviewForm from "@/components/ui/ReviewForm";
 import EscrowActions from "@/components/ui/EscrowActionsLoader";
-import { reRequestOrder } from "@/actions/orders";
+import { reRequestOrder, markOrderOverdueNotified } from "@/actions/orders";
 import ActionButton from "@/components/ui/ActionButton";
 import OrderTimeline from "@/components/ui/OrderTimeline";
 import EscrowState from "@/components/ui/EscrowState";
+import OrderOverdueBanner from "@/components/ui/OrderOverdueBanner";
 
 function hexAlpha(hex: string, alpha: number) {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -84,6 +85,15 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
   const other = isBuyer ? order.seller : order.buyer;
   const revieweeId = isBuyer ? order.sellerId : order.buyerId;
 
+  // Fire overdue notification once when the page loads after deadline passes
+  if (
+    order.status === "accepted" &&
+    order.deliveryDeadline &&
+    new Date(order.deliveryDeadline) < new Date()
+  ) {
+    markOrderOverdueNotified(order.id).catch(() => {});
+  }
+
   const [convId, existingReview, reviews, timelineEvents] = await Promise.all([
     db.conversation.findFirst({
       where: { AND: [{ participants: { has: order.buyerId } }, { participants: { has: order.sellerId } }] },
@@ -156,6 +166,16 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
             </div>
           </div>
         </div>
+
+        {/* Overdue banner */}
+        <OrderOverdueBanner
+          orderId={order.id}
+          deliveryDeadline={order.deliveryDeadline ? order.deliveryDeadline.toISOString() : null}
+          orderStatus={order.status}
+          isBuyer={isBuyer}
+          isSeller={isSeller}
+          convId={convId?.id ?? null}
+        />
 
         {/* Payment Breakdown */}
         {(() => {
@@ -278,7 +298,7 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
 
         {/* Actions */}
         {showActions && (
-          <div style={CARD_SM}>
+          <div id="order-actions" style={CARD_SM}>
             <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.9rem" }}>Actions</div>
             <EscrowActions
               orderId={order.id}

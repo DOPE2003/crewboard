@@ -46,7 +46,7 @@ export async function updateOrderStatus(orderId: string, status: string) {
 
   const order = await db.order.findUnique({
     where: { id: orderId },
-    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+    select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true, deliveryDays: true } } },
   });
   if (!order) throw new Error("Order not found");
 
@@ -71,7 +71,15 @@ export async function updateOrderStatus(orderId: string, status: string) {
   if (rule.by === "buyer" && !isBuyer) throw new Error("Only buyer can do this");
   if (rule.by === "seller" && !isSeller) throw new Error("Only seller can do this");
 
-  await db.order.update({ where: { id: orderId }, data: { status } });
+  await db.order.update({
+    where: { id: orderId },
+    data: {
+      status,
+      ...(status === "accepted" ? {
+        deliveryDeadline: new Date(Date.now() + (order.gig.deliveryDays ?? 7) * 86_400_000),
+      } : {}),
+    },
+  });
 
   logAdminAction({ actorId: userId, action: `order.${status}`, targetId: orderId });
 
@@ -348,4 +356,138 @@ export async function syncEscrowReleased(orderId: string, txHash: string) {
 
   revalidatePath(`/orders/${orderId}`);
   revalidatePath("/orders");
+}
+
+// Buyer extends the delivery deadline
+export async function extendDeadline(orderId: string, additionalDays: number): Promise<{ ok: true } | { error: string }> {
+  try {
+    const userId = await requireUserId();
+    if (!Number.isInteger(additionalDays) || additionalDays < 1 || additionalDays > 30) {
+      return { error: "Extension must be between 1 and 30 days." };
+    }
+
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      select: { buyerId: true, sellerId: true, status: true, deliveryDeadline: true, gig: { select: { title: true } } },
+    });
+    if (!order) return { error: "Order not found." };
+    if (order.buyerId !== userId) return { error: "Only the client can extend the deadline." };
+    if (order.status !== "accepted") return { error: "Cannot extend deadline for this order." };
+
+    const base = order.deliveryDeadline ? Math.max(order.deliveryDeadline.getTime(), Date.now()) : Date.now();
+    const newDeadline = new Date(base + additionalDays * 86_400_000);
+
+    await db.order.update({ where: { id: orderId }, data: { deliveryDeadline: newDeadline } });
+
+    logAdminAction({ actorId: userId, action: "order.deadline_extended", targetId: orderId, metadata: { additionalDays } });
+
+    const buyer = await db.user.findUnique({ where: { id: userId }, select: { name: true, twitterHandle: true } });
+    const buyerName = buyer?.name ?? buyer?.twitterHandle ?? "The client";
+
+    await notifyUser({
+      userId: order.sellerId,
+      type: "order",
+      title: "Deadline Extended",
+      body: `${buyerName} extended the delivery deadline by ${additionalDays} day${additionalDays !== 1 ? "s" : ""} for "${order.gig.title}".`,
+      link: `/orders/${orderId}`,
+      actionUrl: `crewboard://order/${orderId}`,
+    });
+
+    revalidatePath(`/orders/${orderId}`);
+    revalidatePath("/orders");
+    return { ok: true };
+  } catch (e: any) {
+    return { error: e?.message ?? "Failed to extend deadline." };
+  }
+}
+
+// Seller requests a deadline extension from the buyer
+export async function requestExtension(orderId: string, message?: string): Promise<{ ok: true } | { error: string }> {
+  try {
+    const userId = await requireUserId();
+
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      select: { buyerId: true, sellerId: true, status: true, gig: { select: { title: true } } },
+    });
+    if (!order) return { error: "Order not found." };
+    if (order.sellerId !== userId) return { error: "Only the freelancer can request an extension." };
+    if (order.status !== "accepted") return { error: "Cannot request extension for this order." };
+
+    const seller = await db.user.findUnique({ where: { id: userId }, select: { name: true, twitterHandle: true } });
+    const sellerName = seller?.name ?? seller?.twitterHandle ?? "The freelancer";
+
+    await notifyUser({
+      userId: order.buyerId,
+      type: "order",
+      title: "Extension Requested",
+      body: message?.trim()
+        ? `${sellerName}: "${message.trim().slice(0, 120)}"`
+        : `${sellerName} requested more time to complete "${order.gig.title}".`,
+      link: `/orders/${orderId}`,
+      actionUrl: `crewboard://order/${orderId}`,
+    });
+
+    logAdminAction({ actorId: userId, action: "order.extension_requested", targetId: orderId });
+
+    let conv = await db.conversation.findFirst({
+      where: { AND: [{ participants: { has: order.buyerId } }, { participants: { has: order.sellerId } }] },
+      select: { id: true },
+    });
+    if (!conv) {
+      conv = await db.conversation.create({
+        data: { participants: [order.buyerId, order.sellerId] },
+        select: { id: true },
+      });
+    }
+    await createMessage({
+      conversationId: conv.id,
+      senderId: userId,
+      body: `[Extension Request] ${message?.trim() ?? "I need a bit more time to deliver. Could you extend the deadline?"}`,
+    });
+
+    return { ok: true };
+  } catch (e: any) {
+    return { error: e?.message ?? "Failed to send extension request." };
+  }
+}
+
+// Called from order detail page (server) to fire one-time overdue notifications
+export async function markOrderOverdueNotified(orderId: string): Promise<void> {
+  try {
+    const existing = await db.adminActionLog.findFirst({
+      where: { targetId: orderId, action: "order.overdue_notified" },
+      select: { id: true },
+    });
+    if (existing) return;
+
+    const order = await db.order.findUnique({
+      where: { id: orderId },
+      select: { buyerId: true, sellerId: true, gig: { select: { title: true } } },
+    });
+    if (!order) return;
+
+    await Promise.all([
+      notifyUser({
+        userId: order.buyerId,
+        type: "order",
+        title: "Delivery Overdue",
+        body: `"${order.gig.title}" delivery deadline has passed. Take action now.`,
+        link: `/orders/${orderId}`,
+        actionUrl: `crewboard://order/${orderId}`,
+      }),
+      notifyUser({
+        userId: order.sellerId,
+        type: "order",
+        title: "Delivery Overdue",
+        body: `Your delivery for "${order.gig.title}" is overdue. Deliver now or request an extension.`,
+        link: `/orders/${orderId}`,
+        actionUrl: `crewboard://order/${orderId}`,
+      }),
+    ]);
+
+    logAdminAction({ actorId: order.sellerId, action: "order.overdue_notified", targetId: orderId });
+  } catch {
+    // Best-effort — never throw
+  }
 }
