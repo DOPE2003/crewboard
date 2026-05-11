@@ -164,6 +164,41 @@ export default async function OrderDetailPage({ params }: { params: Promise<{ id
           </div>
         </div>
 
+        {/* Payment Breakdown */}
+        {(() => {
+          const fee = Math.floor((order.amount * 1_000) / 10_000);
+          const net = order.amount - fee;
+          return (
+            <div style={CARD_SM}>
+              <div style={{ fontFamily: "Inter, sans-serif", fontSize: "0.58rem", letterSpacing: "0.12em", textTransform: "uppercase", color: "var(--text-muted)", marginBottom: "0.9rem" }}>Payment Breakdown</div>
+              <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>Client Pays</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "var(--foreground)" }}>${order.amount} USDC</span>
+                </div>
+                <div style={{ height: "1px", background: "var(--card-border)", margin: "2px 0" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.78rem", color: "var(--text-muted)" }}>Crewboard Fee <span style={{ fontSize: "0.68rem" }}>(10%)</span></span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)" }}>−${fee} USDC</span>
+                </div>
+                <div style={{ height: "1px", background: "var(--card-border)", margin: "2px 0" }} />
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "6px 0" }}>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.85rem", fontWeight: 700, color: "var(--foreground)" }}>Freelancer Receives</span>
+                  <span style={{ fontFamily: "Inter, sans-serif", fontSize: "1.1rem", fontWeight: 800, color: "#2DD4BF" }}>${net} USDC</span>
+                </div>
+              </div>
+              <div style={{ marginTop: "0.85rem", display: "flex", alignItems: "flex-start", gap: 8, padding: "0.6rem 0.8rem", borderRadius: 8, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.12)" }}>
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                <span style={{ fontFamily: "Inter, sans-serif", fontSize: "0.72rem", color: "#14b8a6", lineHeight: 1.5 }}>
+                  Funds are securely held in escrow until work is approved.
+                </span>
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Progress bar */}
         {isActive && stepIndex >= 0 && (
           <div style={CARD_SM}>

@@ -194,6 +194,46 @@ export default function SendOfferModal({ recipientId, recipientName, onClose }: 
             </div>
           </div>
 
+          {/* Fee breakdown */}
+          {Number(amount) > 0 && (() => {
+            const gross = parseInt(amount, 10);
+            if (isNaN(gross) || gross <= 0) return null;
+            const fee = Math.floor((gross * 1_000) / 10_000);
+            const net = gross - fee;
+            return (
+              <div style={{
+                padding: "12px 14px", borderRadius: 10,
+                background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.15)",
+              }}>
+                <div style={{ fontSize: "0.62rem", fontWeight: 700, color: "#14b8a6", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>Payment Breakdown</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Client Pays</span>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--foreground)" }}>${gross}</span>
+                  </div>
+                  <div style={{ height: "1px", background: "rgba(20,184,166,0.12)", margin: "2px 0" }} />
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0" }}>
+                    <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>Crewboard Fee <span style={{ fontSize: "0.65rem" }}>(10%)</span></span>
+                    <span style={{ fontSize: "0.8rem", fontWeight: 600, color: "var(--text-muted)" }}>−${fee}</span>
+                  </div>
+                  <div style={{ height: "1px", background: "rgba(20,184,166,0.12)", margin: "2px 0" }} />
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "4px 0" }}>
+                    <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--foreground)" }}>Freelancer Receives</span>
+                    <span style={{ fontSize: "1rem", fontWeight: 800, color: "#14b8a6" }}>${net}</span>
+                  </div>
+                </div>
+                <div style={{ marginTop: 8, display: "flex", alignItems: "flex-start", gap: 5 }}>
+                  <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#14b8a6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                  </svg>
+                  <span style={{ fontSize: "0.68rem", color: "#14b8a6", lineHeight: 1.4 }}>
+                    Funds are securely held in escrow until work is approved.
+                  </span>
+                </div>
+              </div>
+            );
+          })()}
+
           {/* How it works hint */}
           <div style={{
             padding: "10px 14px", borderRadius: 10,

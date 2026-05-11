@@ -170,27 +170,55 @@ export default function SendOfferModal({ isOpen, onClose, conversationId, receiv
               </div>
             </div>
 
-            {/* Summary preview */}
-            {title.trim() && Number(amount) > 0 && (
-              <div style={{
-                padding: "12px 16px", borderRadius: 12,
-                background: "rgba(20,184,166,0.06)",
-                border: "1px solid rgba(20,184,166,0.15)",
-              }}>
-                <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#14B8A6", marginBottom: 6 }}>
-                  Offer Preview
-                </div>
-                <div style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", marginBottom: 4 }}>{title}</div>
-                <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-                  <span style={{ fontSize: 20, fontWeight: 800, color: "#14B8A6" }}>${amount}</span>
-                  {Number(deliveryDays) > 0 && (
-                    <span style={{ fontSize: 12, color: "var(--text-muted)" }}>
-                      {deliveryDays} day{Number(deliveryDays) !== 1 ? "s" : ""} delivery
+            {/* Fee breakdown preview */}
+            {title.trim() && Number(amount) > 0 && (() => {
+              const gross = Math.max(1, Math.round(Number(amount)));
+              const fee = Math.floor((gross * 1_000) / 10_000);
+              const net = gross - fee;
+              return (
+                <div style={{
+                  padding: "14px 16px", borderRadius: 12,
+                  background: "rgba(20,184,166,0.06)",
+                  border: "1px solid rgba(20,184,166,0.15)",
+                }}>
+                  <div style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "#14B8A6", marginBottom: 8 }}>
+                    Payment Breakdown
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", marginBottom: 10 }}>
+                    {title}
+                    {Number(deliveryDays) > 0 && (
+                      <span style={{ fontSize: 11, fontWeight: 500, color: "var(--text-muted)", marginLeft: 8 }}>
+                        · {deliveryDays} day{Number(deliveryDays) !== 1 ? "s" : ""} delivery
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Client Pays</span>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)" }}>${gross}</span>
+                    </div>
+                    <div style={{ height: 1, background: "rgba(20,184,166,0.15)", margin: "2px 0" }} />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
+                      <span style={{ fontSize: 12, color: "var(--text-muted)" }}>Crewboard Fee <span style={{ fontSize: 10 }}>(10%)</span></span>
+                      <span style={{ fontSize: 13, fontWeight: 600, color: "var(--text-muted)" }}>−${fee}</span>
+                    </div>
+                    <div style={{ height: 1, background: "rgba(20,184,166,0.15)", margin: "2px 0" }} />
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "5px 0" }}>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: "var(--foreground)" }}>Freelancer Receives</span>
+                      <span style={{ fontSize: 17, fontWeight: 800, color: "#14B8A6" }}>${net}</span>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 10, display: "flex", alignItems: "flex-start", gap: 6, padding: "7px 10px", borderRadius: 8, background: "rgba(20,184,166,0.05)", border: "1px solid rgba(20,184,166,0.1)" }}>
+                    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                      <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                    </svg>
+                    <span style={{ fontSize: 11, color: "#14B8A6", lineHeight: 1.4 }}>
+                      Funds are securely held in escrow until work is approved.
                     </span>
-                  )}
+                  </div>
                 </div>
-              </div>
-            )}
+              );
+            })()}
 
             {/* Error */}
             {error && (

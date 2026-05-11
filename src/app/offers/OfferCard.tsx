@@ -131,6 +131,44 @@ export default function OfferCard({ offer: initialOffer, type }: { offer: any; t
         </span>
       </div>
 
+      {/* Fee breakdown */}
+      {(() => {
+        const gross = offer.amount;
+        const fee = Math.floor((gross * 1_000) / 10_000);
+        const net = gross - fee;
+        return (
+          <div style={{
+            padding: "10px 12px", borderRadius: 10,
+            background: "rgba(20,184,166,0.04)", border: "1px solid rgba(20,184,166,0.1)",
+          }}>
+            <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0" }}>
+                <span style={{ fontSize: 11, color: "var(--text-muted)" }}>Client Pays</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "var(--foreground)" }}>${gross}</span>
+              </div>
+              <div style={{ height: 1, background: "rgba(20,184,166,0.1)", margin: "2px 0" }} />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0" }}>
+                <span style={{ fontSize: 11, color: "var(--text-muted)" }}>Crewboard Fee (10%)</span>
+                <span style={{ fontSize: 12, fontWeight: 600, color: "var(--text-muted)" }}>−${fee}</span>
+              </div>
+              <div style={{ height: 1, background: "rgba(20,184,166,0.1)", margin: "2px 0" }} />
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "3px 0" }}>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "var(--foreground)" }}>Freelancer Receives</span>
+                <span style={{ fontSize: 14, fontWeight: 800, color: "#14B8A6" }}>${net}</span>
+              </div>
+            </div>
+            <div style={{ marginTop: 7, display: "flex", alignItems: "flex-start", gap: 5, padding: "5px 8px", borderRadius: 6, background: "rgba(20,184,166,0.05)" }}>
+              <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#14B8A6" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ flexShrink: 0, marginTop: 1 }}>
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              <span style={{ fontSize: 10, color: "#14B8A6", lineHeight: 1.4 }}>
+                Funds are securely held in escrow until work is approved.
+              </span>
+            </div>
+          </div>
+        );
+      })()}
+
       {/* Hint */}
       {hint && (
         <div style={{ display: "flex", alignItems: "flex-start", gap: 6, padding: "0.55rem 0.75rem", borderRadius: 8, background: "var(--background)", border: "1px solid var(--card-border)" }}>
