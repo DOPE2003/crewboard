@@ -12,12 +12,11 @@ const BROWSE_CATEGORIES = [
     label: "Graphic Design", key: "Graphic & Design",
     iconColor: "#e91e8c", iconBg: "#fde8f3",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="13.5" cy="6.5" r=".5" fill="currentColor"/>
-        <circle cx="17.5" cy="10.5" r=".5" fill="currentColor"/>
-        <circle cx="8.5" cy="7.5" r=".5" fill="currentColor"/>
-        <circle cx="6.5" cy="12.5" r=".5" fill="currentColor"/>
-        <path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/>
+      /* Paintbrush */
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3z"/>
+        <path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7"/>
+        <path d="M14.5 17.5L4.5 15"/>
       </svg>
     ),
   },
@@ -25,8 +24,10 @@ const BROWSE_CATEGORIES = [
     label: "Web3 Dev", key: "Coding & Tech",
     iconColor: "#2563eb", iconBg: "#dbeafe",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>
+      /* Terminal >_ */
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <polyline points="4 17 10 11 4 5"/>
+        <line x1="12" y1="19" x2="20" y2="19"/>
       </svg>
     ),
   },
@@ -34,8 +35,12 @@ const BROWSE_CATEGORIES = [
     label: "Content Creator", key: "Content Creator",
     iconColor: "#ea580c", iconBg: "#ffedd5",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+      /* Person with megaphone */
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M3 18v-2a4 4 0 0 1 4-4h3"/>
+        <circle cx="8" cy="7" r="4"/>
+        <path d="M14 9l7-4v12l-7-4v-4z"/>
+        <line x1="21" y1="12" x2="14" y2="12"/>
       </svg>
     ),
   },
@@ -43,8 +48,10 @@ const BROWSE_CATEGORIES = [
     label: "Social Marketing", key: "Social Marketing",
     iconColor: "#7c3aed", iconBg: "#ede9fe",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+      /* Shield with checkmark */
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+        <polyline points="9 12 11 14 15 10"/>
       </svg>
     ),
   },
@@ -52,9 +59,10 @@ const BROWSE_CATEGORIES = [
     label: "Motion Graphic", key: "Video & Animation",
     iconColor: "#16a34a", iconBg: "#dcfce7",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <circle cx="12" cy="12" r="10"/>
-        <polygon points="10 8 16 12 10 16 10 8" fill="currentColor" stroke="none"/>
+      /* Play button */
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+        <polygon points="9.5 7.5 16.5 12 9.5 16.5 9.5 7.5" fill="currentColor" stroke="none"/>
       </svg>
     ),
   },
@@ -62,8 +70,10 @@ const BROWSE_CATEGORIES = [
     label: "AI Engineer", key: "AI Engineer",
     iconColor: "#ca8a04", iconBg: "#fef9c3",
     icon: (
-      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-        <path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6L12 2z"/>
+      /* AI sparkle */
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.937A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
+        <path d="M20 3v4M22 5h-4"/>
       </svg>
     ),
   },
