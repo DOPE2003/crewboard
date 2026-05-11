@@ -31,22 +31,48 @@ export default function AuthLayout({
           overflow: "hidden",
         }}
       >
-        {/* ── Orb glow ── */}
+        {/* ── Orb ── */}
         <div style={{
           position: "absolute",
-          top: "8%", left: "50%",
+          top: "2%", left: "50%",
           transform: "translateX(-50%)",
-          width: "110%", paddingBottom: "110%",
+          width: "105%", paddingBottom: "105%",
           borderRadius: "50%",
-          background: "radial-gradient(ellipse at 50% 40%, rgba(255,255,255,0.92) 0%, rgba(160,240,200,0.55) 22%, rgba(20,184,166,0.22) 48%, rgba(20,100,80,0.06) 68%, transparent 78%)",
+          /* white-edged glow ring */
+          boxShadow: [
+            "0 0 0 1.5px rgba(255,255,255,0.55)",
+            "0 0 32px 10px rgba(255,255,255,0.30)",
+            "0 0 80px 30px rgba(255,255,255,0.13)",
+          ].join(", "),
+          /* sphere gradient: white top → lavender-white → teal → dark */
+          background: [
+            "radial-gradient(ellipse at 50% 20%,",
+            "  #ffffff        0%,",
+            "  #dff4ee       14%,",
+            "  #a8ddd0       26%,",
+            "  #4db89a       40%,",
+            "  #1a7a5e       55%,",
+            "  #0d4a38       70%,",
+            "  transparent   82%",
+            ")",
+          ].join(""),
           pointerEvents: "none",
         }} />
 
         {/* ── Logo ── */}
         <div style={{ padding: "32px 36px 0", position: "relative", zIndex: 1, flexShrink: 0 }}>
           <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/images/logo-animated.svg" alt="Crewboard" style={{ width: 30, height: 30 }} />
+            {/* Icon-only inline SVG — white strokes on dark bg */}
+            <svg width="28" height="28" viewBox="16 30 112 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <polygon points="124,80 98,125 46,125 20,80 46,35 98,35"
+                fill="none" stroke="white" strokeWidth="5" strokeLinejoin="round"/>
+              <line x1="72" y1="46" x2="46" y2="96" stroke="white" strokeWidth="4.2" strokeLinecap="round"/>
+              <line x1="72" y1="46" x2="98" y2="96" stroke="white" strokeWidth="4.2" strokeLinecap="round"/>
+              <line x1="46" y1="96" x2="98" y2="96" stroke="white" strokeWidth="4.2" strokeLinecap="round"/>
+              <circle cx="72" cy="46" r="7" fill="white"/>
+              <circle cx="46" cy="96" r="7" fill="white"/>
+              <circle cx="98" cy="96" r="7" fill="white"/>
+            </svg>
             <span style={{ fontSize: 17, fontWeight: 800, color: "#ffffff", letterSpacing: "-0.4px", lineHeight: 1 }}>
               <span style={{ fontWeight: 400 }}>crew</span>board
             </span>
