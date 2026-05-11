@@ -19,28 +19,50 @@ const ChatIcon = ({ size = 18, color = "currentColor" }: { size?: number; color?
   </svg>
 );
 
-/* ─── Data ───────────────────────────────────────────────────── */
 const FEATURES = [
   { Icon: ShieldCheckIcon, bg: "#dcfce7", color: "#16a34a", title: "Verified professionals", sub: "Quality you can trust" },
   { Icon: LockIcon,        bg: "#ffedd5", color: "#ea580c", title: "Secure payments",        sub: "Escrow protection on every job" },
   { Icon: ChatIcon,        bg: "#ede9fe", color: "#7c3aed", title: "Direct communication",   sub: "Connect and collaborate easily" },
 ];
 
+/* ─── Tiny profile card ──────────────────────────────────────── */
+function MiniCard({ bg, initials, name, role, rate }: { bg: string; initials: string; name: string; role: string; rate: string }) {
+  return (
+    <div style={{
+      background: "#fff", borderRadius: 12, padding: "10px 11px",
+      border: "1px solid #f0f4f8",
+      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6 }}>
+        <div style={{
+          width: 30, height: 30, borderRadius: "50%", flexShrink: 0,
+          background: bg, display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#fff", fontSize: 10.5, fontWeight: 800,
+        }}>{initials}</div>
+        <div style={{ minWidth: 0 }}>
+          <div style={{ fontSize: 11.5, fontWeight: 700, color: "#0f172a", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{name}</div>
+          <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 1 }}>{role}</div>
+        </div>
+      </div>
+      <div style={{ fontSize: 12, fontWeight: 800, color: "#0f172a" }}>{rate}</div>
+    </div>
+  );
+}
+
 /* ─── App Mockup ─────────────────────────────────────────────── */
 function AppMockup() {
   return (
     <div style={{
-      width: 272,
+      width: 410,
       borderRadius: 20,
       background: "#ffffff",
-      boxShadow: "0 12px 48px rgba(0,0,0,0.13), 0 3px 12px rgba(0,0,0,0.07), 0 0 0 1px rgba(0,0,0,0.05)",
+      boxShadow: "0 24px 64px rgba(0,0,0,0.14), 0 6px 20px rgba(0,0,0,0.08), 0 0 0 1px rgba(0,0,0,0.04)",
       overflow: "hidden",
-      flexShrink: 0,
     }}>
-      {/* App header */}
+      {/* Header */}
       <div style={{
         display: "flex", alignItems: "center", gap: 9,
-        padding: "13px 15px 12px",
+        padding: "13px 16px 12px",
         borderBottom: "1px solid #f1f5f9",
         background: "#fff",
       }}>
@@ -54,73 +76,88 @@ function AppMockup() {
           </svg>
         </div>
         <div>
-          <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.4px", lineHeight: 1 }}>crewboard</div>
+          <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.4px", lineHeight: 1 }}>crewboard</div>
           <div style={{ fontSize: 7.5, fontWeight: 600, color: "#94a3b8", letterSpacing: "0.06em", textTransform: "uppercase", marginTop: 2 }}>
             Web3 Talent Marketplace
           </div>
         </div>
       </div>
 
-      {/* Card 1 */}
-      <div style={{ padding: "10px 12px 5px" }}>
-        <div style={{ background: "#f8fafc", borderRadius: 13, padding: "12px 13px", border: "1px solid #f1f5f9" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 8 }}>
+      {/* 2-column grid */}
+      <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 9, padding: "11px 13px 14px" }}>
+
+        {/* Left: main feature card */}
+        <div style={{
+          background: "#f8fafc", borderRadius: 15, padding: "13px 13px",
+          border: "1px solid #eef2f7",
+          boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
+        }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 9, marginBottom: 9 }}>
             <div style={{
-              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
+              width: 38, height: 38, borderRadius: "50%", flexShrink: 0,
               background: "linear-gradient(135deg, #14B8A6, #0d9488)",
               display: "flex", alignItems: "center", justifyContent: "center",
               color: "#fff", fontSize: 12, fontWeight: 800,
             }}>AE</div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a", letterSpacing: "-0.2px" }}>AI Expert</div>
-              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>@0.x · @talentdropher</div>
+            <div style={{ minWidth: 0 }}>
+              <div style={{ fontSize: 12.5, fontWeight: 700, color: "#0f172a" }}>AI Expert</div>
+              <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 1 }}>@0.x · @talentdropher</div>
             </div>
           </div>
-          <div style={{ fontSize: 11, color: "#64748b", marginBottom: 8 }}>Smart Contract Developer</div>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 8 }}>
+          <div style={{ fontSize: 11, color: "#64748b", marginBottom: 9 }}>Smart Contract Developer</div>
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 9 }}>
             <div>
-              <div style={{ fontSize: 13.5, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.3px" }}>$80 / hr</div>
-              <div style={{ fontSize: 10, color: "#94a3b8", marginTop: 1 }}>500+ jobs completed</div>
+              <div style={{ fontSize: 14, fontWeight: 800, color: "#0f172a", letterSpacing: "-0.3px" }}>$80 / hr</div>
+              <div style={{ fontSize: 9.5, color: "#94a3b8", marginTop: 1 }}>500+ jobs completed</div>
             </div>
             <button style={{
-              padding: "5px 14px", borderRadius: 999, fontSize: 11, fontWeight: 700,
+              padding: "5px 13px", borderRadius: 999, fontSize: 11, fontWeight: 700,
               background: "#14B8A6", color: "#fff", border: "none", cursor: "default",
             }}>Save</button>
           </div>
           <div style={{ display: "flex", alignItems: "center" }}>
             {[
-              { bg: "linear-gradient(135deg, #14B8A6, #0d9488)", label: "A" },
-              { bg: "linear-gradient(135deg, #f97316, #ea580c)", label: "B" },
-              { bg: "linear-gradient(135deg, #8b5cf6, #7c3aed)", label: "C" },
-              { bg: "linear-gradient(135deg, #ec4899, #db2777)", label: "D" },
+              { bg: "linear-gradient(135deg,#14B8A6,#0d9488)", l: "A" },
+              { bg: "linear-gradient(135deg,#f97316,#ea580c)", l: "B" },
+              { bg: "linear-gradient(135deg,#8b5cf6,#7c3aed)", l: "C" },
+              { bg: "linear-gradient(135deg,#ec4899,#db2777)", l: "D" },
             ].map((a, i) => (
               <div key={i} style={{
-                width: 22, height: 22, borderRadius: "50%",
+                width: 21, height: 21, borderRadius: "50%",
                 background: a.bg, border: "2.5px solid #f8fafc",
-                marginLeft: i === 0 ? 0 : -7,
+                marginLeft: i === 0 ? 0 : -6,
                 display: "flex", alignItems: "center", justifyContent: "center",
-                fontSize: 8, fontWeight: 700, color: "#fff",
-              }}>{a.label}</div>
+                fontSize: 7.5, fontWeight: 700, color: "#fff",
+              }}>{a.l}</div>
             ))}
-            <span style={{ fontSize: 9.5, color: "#94a3b8", marginLeft: 6 }}>+124 more</span>
+            <span style={{ fontSize: 9.5, color: "#94a3b8", marginLeft: 5 }}>+124 more</span>
           </div>
         </div>
-      </div>
 
-      {/* Card 2 — partially visible */}
-      <div style={{ padding: "6px 12px 14px" }}>
-        <div style={{ background: "#f8fafc", borderRadius: 13, padding: "12px 13px", border: "1px solid #f1f5f9", opacity: 0.82 }}>
-          <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
-            <div style={{
-              width: 36, height: 36, borderRadius: "50%", flexShrink: 0,
-              background: "linear-gradient(135deg, #8b5cf6, #7c3aed)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              color: "#fff", fontSize: 12, fontWeight: 800,
-            }}>SP</div>
-            <div>
-              <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>Sol Pro</div>
-              <div style={{ fontSize: 10, color: "#94a3b8" }}>@solpro · Rust Dev</div>
-            </div>
+        {/* Right: 3 mini cards */}
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+          <MiniCard
+            bg="linear-gradient(135deg,#14B8A6,#0d9488)"
+            initials="AE"
+            name="AI Expert"
+            role="Blockchain Dev"
+            rate="$80 / hr"
+          />
+          <MiniCard
+            bg="linear-gradient(135deg,#8b5cf6,#7c3aed)"
+            initials="SP"
+            name="Sol Pro"
+            role="Rust Engineer"
+            rate="$95 / hr"
+          />
+          <div style={{ opacity: 0.55 }}>
+            <MiniCard
+              bg="linear-gradient(135deg,#f97316,#ea580c)"
+              initials="WD"
+              name="Web3 Dev"
+              role="Full Stack"
+              rate="$70 / hr"
+            />
           </div>
         </div>
       </div>
@@ -142,11 +179,11 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
         flex: 1,
         display: "flex", flexDirection: "column",
         padding: "40px 48px 0",
-        overflow: "hidden",
+        overflow: "visible",
         position: "relative",
-        /* Large soft mint blob in lower portion */
+        zIndex: 2,
         background: [
-          "radial-gradient(ellipse 88% 56% at 42% 82%, rgba(20,184,166,0.26) 0%, rgba(134,239,172,0.15) 42%, transparent 68%)",
+          "radial-gradient(ellipse 90% 62% at 38% 82%, rgba(20,184,166,0.28) 0%, rgba(134,239,172,0.17) 42%, transparent 70%)",
           "#ffffff",
         ].join(", "),
       }}>
@@ -225,16 +262,8 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
           ))}
         </div>
 
-        {/* ── Mockup — fills remaining flex space, clipped to panel ── */}
-        <div style={{
-          flex: 1, minHeight: 0,
-          display: "flex", alignItems: "center", justifyContent: "center",
-          paddingTop: 18,
-          position: "relative", zIndex: 1,
-          overflow: "hidden",
-        }}>
-          <AppMockup />
-        </div>
+        {/* ── Spacer ── */}
+        <div style={{ flex: 1 }} />
 
         {/* ── Footer ── */}
         <div style={{
@@ -248,6 +277,19 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             <path d="M64.6 237.9c2.4-2.4 5.7-3.8 9.2-3.8h317.4c5.8 0 8.7 7 4.6 11.1l-62.7 62.7c-2.4 2.4-5.7 3.8-9.2 3.8H6.5c-5.8 0-8.7-7-4.6-11.1l62.7-62.7zM64.6 3.8C67.1 1.4 70.4 0 73.8 0h317.4c5.8 0 8.7 7 4.6 11.1L333.1 73.8c-2.4 2.4-5.7 3.8-9.2 3.8H6.5C.7 77.6-2.2 70.6 1.9 66.5L64.6 3.8zM333.1 120.1c-2.4-2.4-5.7-3.8-9.2-3.8H6.5c-5.8 0-8.7 7-4.6 11.1l62.7 62.7c2.4 2.4 5.7 3.8 9.2 3.8h317.4c5.8 0 8.7-7 4.6-11.1l-62.7-62.7z" fill="#94a3b8"/>
           </svg>
           Built on Solana
+        </div>
+
+        {/* ── 3D Mockup — absolute, bleeds past panel right edge ── */}
+        <div style={{
+          position: "absolute",
+          bottom: 56,
+          left: 36,
+          zIndex: 4,
+          pointerEvents: "none",
+          transform: "perspective(900px) rotateY(-9deg) rotateX(5deg)",
+          transformOrigin: "left center",
+        }}>
+          <AppMockup />
         </div>
 
       </div>
