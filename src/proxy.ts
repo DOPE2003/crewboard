@@ -31,12 +31,12 @@ const authMiddleware = auth((req) => {
   // 2. AUTHENTICATION REDIRECTS
   const isDashboard = pathname.startsWith("/dashboard");
   const isOnboarding = pathname.startsWith("/onboarding");
-  const isLogin = pathname.startsWith("/login");
+  const isLogin = pathname.startsWith("/login") || pathname.startsWith("/sign-in");
 
-  // Not logged in → login (for protected pages)
+  // Not logged in → sign-in (for protected pages)
   if ((isDashboard || isOnboarding) && !isLoggedIn) {
     const url = req.nextUrl.clone();
-    url.pathname = "/login";
+    url.pathname = "/sign-in";
     return NextResponse.redirect(url);
   }
 
@@ -54,8 +54,8 @@ const authMiddleware = auth((req) => {
     return NextResponse.redirect(url);
   }
 
-  // Already logged in and lands on /login or /register → send to dashboard/onboarding
-  const isRegister = pathname.startsWith("/register");
+  // Already logged in and lands on /login, /register, /sign-in, /sign-up → send to dashboard/onboarding
+  const isRegister = pathname.startsWith("/register") || pathname.startsWith("/sign-up");
   if (isLoggedIn && (isLogin || isRegister)) {
     const url = req.nextUrl.clone();
     url.pathname = profileComplete ? "/dashboard" : "/onboarding";

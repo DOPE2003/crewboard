@@ -5969,10 +5969,11 @@ body.dark .roadmap-progress-track {
 .auth-split-left {
   flex: 1;
   position: relative;
+  z-index: 2;
   display: flex;
   flex-direction: column;
   padding: 44px 52px 0;
-  overflow: hidden;
+  overflow: visible;
   background: #ffffff;
 }
 
@@ -5992,7 +5993,7 @@ body.dark .roadmap-progress-track {
 .auth-left-blob-2 {
   position: absolute;
   bottom: -40px;
-  right: -60px;
+  right: 20px;
   width: 260px;
   height: 260px;
   border-radius: 50%;
@@ -6005,8 +6006,8 @@ body.dark .roadmap-progress-track {
 .auth-app-mockup {
   position: absolute;
   bottom: 0;
-  right: -32px;
-  width: 240px;
+  right: -88px;
+  width: 260px;
   background: #ffffff;
   border-radius: 20px 20px 0 0;
   box-shadow: 0 -6px 40px rgba(0,0,0,0.10), 0 -2px 12px rgba(0,0,0,0.06);
@@ -6252,6 +6253,7 @@ body.dark .roadmap-progress-track {
   max-width: 540px;
   flex-shrink: 0;
   position: relative;
+  z-index: 1;
   background: #ffffff;
   border-left: 1px solid #f0f0f0;
   overflow-y: auto;
@@ -6265,7 +6267,7 @@ body.dark .roadmap-progress-track {
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  padding: 20px 40px;
+  padding: 14px 40px;
   font-size: 13px;
   color: #6b7280;
   flex-shrink: 0;
@@ -6283,7 +6285,7 @@ body.dark .roadmap-progress-track {
   width: 100%;
   max-width: 400px;
   margin: 0 auto;
-  padding: 36px 40px 48px;
+  padding: 22px 40px 28px;
 }
 
 /* Mobile logo — hidden on desktop */
@@ -6301,7 +6303,7 @@ body.dark .roadmap-progress-track {
 .auth-split-sub {
   font-size: 13.5px;
   color: #6b7280;
-  margin: 0 0 24px;
+  margin: 0 0 16px;
   line-height: 1.5;
 }
 
@@ -6312,7 +6314,7 @@ body.dark .roadmap-progress-track {
   align-items: center;
   justify-content: center;
   gap: 10px;
-  height: 50px;
+  height: 48px;
   background: #000;
   color: #fff;
   border: none;
@@ -6321,7 +6323,7 @@ body.dark .roadmap-progress-track {
   font-weight: 600;
   cursor: pointer;
   transition: background 0.15s;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
   font-family: Inter, sans-serif;
 }
 .auth-btn-x:hover { background: #1a1a1a; }
@@ -6331,7 +6333,7 @@ body.dark .roadmap-progress-track {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 16px;
+  margin-bottom: 12px;
 }
 .auth-split-divider-line {
   flex: 1;
@@ -6363,7 +6365,7 @@ body.dark .roadmap-progress-track {
 /* Inputs */
 .auth-split-input {
   width: 100%;
-  height: 50px;
+  height: 48px;
   padding: 0 16px 0 42px;
   border: 1.5px solid #e5e7eb;
   border-radius: 12px;
@@ -6400,7 +6402,7 @@ body.dark .roadmap-progress-track {
 }
 .auth-handle-input {
   flex: 1;
-  height: 50px;
+  height: 48px;
   padding: 0 4px;
   border: none;
   background: transparent;

@@ -11,7 +11,7 @@ export const authConfig = {
     }),
   ],
   session: { strategy: "jwt" as const },
-  pages: { signIn: "/login" },
+  pages: { signIn: "/sign-in" },
   trustHost: true,
   callbacks: {
     // Map token fields into the session so the proxy can read profileComplete.
