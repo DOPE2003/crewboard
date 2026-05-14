@@ -8,54 +8,62 @@ export default function Footer() {
   if (pathname !== "/") return null;
 
   return (
-    <footer className="site-footer">
-      <div className="footer-inner">
+    <footer style={{
+      borderTop: "1px solid var(--border)",
+      background: "var(--surface)",
+      padding: "3.5rem 2rem 0",
+    }}>
+      <div style={{ maxWidth: 1100, margin: "0 auto" }}>
 
-        {/* ── Grid ── */}
-        <div className="footer-grid">
+        {/* Top row: brand + 3 link columns */}
+        <div className="footer-cols" style={{ marginBottom: "3rem" }}>
 
-          {/* Brand */}
-          <div className="footer-brand">
-            {/* Logo wordmark */}
-            <Link href="/" style={{ display: "flex", alignItems: "center", gap: 6, textDecoration: "none", marginBottom: "0.75rem" }}>
-              <svg width="28" height="28" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <radialGradient id="footer-logo-g" cx="35%" cy="28%" r="70%">
-                    <stop offset="0%" stopColor="#7ee8d6"/>
-                    <stop offset="42%" stopColor="#14B8A6"/>
-                    <stop offset="100%" stopColor="#0b7066"/>
-                  </radialGradient>
-                </defs>
-                <circle cx="20" cy="20" r="19" fill="url(#footer-logo-g)"/>
-                <polygon points="28,20 24,13.1 16,13.1 12,20 16,26.9 24,26.9"
-                  fill="none" stroke="rgba(255,255,255,0.88)" strokeWidth="1.3" strokeLinejoin="round"/>
-                <line x1="20" y1="15.5" x2="16.2" y2="22.2" stroke="rgba(255,255,255,0.88)" strokeWidth="1.2" strokeLinecap="round"/>
-                <line x1="20" y1="15.5" x2="23.8" y2="22.2" stroke="rgba(255,255,255,0.88)" strokeWidth="1.2" strokeLinecap="round"/>
-                <line x1="16.2" y1="22.2" x2="23.8" y2="22.2" stroke="rgba(255,255,255,0.88)" strokeWidth="1.2" strokeLinecap="round"/>
-                <circle cx="20" cy="15.5" r="1.5" fill="rgba(255,255,255,0.92)"/>
-                <circle cx="16.2" cy="22.2" r="1.5" fill="rgba(255,255,255,0.92)"/>
-                <circle cx="23.8" cy="22.2" r="1.5" fill="rgba(255,255,255,0.92)"/>
-              </svg>
-              <span style={{ fontFamily: "Inter, sans-serif", fontSize: "1.05rem", fontWeight: 800, letterSpacing: "-0.025em", color: "var(--foreground)" }}>
-                crewboard
-              </span>
-            </Link>
+          {/* Brand column */}
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.6rem" }}>
+            {/* Logo */}
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" style={{ width: 144, height: 36, color: "var(--foreground)" }}>
+              <polygon points="124,80 98,125 46,125 20,80 46,35 98,35" fill="none" stroke="currentColor" strokeWidth="4.4" strokeLinejoin="round"/>
+              <line x1="72" y1="54" x2="52" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+              <line x1="72" y1="54" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+              <line x1="52" y1="94" x2="92" y2="94" stroke="currentColor" strokeWidth="3.6" strokeLinecap="round"/>
+              <circle cx="72" cy="54" r="6.4" fill="currentColor"/>
+              <circle cx="52" cy="94" r="6.4" fill="currentColor"/>
+              <circle cx="92" cy="94" r="6.4" fill="currentColor"/>
+              <text x="152" y="102" fill="currentColor" style={{ fontFamily: "Inter,'Helvetica Neue',Helvetica,Arial,sans-serif", fontSize: 68, letterSpacing: -2.4 }}>
+                <tspan fontWeight="300">crew</tspan><tspan fontWeight="600">board</tspan>
+              </text>
+            </svg>
 
-            <p className="footer-tagline">Web3 Freelancer Marketplace</p>
+            <span style={{
+              fontSize: "0.63rem", letterSpacing: "0.13em",
+              textTransform: "uppercase", color: "#14B8A6", fontWeight: 600,
+              marginTop: "0.1rem",
+            }}>
+              Web3 Freelancer Marketplace
+            </span>
 
-            <p className="footer-desc">
-              Hire and get paid in Web3. On-chain escrow powered by Solana keeps every deal transparent and secure.
+            <p style={{
+              fontSize: "0.78rem", color: "var(--text-muted)",
+              lineHeight: 1.75, margin: "0.2rem 0 0.8rem", maxWidth: 260,
+            }}>
+              Hire and get paid in Web3. On-chain escrow powered by Solana keeps every deal secure and transparent.
             </p>
 
-            <div className="footer-socials">
-              <a href="https://x.com/crewboard_" target="_blank" rel="noopener noreferrer" className="footer-social-pill">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor">
+            {/* Social links */}
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+              <a
+                href="https://x.com/crewboard_"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="footer-social-btn"
+              >
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.253 5.622 5.91-5.622Zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                 </svg>
                 @crewboard_
               </a>
-              <a href="mailto:info@crewboard.com" className="footer-social-pill">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <a href="mailto:info@crewboard.com" className="footer-social-btn">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
                   <polyline points="22,6 12,13 2,6"/>
                 </svg>
@@ -65,142 +73,115 @@ export default function Footer() {
           </div>
 
           {/* Explore */}
-          <nav aria-label="Explore Crewboard">
-            <p className="footer-col-heading">Explore</p>
-            <Link href="/talent"    className="footer-link">Browse Talent</Link>
-            <Link href="/gigs"      className="footer-link">Browse Services</Link>
-            <Link href="/jobs"      className="footer-link">Job Board</Link>
-            <a href="#categories"   className="footer-link">Categories</a>
-            <a href="#how-it-works" className="footer-link">How It Works</a>
-          </nav>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div className="footer-col-heading">Explore</div>
+            <Link href="/talent" className="footer-nav-link">Browse Talent</Link>
+            <Link href="/gigs" className="footer-nav-link">Browse Services</Link>
+            <a href="#categories" className="footer-nav-link">Categories</a>
+            <a href="#how-it-works" className="footer-nav-link">How It Works</a>
+            <Link href="/gigs/new" className="footer-nav-link">Post a Service</Link>
+            <Link href="/jobs" className="footer-nav-link">Job Board</Link>
+          </div>
 
-          {/* Freelancers */}
-          <nav aria-label="Freelancers">
-            <p className="footer-col-heading">Freelancers</p>
-            <Link href="/register"    className="footer-link">Join for Free</Link>
-            <Link href="/gigs/new"    className="footer-link">Post a Service</Link>
-            <Link href="/showcase"    className="footer-link">Showcase</Link>
-            <a href="#faq"            className="footer-link">FAQ</a>
-          </nav>
+          {/* For Freelancers */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div className="footer-col-heading">Freelancers</div>
+            <Link href="/register" className="footer-nav-link">Join for Free</Link>
+            <Link href="/onboarding" className="footer-nav-link">Complete Profile</Link>
+            <Link href="/showcase" className="footer-nav-link">Showcase</Link>
+            <a href="#faq" className="footer-nav-link">FAQ</a>
+          </div>
 
           {/* Company */}
-          <nav aria-label="Company">
-            <p className="footer-col-heading">Company</p>
-            <a href="mailto:info@crewboard.com" className="footer-link">About</a>
-            <a href="mailto:info@crewboard.com" className="footer-link">Contact</a>
-            <Link href="/privacy"  className="footer-link">Privacy Policy</Link>
-            <Link href="/terms"    className="footer-link">Terms of Service</Link>
-          </nav>
+          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+            <div className="footer-col-heading">Company</div>
+            <a href="mailto:info@crewboard.com" className="footer-nav-link">About</a>
+            <a href="mailto:info@crewboard.com" className="footer-nav-link">Contact</a>
+            <Link href="/privacy" className="footer-nav-link">Privacy Policy</Link>
+            <Link href="/terms" className="footer-nav-link">Terms of Service</Link>
+          </div>
         </div>
 
-        {/* ── Bottom bar ── */}
-        <div className="footer-bottom">
-          <span className="footer-copy">© 2026 Crewboard · Built on Solana</span>
-          <span className="footer-status">
-            <span className="footer-status-dot" />
-            All systems operational
+        {/* Bottom bar */}
+        <div style={{
+          borderTop: "1px solid var(--border)",
+          padding: "1.25rem 0 1.75rem",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          flexWrap: "wrap",
+          gap: "0.75rem",
+        }}>
+          <span style={{ fontSize: "0.7rem", color: "var(--text-muted)", letterSpacing: "0.04em" }}>
+            © 2026 Crewboard · Built on Solana
           </span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <div style={{
+              display: "flex", alignItems: "center", gap: 5,
+              fontSize: "0.68rem", fontWeight: 500, color: "var(--text-muted)",
+            }}>
+              <span style={{
+                width: 6, height: 6, borderRadius: "50%",
+                background: "#22c55e", display: "inline-block",
+              }} />
+              All systems operational
+            </div>
+          </div>
         </div>
 
       </div>
 
       <style>{`
-        .site-footer {
-          border-top: 1px solid var(--border);
-          background: var(--surface);
-          padding: 4rem 2rem 0;
-        }
-        .footer-inner { max-width: 1100px; margin: 0 auto; }
-
-        .footer-grid {
+        .footer-cols {
           display: grid;
           grid-template-columns: 2.2fr 1fr 1fr 1fr;
-          gap: clamp(2rem, 4vw, 3rem);
-          padding-bottom: 3rem;
+          gap: clamp(1.5rem, 3vw, 2.5rem);
         }
-        @media (max-width: 860px) {
-          .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
-          .footer-brand { grid-column: 1 / -1; }
+        @media (max-width: 900px) {
+          .footer-cols { grid-template-columns: 1fr 1fr 1fr; }
+          .footer-cols > div:first-child { grid-column: 1 / -1; }
         }
-        @media (max-width: 500px) {
-          .footer-grid { grid-template-columns: 1fr 1fr; }
-          .footer-brand { grid-column: 1 / -1; }
+        @media (max-width: 520px) {
+          .footer-cols { grid-template-columns: 1fr 1fr; }
+          .footer-cols > div:first-child { grid-column: 1 / -1; }
         }
-        @media (max-width: 340px) {
-          .footer-grid { grid-template-columns: 1fr; }
+        @media (max-width: 360px) {
+          .footer-cols { grid-template-columns: 1fr; }
         }
-
-        .footer-brand { display: flex; flex-direction: column; }
-        .footer-tagline {
-          font-size: 0.62rem;
-          font-weight: 700;
-          letter-spacing: 0.14em;
-          text-transform: uppercase;
-          color: var(--brand);
-          margin-bottom: 0.65rem;
-        }
-        .footer-desc {
-          font-size: 0.8rem;
-          color: var(--text-muted);
-          line-height: 1.75;
-          max-width: 270px;
-          margin-bottom: 1.1rem;
-        }
-        .footer-socials { display: flex; flex-wrap: wrap; gap: 8px; }
-        .footer-social-pill {
-          display: inline-flex; align-items: center; gap: 6px;
-          font-size: 0.74rem; font-weight: 600;
-          color: var(--text-muted); text-decoration: none;
-          padding: 5px 12px; border-radius: 99px;
-          border: 1px solid var(--border);
-          transition: color 0.15s, border-color 0.15s, background 0.15s;
-        }
-        .footer-social-pill:hover {
-          color: var(--foreground);
-          border-color: var(--border-md);
-          background: var(--bg-secondary);
-        }
-
         .footer-col-heading {
           font-size: 0.6rem;
           font-weight: 700;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.13em;
           text-transform: uppercase;
           color: var(--text-muted);
-          margin: 0 0 0.85rem;
+          margin-bottom: 0.5rem;
         }
-        .footer-link {
-          display: block;
-          font-size: 0.83rem;
+        .footer-nav-link {
+          font-size: 0.82rem;
           color: var(--text-muted);
           text-decoration: none;
-          padding: 0.22rem 0;
-          line-height: 1.8;
+          padding: 0.15rem 0;
           transition: color 0.15s;
+          line-height: 1.8;
         }
-        .footer-link:hover { color: var(--foreground); }
-
-        .footer-bottom {
-          border-top: 1px solid var(--border);
-          padding: 1.3rem 0 1.75rem;
-          display: flex;
+        .footer-nav-link:hover { color: var(--foreground); }
+        .footer-social-btn {
+          display: inline-flex;
           align-items: center;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-        }
-        .footer-copy {
-          font-size: 0.7rem;
+          gap: 6px;
+          font-size: 0.75rem;
+          font-weight: 600;
           color: var(--text-muted);
-          letter-spacing: 0.03em;
+          text-decoration: none;
+          padding: 5px 13px;
+          border-radius: 99px;
+          border: 1px solid var(--border);
+          transition: color 0.15s, border-color 0.15s, background 0.15s;
         }
-        .footer-status {
-          display: flex; align-items: center; gap: 6px;
-          font-size: 0.7rem; font-weight: 500; color: var(--text-muted);
-        }
-        .footer-status-dot {
-          width: 6px; height: 6px; border-radius: 50%;
-          background: #22c55e; flex-shrink: 0;
+        .footer-social-btn:hover {
+          color: var(--foreground);
+          border-color: var(--border-md);
+          background: var(--bg-secondary);
         }
       `}</style>
     </footer>
