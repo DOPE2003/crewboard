@@ -4,16 +4,15 @@ import db from "@/lib/db";
 import HomeModeHero from "@/components/home/HomeModeHero";
 import HeroFloatingProfiles from "@/components/home/HeroFloatingProfiles";
 import HomeModeHIW from "@/components/home/HomeModeHIW";
+import HomeFAQ from "@/components/home/HomeFAQ";
 import "@/styles/landing.css";
-
 
 const BROWSE_CATEGORIES = [
   {
     label: "Graphic Design", key: "Graphic & Design",
     iconColor: "#e91e8c", iconBg: "#fde8f3",
     icon: (
-      /* Paintbrush */
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M18.37 2.63 14 7l-1.59-1.59a2 2 0 0 0-2.82 0L8 7l9 9 1.59-1.59a2 2 0 0 0 0-2.82L17 10l4.37-4.37a2.12 2.12 0 1 0-3-3z"/>
         <path d="M9 8c-2 3-4 3.5-7 4l8 10c2-1 6-5 6-7"/>
         <path d="M14.5 17.5L4.5 15"/>
@@ -24,8 +23,7 @@ const BROWSE_CATEGORIES = [
     label: "Web3 Dev", key: "Coding & Tech",
     iconColor: "#2563eb", iconBg: "#dbeafe",
     icon: (
-      /* Terminal >_ */
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <polyline points="4 17 10 11 4 5"/>
         <line x1="12" y1="19" x2="20" y2="19"/>
       </svg>
@@ -35,8 +33,7 @@ const BROWSE_CATEGORIES = [
     label: "Content Creator", key: "Content Creator",
     iconColor: "#ea580c", iconBg: "#ffedd5",
     icon: (
-      /* Person with megaphone */
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M3 18v-2a4 4 0 0 1 4-4h3"/>
         <circle cx="8" cy="7" r="4"/>
         <path d="M14 9l7-4v12l-7-4v-4z"/>
@@ -48,8 +45,7 @@ const BROWSE_CATEGORIES = [
     label: "Social Marketing", key: "Social Marketing",
     iconColor: "#7c3aed", iconBg: "#ede9fe",
     icon: (
-      /* Shield with checkmark */
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
         <polyline points="9 12 11 14 15 10"/>
       </svg>
@@ -59,8 +55,7 @@ const BROWSE_CATEGORIES = [
     label: "Motion Graphic", key: "Video & Animation",
     iconColor: "#16a34a", iconBg: "#dcfce7",
     icon: (
-      /* Play button */
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
         <polygon points="9.5 7.5 16.5 12 9.5 16.5 9.5 7.5" fill="currentColor" stroke="none"/>
       </svg>
@@ -70,8 +65,7 @@ const BROWSE_CATEGORIES = [
     label: "AI Engineer", key: "AI Engineer",
     iconColor: "#ca8a04", iconBg: "#fef9c3",
     icon: (
-      /* AI sparkle */
-      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.937A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.582a.5.5 0 0 1 0 .963L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z"/>
         <path d="M20 3v4M22 5h-4"/>
       </svg>
@@ -124,6 +118,7 @@ export default async function HomePage() {
       },
     }).catch(() => []),
   ]);
+
   const categoryCountMap: Record<string, number> = Object.fromEntries(
     categoryCountsRaw.map((c) => [c.category, c._count.id])
   );
@@ -147,11 +142,10 @@ export default async function HomePage() {
   );
 
   return (
-    <>
     <main className="page landing-page-main">
 
       {/* ── HERO ── */}
-      <div
+      <section
         className="landing-hero hero-compact-mobile"
         style={{
           display: "flex",
@@ -159,35 +153,35 @@ export default async function HomePage() {
           alignItems: "center",
           justifyContent: "flex-start",
           textAlign: "center",
-          padding: "clamp(2.5rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2rem) clamp(3rem, 6vw, 5rem)",
+          padding: "clamp(3rem, 6vw, 5.5rem) clamp(1rem, 4vw, 2rem) clamp(3.5rem, 7vw, 6rem)",
           position: "relative",
           overflow: "visible",
           background: "var(--surface)",
         }}
       >
-        {/* Teal radial blob — mimics the iOS app welcome screen */}
+        {/* Teal radial glow */}
         <div style={{
           position: "absolute",
-          top: "-30%",
+          top: "-20%",
           left: "50%",
           transform: "translateX(-50%)",
-          width: "clamp(320px, 90vw, 720px)",
-          height: "clamp(320px, 60vw, 580px)",
-          background: "radial-gradient(ellipse at 50% 35%, rgba(45,212,191,0.42) 0%, rgba(20,184,166,0.22) 38%, rgba(16,185,129,0.08) 62%, transparent 80%)",
+          width: "clamp(360px, 100vw, 800px)",
+          height: "clamp(360px, 65vw, 640px)",
+          background: "radial-gradient(ellipse at 50% 32%, rgba(45,212,191,0.38) 0%, rgba(20,184,166,0.18) 38%, rgba(16,185,129,0.06) 62%, transparent 78%)",
           pointerEvents: "none",
           zIndex: 0,
         }} />
-        {/* White fade overlay — keeps text crisp over blob */}
+        {/* Top fade */}
         <div style={{
           position: "absolute",
           top: 0, left: 0, right: 0,
-          height: "55%",
+          height: "50%",
           background: "linear-gradient(to bottom, var(--surface) 0%, transparent 100%)",
           pointerEvents: "none",
           zIndex: 0,
         }} />
 
-        {/* Rotating profile cards — desktop only, 3 left + 3 right */}
+        {/* Floating profile cards — desktop only */}
         {floatingProfiles.length >= 6 && (
           <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
             <div style={{ pointerEvents: "auto" }}>
@@ -202,16 +196,16 @@ export default async function HomePage() {
           style={{
             fontFamily: "Inter, sans-serif",
             fontWeight: 600,
-            fontSize: "0.7rem",
-            letterSpacing: "0.12em",
+            fontSize: "0.68rem",
+            letterSpacing: "0.13em",
             textTransform: "uppercase" as const,
             color: "var(--brand)",
             marginTop: "0.25rem",
-            marginBottom: "1.4rem",
-            padding: "0.3rem 0.9rem",
-            border: "1px solid rgba(20,184,166,0.4)",
+            marginBottom: "1.5rem",
+            padding: "0.28rem 0.9rem",
+            border: "1px solid rgba(20,184,166,0.35)",
             borderRadius: "999px",
-            background: "rgba(20,184,166,0.08)",
+            background: "rgba(20,184,166,0.07)",
             opacity: 0,
             animation: "fadeUp 0.6s 0.1s forwards",
             position: "relative",
@@ -221,14 +215,14 @@ export default async function HomePage() {
           Now in Beta
         </div>
 
-        {/* Mode-aware hero — headline, subtitle, CTA buttons */}
+        {/* Mode-aware headline + CTAs */}
         <HomeModeHero isLoggedIn={isLoggedIn} />
 
-        {/* ── Category chip strip — mirrors the app's horizontal filter row ── */}
+        {/* Category chip strip */}
         <div style={{
           opacity: 0, animation: "fadeUp 0.6s 0.88s forwards",
           position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 560, marginTop: 28,
+          width: "100%", maxWidth: 580, marginTop: 32,
           display: "flex", gap: 8, alignItems: "center",
           justifyContent: "center", flexWrap: "wrap",
         }}>
@@ -247,125 +241,79 @@ export default async function HomePage() {
             All categories →
           </Link>
         </div>
+      </section>
 
-        {/* ── Spotlight cards — Superteam + iOS App ── */}
-        <div style={{
-          opacity: 0, animation: "fadeUp 0.6s 1.05s forwards",
-          position: "relative", zIndex: 1,
-          width: "100%", maxWidth: 600,
-          marginTop: 24,
-          display: "flex", gap: 16, alignItems: "stretch",
-        }} className="spotlight-row">
-
-          {/* Card 1: Superteam Germany */}
-          <div style={{
-            flex: 1, minWidth: 0,
-            display: "flex",
-            borderRadius: 10,
-            border: "1px solid var(--border)",
-            background: "var(--surface)",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-            overflow: "hidden",
-          }}>
-            <div style={{ width: 76, flexShrink: 0, overflow: "hidden", background: "#0B0B2E" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="https://pbs.twimg.com/media/HGfbHMtbQAAGEv1?format=jpg&name=large" alt="Solana Summit Germany" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }} />
+      {/* ── BROWSE BY CATEGORY ── */}
+      <section
+        id="categories"
+        style={{
+          background: "var(--bg-secondary)",
+          borderTop: "1px solid var(--border)",
+          padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
+          <div className="section-header">
+            <div>
+              <h2 className="section-title">Browse by Category</h2>
+              <p className="section-subtitle">Find the right specialist for your project.</p>
             </div>
-            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 5 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, minWidth: 0 }}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/superteam-germany.png" alt="Superteam Germany" style={{ width: 14, height: 14, borderRadius: "50%", objectFit: "cover", flexShrink: 0 }} />
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Superteam Germany</span>
-                <span style={{ width: 12, height: 12, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <a href="https://x.com/SuperteamDE" target="_blank" rel="noopener noreferrer" style={{ fontSize: 10, color: "var(--brand)", textDecoration: "none", fontWeight: 600, marginLeft: "auto", flexShrink: 0 }}>X ↗</a>
-              </div>
-              <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
-                Content Creators Program — Solana Summit Germany
-              </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--border)" }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 700, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Exclusive on-site benefits</div>
-                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>$500 travel boost · Limited spots</div>
-                </div>
-                <a href="https://t.co/4EFTnBjaWn" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", padding: "5px 10px", borderRadius: 6, background: "var(--foreground)", color: "var(--surface)", fontWeight: 700, fontSize: 11, textDecoration: "none", whiteSpace: "nowrap", flexShrink: 0 }}>
-                  Apply ↗
-                </a>
-              </div>
-            </div>
+            <Link href="/gigs" className="section-see-all">See all →</Link>
           </div>
 
-          {/* Card 2: iOS App Coming Soon */}
-          <div style={{
-            flex: 1, minWidth: 0,
-            display: "flex",
-            borderRadius: 10,
-            border: "1px solid var(--border)",
-            background: "var(--surface)",
-            boxShadow: "0 2px 10px rgba(0,0,0,0.07)",
-            overflow: "hidden",
-          }}>
-            <div style={{
-              width: 76, flexShrink: 0,
-              background: "linear-gradient(160deg, #1c1c1e 0%, #0a0a0a 60%, #0f1520 100%)",
-              display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: 5,
-            }}>
-              <svg width="26" height="32" viewBox="0 0 384 512" fill="white" xmlns="http://www.w3.org/2000/svg">
-                <path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/>
-              </svg>
-              <span style={{ fontSize: 9, fontWeight: 700, color: "rgba(255,255,255,0.7)", letterSpacing: "0.08em", textTransform: "uppercase" }}>iOS</span>
-            </div>
-            <div style={{ padding: "10px 12px", display: "flex", flexDirection: "column", justifyContent: "space-between", flex: 1, minWidth: 0, gap: 5 }}>
-              <div style={{ display: "flex", alignItems: "center", gap: 5, minWidth: 0 }}>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" style={{ width: 14, height: 14, flexShrink: 0 }}>
-                  <polygon points="44,24 34,6.7 14,6.7 4,24 14,41.3 34,41.3" fill="none" stroke="var(--foreground)" strokeWidth="3.5" strokeLinejoin="round"/>
-                  <line x1="24" y1="13" x2="14.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="24" y1="13" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
-                  <line x1="14.5" y1="29.5" x2="33.5" y2="29.5" stroke="var(--foreground)" strokeWidth="3" strokeLinecap="round"/>
-                  <circle cx="24" cy="13" r="3.5" fill="var(--foreground)"/>
-                  <circle cx="14.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
-                  <circle cx="33.5" cy="29.5" r="3.5" fill="var(--foreground)"/>
-                </svg>
-                <span style={{ fontSize: 11, fontWeight: 600, color: "var(--foreground)", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Crewboard</span>
-                <span style={{ width: 12, height: 12, borderRadius: "50%", background: "var(--brand)", color: "#fff", display: "inline-flex", alignItems: "center", justifyContent: "center", fontSize: 7, fontWeight: 800, flexShrink: 0 }}>✓</span>
-                <span style={{ marginLeft: "auto", fontSize: 8, fontWeight: 800, letterSpacing: "0.04em", textTransform: "uppercase", background: "rgba(20,184,166,0.1)", color: "var(--brand)", padding: "2px 7px", borderRadius: 6, flexShrink: 0, border: "1px solid rgba(20,184,166,0.25)", whiteSpace: "nowrap" }}>Soon</span>
-              </div>
-              <div style={{ fontSize: 11.5, fontWeight: 700, color: "var(--foreground)", lineHeight: 1.3, letterSpacing: "-0.01em" }}>
-                Crewboard iOS App — Hire &amp; Find Work on the Go
-              </div>
-              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, paddingTop: 6, borderTop: "1px solid var(--border)" }}>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 10.5, fontWeight: 700, color: "var(--brand)", lineHeight: 1.2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Available on iPhone</div>
-                  <div style={{ fontSize: 9, color: "var(--text-muted)", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>Gigs, escrow &amp; DMs · Launching soon</div>
-                </div>
-                <div style={{ display: "inline-flex", alignItems: "center", gap: 4, padding: "5px 9px", borderRadius: 6, background: "#1a1a1a", border: "1px solid rgba(255,255,255,0.12)", opacity: 0.5, cursor: "not-allowed", flexShrink: 0 }}>
-                  <svg width="9" height="11" viewBox="0 0 384 512" fill="white"><path d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"/></svg>
-                  <span style={{ fontSize: 10, fontWeight: 700, color: "white", whiteSpace: "nowrap" }}>App Store</span>
-                </div>
-              </div>
-            </div>
+          <div className="cat-grid">
+            {BROWSE_CATEGORIES.map((cat) => {
+              const count = categoryCountMap[cat.key] ?? 0;
+              return (
+                <Link
+                  key={cat.label}
+                  href={`/gigs?category=${encodeURIComponent(cat.key)}`}
+                  className="cat-card"
+                >
+                  <div className="cat-icon-wrap" style={{ background: cat.iconBg, color: cat.iconColor }}>
+                    {cat.icon}
+                  </div>
+                  <div className="cat-card-body">
+                    <div className="cat-card-label">{cat.label}</div>
+                    <div className="cat-card-count">
+                      {count > 0 ? `${count}+ Talents` : "Explore"}
+                    </div>
+                  </div>
+                  <div className="cat-card-arrow">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                  </div>
+                </Link>
+              );
+            })}
           </div>
-
         </div>
-        <style>{`
-          @media (max-width: 600px) { .spotlight-row { flex-direction: column !important; } }
-        `}</style>
+      </section>
 
-      </div>
-
-      {/* ── FEATURED FREELANCERS ── */}
+      {/* ── TOP FREELANCERS ── */}
       {featuredFreelancers.length > 0 && (
-        <div style={{ background: "var(--bg-secondary)", padding: "clamp(2.5rem,5vw,3.5rem) 0 clamp(2rem,4vw,3rem)", borderTop: "1px solid var(--border)", position: "relative", zIndex: 1 }}>
-          <div style={{ maxWidth: "72rem", margin: "0 auto", padding: "0 clamp(1rem,4vw,2rem)" }}>
-            {/* Section header — mirrors app's "Top Freelancers · See all" */}
+        <section
+          style={{
+            background: "var(--surface)",
+            borderTop: "1px solid var(--border)",
+            padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)",
+            position: "relative",
+            zIndex: 1,
+          }}
+        >
+          <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
             <div className="section-header">
               <div>
                 <h2 className="section-title">Top Freelancers</h2>
-                <p className="section-subtitle">Browse verified talent on Crewboard</p>
+                <p className="section-subtitle">Browse verified talent on Crewboard.</p>
               </div>
               <Link href="/talent" className="section-see-all">See all →</Link>
             </div>
 
-            <div style={{ display: "grid", gap: "clamp(0.75rem,2vw,1rem)" }} className="ff-grid">
+            <div className="ff-grid">
               {featuredFreelancers.map((f: any) => {
                 const minPrice = f.gigs?.[0]?.price ?? null;
                 const completedCount = f.sellerOrders?.length ?? 0;
@@ -389,20 +337,11 @@ export default async function HomePage() {
                   : null;
                 const totalEarned = (f.sellerOrders as Array<{ amount: number }> ?? [])
                   .reduce((s: number, o: { amount: number }) => s + (Number(o.amount) || 0), 0);
+
                 return (
-                  <div
-                    key={f.twitterHandle}
-                    style={{
-                      background: "var(--surface)", border: "1px solid var(--border)",
-                      borderRadius: 16, overflow: "hidden",
-                      display: "flex", flexDirection: "column",
-                      boxShadow: "0 1px 4px rgba(0,0,0,0.05)",
-                      transition: "box-shadow 0.2s, transform 0.2s, border-color 0.2s",
-                    }}
-                    className="ff-card"
-                  >
-                    {/* Portfolio media / avatar banner */}
-                    <div style={{ position: "relative", width: "100%", height: 160, background: "#f0f0f2", flexShrink: 0, overflow: "hidden" }}>
+                  <div key={f.twitterHandle} className="ff-card">
+                    {/* Banner */}
+                    <div className="ff-card-banner">
                       {portfolioMedia.length > 0 ? (
                         portfolioMedia[0].type === "video" ? (
                           <video
@@ -416,65 +355,65 @@ export default async function HomePage() {
                         )
                       ) : (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={f.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "blur(8px) scale(1.1)", opacity: 0.6 }} />
+                        <img src={f.image} alt="" style={{ width: "100%", height: "100%", objectFit: "cover", display: "block", filter: "blur(8px) scale(1.1)", opacity: 0.55 }} />
                       )}
-                      {/* Rating badge overlay — mirrors app */}
                       {avgRating !== null && (
-                        <div style={{
-                          position: "absolute", bottom: 10, right: 10,
-                          background: "rgba(0,0,0,0.72)", backdropFilter: "blur(4px)",
-                          borderRadius: 999, padding: "4px 10px",
-                          display: "flex", alignItems: "center", gap: 4,
-                          fontSize: 12, fontWeight: 700, color: "#fff",
-                        }}>
-                          ⭐ {avgRating.toFixed(1)}
+                        <div className="ff-card-rating">
+                          <span>⭐</span>
+                          <span>{avgRating.toFixed(1)}</span>
                         </div>
                       )}
                     </div>
 
-                    {/* Card body */}
-                    <div style={{ padding: "14px 16px 16px", display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
-                      {/* Avatar + name row */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    {/* Body */}
+                    <div className="ff-card-body">
+                      {/* Avatar row */}
+                      <div className="ff-card-avatar-row">
                         <div style={{ position: "relative", flexShrink: 0 }}>
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={f.image} alt="" style={{ width: 42, height: 42, borderRadius: "50%", objectFit: "cover", display: "block", border: "2px solid var(--surface)", boxShadow: "0 0 0 1px var(--border)" }} />
+                          <img
+                            src={f.image}
+                            alt=""
+                            style={{
+                              width: 44, height: 44, borderRadius: "50%",
+                              objectFit: "cover", display: "block",
+                              border: "2.5px solid var(--surface)",
+                              boxShadow: "0 0 0 1px var(--border)",
+                            }}
+                          />
                           <span style={{
-                            position: "absolute", bottom: 1, right: 1, width: 10, height: 10,
-                            borderRadius: "50%", border: "2px solid var(--surface)",
+                            position: "absolute", bottom: 1, right: 1,
+                            width: 11, height: 11, borderRadius: "50%",
+                            border: "2px solid var(--surface)",
                             background: f.availability === "available" ? "#22c55e" : f.availability === "open" ? "#f59e0b" : "#d1d5db",
                           }} />
                         </div>
                         <div style={{ minWidth: 0, flex: 1 }}>
-                          <div style={{ display: "flex", alignItems: "center", gap: 5 }}>
-                            <span style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", letterSpacing: "-0.02em" }}>
-                              {f.name ?? f.twitterHandle}
-                            </span>
+                          <div className="ff-card-name-row">
+                            <span className="ff-card-name">{f.name ?? f.twitterHandle}</span>
                             {isVerified && (
-                              <span style={{ display: "inline-flex", alignItems: "center", justifyContent: "center", width: 16, height: 16, borderRadius: "50%", background: "var(--brand)", flexShrink: 0 }}>
+                              <span className="ff-card-verified">
                                 <svg width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
                                   <polyline points="20 6 9 17 4 12"/>
                                 </svg>
                               </span>
                             )}
                           </div>
-                          <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 400, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                            {f.userTitle ?? "Freelancer"}
-                          </div>
+                          <div className="ff-card-title">{f.userTitle ?? "Freelancer"}</div>
                         </div>
                       </div>
 
                       {/* X handle */}
                       {f.twitterHandle && (
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0, opacity: 0.65 }}>
+                        <div className="ff-card-handle">
+                          <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor" style={{ flexShrink: 0, opacity: 0.6 }}>
                             <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.259 5.63 5.906-5.63zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
                           </svg>
                           @{f.twitterHandle}
                         </div>
                       )}
 
-                      {/* Skill chips */}
+                      {/* Skills */}
                       {(f.skills as string[] | null)?.length ? (
                         <div style={{ display: "flex", gap: 5, flexWrap: "wrap" }}>
                           {(f.skills as string[]).slice(0, 3).map((skill: string) => (
@@ -483,14 +422,14 @@ export default async function HomePage() {
                         </div>
                       ) : null}
 
-                      {/* Stats row — mirrors app (Rating | Earned | Orders) */}
+                      {/* Stats */}
                       <div className="stats-row">
                         <div className="stats-row-item">
                           <span className="stats-row-val">{avgRating !== null ? `⭐ ${avgRating.toFixed(1)}` : "New"}</span>
                           <span className="stats-row-label">Rating</span>
                         </div>
                         <div className="stats-row-item">
-                          <span className="stats-row-val">${totalEarned >= 1000 ? `${(totalEarned/1000).toFixed(1)}k` : totalEarned > 0 ? totalEarned : "—"}</span>
+                          <span className="stats-row-val">{totalEarned >= 1000 ? `$${(totalEarned/1000).toFixed(1)}k` : totalEarned > 0 ? `$${totalEarned}` : "—"}</span>
                           <span className="stats-row-label">Earned</span>
                         </div>
                         <div className="stats-row-item">
@@ -499,118 +438,155 @@ export default async function HomePage() {
                         </div>
                       </div>
 
-                      {/* From price */}
-                      {minPrice != null && (
-                        <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500 }}>
-                          From <span style={{ color: "var(--foreground)", fontWeight: 700 }}>${minPrice}</span>
-                        </div>
-                      )}
-
-                      {/* CTA button — mirrors app's "Show Portfolio" black pill */}
-                      <Link href={`/u/${f.twitterHandle}`} className="card-btn-dark" style={{ marginTop: "auto" }}>
-                        View Profile
-                      </Link>
+                      {/* Price + CTA */}
+                      <div className="ff-card-footer">
+                        {minPrice != null ? (
+                          <span className="ff-card-price">
+                            From <strong>${minPrice}</strong>
+                          </span>
+                        ) : <span />}
+                        <Link href={`/u/${f.twitterHandle}`} className="card-btn-dark ff-card-cta">
+                          View Profile
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
           </div>
-          <style>{`
-            .ff-grid { grid-template-columns: repeat(3,1fr); }
-            @media (max-width: 900px) { .ff-grid { grid-template-columns: repeat(2,1fr); } }
-            @media (max-width: 500px) { .ff-grid { grid-template-columns: 1fr; } }
-            .ff-card:hover {
-              transform: translateY(-4px);
-              box-shadow: 0 12px 36px rgba(0,0,0,0.10) !important;
-              border-color: rgba(20,184,166,0.3) !important;
-            }
-          `}</style>
-        </div>
+        </section>
       )}
 
       {featuredFreelancers.length === 0 && (
-        <div style={{ textAlign: "center", padding: "3rem", color: "var(--text-muted)", fontSize: "0.85rem", borderTop: "1px solid var(--card-border)" }}>
-          No freelancers yet — <Link href="/register" style={{ color: "var(--brand)", textDecoration: "none", fontWeight: 600 }}>be the first to join</Link>.
+        <div style={{
+          textAlign: "center", padding: "4rem 2rem",
+          color: "var(--text-muted)", fontSize: "0.88rem",
+          borderTop: "1px solid var(--border)",
+          background: "var(--surface)",
+        }}>
+          No freelancers yet —{" "}
+          <Link href="/register" style={{ color: "var(--brand)", textDecoration: "none", fontWeight: 600 }}>
+            be the first to join
+          </Link>.
         </div>
       )}
 
-      {/* ── BROWSE BY CATEGORY ── */}
-      <div style={{ background: "var(--surface)", borderTop: "1px solid var(--border)", padding: "clamp(2.5rem,5vw,3.5rem) clamp(1rem,4vw,2rem)", position: "relative", zIndex: 1 }}>
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          <div className="section-header">
-            <div>
-              <h2 className="section-title">Browse by Category</h2>
-              <p className="section-subtitle">Find the right specialist fast.</p>
-            </div>
-            <Link href="/gigs" className="section-see-all">See all →</Link>
-          </div>
-
-          <div style={{ display: "grid", gap: "clamp(0.75rem,1.5vw,1rem)" }} className="cat-grid">
-            {BROWSE_CATEGORIES.map((cat) => {
-              const count = categoryCountMap[cat.key] ?? 0;
-              return (
-                <Link
-                  key={cat.label}
-                  href={`/gigs?category=${encodeURIComponent(cat.key)}`}
-                  style={{
-                    display: "flex", flexDirection: "row", alignItems: "center", gap: 14,
-                    padding: "1rem 1.1rem", borderRadius: 16,
-                    background: "var(--surface)", border: "1px solid var(--border)",
-                    textDecoration: "none", color: "inherit",
-                    boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
-                    transition: "box-shadow 0.18s, transform 0.18s, border-color 0.18s",
-                  }}
-                  className="cat-card"
-                >
-                  {/* Circular pastel icon — matches iOS app exactly */}
-                  <div style={{
-                    width: 52, height: 52, borderRadius: "50%", flexShrink: 0,
-                    background: cat.iconBg,
-                    display: "flex", alignItems: "center", justifyContent: "center",
-                    color: cat.iconColor,
-                  }}>
-                    {cat.icon}
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 14, fontWeight: 700, color: "var(--foreground)", marginBottom: 3, letterSpacing: "-0.02em" }}>{cat.label}</div>
-                    <div style={{ fontSize: 12, color: "var(--text-muted)", fontWeight: 500 }}>
-                      {count > 0 ? `${count}+ Talents` : "Explore"}
-                    </div>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-        <style>{`
-          .cat-grid { grid-template-columns: repeat(3,1fr); }
-          @media (max-width: 900px) { .cat-grid { grid-template-columns: repeat(2,1fr); } }
-          @media (max-width: 480px) { .cat-grid { grid-template-columns: 1fr; } }
-          .cat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08) !important;
-            border-color: rgba(20,184,166,0.35) !important;
-          }
-        `}</style>
-      </div>
-
       {/* ── HOW IT WORKS ── */}
-      <div id="how-it-works" style={{ padding: "clamp(3rem,6vw,5rem) clamp(1rem,4vw,2rem)", background: "var(--bg-secondary)", borderTop: "1px solid var(--border)", position: "relative", zIndex: 1 }}>
+      <section
+        id="how-it-works"
+        style={{
+          background: "var(--bg-secondary)",
+          borderTop: "1px solid var(--border)",
+          padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
         <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-
-          <div style={{ textAlign: "center", marginBottom: "clamp(2rem,4vw,3rem)" }}>
-            <h2 style={{ fontFamily: "Inter, sans-serif", fontWeight: 800, fontSize: "clamp(1.6rem,3.2vw,2.25rem)", color: "var(--foreground)", margin: "0 0 0.5rem", letterSpacing: "-0.04em" }}>
-              How it works
-            </h2>
-            <p style={{ color: "var(--text-muted)", fontSize: "0.9rem", margin: 0, lineHeight: 1.5 }}>Fast, secure, and built for Web3 teams.</p>
+          <div style={{ textAlign: "center", marginBottom: "clamp(2rem, 4vw, 3rem)" }}>
+            <h2 className="section-title" style={{ textAlign: "center" }}>How it works</h2>
+            <p className="section-subtitle" style={{ textAlign: "center", marginTop: "0.4rem" }}>
+              Fast, secure, and built for Web3 teams.
+            </p>
           </div>
-
           <HomeModeHIW isLoggedIn={isLoggedIn} />
         </div>
-      </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section
+        id="faq"
+        style={{
+          background: "var(--surface)",
+          borderTop: "1px solid var(--border)",
+          padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)",
+          position: "relative",
+          zIndex: 1,
+        }}
+      >
+        <div style={{ maxWidth: "720px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "clamp(2rem, 4vw, 3rem)" }}>
+            <h2 className="section-title" style={{ textAlign: "center" }}>
+              Frequently asked questions
+            </h2>
+            <p className="section-subtitle" style={{ textAlign: "center", marginTop: "0.4rem" }}>
+              Everything you need to know about Crewboard.
+            </p>
+          </div>
+          <HomeFAQ />
+          <div style={{ textAlign: "center", marginTop: "2.5rem" }}>
+            <a
+              href="mailto:info@crewboard.com"
+              style={{
+                display: "inline-flex", alignItems: "center", gap: 6,
+                fontSize: "0.85rem", fontWeight: 600, color: "var(--text-muted)",
+                textDecoration: "none",
+                transition: "color 0.15s",
+              }}
+            >
+              Still have questions?{" "}
+              <span style={{ color: "var(--brand)", textDecoration: "underline", textUnderlineOffset: 3 }}>
+                Contact us →
+              </span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── GET STARTED CTA BANNER ── */}
+      {!isLoggedIn && (
+        <section
+          style={{
+            background: "var(--bg-secondary)",
+            borderTop: "1px solid var(--border)",
+            padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)",
+            position: "relative",
+            zIndex: 1,
+            overflow: "hidden",
+          }}
+        >
+          {/* Teal glow background */}
+          <div style={{
+            position: "absolute", inset: 0,
+            background: "radial-gradient(ellipse at 50% 60%, rgba(20,184,166,0.12) 0%, transparent 70%)",
+            pointerEvents: "none",
+          }} />
+          <div style={{ maxWidth: "600px", margin: "0 auto", textAlign: "center", position: "relative" }}>
+            <h2 style={{
+              fontFamily: "Inter, sans-serif",
+              fontWeight: 800,
+              fontSize: "clamp(1.6rem, 3.5vw, 2.5rem)",
+              color: "var(--foreground)",
+              letterSpacing: "-0.04em",
+              lineHeight: 1.1,
+              marginBottom: "0.9rem",
+            }}>
+              Ready to build something<br />
+              <span style={{ color: "var(--brand)" }}>great?</span>
+            </h2>
+            <p style={{
+              color: "var(--text-muted)",
+              fontSize: "0.95rem",
+              lineHeight: 1.65,
+              marginBottom: "2rem",
+              maxWidth: 440,
+              margin: "0 auto 2rem",
+            }}>
+              Join Crewboard today and connect with the best Web3 talent — or get hired for work you love.
+            </p>
+            <div style={{ display: "flex", gap: 12, justifyContent: "center", flexWrap: "wrap" }}>
+              <Link href="/register" className="hero-pill-btn hero-pill-teal" style={{ width: "auto", minWidth: 180 }}>
+                Get started free
+              </Link>
+              <Link href="/talent" className="hero-pill-btn hero-pill-outline" style={{ width: "auto", minWidth: 160 }}>
+                Browse talent
+              </Link>
+            </div>
+          </div>
+        </section>
+      )}
 
     </main>
-    </>
   );
 }
