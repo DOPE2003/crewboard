@@ -23,6 +23,7 @@ import { ok, err } from "../_lib/response";
 import { parseMessageBody } from "../_lib/parse-message";
 import { notifyUser } from "@/lib/notify";
 import { sendPush } from "@/lib/push";
+import { pusher } from "@/lib/pusher";
 
 // ─── GET ──────────────────────────────────────────────────────────────────────
 
@@ -218,40 +219,20 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       }).catch((e) => console.error("[mobile/messages] sendPush failed:", e));
 
       // Run push + Pusher concurrently so both complete before the response returns
-      const pusherPromise = (async () => {
-        try {
-          const Pusher = (await import("pusher")).default;
-          const pusher = new Pusher({
-            appId: process.env.PUSHER_APP_ID!,
-            key: process.env.NEXT_PUBLIC_PUSHER_KEY!,
-            secret: process.env.PUSHER_SECRET!,
-            cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-            useTLS: true,
-          });
-          await pusher.trigger(`conversation-${conversationId}`, "new-message", {
-            ...message,
-            replyTo: message.replyTo ?? null,
-          });
-        } catch (e) { console.error("[mobile/messages] Pusher trigger failed:", e); }
-      })();
+      const pusherPromise = pusher.trigger(
+        `private-conversation-${conversationId}`,
+        "new-message",
+        { ...message, replyTo: message.replyTo ?? null },
+      ).catch((e: unknown) => console.error("[mobile/messages] Pusher trigger failed:", e));
 
       await Promise.allSettled([pushPromise, pusherPromise]);
     } else {
       // No receiver — still fire Pusher for real-time delivery
-      try {
-        const Pusher = (await import("pusher")).default;
-        const pusher = new Pusher({
-          appId: process.env.PUSHER_APP_ID!,
-          key: process.env.NEXT_PUBLIC_PUSHER_KEY!,
-          secret: process.env.PUSHER_SECRET!,
-          cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
-          useTLS: true,
-        });
-        await pusher.trigger(`conversation-${conversationId}`, "new-message", {
-          ...message,
-          replyTo: message.replyTo ?? null,
-        });
-      } catch (e) { console.error("[mobile/messages] Pusher trigger failed:", e); }
+      pusher.trigger(
+        `private-conversation-${conversationId}`,
+        "new-message",
+        { ...message, replyTo: message.replyTo ?? null },
+      ).catch((e: unknown) => console.error("[mobile/messages] Pusher trigger failed:", e));
     }
 
     return ok({

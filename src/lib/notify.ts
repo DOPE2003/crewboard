@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { sendNotificationEmail } from "@/lib/email";
+import { pusher } from "@/lib/pusher";
 
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL ?? "https://crewboard.fun";
 
@@ -51,6 +52,17 @@ export async function notifyUser({
       select: { id: true },
     });
     notifId = notif.id;
+
+    // Fire Pusher real-time event — non-blocking, best-effort
+    pusher.trigger(`private-user-${userId}`, "notification", {
+      id:        notif.id,
+      type,
+      title,
+      body,
+      actionUrl: actionUrl ?? null,
+      createdAt: new Date().toISOString(),
+      read:      false,
+    }).catch(() => {});
   } catch (e: any) {
     // P2002 = unique constraint violation — duplicate notification, silently skip
     if (e?.code === "P2002") return null;

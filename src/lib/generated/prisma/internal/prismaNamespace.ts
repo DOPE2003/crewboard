@@ -408,6 +408,8 @@ export const ModelName = {
   Offer: 'Offer',
   SupportTicket: 'SupportTicket',
   AdminActionLog: 'AdminActionLog',
+  InvoiceCounter: 'InvoiceCounter',
+  Invoice: 'Invoice',
   OfacSdnEntry: 'OfacSdnEntry',
   SanctionsBlock: 'SanctionsBlock',
   CampaignClaim: 'CampaignClaim'
@@ -426,7 +428,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "supportTicket" | "adminActionLog" | "ofacSdnEntry" | "sanctionsBlock" | "campaignClaim"
+    modelProps: "user" | "savedTalent" | "notification" | "job" | "jobApplication" | "project" | "conversation" | "message" | "gig" | "savedGig" | "order" | "review" | "showcasePost" | "showcaseInteraction" | "proWaitlist" | "notificationPreferences" | "emailVerifyToken" | "passwordResetToken" | "dispute" | "disputeEvidence" | "disputeMessage" | "offer" | "supportTicket" | "adminActionLog" | "invoiceCounter" | "invoice" | "ofacSdnEntry" | "sanctionsBlock" | "campaignClaim"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2206,6 +2208,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    InvoiceCounter: {
+      payload: Prisma.$InvoiceCounterPayload<ExtArgs>
+      fields: Prisma.InvoiceCounterFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InvoiceCounterFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InvoiceCounterFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>
+        }
+        findFirst: {
+          args: Prisma.InvoiceCounterFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InvoiceCounterFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>
+        }
+        findMany: {
+          args: Prisma.InvoiceCounterFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>[]
+        }
+        create: {
+          args: Prisma.InvoiceCounterCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>
+        }
+        createMany: {
+          args: Prisma.InvoiceCounterCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InvoiceCounterCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>[]
+        }
+        delete: {
+          args: Prisma.InvoiceCounterDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>
+        }
+        update: {
+          args: Prisma.InvoiceCounterUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>
+        }
+        deleteMany: {
+          args: Prisma.InvoiceCounterDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InvoiceCounterUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InvoiceCounterUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>[]
+        }
+        upsert: {
+          args: Prisma.InvoiceCounterUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoiceCounterPayload>
+        }
+        aggregate: {
+          args: Prisma.InvoiceCounterAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInvoiceCounter>
+        }
+        groupBy: {
+          args: Prisma.InvoiceCounterGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceCounterGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InvoiceCounterCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceCounterCountAggregateOutputType> | number
+        }
+      }
+    }
+    Invoice: {
+      payload: Prisma.$InvoicePayload<ExtArgs>
+      fields: Prisma.InvoiceFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.InvoiceFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.InvoiceFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>
+        }
+        findFirst: {
+          args: Prisma.InvoiceFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.InvoiceFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>
+        }
+        findMany: {
+          args: Prisma.InvoiceFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>[]
+        }
+        create: {
+          args: Prisma.InvoiceCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>
+        }
+        createMany: {
+          args: Prisma.InvoiceCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.InvoiceCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>[]
+        }
+        delete: {
+          args: Prisma.InvoiceDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>
+        }
+        update: {
+          args: Prisma.InvoiceUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>
+        }
+        deleteMany: {
+          args: Prisma.InvoiceDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.InvoiceUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.InvoiceUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>[]
+        }
+        upsert: {
+          args: Prisma.InvoiceUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$InvoicePayload>
+        }
+        aggregate: {
+          args: Prisma.InvoiceAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateInvoice>
+        }
+        groupBy: {
+          args: Prisma.InvoiceGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.InvoiceCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.InvoiceCountAggregateOutputType> | number
+        }
+      }
+    }
     OfacSdnEntry: {
       payload: Prisma.$OfacSdnEntryPayload<ExtArgs>
       fields: Prisma.OfacSdnEntryFieldRefs
@@ -2501,12 +2651,21 @@ export const UserScalarFieldEnum = {
   githubHandle: 'githubHandle',
   discordHandle: 'discordHandle',
   linkedinHandle: 'linkedinHandle',
+  instagramHandle: 'instagramHandle',
   website: 'website',
   website2: 'website2',
   website3: 'website3',
   bannerImage: 'bannerImage',
   bannerHeight: 'bannerHeight',
-  humanVerified: 'humanVerified'
+  humanVerified: 'humanVerified',
+  taxLegalName: 'taxLegalName',
+  taxAddressLine1: 'taxAddressLine1',
+  taxAddressLine2: 'taxAddressLine2',
+  taxCity: 'taxCity',
+  taxPostalCode: 'taxPostalCode',
+  taxCountry: 'taxCountry',
+  taxVatId: 'taxVatId',
+  taxProfileUpdated: 'taxProfileUpdated'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -2845,6 +3004,33 @@ export const AdminActionLogScalarFieldEnum = {
 export type AdminActionLogScalarFieldEnum = (typeof AdminActionLogScalarFieldEnum)[keyof typeof AdminActionLogScalarFieldEnum]
 
 
+export const InvoiceCounterScalarFieldEnum = {
+  userId: 'userId',
+  nextNumber: 'nextNumber',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceCounterScalarFieldEnum = (typeof InvoiceCounterScalarFieldEnum)[keyof typeof InvoiceCounterScalarFieldEnum]
+
+
+export const InvoiceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  orderId: 'orderId',
+  invoiceNumber: 'invoiceNumber',
+  pdfUrl: 'pdfUrl',
+  amountUsdc: 'amountUsdc',
+  amountEurAtTx: 'amountEurAtTx',
+  fxRate: 'fxRate',
+  buyerHandle: 'buyerHandle',
+  buyerLegalName: 'buyerLegalName',
+  issuerSnapshot: 'issuerSnapshot',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
 export const OfacSdnEntryScalarFieldEnum = {
   address: 'address',
   syncedAt: 'syncedAt'
@@ -3149,6 +3335,8 @@ export type GlobalOmitConfig = {
   offer?: Prisma.OfferOmit
   supportTicket?: Prisma.SupportTicketOmit
   adminActionLog?: Prisma.AdminActionLogOmit
+  invoiceCounter?: Prisma.InvoiceCounterOmit
+  invoice?: Prisma.InvoiceOmit
   ofacSdnEntry?: Prisma.OfacSdnEntryOmit
   sanctionsBlock?: Prisma.SanctionsBlockOmit
   campaignClaim?: Prisma.CampaignClaimOmit

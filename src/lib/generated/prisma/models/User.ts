@@ -65,12 +65,21 @@ export type UserMinAggregateOutputType = {
   githubHandle: string | null
   discordHandle: string | null
   linkedinHandle: string | null
+  instagramHandle: string | null
   website: string | null
   website2: string | null
   website3: string | null
   bannerImage: string | null
   bannerHeight: number | null
   humanVerified: boolean | null
+  taxLegalName: string | null
+  taxAddressLine1: string | null
+  taxAddressLine2: string | null
+  taxCity: string | null
+  taxPostalCode: string | null
+  taxCountry: string | null
+  taxVatId: string | null
+  taxProfileUpdated: Date | null
 }
 
 export type UserMaxAggregateOutputType = {
@@ -104,12 +113,21 @@ export type UserMaxAggregateOutputType = {
   githubHandle: string | null
   discordHandle: string | null
   linkedinHandle: string | null
+  instagramHandle: string | null
   website: string | null
   website2: string | null
   website3: string | null
   bannerImage: string | null
   bannerHeight: number | null
   humanVerified: boolean | null
+  taxLegalName: string | null
+  taxAddressLine1: string | null
+  taxAddressLine2: string | null
+  taxCity: string | null
+  taxPostalCode: string | null
+  taxCountry: string | null
+  taxVatId: string | null
+  taxProfileUpdated: Date | null
 }
 
 export type UserCountAggregateOutputType = {
@@ -146,12 +164,21 @@ export type UserCountAggregateOutputType = {
   githubHandle: number
   discordHandle: number
   linkedinHandle: number
+  instagramHandle: number
   website: number
   website2: number
   website3: number
   bannerImage: number
   bannerHeight: number
   humanVerified: number
+  taxLegalName: number
+  taxAddressLine1: number
+  taxAddressLine2: number
+  taxCity: number
+  taxPostalCode: number
+  taxCountry: number
+  taxVatId: number
+  taxProfileUpdated: number
   _all: number
 }
 
@@ -195,12 +222,21 @@ export type UserMinAggregateInputType = {
   githubHandle?: true
   discordHandle?: true
   linkedinHandle?: true
+  instagramHandle?: true
   website?: true
   website2?: true
   website3?: true
   bannerImage?: true
   bannerHeight?: true
   humanVerified?: true
+  taxLegalName?: true
+  taxAddressLine1?: true
+  taxAddressLine2?: true
+  taxCity?: true
+  taxPostalCode?: true
+  taxCountry?: true
+  taxVatId?: true
+  taxProfileUpdated?: true
 }
 
 export type UserMaxAggregateInputType = {
@@ -234,12 +270,21 @@ export type UserMaxAggregateInputType = {
   githubHandle?: true
   discordHandle?: true
   linkedinHandle?: true
+  instagramHandle?: true
   website?: true
   website2?: true
   website3?: true
   bannerImage?: true
   bannerHeight?: true
   humanVerified?: true
+  taxLegalName?: true
+  taxAddressLine1?: true
+  taxAddressLine2?: true
+  taxCity?: true
+  taxPostalCode?: true
+  taxCountry?: true
+  taxVatId?: true
+  taxProfileUpdated?: true
 }
 
 export type UserCountAggregateInputType = {
@@ -276,12 +321,21 @@ export type UserCountAggregateInputType = {
   githubHandle?: true
   discordHandle?: true
   linkedinHandle?: true
+  instagramHandle?: true
   website?: true
   website2?: true
   website3?: true
   bannerImage?: true
   bannerHeight?: true
   humanVerified?: true
+  taxLegalName?: true
+  taxAddressLine1?: true
+  taxAddressLine2?: true
+  taxCity?: true
+  taxPostalCode?: true
+  taxCountry?: true
+  taxVatId?: true
+  taxProfileUpdated?: true
   _all?: true
 }
 
@@ -405,12 +459,21 @@ export type UserGroupByOutputType = {
   githubHandle: string | null
   discordHandle: string | null
   linkedinHandle: string | null
+  instagramHandle: string | null
   website: string | null
   website2: string | null
   website3: string | null
   bannerImage: string | null
   bannerHeight: number
   humanVerified: boolean
+  taxLegalName: string | null
+  taxAddressLine1: string | null
+  taxAddressLine2: string | null
+  taxCity: string | null
+  taxPostalCode: string | null
+  taxCountry: string | null
+  taxVatId: string | null
+  taxProfileUpdated: Date | null
   _count: UserCountAggregateOutputType | null
   _avg: UserAvgAggregateOutputType | null
   _sum: UserSumAggregateOutputType | null
@@ -470,12 +533,21 @@ export type UserWhereInput = {
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
   linkedinHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  instagramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
   website2?: Prisma.StringNullableFilter<"User"> | string | null
   website3?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
   bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
+  taxLegalName?: Prisma.StringNullableFilter<"User"> | string | null
+  taxAddressLine1?: Prisma.StringNullableFilter<"User"> | string | null
+  taxAddressLine2?: Prisma.StringNullableFilter<"User"> | string | null
+  taxCity?: Prisma.StringNullableFilter<"User"> | string | null
+  taxPostalCode?: Prisma.StringNullableFilter<"User"> | string | null
+  taxCountry?: Prisma.StringNullableFilter<"User"> | string | null
+  taxVatId?: Prisma.StringNullableFilter<"User"> | string | null
+  taxProfileUpdated?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   gigs?: Prisma.GigListRelationFilter
   jobs?: Prisma.JobListRelationFilter
   jobApplications?: Prisma.JobApplicationListRelationFilter
@@ -500,6 +572,8 @@ export type UserWhereInput = {
   filedDisputes?: Prisma.DisputeListRelationFilter
   disputeMessages?: Prisma.DisputeMessageListRelationFilter
   supportTickets?: Prisma.SupportTicketListRelationFilter
+  invoiceCounter?: Prisma.XOR<Prisma.InvoiceCounterNullableScalarRelationFilter, Prisma.InvoiceCounterWhereInput> | null
+  invoices?: Prisma.InvoiceListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -536,12 +610,21 @@ export type UserOrderByWithRelationInput = {
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   website2?: Prisma.SortOrderInput | Prisma.SortOrder
   website3?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+  taxLegalName?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxAddressLine1?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxAddressLine2?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxPostalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxCountry?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxVatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxProfileUpdated?: Prisma.SortOrderInput | Prisma.SortOrder
   gigs?: Prisma.GigOrderByRelationAggregateInput
   jobs?: Prisma.JobOrderByRelationAggregateInput
   jobApplications?: Prisma.JobApplicationOrderByRelationAggregateInput
@@ -566,6 +649,8 @@ export type UserOrderByWithRelationInput = {
   filedDisputes?: Prisma.DisputeOrderByRelationAggregateInput
   disputeMessages?: Prisma.DisputeMessageOrderByRelationAggregateInput
   supportTickets?: Prisma.SupportTicketOrderByRelationAggregateInput
+  invoiceCounter?: Prisma.InvoiceCounterOrderByWithRelationInput
+  invoices?: Prisma.InvoiceOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -605,12 +690,21 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   githubHandle?: Prisma.StringNullableFilter<"User"> | string | null
   discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
   linkedinHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  instagramHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
   website2?: Prisma.StringNullableFilter<"User"> | string | null
   website3?: Prisma.StringNullableFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableFilter<"User"> | string | null
   bannerHeight?: Prisma.IntFilter<"User"> | number
   humanVerified?: Prisma.BoolFilter<"User"> | boolean
+  taxLegalName?: Prisma.StringNullableFilter<"User"> | string | null
+  taxAddressLine1?: Prisma.StringNullableFilter<"User"> | string | null
+  taxAddressLine2?: Prisma.StringNullableFilter<"User"> | string | null
+  taxCity?: Prisma.StringNullableFilter<"User"> | string | null
+  taxPostalCode?: Prisma.StringNullableFilter<"User"> | string | null
+  taxCountry?: Prisma.StringNullableFilter<"User"> | string | null
+  taxVatId?: Prisma.StringNullableFilter<"User"> | string | null
+  taxProfileUpdated?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   gigs?: Prisma.GigListRelationFilter
   jobs?: Prisma.JobListRelationFilter
   jobApplications?: Prisma.JobApplicationListRelationFilter
@@ -635,6 +729,8 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   filedDisputes?: Prisma.DisputeListRelationFilter
   disputeMessages?: Prisma.DisputeMessageListRelationFilter
   supportTickets?: Prisma.SupportTicketListRelationFilter
+  invoiceCounter?: Prisma.XOR<Prisma.InvoiceCounterNullableScalarRelationFilter, Prisma.InvoiceCounterWhereInput> | null
+  invoices?: Prisma.InvoiceListRelationFilter
 }, "id" | "twitterId" | "twitterHandle" | "walletAddress" | "worldIdNullifier" | "stripeVerificationId" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -671,12 +767,21 @@ export type UserOrderByWithAggregationInput = {
   githubHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  instagramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   website2?: Prisma.SortOrderInput | Prisma.SortOrder
   website3?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerImage?: Prisma.SortOrderInput | Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+  taxLegalName?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxAddressLine1?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxAddressLine2?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxCity?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxPostalCode?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxCountry?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxVatId?: Prisma.SortOrderInput | Prisma.SortOrder
+  taxProfileUpdated?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
   _avg?: Prisma.UserAvgOrderByAggregateInput
   _max?: Prisma.UserMaxOrderByAggregateInput
@@ -721,12 +826,21 @@ export type UserScalarWhereWithAggregatesInput = {
   githubHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   discordHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   linkedinHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  instagramHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website2?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website3?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bannerImage?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   bannerHeight?: Prisma.IntWithAggregatesFilter<"User"> | number
   humanVerified?: Prisma.BoolWithAggregatesFilter<"User"> | boolean
+  taxLegalName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxAddressLine1?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxAddressLine2?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxCity?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxPostalCode?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxCountry?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxVatId?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  taxProfileUpdated?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
 }
 
 export type UserCreateInput = {
@@ -763,12 +877,21 @@ export type UserCreateInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -793,6 +916,8 @@ export type UserCreateInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -829,12 +954,21 @@ export type UserUncheckedCreateInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -859,6 +993,8 @@ export type UserUncheckedCreateInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -895,12 +1031,21 @@ export type UserUpdateInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -925,6 +1070,8 @@ export type UserUpdateInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -961,12 +1108,21 @@ export type UserUncheckedUpdateInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -991,6 +1147,8 @@ export type UserUncheckedUpdateInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1027,12 +1185,21 @@ export type UserCreateManyInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
 }
 
 export type UserUpdateManyMutationInput = {
@@ -1069,12 +1236,21 @@ export type UserUpdateManyMutationInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type UserUncheckedUpdateManyInput = {
@@ -1111,12 +1287,21 @@ export type UserUncheckedUpdateManyInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
 }
 
 export type StringNullableListFilter<$PrismaModel = never> = {
@@ -1161,12 +1346,21 @@ export type UserCountOrderByAggregateInput = {
   githubHandle?: Prisma.SortOrder
   discordHandle?: Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrder
+  instagramHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   website2?: Prisma.SortOrder
   website3?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+  taxLegalName?: Prisma.SortOrder
+  taxAddressLine1?: Prisma.SortOrder
+  taxAddressLine2?: Prisma.SortOrder
+  taxCity?: Prisma.SortOrder
+  taxPostalCode?: Prisma.SortOrder
+  taxCountry?: Prisma.SortOrder
+  taxVatId?: Prisma.SortOrder
+  taxProfileUpdated?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
@@ -1204,12 +1398,21 @@ export type UserMaxOrderByAggregateInput = {
   githubHandle?: Prisma.SortOrder
   discordHandle?: Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrder
+  instagramHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   website2?: Prisma.SortOrder
   website3?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+  taxLegalName?: Prisma.SortOrder
+  taxAddressLine1?: Prisma.SortOrder
+  taxAddressLine2?: Prisma.SortOrder
+  taxCity?: Prisma.SortOrder
+  taxPostalCode?: Prisma.SortOrder
+  taxCountry?: Prisma.SortOrder
+  taxVatId?: Prisma.SortOrder
+  taxProfileUpdated?: Prisma.SortOrder
 }
 
 export type UserMinOrderByAggregateInput = {
@@ -1243,12 +1446,21 @@ export type UserMinOrderByAggregateInput = {
   githubHandle?: Prisma.SortOrder
   discordHandle?: Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrder
+  instagramHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   website2?: Prisma.SortOrder
   website3?: Prisma.SortOrder
   bannerImage?: Prisma.SortOrder
   bannerHeight?: Prisma.SortOrder
   humanVerified?: Prisma.SortOrder
+  taxLegalName?: Prisma.SortOrder
+  taxAddressLine1?: Prisma.SortOrder
+  taxAddressLine2?: Prisma.SortOrder
+  taxCity?: Prisma.SortOrder
+  taxPostalCode?: Prisma.SortOrder
+  taxCountry?: Prisma.SortOrder
+  taxVatId?: Prisma.SortOrder
+  taxProfileUpdated?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
@@ -1639,6 +1851,34 @@ export type UserUpdateOneRequiredWithoutSupportTicketsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSupportTicketsInput, Prisma.UserUpdateWithoutSupportTicketsInput>, Prisma.UserUncheckedUpdateWithoutSupportTicketsInput>
 }
 
+export type UserCreateNestedOneWithoutInvoiceCounterInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvoiceCounterInput, Prisma.UserUncheckedCreateWithoutInvoiceCounterInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvoiceCounterInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutInvoiceCounterNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvoiceCounterInput, Prisma.UserUncheckedCreateWithoutInvoiceCounterInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvoiceCounterInput
+  upsert?: Prisma.UserUpsertWithoutInvoiceCounterInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInvoiceCounterInput, Prisma.UserUpdateWithoutInvoiceCounterInput>, Prisma.UserUncheckedUpdateWithoutInvoiceCounterInput>
+}
+
+export type UserCreateNestedOneWithoutInvoicesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvoicesInput, Prisma.UserUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvoicesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutInvoicesInput, Prisma.UserUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutInvoicesInput
+  upsert?: Prisma.UserUpsertWithoutInvoicesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutInvoicesInput, Prisma.UserUpdateWithoutInvoicesInput>, Prisma.UserUncheckedUpdateWithoutInvoicesInput>
+}
+
 export type UserCreateNestedOneWithoutCampaignClaimsInput = {
   create?: Prisma.XOR<Prisma.UserCreateWithoutCampaignClaimsInput, Prisma.UserUncheckedCreateWithoutCampaignClaimsInput>
   connectOrCreate?: Prisma.UserCreateOrConnectWithoutCampaignClaimsInput
@@ -1689,12 +1929,21 @@ export type UserCreateWithoutSavedByTalentsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -1718,6 +1967,8 @@ export type UserCreateWithoutSavedByTalentsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedByTalentsInput = {
@@ -1754,12 +2005,21 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -1783,6 +2043,8 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedByTalentsInput = {
@@ -1824,12 +2086,21 @@ export type UserCreateWithoutSavedTalentsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -1853,6 +2124,8 @@ export type UserCreateWithoutSavedTalentsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedTalentsInput = {
@@ -1889,12 +2162,21 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -1918,6 +2200,8 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedTalentsInput = {
@@ -1970,12 +2254,21 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -1999,6 +2292,8 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
@@ -2035,12 +2330,21 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -2064,6 +2368,8 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutSavedTalentsInput = {
@@ -2111,12 +2417,21 @@ export type UserUpdateWithoutSavedTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -2140,6 +2455,8 @@ export type UserUpdateWithoutSavedTalentsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedTalentsInput = {
@@ -2176,12 +2493,21 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -2205,6 +2531,8 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -2241,12 +2569,21 @@ export type UserCreateWithoutNotificationsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -2270,6 +2607,8 @@ export type UserCreateWithoutNotificationsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -2306,12 +2645,21 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -2335,6 +2683,8 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2387,12 +2737,21 @@ export type UserUpdateWithoutNotificationsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -2416,6 +2775,8 @@ export type UserUpdateWithoutNotificationsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2452,12 +2813,21 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -2481,6 +2851,8 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutJobsInput = {
@@ -2517,12 +2889,21 @@ export type UserCreateWithoutJobsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2546,6 +2927,8 @@ export type UserCreateWithoutJobsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJobsInput = {
@@ -2582,12 +2965,21 @@ export type UserUncheckedCreateWithoutJobsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2611,6 +3003,8 @@ export type UserUncheckedCreateWithoutJobsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJobsInput = {
@@ -2663,12 +3057,21 @@ export type UserUpdateWithoutJobsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2692,6 +3095,8 @@ export type UserUpdateWithoutJobsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJobsInput = {
@@ -2728,12 +3133,21 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -2757,6 +3171,8 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutJobApplicationsInput = {
@@ -2793,12 +3209,21 @@ export type UserCreateWithoutJobApplicationsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -2822,6 +3247,8 @@ export type UserCreateWithoutJobApplicationsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutJobApplicationsInput = {
@@ -2858,12 +3285,21 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -2887,6 +3323,8 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutJobApplicationsInput = {
@@ -2939,12 +3377,21 @@ export type UserUpdateWithoutJobApplicationsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -2968,6 +3415,8 @@ export type UserUpdateWithoutJobApplicationsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutJobApplicationsInput = {
@@ -3004,12 +3453,21 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -3033,6 +3491,8 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -3069,12 +3529,21 @@ export type UserCreateWithoutSentMessagesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -3098,6 +3567,8 @@ export type UserCreateWithoutSentMessagesInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -3134,12 +3605,21 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -3163,6 +3643,8 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -3215,12 +3697,21 @@ export type UserUpdateWithoutSentMessagesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -3244,6 +3735,8 @@ export type UserUpdateWithoutSentMessagesInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -3280,12 +3773,21 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -3309,6 +3811,8 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutGigsInput = {
@@ -3345,12 +3849,21 @@ export type UserCreateWithoutGigsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
   sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
@@ -3374,6 +3887,8 @@ export type UserCreateWithoutGigsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutGigsInput = {
@@ -3410,12 +3925,21 @@ export type UserUncheckedCreateWithoutGigsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
   sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
@@ -3439,6 +3963,8 @@ export type UserUncheckedCreateWithoutGigsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutGigsInput = {
@@ -3491,12 +4017,21 @@ export type UserUpdateWithoutGigsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
   sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
@@ -3520,6 +4055,8 @@ export type UserUpdateWithoutGigsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGigsInput = {
@@ -3556,12 +4093,21 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
   sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
@@ -3585,6 +4131,8 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSavedGigsInput = {
@@ -3621,12 +4169,21 @@ export type UserCreateWithoutSavedGigsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -3650,6 +4207,8 @@ export type UserCreateWithoutSavedGigsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSavedGigsInput = {
@@ -3686,12 +4245,21 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -3715,6 +4283,8 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSavedGigsInput = {
@@ -3767,12 +4337,21 @@ export type UserUpdateWithoutSavedGigsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -3796,6 +4375,8 @@ export type UserUpdateWithoutSavedGigsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSavedGigsInput = {
@@ -3832,12 +4413,21 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -3861,6 +4451,8 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBuyerOrdersInput = {
@@ -3897,12 +4489,21 @@ export type UserCreateWithoutBuyerOrdersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -3926,6 +4527,8 @@ export type UserCreateWithoutBuyerOrdersInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBuyerOrdersInput = {
@@ -3962,12 +4565,21 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -3991,6 +4603,8 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBuyerOrdersInput = {
@@ -4032,12 +4646,21 @@ export type UserCreateWithoutSellerOrdersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -4061,6 +4684,8 @@ export type UserCreateWithoutSellerOrdersInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSellerOrdersInput = {
@@ -4097,12 +4722,21 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -4126,6 +4760,8 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSellerOrdersInput = {
@@ -4178,12 +4814,21 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -4207,6 +4852,8 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
@@ -4243,12 +4890,21 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -4272,6 +4928,8 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutSellerOrdersInput = {
@@ -4319,12 +4977,21 @@ export type UserUpdateWithoutSellerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -4348,6 +5015,8 @@ export type UserUpdateWithoutSellerOrdersInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSellerOrdersInput = {
@@ -4384,12 +5053,21 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -4413,6 +5091,8 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsReceivedInput = {
@@ -4449,12 +5129,21 @@ export type UserCreateWithoutReviewsReceivedInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -4478,6 +5167,8 @@ export type UserCreateWithoutReviewsReceivedInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsReceivedInput = {
@@ -4514,12 +5205,21 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -4543,6 +5243,8 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsReceivedInput = {
@@ -4584,12 +5286,21 @@ export type UserCreateWithoutReviewsGivenInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -4613,6 +5324,8 @@ export type UserCreateWithoutReviewsGivenInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsGivenInput = {
@@ -4649,12 +5362,21 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -4678,6 +5400,8 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsGivenInput = {
@@ -4730,12 +5454,21 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -4759,6 +5492,8 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
@@ -4795,12 +5530,21 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -4824,6 +5568,8 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReviewsGivenInput = {
@@ -4871,12 +5617,21 @@ export type UserUpdateWithoutReviewsGivenInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -4900,6 +5655,8 @@ export type UserUpdateWithoutReviewsGivenInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsGivenInput = {
@@ -4936,12 +5693,21 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -4965,6 +5731,8 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShowcasePostsInput = {
@@ -5001,12 +5769,21 @@ export type UserCreateWithoutShowcasePostsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -5030,6 +5807,8 @@ export type UserCreateWithoutShowcasePostsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShowcasePostsInput = {
@@ -5066,12 +5845,21 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -5095,6 +5883,8 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShowcasePostsInput = {
@@ -5147,12 +5937,21 @@ export type UserUpdateWithoutShowcasePostsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -5176,6 +5975,8 @@ export type UserUpdateWithoutShowcasePostsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShowcasePostsInput = {
@@ -5212,12 +6013,21 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -5241,6 +6051,8 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutShowcaseInteractionsInput = {
@@ -5277,12 +6089,21 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -5306,6 +6127,8 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
@@ -5342,12 +6165,21 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -5371,6 +6203,8 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutShowcaseInteractionsInput = {
@@ -5423,12 +6257,21 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -5452,6 +6295,8 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
@@ -5488,12 +6333,21 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -5517,6 +6371,8 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutProWaitlistInput = {
@@ -5553,12 +6409,21 @@ export type UserCreateWithoutProWaitlistInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -5582,6 +6447,8 @@ export type UserCreateWithoutProWaitlistInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutProWaitlistInput = {
@@ -5618,12 +6485,21 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -5647,6 +6523,8 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutProWaitlistInput = {
@@ -5699,12 +6577,21 @@ export type UserUpdateWithoutProWaitlistInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -5728,6 +6615,8 @@ export type UserUpdateWithoutProWaitlistInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutProWaitlistInput = {
@@ -5764,12 +6653,21 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -5793,6 +6691,8 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationPreferencesInput = {
@@ -5829,12 +6729,21 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -5858,6 +6767,8 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
@@ -5894,12 +6805,21 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -5923,6 +6843,8 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationPreferencesInput = {
@@ -5975,12 +6897,21 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -6004,6 +6935,8 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
@@ -6040,12 +6973,21 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -6069,6 +7011,8 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutEmailVerifyTokensInput = {
@@ -6105,12 +7049,21 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -6134,6 +7087,8 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
@@ -6170,12 +7125,21 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -6199,6 +7163,8 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutEmailVerifyTokensInput = {
@@ -6251,12 +7217,21 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -6280,6 +7255,8 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
@@ -6316,12 +7293,21 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -6345,6 +7331,8 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPasswordResetTokensInput = {
@@ -6381,12 +7369,21 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -6410,6 +7407,8 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
@@ -6446,12 +7445,21 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -6475,6 +7483,8 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPasswordResetTokensInput = {
@@ -6527,12 +7537,21 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -6556,6 +7575,8 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
@@ -6592,12 +7613,21 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -6621,6 +7651,8 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFiledDisputesInput = {
@@ -6657,12 +7689,21 @@ export type UserCreateWithoutFiledDisputesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -6686,6 +7727,8 @@ export type UserCreateWithoutFiledDisputesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFiledDisputesInput = {
@@ -6722,12 +7765,21 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -6751,6 +7803,8 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFiledDisputesInput = {
@@ -6803,12 +7857,21 @@ export type UserUpdateWithoutFiledDisputesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -6832,6 +7895,8 @@ export type UserUpdateWithoutFiledDisputesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFiledDisputesInput = {
@@ -6868,12 +7933,21 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -6897,6 +7971,8 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutDisputeMessagesInput = {
@@ -6933,12 +8009,21 @@ export type UserCreateWithoutDisputeMessagesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -6962,6 +8047,8 @@ export type UserCreateWithoutDisputeMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutDisputeMessagesInput = {
@@ -6998,12 +8085,21 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -7027,6 +8123,8 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutDisputeMessagesInput = {
@@ -7079,12 +8177,21 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -7108,6 +8215,8 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
@@ -7144,12 +8253,21 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -7173,6 +8291,8 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSentOffersInput = {
@@ -7209,12 +8329,21 @@ export type UserCreateWithoutSentOffersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -7238,6 +8367,8 @@ export type UserCreateWithoutSentOffersInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSentOffersInput = {
@@ -7274,12 +8405,21 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -7303,6 +8443,8 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSentOffersInput = {
@@ -7344,12 +8486,21 @@ export type UserCreateWithoutReceivedOffersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -7373,6 +8524,8 @@ export type UserCreateWithoutReceivedOffersInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReceivedOffersInput = {
@@ -7409,12 +8562,21 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -7438,6 +8600,8 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReceivedOffersInput = {
@@ -7490,12 +8654,21 @@ export type UserUpdateWithoutSentOffersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -7519,6 +8692,8 @@ export type UserUpdateWithoutSentOffersInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentOffersInput = {
@@ -7555,12 +8730,21 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -7584,6 +8768,8 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserUpsertWithoutReceivedOffersInput = {
@@ -7631,12 +8817,21 @@ export type UserUpdateWithoutReceivedOffersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -7660,6 +8855,8 @@ export type UserUpdateWithoutReceivedOffersInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedOffersInput = {
@@ -7696,12 +8893,21 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -7725,6 +8931,8 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutSupportTicketsInput = {
@@ -7761,12 +8969,21 @@ export type UserCreateWithoutSupportTicketsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -7790,6 +9007,8 @@ export type UserCreateWithoutSupportTicketsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSupportTicketsInput = {
@@ -7826,12 +9045,21 @@ export type UserUncheckedCreateWithoutSupportTicketsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -7855,6 +9083,8 @@ export type UserUncheckedCreateWithoutSupportTicketsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSupportTicketsInput = {
@@ -7907,12 +9137,21 @@ export type UserUpdateWithoutSupportTicketsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -7936,6 +9175,8 @@ export type UserUpdateWithoutSupportTicketsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSupportTicketsInput = {
@@ -7972,12 +9213,21 @@ export type UserUncheckedUpdateWithoutSupportTicketsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -8001,6 +9251,648 @@ export type UserUncheckedUpdateWithoutSupportTicketsInput = {
   notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutInvoiceCounterInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  instagramHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutInvoiceCounterInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  instagramHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutInvoiceCounterInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvoiceCounterInput, Prisma.UserUncheckedCreateWithoutInvoiceCounterInput>
+}
+
+export type UserUpsertWithoutInvoiceCounterInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInvoiceCounterInput, Prisma.UserUncheckedUpdateWithoutInvoiceCounterInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvoiceCounterInput, Prisma.UserUncheckedCreateWithoutInvoiceCounterInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInvoiceCounterInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInvoiceCounterInput, Prisma.UserUncheckedUpdateWithoutInvoiceCounterInput>
+}
+
+export type UserUpdateWithoutInvoiceCounterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInvoiceCounterInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUncheckedUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutInvoicesInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  instagramHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
+  gigs?: Prisma.GigCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutInvoicesInput = {
+  id?: string
+  twitterId?: string | null
+  twitterHandle: string
+  name?: string | null
+  image?: string | null
+  userTitle?: string | null
+  role?: $Enums.Role
+  skills?: Prisma.UserCreateskillsInput | string[]
+  bio?: string | null
+  availability?: string | null
+  unavailableDays?: Prisma.UserCreateunavailableDaysInput | string[]
+  responseTime?: string | null
+  profileComplete?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  walletAddress?: string | null
+  isOG?: boolean
+  ogGrantedAt?: Date | string | null
+  ogFoundingClient?: boolean
+  worldIdLevel?: string | null
+  worldIdNullifier?: string | null
+  stripeVerificationId?: string | null
+  email?: string | null
+  passwordHash?: string | null
+  emailVerified?: Date | string | null
+  lastSeenAt?: Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: string | null
+  twitterHandle2?: string | null
+  telegramHandle?: string | null
+  githubHandle?: string | null
+  discordHandle?: string | null
+  linkedinHandle?: string | null
+  instagramHandle?: string | null
+  website?: string | null
+  website2?: string | null
+  website3?: string | null
+  bannerImage?: string | null
+  bannerHeight?: number
+  humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
+  gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
+  jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
+  jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  buyerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutBuyerInput
+  sellerOrders?: Prisma.OrderUncheckedCreateNestedManyWithoutSellerInput
+  reviewsReceived?: Prisma.ReviewUncheckedCreateNestedManyWithoutRevieweeInput
+  reviewsGiven?: Prisma.ReviewUncheckedCreateNestedManyWithoutReviewerInput
+  savedByTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSavedUserInput
+  savedTalents?: Prisma.SavedTalentUncheckedCreateNestedManyWithoutSaverInput
+  savedGigs?: Prisma.SavedGigUncheckedCreateNestedManyWithoutUserInput
+  sentOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutSenderInput
+  receivedOffers?: Prisma.OfferUncheckedCreateNestedManyWithoutReceiverInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedCreateNestedManyWithoutUserInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedCreateNestedManyWithoutUserInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedCreateNestedOneWithoutUserInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedCreateNestedManyWithoutUserInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedCreateNestedManyWithoutUserInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedCreateNestedManyWithoutUserInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedCreateNestedOneWithoutUserInput
+  filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
+  supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutInvoicesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvoicesInput, Prisma.UserUncheckedCreateWithoutInvoicesInput>
+}
+
+export type UserUpsertWithoutInvoicesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutInvoicesInput, Prisma.UserUncheckedUpdateWithoutInvoicesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutInvoicesInput, Prisma.UserUncheckedCreateWithoutInvoicesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutInvoicesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutInvoicesInput, Prisma.UserUncheckedUpdateWithoutInvoicesInput>
+}
+
+export type UserUpdateWithoutInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  twitterId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  userTitle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  skills?: Prisma.UserUpdateskillsInput | string[]
+  bio?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  availability?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  unavailableDays?: Prisma.UserUpdateunavailableDaysInput | string[]
+  responseTime?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  profileComplete?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  walletAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  isOG?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  ogGrantedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  ogFoundingClient?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  worldIdLevel?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  worldIdNullifier?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  stripeVerificationId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  email?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  lastSeenAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  portfolioItems?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  cvUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  twitterHandle2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  telegramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
+  humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
+  jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
+  jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  buyerOrders?: Prisma.OrderUncheckedUpdateManyWithoutBuyerNestedInput
+  sellerOrders?: Prisma.OrderUncheckedUpdateManyWithoutSellerNestedInput
+  reviewsReceived?: Prisma.ReviewUncheckedUpdateManyWithoutRevieweeNestedInput
+  reviewsGiven?: Prisma.ReviewUncheckedUpdateManyWithoutReviewerNestedInput
+  savedByTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSavedUserNestedInput
+  savedTalents?: Prisma.SavedTalentUncheckedUpdateManyWithoutSaverNestedInput
+  savedGigs?: Prisma.SavedGigUncheckedUpdateManyWithoutUserNestedInput
+  sentOffers?: Prisma.OfferUncheckedUpdateManyWithoutSenderNestedInput
+  receivedOffers?: Prisma.OfferUncheckedUpdateManyWithoutReceiverNestedInput
+  showcaseInteractions?: Prisma.ShowcaseInteractionUncheckedUpdateManyWithoutUserNestedInput
+  showcasePosts?: Prisma.ShowcasePostUncheckedUpdateManyWithoutUserNestedInput
+  proWaitlist?: Prisma.ProWaitlistUncheckedUpdateOneWithoutUserNestedInput
+  campaignClaims?: Prisma.CampaignClaimUncheckedUpdateManyWithoutUserNestedInput
+  passwordResetTokens?: Prisma.PasswordResetTokenUncheckedUpdateManyWithoutUserNestedInput
+  emailVerifyTokens?: Prisma.EmailVerifyTokenUncheckedUpdateManyWithoutUserNestedInput
+  notificationPreferences?: Prisma.NotificationPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
+  disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
+  supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UserCreateWithoutCampaignClaimsInput = {
@@ -8037,12 +9929,21 @@ export type UserCreateWithoutCampaignClaimsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationCreateNestedManyWithoutApplicantInput
@@ -8066,6 +9967,8 @@ export type UserCreateWithoutCampaignClaimsInput = {
   filedDisputes?: Prisma.DisputeCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutCampaignClaimsInput = {
@@ -8102,12 +10005,21 @@ export type UserUncheckedCreateWithoutCampaignClaimsInput = {
   githubHandle?: string | null
   discordHandle?: string | null
   linkedinHandle?: string | null
+  instagramHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
   bannerImage?: string | null
   bannerHeight?: number
   humanVerified?: boolean
+  taxLegalName?: string | null
+  taxAddressLine1?: string | null
+  taxAddressLine2?: string | null
+  taxCity?: string | null
+  taxPostalCode?: string | null
+  taxCountry?: string | null
+  taxVatId?: string | null
+  taxProfileUpdated?: Date | string | null
   gigs?: Prisma.GigUncheckedCreateNestedManyWithoutUserInput
   jobs?: Prisma.JobUncheckedCreateNestedManyWithoutOwnerInput
   jobApplications?: Prisma.JobApplicationUncheckedCreateNestedManyWithoutApplicantInput
@@ -8131,6 +10043,8 @@ export type UserUncheckedCreateWithoutCampaignClaimsInput = {
   filedDisputes?: Prisma.DisputeUncheckedCreateNestedManyWithoutFiledByInput
   disputeMessages?: Prisma.DisputeMessageUncheckedCreateNestedManyWithoutSenderInput
   supportTickets?: Prisma.SupportTicketUncheckedCreateNestedManyWithoutUserInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedCreateNestedOneWithoutUserInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutCampaignClaimsInput = {
@@ -8183,12 +10097,21 @@ export type UserUpdateWithoutCampaignClaimsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUpdateManyWithoutApplicantNestedInput
@@ -8212,6 +10135,8 @@ export type UserUpdateWithoutCampaignClaimsInput = {
   filedDisputes?: Prisma.DisputeUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
@@ -8248,12 +10173,21 @@ export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
   githubHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerImage?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   bannerHeight?: Prisma.IntFieldUpdateOperationsInput | number
   humanVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  taxLegalName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine1?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxAddressLine2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCity?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxPostalCode?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxCountry?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxVatId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  taxProfileUpdated?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   gigs?: Prisma.GigUncheckedUpdateManyWithoutUserNestedInput
   jobs?: Prisma.JobUncheckedUpdateManyWithoutOwnerNestedInput
   jobApplications?: Prisma.JobApplicationUncheckedUpdateManyWithoutApplicantNestedInput
@@ -8277,6 +10211,8 @@ export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
   filedDisputes?: Prisma.DisputeUncheckedUpdateManyWithoutFiledByNestedInput
   disputeMessages?: Prisma.DisputeMessageUncheckedUpdateManyWithoutSenderNestedInput
   supportTickets?: Prisma.SupportTicketUncheckedUpdateManyWithoutUserNestedInput
+  invoiceCounter?: Prisma.InvoiceCounterUncheckedUpdateOneWithoutUserNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -8307,6 +10243,7 @@ export type UserCountOutputType = {
   filedDisputes: number
   disputeMessages: number
   supportTickets: number
+  invoices: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -8332,6 +10269,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   filedDisputes?: boolean | UserCountOutputTypeCountFiledDisputesArgs
   disputeMessages?: boolean | UserCountOutputTypeCountDisputeMessagesArgs
   supportTickets?: boolean | UserCountOutputTypeCountSupportTicketsArgs
+  invoices?: boolean | UserCountOutputTypeCountInvoicesArgs
 }
 
 /**
@@ -8498,6 +10436,13 @@ export type UserCountOutputTypeCountSupportTicketsArgs<ExtArgs extends runtime.T
   where?: Prisma.SupportTicketWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -8533,12 +10478,21 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   githubHandle?: boolean
   discordHandle?: boolean
   linkedinHandle?: boolean
+  instagramHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
+  taxLegalName?: boolean
+  taxAddressLine1?: boolean
+  taxAddressLine2?: boolean
+  taxCity?: boolean
+  taxPostalCode?: boolean
+  taxCountry?: boolean
+  taxVatId?: boolean
+  taxProfileUpdated?: boolean
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
   jobApplications?: boolean | Prisma.User$jobApplicationsArgs<ExtArgs>
@@ -8563,6 +10517,8 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   filedDisputes?: boolean | Prisma.User$filedDisputesArgs<ExtArgs>
   disputeMessages?: boolean | Prisma.User$disputeMessagesArgs<ExtArgs>
   supportTickets?: boolean | Prisma.User$supportTicketsArgs<ExtArgs>
+  invoiceCounter?: boolean | Prisma.User$invoiceCounterArgs<ExtArgs>
+  invoices?: boolean | Prisma.User$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -8600,12 +10556,21 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   githubHandle?: boolean
   discordHandle?: boolean
   linkedinHandle?: boolean
+  instagramHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
+  taxLegalName?: boolean
+  taxAddressLine1?: boolean
+  taxAddressLine2?: boolean
+  taxCity?: boolean
+  taxPostalCode?: boolean
+  taxCountry?: boolean
+  taxVatId?: boolean
+  taxProfileUpdated?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -8642,12 +10607,21 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   githubHandle?: boolean
   discordHandle?: boolean
   linkedinHandle?: boolean
+  instagramHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
+  taxLegalName?: boolean
+  taxAddressLine1?: boolean
+  taxAddressLine2?: boolean
+  taxCity?: boolean
+  taxPostalCode?: boolean
+  taxCountry?: boolean
+  taxVatId?: boolean
+  taxProfileUpdated?: boolean
 }, ExtArgs["result"]["user"]>
 
 export type UserSelectScalar = {
@@ -8684,15 +10658,24 @@ export type UserSelectScalar = {
   githubHandle?: boolean
   discordHandle?: boolean
   linkedinHandle?: boolean
+  instagramHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
   bannerImage?: boolean
   bannerHeight?: boolean
   humanVerified?: boolean
+  taxLegalName?: boolean
+  taxAddressLine1?: boolean
+  taxAddressLine2?: boolean
+  taxCity?: boolean
+  taxPostalCode?: boolean
+  taxCountry?: boolean
+  taxVatId?: boolean
+  taxProfileUpdated?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "unavailableDays" | "responseTime" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "unavailableDays" | "responseTime" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "instagramHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified" | "taxLegalName" | "taxAddressLine1" | "taxAddressLine2" | "taxCity" | "taxPostalCode" | "taxCountry" | "taxVatId" | "taxProfileUpdated", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
@@ -8718,6 +10701,8 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   filedDisputes?: boolean | Prisma.User$filedDisputesArgs<ExtArgs>
   disputeMessages?: boolean | Prisma.User$disputeMessagesArgs<ExtArgs>
   supportTickets?: boolean | Prisma.User$supportTicketsArgs<ExtArgs>
+  invoiceCounter?: boolean | Prisma.User$invoiceCounterArgs<ExtArgs>
+  invoices?: boolean | Prisma.User$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -8750,6 +10735,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     filedDisputes: Prisma.$DisputePayload<ExtArgs>[]
     disputeMessages: Prisma.$DisputeMessagePayload<ExtArgs>[]
     supportTickets: Prisma.$SupportTicketPayload<ExtArgs>[]
+    invoiceCounter: Prisma.$InvoiceCounterPayload<ExtArgs> | null
+    invoices: Prisma.$InvoicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -8785,12 +10772,21 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     githubHandle: string | null
     discordHandle: string | null
     linkedinHandle: string | null
+    instagramHandle: string | null
     website: string | null
     website2: string | null
     website3: string | null
     bannerImage: string | null
     bannerHeight: number
     humanVerified: boolean
+    taxLegalName: string | null
+    taxAddressLine1: string | null
+    taxAddressLine2: string | null
+    taxCity: string | null
+    taxPostalCode: string | null
+    taxCountry: string | null
+    taxVatId: string | null
+    taxProfileUpdated: Date | null
   }, ExtArgs["result"]["user"]>
   composites: {}
 }
@@ -9209,6 +11205,8 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   filedDisputes<T extends Prisma.User$filedDisputesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$filedDisputesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   disputeMessages<T extends Prisma.User$disputeMessagesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$disputeMessagesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DisputeMessagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   supportTickets<T extends Prisma.User$supportTicketsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$supportTicketsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SupportTicketPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invoiceCounter<T extends Prisma.User$invoiceCounterArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invoiceCounterArgs<ExtArgs>>): Prisma.Prisma__InvoiceCounterClient<runtime.Types.Result.GetResult<Prisma.$InvoiceCounterPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  invoices<T extends Prisma.User$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -9271,12 +11269,21 @@ export interface UserFieldRefs {
   readonly githubHandle: Prisma.FieldRef<"User", 'String'>
   readonly discordHandle: Prisma.FieldRef<"User", 'String'>
   readonly linkedinHandle: Prisma.FieldRef<"User", 'String'>
+  readonly instagramHandle: Prisma.FieldRef<"User", 'String'>
   readonly website: Prisma.FieldRef<"User", 'String'>
   readonly website2: Prisma.FieldRef<"User", 'String'>
   readonly website3: Prisma.FieldRef<"User", 'String'>
   readonly bannerImage: Prisma.FieldRef<"User", 'String'>
   readonly bannerHeight: Prisma.FieldRef<"User", 'Int'>
   readonly humanVerified: Prisma.FieldRef<"User", 'Boolean'>
+  readonly taxLegalName: Prisma.FieldRef<"User", 'String'>
+  readonly taxAddressLine1: Prisma.FieldRef<"User", 'String'>
+  readonly taxAddressLine2: Prisma.FieldRef<"User", 'String'>
+  readonly taxCity: Prisma.FieldRef<"User", 'String'>
+  readonly taxPostalCode: Prisma.FieldRef<"User", 'String'>
+  readonly taxCountry: Prisma.FieldRef<"User", 'String'>
+  readonly taxVatId: Prisma.FieldRef<"User", 'String'>
+  readonly taxProfileUpdated: Prisma.FieldRef<"User", 'DateTime'>
 }
     
 
@@ -10233,6 +12240,49 @@ export type User$supportTicketsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.SupportTicketScalarFieldEnum | Prisma.SupportTicketScalarFieldEnum[]
+}
+
+/**
+ * User.invoiceCounter
+ */
+export type User$invoiceCounterArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the InvoiceCounter
+   */
+  select?: Prisma.InvoiceCounterSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the InvoiceCounter
+   */
+  omit?: Prisma.InvoiceCounterOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceCounterInclude<ExtArgs> | null
+  where?: Prisma.InvoiceCounterWhereInput
+}
+
+/**
+ * User.invoices
+ */
+export type User$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceInclude<ExtArgs> | null
+  where?: Prisma.InvoiceWhereInput
+  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.InvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
 }
 
 /**

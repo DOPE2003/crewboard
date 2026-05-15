@@ -75,6 +75,8 @@ export const ModelName = {
   Offer: 'Offer',
   SupportTicket: 'SupportTicket',
   AdminActionLog: 'AdminActionLog',
+  InvoiceCounter: 'InvoiceCounter',
+  Invoice: 'Invoice',
   OfacSdnEntry: 'OfacSdnEntry',
   SanctionsBlock: 'SanctionsBlock',
   CampaignClaim: 'CampaignClaim'
@@ -130,12 +132,21 @@ export const UserScalarFieldEnum = {
   githubHandle: 'githubHandle',
   discordHandle: 'discordHandle',
   linkedinHandle: 'linkedinHandle',
+  instagramHandle: 'instagramHandle',
   website: 'website',
   website2: 'website2',
   website3: 'website3',
   bannerImage: 'bannerImage',
   bannerHeight: 'bannerHeight',
-  humanVerified: 'humanVerified'
+  humanVerified: 'humanVerified',
+  taxLegalName: 'taxLegalName',
+  taxAddressLine1: 'taxAddressLine1',
+  taxAddressLine2: 'taxAddressLine2',
+  taxCity: 'taxCity',
+  taxPostalCode: 'taxPostalCode',
+  taxCountry: 'taxCountry',
+  taxVatId: 'taxVatId',
+  taxProfileUpdated: 'taxProfileUpdated'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -472,6 +483,33 @@ export const AdminActionLogScalarFieldEnum = {
 } as const
 
 export type AdminActionLogScalarFieldEnum = (typeof AdminActionLogScalarFieldEnum)[keyof typeof AdminActionLogScalarFieldEnum]
+
+
+export const InvoiceCounterScalarFieldEnum = {
+  userId: 'userId',
+  nextNumber: 'nextNumber',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceCounterScalarFieldEnum = (typeof InvoiceCounterScalarFieldEnum)[keyof typeof InvoiceCounterScalarFieldEnum]
+
+
+export const InvoiceScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  orderId: 'orderId',
+  invoiceNumber: 'invoiceNumber',
+  pdfUrl: 'pdfUrl',
+  amountUsdc: 'amountUsdc',
+  amountEurAtTx: 'amountEurAtTx',
+  fxRate: 'fxRate',
+  buyerHandle: 'buyerHandle',
+  buyerLegalName: 'buyerLegalName',
+  issuerSnapshot: 'issuerSnapshot',
+  createdAt: 'createdAt'
+} as const
+
+export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
 
 
 export const OfacSdnEntryScalarFieldEnum = {

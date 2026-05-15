@@ -23,6 +23,9 @@ import { withMobileAuth, MobileTokenPayload } from "../../_lib/auth";
 import { ok, err } from "../../_lib/response";
 import { computeFreelancerLevel } from "@/lib/freelancerLevel";
 
+// Never cache — must always read fresh data so profile updates are immediately visible
+export const dynamic = "force-dynamic";
+
 function fallbackImage(name?: string | null, handle?: string | null) {
   const seed = encodeURIComponent(name ?? handle ?? "?");
   return `https://api.dicebear.com/9.x/initials/png?seed=${seed}&backgroundColor=14b8a6&fontColor=ffffff&size=200`;

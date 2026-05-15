@@ -8,9 +8,9 @@
  *   - Field present with value  → updated
  *
  * Updatable fields: name, image, bio, userTitle, twitterHandle (handle rename),
- *   githubHandle, telegramHandle, discordHandle, linkedinHandle,
+ *   githubHandle, telegramHandle, instagramHandle, discordHandle, linkedinHandle,
  *   website, website2, website3, twitterHandle2, availability,
- *   skills (string[]), email, bannerImage
+ *   skills (string[]), email, bannerImage, portfolioItems (Json[])
  *
  * Headers  Authorization: Bearer <token>
  * Body     Partial<above fields>
@@ -27,8 +27,8 @@ import { ok, err } from "../../_lib/response";
 const ALLOWED_FIELDS = [
   "name", "image", "bio", "userTitle", "availability",
   "twitterHandle", "twitterHandle2", "githubHandle", "telegramHandle",
-  "discordHandle", "linkedinHandle", "website", "website2", "website3",
-  "email", "bannerImage", "skills", "walletAddress",
+  "instagramHandle", "discordHandle", "linkedinHandle", "website", "website2", "website3",
+  "email", "bannerImage", "skills", "walletAddress", "portfolioItems",
 ] as const;
 
 type AllowedField = (typeof ALLOWED_FIELDS)[number];
@@ -51,6 +51,12 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
         continue;
       }
 
+      // portfolioItems: null means "clear to empty array"
+      if (key === "portfolioItems" && val === null) {
+        updates[key] = [];
+        continue;
+      }
+
       if (val === null || val === "") {
         updates[key] = null; // clear text fields intentionally
       } else {
@@ -68,6 +74,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       if (!/^[a-zA-Z0-9_]{3,20}$/.test(updates.twitterHandle as string)) {
         return err("Handle must be 3–20 characters (letters, numbers, underscores).");
       }
+    }
+
+    // Normalise instagramHandle — strip leading @, trim whitespace
+    if (typeof updates.instagramHandle === "string") {
+      let ig = (updates.instagramHandle as string).trim();
+      if (ig.startsWith("@")) ig = ig.slice(1);
+      updates.instagramHandle = ig || null;
     }
 
     // Validate email format if being set
@@ -103,6 +116,22 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       }
     }
 
+    // Validate portfolioItems
+    if (updates.portfolioItems !== undefined && updates.portfolioItems !== null) {
+      if (!Array.isArray(updates.portfolioItems)) {
+        return err("portfolioItems must be an array.");
+      }
+      const arr = updates.portfolioItems as unknown[];
+      if (arr.length > 50) {
+        return err("portfolioItems is limited to 50 entries.");
+      }
+      for (const item of arr) {
+        if (typeof item !== "object" || item === null || Array.isArray(item)) {
+          return err("portfolioItems entries must be objects.");
+        }
+      }
+    }
+
     const updated = await db.user.update({
       where: { id: user.sub },
       data: updates,
@@ -110,9 +139,11 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
         id: true, twitterHandle: true, name: true, email: true, image: true,
         bio: true, userTitle: true, skills: true, availability: true,
         walletAddress: true, profileComplete: true, isOG: true,
-        githubHandle: true, telegramHandle: true, linkedinHandle: true,
-        discordHandle: true, website: true, website2: true, website3: true,
+        githubHandle: true, telegramHandle: true, instagramHandle: true,
+        linkedinHandle: true, discordHandle: true,
+        website: true, website2: true, website3: true,
         twitterHandle2: true, bannerImage: true, role: true,
+        portfolioItems: true,
       },
     });
 

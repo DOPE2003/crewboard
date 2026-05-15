@@ -162,6 +162,16 @@ export type SupportTicket = Prisma.SupportTicketModel
  */
 export type AdminActionLog = Prisma.AdminActionLogModel
 /**
+ * Model InvoiceCounter
+ * 
+ */
+export type InvoiceCounter = Prisma.InvoiceCounterModel
+/**
+ * Model Invoice
+ * 
+ */
+export type Invoice = Prisma.InvoiceModel
+/**
  * Model OfacSdnEntry
  * 
  */

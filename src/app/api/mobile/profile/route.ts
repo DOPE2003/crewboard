@@ -63,6 +63,7 @@ const PUBLIC_SELECT = {
   twitterHandle2: true,
   telegramHandle: true,
   githubHandle: true,
+  instagramHandle: true,
   discordHandle: true,
   linkedinHandle: true,
   website: true,

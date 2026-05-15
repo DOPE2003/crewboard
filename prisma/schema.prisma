@@ -48,12 +48,22 @@ model User {
   githubHandle         String?
   discordHandle        String?
   linkedinHandle       String?
+  instagramHandle      String?
   website              String?
   website2             String?
   website3             String?
   bannerImage          String?
   bannerHeight         Int                   @default(140)
   humanVerified        Boolean               @default(false)
+  // Tax profile fields (for invoice generation)
+  taxLegalName         String?
+  taxAddressLine1      String?
+  taxAddressLine2      String?
+  taxCity              String?
+  taxPostalCode        String?
+  taxCountry           String?
+  taxVatId             String?
+  taxProfileUpdated    DateTime?
   gigs                 Gig[]
   jobs                 Job[]
   jobApplications      JobApplication[]
@@ -78,6 +88,8 @@ model User {
   filedDisputes        Dispute[]        @relation("FiledDisputes")
   disputeMessages      DisputeMessage[] @relation("DisputeMessages")
   supportTickets       SupportTicket[]
+  invoiceCounter       InvoiceCounter?
+  invoices             Invoice[]
 }
 
 model SavedTalent {
@@ -249,6 +261,7 @@ model Order {
   reviews             Review[]
   offer               Offer?
   disputes            Dispute[]
+  invoice             Invoice?
 
   @@index([buyerId])
   @@index([sellerId])
@@ -442,6 +455,32 @@ model AdminActionLog {
   @@index([action])
   @@index([targetId])
   @@index([createdAt])
+}
+
+model InvoiceCounter {
+  userId     String   @id
+  nextNumber Int      @default(1)
+  updatedAt  DateTime @updatedAt
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Invoice {
+  id             String   @id @default(cuid())
+  userId         String
+  orderId        String   @unique
+  invoiceNumber  String
+  pdfUrl         String
+  amountUsdc     Float
+  amountEurAtTx  Float?
+  fxRate         Float?
+  buyerHandle    String?
+  buyerLegalName String?
+  issuerSnapshot Json
+  createdAt      DateTime @default(now())
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  order          Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
 }
 
 // Local mirror of OFAC SDN crypto addresses — refreshed every 6h by the sync-ofac cron
