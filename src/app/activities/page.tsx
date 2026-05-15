@@ -160,6 +160,7 @@ export default async function ActivitiesPage() {
 
   return (
     <ActivitiesClient
+      userId={userId}
       conversations={conversations}
       totalMsgUnread={totalMsgUnread}
       notifications={notifications}

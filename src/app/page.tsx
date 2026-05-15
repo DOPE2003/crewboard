@@ -181,14 +181,12 @@ export default async function HomePage() {
           zIndex: 0,
         }} />
 
-        {/* Floating profile cards — desktop only */}
-        {floatingProfiles.length >= 6 && (
-          <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
-            <div style={{ pointerEvents: "auto" }}>
-              <HeroFloatingProfiles profiles={floatingProfiles} />
-            </div>
+        {/* Floating profile cards — desktop only, always rendered (fallbacks fill gaps) */}
+        <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
+          <div style={{ pointerEvents: "auto" }}>
+            <HeroFloatingProfiles profiles={floatingProfiles} />
           </div>
-        )}
+        </div>
 
         {/* Beta badge */}
         <div

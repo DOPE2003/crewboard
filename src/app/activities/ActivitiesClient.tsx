@@ -3,11 +3,13 @@
 import { useState, useMemo, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import PusherClient from 'pusher-js'
 import { markAllConversationsRead, deleteConversation } from '@/actions/messages'
 import { markAllNotificationsAsRead, markNotificationRead, deleteNotification } from '@/actions/notifications'
 import type { NavNotif, NavOrder, NavConv } from '@/types/nav'
 
 interface Props {
+  userId: string
   conversations: NavConv[]
   totalMsgUnread: number
   notifications: NavNotif[]
@@ -93,7 +95,7 @@ function getDateGroup(iso: string): string {
   return 'EARLIER'
 }
 
-type SidebarTab = 'all' | 'messages' | 'orders' | 'payments' | 'disputes' | 'reviews' | 'system'
+type SidebarTab = 'all' | 'messages' | 'orders' | 'offers' | 'payments' | 'disputes' | 'reviews' | 'system'
 
 function previewLastMessage(body: string | null): string {
   if (!body) return 'No messages yet'
@@ -151,6 +153,7 @@ function NotifIcon({ type, size }: { type: string; size: number }) {
     dispute_opened:   { bg: '#fef2f2', stroke: '#EF4444', path: <><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></> },
     dispute:          { bg: '#fef2f2', stroke: '#EF4444', path: <><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></> },
     profile_view:     { bg: '#f3f4f6', stroke: '#6B7280', path: <><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></> },
+    offer:            { bg: '#fff7ed', stroke: '#C2410C', path: <><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></> },
   }
   const c = configs[type] ?? { bg: '#f3f4f6', stroke: '#64748b', path: <><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></> }
   return (
@@ -184,6 +187,7 @@ function CtaBtn({ label, href, urgent }: { label: string; href: string; urgent?:
 }
 
 export default function ActivitiesClient({
+  userId,
   conversations: initialConvs,
   totalMsgUnread: initialMsgUnread,
   notifications: initialNotifs,
@@ -208,6 +212,35 @@ export default function ActivitiesClient({
     return () => window.removeEventListener('resize', update)
   }, [])
 
+  // Real-time: Pusher private-user channel for instant notification delivery
+  useEffect(() => {
+    const key     = process.env.NEXT_PUBLIC_PUSHER_KEY
+    const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER
+    if (!key || !cluster || !userId) return
+
+    const client = new PusherClient(key, {
+      cluster,
+      channelAuthorization: { transport: 'ajax', endpoint: '/api/pusher/auth-web' },
+    })
+
+    const channel = client.subscribe(`private-user-${userId}`)
+    channel.bind('notification', (data: NavNotif) => {
+      setNotifs(prev => {
+        if (prev.some(n => n.id === data.id)) return prev
+        return [data, ...prev]
+      })
+      if (!data.read) setUnreadNotifs(c => c + 1)
+    })
+
+    return () => { channel.unbind_all(); client.disconnect() }
+  }, [userId])
+
+  // Polling: refresh server data every 30s to pick up orders / other changes
+  useEffect(() => {
+    const id = setInterval(() => router.refresh(), 30000)
+    return () => clearInterval(id)
+  }, [router])
+
   const totalUnread  = unreadMsgs + unreadNotifs
   const hasAnyUnread = convs.some(c => c.unread > 0) || notifs.some(n => !n.read)
 
@@ -216,9 +249,11 @@ export default function ActivitiesClient({
   const reviewNotifs    = useMemo(() => nonMsgNotifs.filter(n => n.type === 'review'), [nonMsgNotifs])
   const paymentNotifs   = useMemo(() => nonMsgNotifs.filter(n => ['payment_received', 'escrow_funded', 'escrow_released'].includes(n.type)), [nonMsgNotifs])
   const disputeNotifs   = useMemo(() => nonMsgNotifs.filter(n => ['dispute_opened', 'dispute'].includes(n.type)), [nonMsgNotifs])
+  const offerNotifs     = useMemo(() => nonMsgNotifs.filter(n => n.type === 'offer'), [nonMsgNotifs])
   const systemNotifs    = useMemo(() => nonMsgNotifs.filter(n => ['system', 'welcome', 'signin', 'profile_view'].includes(n.type) || !['review', 'payment_received', 'escrow_funded', 'escrow_released', 'dispute_opened', 'dispute', 'order', 'offer'].includes(n.type)), [nonMsgNotifs])
   const disputeOrders   = useMemo(() => orders.filter(o => o.status === 'disputed'), [orders])
 
+  const offerUnread     = offerNotifs.filter(n => !n.read).length
   const reviewUnread    = reviewNotifs.filter(n => !n.read).length
   const paymentUnread   = paymentNotifs.filter(n => !n.read).length
   const disputeCount    = disputeOrders.length + disputeNotifs.filter(n => !n.read).length
@@ -280,6 +315,7 @@ export default function ActivitiesClient({
       .map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() }))
 
     const notifSrc =
+      activeTab === 'offers'   ? offerNotifs   :
       activeTab === 'reviews'  ? reviewNotifs  :
       activeTab === 'payments' ? paymentNotifs :
       activeTab === 'disputes' ? disputeNotifs :
@@ -293,6 +329,7 @@ export default function ActivitiesClient({
       activeTab === 'all'      ? [...msgItems, ...notifItems, ...orderItems] :
       activeTab === 'messages' ? msgItems :
       activeTab === 'orders'   ? orderItems :
+      activeTab === 'offers'   ? notifItems :
       activeTab === 'payments' ? notifItems :
       activeTab === 'disputes' ? [...orders.filter(o => o.status === 'disputed').map(o => ({ kind: 'order' as const, data: o, ts: new Date(o.createdAt).getTime() })), ...notifItems] :
       activeTab === 'system'   ? notifItems :
@@ -317,7 +354,7 @@ export default function ActivitiesClient({
       if (Math.abs(tsDiff) > 300000) return tsDiff // > 5 min apart: use time
       return itemPriority(a) - itemPriority(b)      // same time window: use priority
     })
-  }, [convs, nonMsgNotifs, orders, activeTab, search, reviewNotifs, paymentNotifs, disputeNotifs])
+  }, [convs, nonMsgNotifs, orders, activeTab, search, offerNotifs, reviewNotifs, paymentNotifs, disputeNotifs, systemNotifs])
 
   const groupedItems = useMemo(() => {
     const ORDER = ['TODAY', 'YESTERDAY', 'THIS WEEK', 'EARLIER']
@@ -345,6 +382,7 @@ export default function ActivitiesClient({
     { key: 'all',      label: 'All Activities', count: totalUnread + activeOrderCount },
     { key: 'messages', label: 'Messages',        count: unreadMsgs },
     { key: 'orders',   label: 'Orders',          count: activeOrderCount },
+    { key: 'offers',   label: 'Offers',          count: offerUnread },
     { key: 'payments', label: 'Payments',        count: paymentUnread },
     { key: 'disputes', label: 'Disputes',        count: disputeCount, urgent: disputeCount > 0 },
     { key: 'reviews',  label: 'Reviews',         count: reviewUnread },
@@ -438,6 +476,8 @@ export default function ActivitiesClient({
         ? { label: 'View Order', href: n.link ?? '/orders' }
       : n.type === 'order'
         ? { label: 'View Order', href: n.link ?? '/orders' }
+      : n.type === 'offer'
+        ? { label: 'View Offer', href: n.link ?? '/offers' }
       : n.type === 'review'
         ? { label: 'See Review', href: n.link ?? '/notifications' }
       : n.link
@@ -559,6 +599,7 @@ export default function ActivitiesClient({
     activeTab === 'all'      ? 'All Activities' :
     activeTab === 'messages' ? 'Messages' :
     activeTab === 'orders'   ? 'Orders' :
+    activeTab === 'offers'   ? 'Offers' :
     activeTab === 'payments' ? 'Payments' :
     activeTab === 'disputes' ? 'Disputes' :
     activeTab === 'system'   ? 'System' :
@@ -568,6 +609,7 @@ export default function ActivitiesClient({
     { key: 'all',      label: 'All' },
     { key: 'messages', label: 'Messages' },
     { key: 'orders',   label: 'Orders' },
+    { key: 'offers',   label: 'Offers' },
     { key: 'payments', label: 'Payments' },
     { key: 'disputes', label: 'Disputes' },
     { key: 'reviews',  label: 'Reviews' },
@@ -687,6 +729,7 @@ export default function ActivitiesClient({
               search               ? 'No results match your search.' :
               activeTab === 'messages' ? 'Your conversations will appear here.' :
               activeTab === 'orders'   ? 'Your orders will appear here.' :
+              activeTab === 'offers'   ? 'Offers you send and receive will appear here.' :
               activeTab === 'payments' ? 'Payments and escrow events will appear here.' :
               activeTab === 'disputes' ? 'No disputes. Nice work staying out of here.' :
               activeTab === 'reviews'  ? 'Reviews you receive will appear here.' :
