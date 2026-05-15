@@ -537,7 +537,7 @@ body.dark .hiw-step-num {
   margin: 0;
 }
 
-/* ── Hero float wrapper — desktop only via CSS, no Tailwind responsive dependency ── */
+/* ── Hero float wrapper — desktop only (1024px+ to match globals.css hide breakpoint) ── */
 .hero-float-wrapper {
   display: none;
   position: absolute;
@@ -545,13 +545,14 @@ body.dark .hiw-step-num {
   z-index: 20;
   pointer-events: none;
 }
-@media (min-width: 768px) {
+@media (min-width: 1024px) {
   .hero-float-wrapper {
     display: block;
   }
 }
 
 /* ── Hero float cards ── */
+/* Override globals.css opacity:0 so cards are visible after fadeUp animation */
 .hero-float-card {
   background: #ffffff;
   backdrop-filter: blur(14px);
@@ -562,21 +563,23 @@ body.dark .hiw-step-num {
   padding: 12px 14px;
   width: 210px;
   box-shadow: 0 8px 36px rgba(0, 0, 0, 0.13), 0 2px 8px rgba(20, 184, 166, 0.1);
+  opacity: 1 !important;
 }
 body.dark .hero-float-card {
-  background: rgba(20, 20, 40, 0.92);
-  border-color: rgba(20, 184, 166, 0.2);
-  border-top-color: rgba(20, 184, 166, 0.45);
-  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(20, 184, 166, 0.12);
+  background: rgba(20, 20, 40, 0.92) !important;
+  border-color: rgba(20, 184, 166, 0.2) !important;
+  border-top-color: rgba(20, 184, 166, 0.45) !important;
+  box-shadow: 0 8px 36px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(20, 184, 166, 0.12) !important;
 }
 body.dark .hero-float-name { color: #f1f5f9 !important; }
 
-.hero-float-1 { animation: heroFloat1 5s ease-in-out infinite; }
-.hero-float-2 { animation: heroFloat2 6s ease-in-out infinite 0.5s; }
-.hero-float-3 { animation: heroFloat3 4.5s ease-in-out infinite 1s; }
-.hero-float-4 { animation: heroFloat4 5.5s ease-in-out infinite 0.8s; }
-.hero-float-5 { animation: heroFloat5 6s ease-in-out infinite 0.3s; }
-.hero-float-6 { animation: heroFloat6 5s ease-in-out infinite 1.2s; }
+/* fadeUp brings cards in, then heroFloat keeps them floating */
+.hero-float-1 { animation: fadeUp 0.55s 0.5s both, heroFloat1 5s 1.05s ease-in-out infinite; }
+.hero-float-2 { animation: fadeUp 0.55s 0.7s both, heroFloat2 6s 1.25s ease-in-out infinite; }
+.hero-float-3 { animation: fadeUp 0.55s 0.9s both, heroFloat3 4.5s 1.45s ease-in-out infinite; }
+.hero-float-4 { animation: fadeUp 0.55s 0.6s both, heroFloat4 5.5s 1.15s ease-in-out infinite; }
+.hero-float-5 { animation: fadeUp 0.55s 0.8s both, heroFloat5 6s 1.35s ease-in-out infinite; }
+.hero-float-6 { animation: fadeUp 0.55s 1.0s both, heroFloat6 5s 1.55s ease-in-out infinite; }
 
 /* ── Glass card ── */
 .glass-card {
