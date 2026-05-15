@@ -375,8 +375,8 @@ export default function HeroFloatingProfiles({ profiles }: Props) {
       if (currentPool.length < 2) return;
 
       const slotIdx = Math.floor(Math.random() * 6);
-      const current = slotsRef.current[slotIdx];
-      const candidates = currentPool.filter((p) => p.twitterHandle !== current.twitterHandle);
+      const displayedHandles = new Set(slotsRef.current.map((p) => p.twitterHandle));
+      const candidates = currentPool.filter((p) => !displayedHandles.has(p.twitterHandle));
       if (candidates.length === 0) return;
 
       const next = candidates[Math.floor(Math.random() * candidates.length)];
