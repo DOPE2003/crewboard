@@ -181,12 +181,8 @@ export default async function HomePage() {
           zIndex: 0,
         }} />
 
-        {/* Floating profile cards — desktop only, always rendered (fallbacks fill gaps) */}
-        <div className="hidden md:block" style={{ position: "absolute", inset: 0, zIndex: 2, pointerEvents: "none" }}>
-          <div style={{ pointerEvents: "auto" }}>
-            <HeroFloatingProfiles profiles={floatingProfiles} />
-          </div>
-        </div>
+        {/* Floating profile cards — desktop only via .hero-float-wrapper CSS class */}
+        <HeroFloatingProfiles profiles={floatingProfiles} />
 
         {/* Beta badge */}
         <div

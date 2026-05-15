@@ -537,6 +537,20 @@ body.dark .hiw-step-num {
   margin: 0;
 }
 
+/* ── Hero float wrapper — desktop only via CSS, no Tailwind responsive dependency ── */
+.hero-float-wrapper {
+  display: none;
+  position: absolute;
+  inset: 0;
+  z-index: 20;
+  pointer-events: none;
+}
+@media (min-width: 768px) {
+  .hero-float-wrapper {
+    display: block;
+  }
+}
+
 /* ── Hero float cards ── */
 .hero-float-card {
   background: #ffffff;

@@ -184,6 +184,7 @@ function FloatCard({ profile, style, animClass, fading }: {
         ...style,
         opacity: fading ? 0 : 1,
         transition: "opacity 0.4s ease",
+        pointerEvents: "auto",
       }}
     >
       <div
@@ -396,7 +397,7 @@ export default function HeroFloatingProfiles({ profiles }: Props) {
   }, []);
 
   return (
-    <>
+    <div className="hero-float-wrapper">
       {slots.map((profile, i) => (
         <FloatCard
           key={i}
@@ -406,6 +407,6 @@ export default function HeroFloatingProfiles({ profiles }: Props) {
           fading={fadingSlot === i}
         />
       ))}
-    </>
+    </div>
   );
 }
