@@ -14,7 +14,7 @@ import { rateLimit } from "../../_lib/rate-limit";
 const JOB_SELECT = {
   id: true, title: true, company: true, budget: true, duration: true,
   chain: true, category: true, level: true, jobType: true, tags: true,
-  description: true, milestones: true, status: true, ownerId: true, createdAt: true,
+  description: true, milestones: true, attachments: true, status: true, ownerId: true, createdAt: true,
   owner: { select: { name: true, twitterHandle: true, image: true } },
 };
 
@@ -32,6 +32,7 @@ function formatJob(j: any) {
     tags: j.tags,
     description: j.description,
     milestones: j.milestones,
+    attachments: j.attachments,
     status: j.status,
     createdAt: j.createdAt.toISOString(),
     owner: {

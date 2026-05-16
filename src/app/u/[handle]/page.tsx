@@ -389,6 +389,7 @@ export default async function PublicProfilePage({ params }: { params: Promise<{ 
                     githubHandle={user.githubHandle ?? null}
                     discordHandle={user.discordHandle ?? null}
                     linkedinHandle={user.linkedinHandle ?? null}
+                    instagramHandle={user.instagramHandle ?? null}
                     isOwnProfile={isOwnProfile}
                     isTwitterUser={!!user.twitterId && !user.twitterId.startsWith("apple:")}
                   />

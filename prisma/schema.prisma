@@ -49,6 +49,7 @@ model User {
   discordHandle        String?
   linkedinHandle       String?
   instagramHandle      String?
+  facebookHandle       String?
   website              String?
   website2             String?
   website3             String?
@@ -134,7 +135,8 @@ model Job {
   jobType     String   @default("Remote")
   tags        String[]
   description String
-  milestones  Boolean  @default(false)
+  milestones  Json?
+  attachments Json?
   status                String   @default("open")
   ownerId               String
   acceptedApplicantId   String?

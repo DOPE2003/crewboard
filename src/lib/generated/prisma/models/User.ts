@@ -66,6 +66,7 @@ export type UserMinAggregateOutputType = {
   discordHandle: string | null
   linkedinHandle: string | null
   instagramHandle: string | null
+  facebookHandle: string | null
   website: string | null
   website2: string | null
   website3: string | null
@@ -114,6 +115,7 @@ export type UserMaxAggregateOutputType = {
   discordHandle: string | null
   linkedinHandle: string | null
   instagramHandle: string | null
+  facebookHandle: string | null
   website: string | null
   website2: string | null
   website3: string | null
@@ -165,6 +167,7 @@ export type UserCountAggregateOutputType = {
   discordHandle: number
   linkedinHandle: number
   instagramHandle: number
+  facebookHandle: number
   website: number
   website2: number
   website3: number
@@ -223,6 +226,7 @@ export type UserMinAggregateInputType = {
   discordHandle?: true
   linkedinHandle?: true
   instagramHandle?: true
+  facebookHandle?: true
   website?: true
   website2?: true
   website3?: true
@@ -271,6 +275,7 @@ export type UserMaxAggregateInputType = {
   discordHandle?: true
   linkedinHandle?: true
   instagramHandle?: true
+  facebookHandle?: true
   website?: true
   website2?: true
   website3?: true
@@ -322,6 +327,7 @@ export type UserCountAggregateInputType = {
   discordHandle?: true
   linkedinHandle?: true
   instagramHandle?: true
+  facebookHandle?: true
   website?: true
   website2?: true
   website3?: true
@@ -460,6 +466,7 @@ export type UserGroupByOutputType = {
   discordHandle: string | null
   linkedinHandle: string | null
   instagramHandle: string | null
+  facebookHandle: string | null
   website: string | null
   website2: string | null
   website3: string | null
@@ -534,6 +541,7 @@ export type UserWhereInput = {
   discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
   linkedinHandle?: Prisma.StringNullableFilter<"User"> | string | null
   instagramHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  facebookHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
   website2?: Prisma.StringNullableFilter<"User"> | string | null
   website3?: Prisma.StringNullableFilter<"User"> | string | null
@@ -611,6 +619,7 @@ export type UserOrderByWithRelationInput = {
   discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   instagramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebookHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   website2?: Prisma.SortOrderInput | Prisma.SortOrder
   website3?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -691,6 +700,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   discordHandle?: Prisma.StringNullableFilter<"User"> | string | null
   linkedinHandle?: Prisma.StringNullableFilter<"User"> | string | null
   instagramHandle?: Prisma.StringNullableFilter<"User"> | string | null
+  facebookHandle?: Prisma.StringNullableFilter<"User"> | string | null
   website?: Prisma.StringNullableFilter<"User"> | string | null
   website2?: Prisma.StringNullableFilter<"User"> | string | null
   website3?: Prisma.StringNullableFilter<"User"> | string | null
@@ -768,6 +778,7 @@ export type UserOrderByWithAggregationInput = {
   discordHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   instagramHandle?: Prisma.SortOrderInput | Prisma.SortOrder
+  facebookHandle?: Prisma.SortOrderInput | Prisma.SortOrder
   website?: Prisma.SortOrderInput | Prisma.SortOrder
   website2?: Prisma.SortOrderInput | Prisma.SortOrder
   website3?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -827,6 +838,7 @@ export type UserScalarWhereWithAggregatesInput = {
   discordHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   linkedinHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   instagramHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  facebookHandle?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website2?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   website3?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
@@ -878,6 +890,7 @@ export type UserCreateInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -955,6 +968,7 @@ export type UserUncheckedCreateInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -1032,6 +1046,7 @@ export type UserUpdateInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1109,6 +1124,7 @@ export type UserUncheckedUpdateInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1186,6 +1202,7 @@ export type UserCreateManyInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -1237,6 +1254,7 @@ export type UserUpdateManyMutationInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1288,6 +1306,7 @@ export type UserUncheckedUpdateManyInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1347,6 +1366,7 @@ export type UserCountOrderByAggregateInput = {
   discordHandle?: Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrder
   instagramHandle?: Prisma.SortOrder
+  facebookHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   website2?: Prisma.SortOrder
   website3?: Prisma.SortOrder
@@ -1399,6 +1419,7 @@ export type UserMaxOrderByAggregateInput = {
   discordHandle?: Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrder
   instagramHandle?: Prisma.SortOrder
+  facebookHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   website2?: Prisma.SortOrder
   website3?: Prisma.SortOrder
@@ -1447,6 +1468,7 @@ export type UserMinOrderByAggregateInput = {
   discordHandle?: Prisma.SortOrder
   linkedinHandle?: Prisma.SortOrder
   instagramHandle?: Prisma.SortOrder
+  facebookHandle?: Prisma.SortOrder
   website?: Prisma.SortOrder
   website2?: Prisma.SortOrder
   website3?: Prisma.SortOrder
@@ -1930,6 +1952,7 @@ export type UserCreateWithoutSavedByTalentsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2006,6 +2029,7 @@ export type UserUncheckedCreateWithoutSavedByTalentsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2087,6 +2111,7 @@ export type UserCreateWithoutSavedTalentsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2163,6 +2188,7 @@ export type UserUncheckedCreateWithoutSavedTalentsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2255,6 +2281,7 @@ export type UserUpdateWithoutSavedByTalentsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2331,6 +2358,7 @@ export type UserUncheckedUpdateWithoutSavedByTalentsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2418,6 +2446,7 @@ export type UserUpdateWithoutSavedTalentsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2494,6 +2523,7 @@ export type UserUncheckedUpdateWithoutSavedTalentsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2570,6 +2600,7 @@ export type UserCreateWithoutNotificationsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2646,6 +2677,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2738,6 +2770,7 @@ export type UserUpdateWithoutNotificationsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2814,6 +2847,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2890,6 +2924,7 @@ export type UserCreateWithoutJobsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -2966,6 +3001,7 @@ export type UserUncheckedCreateWithoutJobsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -3058,6 +3094,7 @@ export type UserUpdateWithoutJobsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3134,6 +3171,7 @@ export type UserUncheckedUpdateWithoutJobsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3210,6 +3248,7 @@ export type UserCreateWithoutJobApplicationsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -3286,6 +3325,7 @@ export type UserUncheckedCreateWithoutJobApplicationsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -3378,6 +3418,7 @@ export type UserUpdateWithoutJobApplicationsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3454,6 +3495,7 @@ export type UserUncheckedUpdateWithoutJobApplicationsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3530,6 +3572,7 @@ export type UserCreateWithoutSentMessagesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -3606,6 +3649,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -3698,6 +3742,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3774,6 +3819,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3850,6 +3896,7 @@ export type UserCreateWithoutGigsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -3926,6 +3973,7 @@ export type UserUncheckedCreateWithoutGigsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4018,6 +4066,7 @@ export type UserUpdateWithoutGigsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4094,6 +4143,7 @@ export type UserUncheckedUpdateWithoutGigsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4170,6 +4220,7 @@ export type UserCreateWithoutSavedGigsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4246,6 +4297,7 @@ export type UserUncheckedCreateWithoutSavedGigsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4338,6 +4390,7 @@ export type UserUpdateWithoutSavedGigsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4414,6 +4467,7 @@ export type UserUncheckedUpdateWithoutSavedGigsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4490,6 +4544,7 @@ export type UserCreateWithoutBuyerOrdersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4566,6 +4621,7 @@ export type UserUncheckedCreateWithoutBuyerOrdersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4647,6 +4703,7 @@ export type UserCreateWithoutSellerOrdersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4723,6 +4780,7 @@ export type UserUncheckedCreateWithoutSellerOrdersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -4815,6 +4873,7 @@ export type UserUpdateWithoutBuyerOrdersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4891,6 +4950,7 @@ export type UserUncheckedUpdateWithoutBuyerOrdersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4978,6 +5038,7 @@ export type UserUpdateWithoutSellerOrdersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5054,6 +5115,7 @@ export type UserUncheckedUpdateWithoutSellerOrdersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5130,6 +5192,7 @@ export type UserCreateWithoutReviewsReceivedInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -5206,6 +5269,7 @@ export type UserUncheckedCreateWithoutReviewsReceivedInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -5287,6 +5351,7 @@ export type UserCreateWithoutReviewsGivenInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -5363,6 +5428,7 @@ export type UserUncheckedCreateWithoutReviewsGivenInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -5455,6 +5521,7 @@ export type UserUpdateWithoutReviewsReceivedInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5531,6 +5598,7 @@ export type UserUncheckedUpdateWithoutReviewsReceivedInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5618,6 +5686,7 @@ export type UserUpdateWithoutReviewsGivenInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5694,6 +5763,7 @@ export type UserUncheckedUpdateWithoutReviewsGivenInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -5770,6 +5840,7 @@ export type UserCreateWithoutShowcasePostsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -5846,6 +5917,7 @@ export type UserUncheckedCreateWithoutShowcasePostsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -5938,6 +6010,7 @@ export type UserUpdateWithoutShowcasePostsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6014,6 +6087,7 @@ export type UserUncheckedUpdateWithoutShowcasePostsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6090,6 +6164,7 @@ export type UserCreateWithoutShowcaseInteractionsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -6166,6 +6241,7 @@ export type UserUncheckedCreateWithoutShowcaseInteractionsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -6258,6 +6334,7 @@ export type UserUpdateWithoutShowcaseInteractionsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6334,6 +6411,7 @@ export type UserUncheckedUpdateWithoutShowcaseInteractionsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6410,6 +6488,7 @@ export type UserCreateWithoutProWaitlistInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -6486,6 +6565,7 @@ export type UserUncheckedCreateWithoutProWaitlistInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -6578,6 +6658,7 @@ export type UserUpdateWithoutProWaitlistInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6654,6 +6735,7 @@ export type UserUncheckedUpdateWithoutProWaitlistInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6730,6 +6812,7 @@ export type UserCreateWithoutNotificationPreferencesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -6806,6 +6889,7 @@ export type UserUncheckedCreateWithoutNotificationPreferencesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -6898,6 +6982,7 @@ export type UserUpdateWithoutNotificationPreferencesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -6974,6 +7059,7 @@ export type UserUncheckedUpdateWithoutNotificationPreferencesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7050,6 +7136,7 @@ export type UserCreateWithoutEmailVerifyTokensInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -7126,6 +7213,7 @@ export type UserUncheckedCreateWithoutEmailVerifyTokensInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -7218,6 +7306,7 @@ export type UserUpdateWithoutEmailVerifyTokensInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7294,6 +7383,7 @@ export type UserUncheckedUpdateWithoutEmailVerifyTokensInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7370,6 +7460,7 @@ export type UserCreateWithoutPasswordResetTokensInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -7446,6 +7537,7 @@ export type UserUncheckedCreateWithoutPasswordResetTokensInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -7538,6 +7630,7 @@ export type UserUpdateWithoutPasswordResetTokensInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7614,6 +7707,7 @@ export type UserUncheckedUpdateWithoutPasswordResetTokensInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7690,6 +7784,7 @@ export type UserCreateWithoutFiledDisputesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -7766,6 +7861,7 @@ export type UserUncheckedCreateWithoutFiledDisputesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -7858,6 +7954,7 @@ export type UserUpdateWithoutFiledDisputesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -7934,6 +8031,7 @@ export type UserUncheckedUpdateWithoutFiledDisputesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8010,6 +8108,7 @@ export type UserCreateWithoutDisputeMessagesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -8086,6 +8185,7 @@ export type UserUncheckedCreateWithoutDisputeMessagesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -8178,6 +8278,7 @@ export type UserUpdateWithoutDisputeMessagesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8254,6 +8355,7 @@ export type UserUncheckedUpdateWithoutDisputeMessagesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8330,6 +8432,7 @@ export type UserCreateWithoutSentOffersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -8406,6 +8509,7 @@ export type UserUncheckedCreateWithoutSentOffersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -8487,6 +8591,7 @@ export type UserCreateWithoutReceivedOffersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -8563,6 +8668,7 @@ export type UserUncheckedCreateWithoutReceivedOffersInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -8655,6 +8761,7 @@ export type UserUpdateWithoutSentOffersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8731,6 +8838,7 @@ export type UserUncheckedUpdateWithoutSentOffersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8818,6 +8926,7 @@ export type UserUpdateWithoutReceivedOffersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8894,6 +9003,7 @@ export type UserUncheckedUpdateWithoutReceivedOffersInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -8970,6 +9080,7 @@ export type UserCreateWithoutSupportTicketsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -9046,6 +9157,7 @@ export type UserUncheckedCreateWithoutSupportTicketsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -9138,6 +9250,7 @@ export type UserUpdateWithoutSupportTicketsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9214,6 +9327,7 @@ export type UserUncheckedUpdateWithoutSupportTicketsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9290,6 +9404,7 @@ export type UserCreateWithoutInvoiceCounterInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -9366,6 +9481,7 @@ export type UserUncheckedCreateWithoutInvoiceCounterInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -9458,6 +9574,7 @@ export type UserUpdateWithoutInvoiceCounterInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9534,6 +9651,7 @@ export type UserUncheckedUpdateWithoutInvoiceCounterInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9610,6 +9728,7 @@ export type UserCreateWithoutInvoicesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -9686,6 +9805,7 @@ export type UserUncheckedCreateWithoutInvoicesInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -9778,6 +9898,7 @@ export type UserUpdateWithoutInvoicesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9854,6 +9975,7 @@ export type UserUncheckedUpdateWithoutInvoicesInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -9930,6 +10052,7 @@ export type UserCreateWithoutCampaignClaimsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -10006,6 +10129,7 @@ export type UserUncheckedCreateWithoutCampaignClaimsInput = {
   discordHandle?: string | null
   linkedinHandle?: string | null
   instagramHandle?: string | null
+  facebookHandle?: string | null
   website?: string | null
   website2?: string | null
   website3?: string | null
@@ -10098,6 +10222,7 @@ export type UserUpdateWithoutCampaignClaimsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10174,6 +10299,7 @@ export type UserUncheckedUpdateWithoutCampaignClaimsInput = {
   discordHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   linkedinHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   instagramHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  facebookHandle?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website2?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   website3?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -10479,6 +10605,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   discordHandle?: boolean
   linkedinHandle?: boolean
   instagramHandle?: boolean
+  facebookHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
@@ -10557,6 +10684,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   discordHandle?: boolean
   linkedinHandle?: boolean
   instagramHandle?: boolean
+  facebookHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
@@ -10608,6 +10736,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   discordHandle?: boolean
   linkedinHandle?: boolean
   instagramHandle?: boolean
+  facebookHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
@@ -10659,6 +10788,7 @@ export type UserSelectScalar = {
   discordHandle?: boolean
   linkedinHandle?: boolean
   instagramHandle?: boolean
+  facebookHandle?: boolean
   website?: boolean
   website2?: boolean
   website3?: boolean
@@ -10675,7 +10805,7 @@ export type UserSelectScalar = {
   taxProfileUpdated?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "unavailableDays" | "responseTime" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "instagramHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified" | "taxLegalName" | "taxAddressLine1" | "taxAddressLine2" | "taxCity" | "taxPostalCode" | "taxCountry" | "taxVatId" | "taxProfileUpdated", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "twitterId" | "twitterHandle" | "name" | "image" | "userTitle" | "role" | "skills" | "bio" | "availability" | "unavailableDays" | "responseTime" | "profileComplete" | "createdAt" | "updatedAt" | "walletAddress" | "isOG" | "ogGrantedAt" | "ogFoundingClient" | "worldIdLevel" | "worldIdNullifier" | "stripeVerificationId" | "email" | "passwordHash" | "emailVerified" | "lastSeenAt" | "portfolioItems" | "cvUrl" | "twitterHandle2" | "telegramHandle" | "githubHandle" | "discordHandle" | "linkedinHandle" | "instagramHandle" | "facebookHandle" | "website" | "website2" | "website3" | "bannerImage" | "bannerHeight" | "humanVerified" | "taxLegalName" | "taxAddressLine1" | "taxAddressLine2" | "taxCity" | "taxPostalCode" | "taxCountry" | "taxVatId" | "taxProfileUpdated", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   gigs?: boolean | Prisma.User$gigsArgs<ExtArgs>
   jobs?: boolean | Prisma.User$jobsArgs<ExtArgs>
@@ -10773,6 +10903,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     discordHandle: string | null
     linkedinHandle: string | null
     instagramHandle: string | null
+    facebookHandle: string | null
     website: string | null
     website2: string | null
     website3: string | null
@@ -11270,6 +11401,7 @@ export interface UserFieldRefs {
   readonly discordHandle: Prisma.FieldRef<"User", 'String'>
   readonly linkedinHandle: Prisma.FieldRef<"User", 'String'>
   readonly instagramHandle: Prisma.FieldRef<"User", 'String'>
+  readonly facebookHandle: Prisma.FieldRef<"User", 'String'>
   readonly website: Prisma.FieldRef<"User", 'String'>
   readonly website2: Prisma.FieldRef<"User", 'String'>
   readonly website3: Prisma.FieldRef<"User", 'String'>

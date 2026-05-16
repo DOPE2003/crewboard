@@ -13,6 +13,7 @@ export async function updateSocialLinks({
   githubHandle,
   discordHandle,
   linkedinHandle,
+  instagramHandle,
 }: {
   twitterHandle2?: string;
   telegramHandle?: string;
@@ -22,6 +23,7 @@ export async function updateSocialLinks({
   githubHandle?: string;
   discordHandle?: string;
   linkedinHandle?: string;
+  instagramHandle?: string;
 }) {
   const session = await auth();
   const userId = (session?.user as any)?.userId as string | undefined;
@@ -36,6 +38,7 @@ export async function updateSocialLinks({
   if (githubHandle !== undefined) { const v = githubHandle.replace(/^@/, "").trim(); data.githubHandle = v || null; }
   if (discordHandle !== undefined) { const v = discordHandle.replace(/^@/, "").trim(); data.discordHandle = v || null; }
   if (linkedinHandle !== undefined) { const v = linkedinHandle.replace(/^@/, "").trim(); data.linkedinHandle = v || null; }
+  if (instagramHandle !== undefined) { const v = instagramHandle.replace(/^@/, "").trim(); data.instagramHandle = v || null; }
 
   const updated = await db.user.update({ where: { id: userId }, data, select: { twitterHandle: true } });
   revalidatePath(`/u/${updated.twitterHandle}`);

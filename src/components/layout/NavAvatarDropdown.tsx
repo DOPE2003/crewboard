@@ -7,7 +7,7 @@ import { usePathname } from 'next/navigation'
 import { signOut } from 'next-auth/react'
 import {
   User, ClipboardList, MessageSquare, Heart,
-  CreditCard, Users, Briefcase, HelpCircle, LogOut, ChevronDown, ArrowLeftRight, LayoutDashboard,
+  CreditCard, Users, Briefcase, HelpCircle, LogOut, ChevronDown, ArrowLeftRight, LayoutDashboard, FileText,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useMode, setMode } from '@/components/ModeProvider'
@@ -191,6 +191,9 @@ export default function NavAvatarDropdown({
             </MenuLink>
             <MenuLink href="/orders" icon={<ClipboardList size={14} />}>
               Orders
+            </MenuLink>
+            <MenuLink href="/jobs/applied" icon={<FileText size={14} />}>
+              Applied Jobs
             </MenuLink>
             <MenuLink href="/messages" icon={<MessageSquare size={14} />} badge={unreadCount}>
               Messages

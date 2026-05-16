@@ -27,7 +27,7 @@ import { ok, err } from "../../_lib/response";
 const ALLOWED_FIELDS = [
   "name", "image", "bio", "userTitle", "availability",
   "twitterHandle", "twitterHandle2", "githubHandle", "telegramHandle",
-  "instagramHandle", "discordHandle", "linkedinHandle", "website", "website2", "website3",
+  "instagramHandle", "facebookHandle", "discordHandle", "linkedinHandle", "website", "website2", "website3",
   "email", "bannerImage", "skills", "walletAddress", "portfolioItems",
 ] as const;
 
@@ -81,6 +81,13 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
       let ig = (updates.instagramHandle as string).trim();
       if (ig.startsWith("@")) ig = ig.slice(1);
       updates.instagramHandle = ig || null;
+    }
+
+    // Normalise facebookHandle — strip leading @, trim whitespace
+    if (typeof updates.facebookHandle === "string") {
+      let fb = (updates.facebookHandle as string).trim();
+      if (fb.startsWith("@")) fb = fb.slice(1);
+      updates.facebookHandle = fb || null;
     }
 
     // Validate email format if being set

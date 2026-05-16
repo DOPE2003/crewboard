@@ -339,11 +339,13 @@ export default function NavProfileDropdown({
         {/* ── WORKSPACE (top priority) ── */}
         <SectionLabel icon={I.orders}>Workspace</SectionLabel>
         <Card>
-          <Row icon={I.orders} label="My Orders"       href="/orders"  onClick={onClose} />
+          <Row icon={I.orders}        label="My Orders"       href="/orders"        onClick={onClose} />
           <RowDivider />
-          <Row icon={I.sent}   label="Sent Offers"     href="/offers"  onClick={onClose} />
+          <Row icon={I.applications}  label="Applied Jobs"    href="/jobs/applied"  onClick={onClose} />
           <RowDivider />
-          <Row icon={I.inbox}  label="Received Offers" href="/offers"  onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
+          <Row icon={I.sent}          label="Sent Offers"     href="/offers"        onClick={onClose} />
+          <RowDivider />
+          <Row icon={I.inbox}         label="Received Offers" href="/offers"        onClick={onClose} badge={unreadCount > 0 ? unreadCount : null} />
           <RowDivider />
           {isHiring ? (
             <Row icon={I.saved} label="Saved Talent" href="/saved-talents" onClick={onClose} />

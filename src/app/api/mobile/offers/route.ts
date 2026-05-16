@@ -91,7 +91,7 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
       description?: string;
       amount?: number;
       deliveryDays?: number;
-      milestones?: { title: string; description?: string; amount: number; status?: string }[];
+      milestones?: { title: string; description?: string; amount: number; status?: string; dueDate?: string }[];
       attachments?: { url: string; name: string }[];
       clientContact?: string;
       currency?: string;
@@ -104,6 +104,21 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
     if (!amount || amount < 1) return err("amount must be at least $1.");
     if (!deliveryDays || deliveryDays < 1) return err("deliveryDays must be at least 1.");
     if (receiverId === user.sub) return err("Cannot send an offer to yourself.");
+
+    // Validate milestone dueDates
+    if (milestones) {
+      for (const m of milestones) {
+        if (m.dueDate) {
+          const d = new Date(m.dueDate);
+          if (isNaN(d.getTime())) {
+            return err(`Milestone "${m.title}" has an invalid dueDate.`);
+          }
+          if (d.getTime() < Date.now() - 24 * 60 * 60 * 1000) {
+            return err(`Milestone "${m.title}" dueDate is in the past.`);
+          }
+        }
+      }
+    }
 
     // Verify participant
     const conv = await db.conversation.findUnique({

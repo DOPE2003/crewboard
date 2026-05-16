@@ -15,6 +15,7 @@ interface Props {
   githubHandle: string | null;
   discordHandle: string | null;
   linkedinHandle: string | null;
+  instagramHandle: string | null;
   isOwnProfile: boolean;
   isTwitterUser?: boolean;
 }
@@ -27,9 +28,19 @@ function DiscordIcon({ size = 12 }: { size?: number }) {
   );
 }
 
+function InstagramIcon({ size = 12 }: { size?: number }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+      <circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+    </svg>
+  );
+}
+
 export default function SocialLinksEditor({
   twitterHandle, twitterHandle2, telegramHandle, website, website2, website3,
-  githubHandle, discordHandle, linkedinHandle, isOwnProfile, isTwitterUser = false,
+  githubHandle, discordHandle, linkedinHandle, instagramHandle, isOwnProfile, isTwitterUser = false,
 }: Props) {
   const router = useRouter();
   const [editingTw2, setEditingTw2] = useState(false);
@@ -40,6 +51,7 @@ export default function SocialLinksEditor({
   const [editingGh, setEditingGh] = useState(false);
   const [editingDiscord, setEditingDiscord] = useState(false);
   const [editingLinkedin, setEditingLinkedin] = useState(false);
+  const [editingIg, setEditingIg] = useState(false);
   const [tw2Val, setTw2Val] = useState(twitterHandle2 ?? "");
   const [tgVal, setTgVal] = useState(telegramHandle ?? "");
   const [webVal, setWebVal] = useState(website ?? "");
@@ -48,6 +60,7 @@ export default function SocialLinksEditor({
   const [ghVal, setGhVal] = useState(githubHandle ?? "");
   const [discordVal, setDiscordVal] = useState(discordHandle ?? "");
   const [linkedinVal, setLinkedinVal] = useState(linkedinHandle ?? "");
+  const [igVal, setIgVal] = useState(instagramHandle ?? "");
   const [saving, setSaving] = useState(false);
   const tw2Ref = useRef<HTMLInputElement>(null);
   const tgRef = useRef<HTMLInputElement>(null);
@@ -57,6 +70,7 @@ export default function SocialLinksEditor({
   const ghRef = useRef<HTMLInputElement>(null);
   const discordRef = useRef<HTMLInputElement>(null);
   const linkedinRef = useRef<HTMLInputElement>(null);
+  const igRef = useRef<HTMLInputElement>(null);
 
   const pill: React.CSSProperties = {
     display: "inline-flex", alignItems: "center", gap: 5,
@@ -220,6 +234,14 @@ export default function SocialLinksEditor({
         <Linkedin size={12} style={{ flexShrink: 0 }} />,
         linkedinHandle, linkedinVal, setLinkedinVal, editingLinkedin, setEditingLinkedin,
         "linkedinHandle", v => `https://linkedin.com/in/${v}`, "username", linkedinRef,
+      )}
+
+      {/* Instagram */}
+      {renderHandlePill(
+        "Instagram",
+        <InstagramIcon size={12} />,
+        instagramHandle, igVal, setIgVal, editingIg, setEditingIg,
+        "instagramHandle", v => `https://instagram.com/${v}`, "username", igRef,
       )}
 
       {/* Website */}

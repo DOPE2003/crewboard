@@ -35,7 +35,6 @@ export type JobMinAggregateOutputType = {
   level: string | null
   jobType: string | null
   description: string | null
-  milestones: boolean | null
   status: string | null
   ownerId: string | null
   acceptedApplicantId: string | null
@@ -53,7 +52,6 @@ export type JobMaxAggregateOutputType = {
   level: string | null
   jobType: string | null
   description: string | null
-  milestones: boolean | null
   status: string | null
   ownerId: string | null
   acceptedApplicantId: string | null
@@ -73,6 +71,7 @@ export type JobCountAggregateOutputType = {
   tags: number
   description: number
   milestones: number
+  attachments: number
   status: number
   ownerId: number
   acceptedApplicantId: number
@@ -92,7 +91,6 @@ export type JobMinAggregateInputType = {
   level?: true
   jobType?: true
   description?: true
-  milestones?: true
   status?: true
   ownerId?: true
   acceptedApplicantId?: true
@@ -110,7 +108,6 @@ export type JobMaxAggregateInputType = {
   level?: true
   jobType?: true
   description?: true
-  milestones?: true
   status?: true
   ownerId?: true
   acceptedApplicantId?: true
@@ -130,6 +127,7 @@ export type JobCountAggregateInputType = {
   tags?: true
   description?: true
   milestones?: true
+  attachments?: true
   status?: true
   ownerId?: true
   acceptedApplicantId?: true
@@ -221,7 +219,8 @@ export type JobGroupByOutputType = {
   jobType: string
   tags: string[]
   description: string
-  milestones: boolean
+  milestones: runtime.JsonValue | null
+  attachments: runtime.JsonValue | null
   status: string
   ownerId: string
   acceptedApplicantId: string | null
@@ -261,7 +260,8 @@ export type JobWhereInput = {
   jobType?: Prisma.StringFilter<"Job"> | string
   tags?: Prisma.StringNullableListFilter<"Job">
   description?: Prisma.StringFilter<"Job"> | string
-  milestones?: Prisma.BoolFilter<"Job"> | boolean
+  milestones?: Prisma.JsonNullableFilter<"Job">
+  attachments?: Prisma.JsonNullableFilter<"Job">
   status?: Prisma.StringFilter<"Job"> | string
   ownerId?: Prisma.StringFilter<"Job"> | string
   acceptedApplicantId?: Prisma.StringNullableFilter<"Job"> | string | null
@@ -282,7 +282,8 @@ export type JobOrderByWithRelationInput = {
   jobType?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  milestones?: Prisma.SortOrder
+  milestones?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   acceptedApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -306,7 +307,8 @@ export type JobWhereUniqueInput = Prisma.AtLeast<{
   jobType?: Prisma.StringFilter<"Job"> | string
   tags?: Prisma.StringNullableListFilter<"Job">
   description?: Prisma.StringFilter<"Job"> | string
-  milestones?: Prisma.BoolFilter<"Job"> | boolean
+  milestones?: Prisma.JsonNullableFilter<"Job">
+  attachments?: Prisma.JsonNullableFilter<"Job">
   status?: Prisma.StringFilter<"Job"> | string
   ownerId?: Prisma.StringFilter<"Job"> | string
   acceptedApplicantId?: Prisma.StringNullableFilter<"Job"> | string | null
@@ -327,7 +329,8 @@ export type JobOrderByWithAggregationInput = {
   jobType?: Prisma.SortOrder
   tags?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  milestones?: Prisma.SortOrder
+  milestones?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachments?: Prisma.SortOrderInput | Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   acceptedApplicantId?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -352,7 +355,8 @@ export type JobScalarWhereWithAggregatesInput = {
   jobType?: Prisma.StringWithAggregatesFilter<"Job"> | string
   tags?: Prisma.StringNullableListFilter<"Job">
   description?: Prisma.StringWithAggregatesFilter<"Job"> | string
-  milestones?: Prisma.BoolWithAggregatesFilter<"Job"> | boolean
+  milestones?: Prisma.JsonNullableWithAggregatesFilter<"Job">
+  attachments?: Prisma.JsonNullableWithAggregatesFilter<"Job">
   status?: Prisma.StringWithAggregatesFilter<"Job"> | string
   ownerId?: Prisma.StringWithAggregatesFilter<"Job"> | string
   acceptedApplicantId?: Prisma.StringNullableWithAggregatesFilter<"Job"> | string | null
@@ -371,7 +375,8 @@ export type JobCreateInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   acceptedApplicantId?: string | null
   createdAt?: Date | string
@@ -391,7 +396,8 @@ export type JobUncheckedCreateInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   ownerId: string
   acceptedApplicantId?: string | null
@@ -411,7 +417,8 @@ export type JobUpdateInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -431,7 +438,8 @@ export type JobUncheckedUpdateInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -451,7 +459,8 @@ export type JobCreateManyInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   ownerId: string
   acceptedApplicantId?: string | null
@@ -470,7 +479,8 @@ export type JobUpdateManyMutationInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -488,7 +498,8 @@ export type JobUncheckedUpdateManyInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -518,6 +529,7 @@ export type JobCountOrderByAggregateInput = {
   tags?: Prisma.SortOrder
   description?: Prisma.SortOrder
   milestones?: Prisma.SortOrder
+  attachments?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   acceptedApplicantId?: Prisma.SortOrder
@@ -535,7 +547,6 @@ export type JobMaxOrderByAggregateInput = {
   level?: Prisma.SortOrder
   jobType?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  milestones?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   acceptedApplicantId?: Prisma.SortOrder
@@ -553,7 +564,6 @@ export type JobMinOrderByAggregateInput = {
   level?: Prisma.SortOrder
   jobType?: Prisma.SortOrder
   description?: Prisma.SortOrder
-  milestones?: Prisma.SortOrder
   status?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   acceptedApplicantId?: Prisma.SortOrder
@@ -642,7 +652,8 @@ export type JobCreateWithoutOwnerInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   acceptedApplicantId?: string | null
   createdAt?: Date | string
@@ -661,7 +672,8 @@ export type JobUncheckedCreateWithoutOwnerInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   acceptedApplicantId?: string | null
   createdAt?: Date | string
@@ -709,7 +721,8 @@ export type JobScalarWhereInput = {
   jobType?: Prisma.StringFilter<"Job"> | string
   tags?: Prisma.StringNullableListFilter<"Job">
   description?: Prisma.StringFilter<"Job"> | string
-  milestones?: Prisma.BoolFilter<"Job"> | boolean
+  milestones?: Prisma.JsonNullableFilter<"Job">
+  attachments?: Prisma.JsonNullableFilter<"Job">
   status?: Prisma.StringFilter<"Job"> | string
   ownerId?: Prisma.StringFilter<"Job"> | string
   acceptedApplicantId?: Prisma.StringNullableFilter<"Job"> | string | null
@@ -728,7 +741,8 @@ export type JobCreateWithoutApplicationsInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   acceptedApplicantId?: string | null
   createdAt?: Date | string
@@ -747,7 +761,8 @@ export type JobUncheckedCreateWithoutApplicationsInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   ownerId: string
   acceptedApplicantId?: string | null
@@ -782,7 +797,8 @@ export type JobUpdateWithoutApplicationsInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -801,7 +817,8 @@ export type JobUncheckedUpdateWithoutApplicationsInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   ownerId?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -820,7 +837,8 @@ export type JobCreateManyOwnerInput = {
   jobType?: string
   tags?: Prisma.JobCreatetagsInput | string[]
   description: string
-  milestones?: boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: string
   acceptedApplicantId?: string | null
   createdAt?: Date | string
@@ -838,7 +856,8 @@ export type JobUpdateWithoutOwnerInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -857,7 +876,8 @@ export type JobUncheckedUpdateWithoutOwnerInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -876,7 +896,8 @@ export type JobUncheckedUpdateManyWithoutOwnerInput = {
   jobType?: Prisma.StringFieldUpdateOperationsInput | string
   tags?: Prisma.JobUpdatetagsInput | string[]
   description?: Prisma.StringFieldUpdateOperationsInput | string
-  milestones?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  milestones?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
+  attachments?: Prisma.NullableJsonNullValueInput | runtime.InputJsonValue
   status?: Prisma.StringFieldUpdateOperationsInput | string
   acceptedApplicantId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -926,6 +947,7 @@ export type JobSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = ru
   tags?: boolean
   description?: boolean
   milestones?: boolean
+  attachments?: boolean
   status?: boolean
   ownerId?: boolean
   acceptedApplicantId?: boolean
@@ -948,6 +970,7 @@ export type JobSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extension
   tags?: boolean
   description?: boolean
   milestones?: boolean
+  attachments?: boolean
   status?: boolean
   ownerId?: boolean
   acceptedApplicantId?: boolean
@@ -968,6 +991,7 @@ export type JobSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extension
   tags?: boolean
   description?: boolean
   milestones?: boolean
+  attachments?: boolean
   status?: boolean
   ownerId?: boolean
   acceptedApplicantId?: boolean
@@ -988,13 +1012,14 @@ export type JobSelectScalar = {
   tags?: boolean
   description?: boolean
   milestones?: boolean
+  attachments?: boolean
   status?: boolean
   ownerId?: boolean
   acceptedApplicantId?: boolean
   createdAt?: boolean
 }
 
-export type JobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "company" | "budget" | "duration" | "chain" | "category" | "level" | "jobType" | "tags" | "description" | "milestones" | "status" | "ownerId" | "acceptedApplicantId" | "createdAt", ExtArgs["result"]["job"]>
+export type JobOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "company" | "budget" | "duration" | "chain" | "category" | "level" | "jobType" | "tags" | "description" | "milestones" | "attachments" | "status" | "ownerId" | "acceptedApplicantId" | "createdAt", ExtArgs["result"]["job"]>
 export type JobInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   owner?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   applications?: boolean | Prisma.Job$applicationsArgs<ExtArgs>
@@ -1025,7 +1050,8 @@ export type $JobPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
     jobType: string
     tags: string[]
     description: string
-    milestones: boolean
+    milestones: runtime.JsonValue | null
+    attachments: runtime.JsonValue | null
     status: string
     ownerId: string
     acceptedApplicantId: string | null
@@ -1466,7 +1492,8 @@ export interface JobFieldRefs {
   readonly jobType: Prisma.FieldRef<"Job", 'String'>
   readonly tags: Prisma.FieldRef<"Job", 'String[]'>
   readonly description: Prisma.FieldRef<"Job", 'String'>
-  readonly milestones: Prisma.FieldRef<"Job", 'Boolean'>
+  readonly milestones: Prisma.FieldRef<"Job", 'Json'>
+  readonly attachments: Prisma.FieldRef<"Job", 'Json'>
   readonly status: Prisma.FieldRef<"Job", 'String'>
   readonly ownerId: Prisma.FieldRef<"Job", 'String'>
   readonly acceptedApplicantId: Prisma.FieldRef<"Job", 'String'>

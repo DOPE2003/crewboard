@@ -79,12 +79,7 @@ export default async function HomePage() {
 
   const VIDEO_HANDLES = ["alphaeth", "0xmambich", "mehdi"];
 
-  const [categoryCountsRaw, rawFeatured, rawProfiles] = await Promise.all([
-    db.gig.groupBy({
-      by: ["category"],
-      where: { status: "active" },
-      _count: { id: true },
-    }).catch(() => [] as Array<{ category: string; _count: { id: number } }>),
+  const [rawFeatured, rawProfiles] = await Promise.all([
     db.user.findMany({
       where: { twitterHandle: { in: VIDEO_HANDLES }, profileComplete: true, image: { not: null } },
       select: {
@@ -118,10 +113,6 @@ export default async function HomePage() {
       },
     }).catch(() => []),
   ]);
-
-  const categoryCountMap: Record<string, number> = Object.fromEntries(
-    categoryCountsRaw.map((c) => [c.category, c._count.id])
-  );
 
   const floatingProfiles = rawProfiles.map((u: any) => ({
     twitterHandle: u.twitterHandle,
@@ -337,56 +328,6 @@ export default async function HomePage() {
         <style>{`
           @media (max-width: 600px) { .spotlight-row { flex-direction: column !important; } }
         `}</style>
-      </section>
-
-      {/* ── BROWSE BY CATEGORY ── */}
-      <section
-        id="categories"
-        style={{
-          background: "var(--bg-secondary)",
-          borderTop: "1px solid var(--border)",
-          padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)",
-          position: "relative",
-          zIndex: 1,
-        }}
-      >
-        <div style={{ maxWidth: "72rem", margin: "0 auto" }}>
-          <div className="section-header">
-            <div>
-              <h2 className="section-title">Browse by Category</h2>
-              <p className="section-subtitle">Find the right specialist for your project.</p>
-            </div>
-            <Link href="/gigs" className="section-see-all">See all →</Link>
-          </div>
-
-          <div className="cat-grid">
-            {BROWSE_CATEGORIES.map((cat) => {
-              const count = categoryCountMap[cat.key] ?? 0;
-              return (
-                <Link
-                  key={cat.label}
-                  href={`/gigs?category=${encodeURIComponent(cat.key)}`}
-                  className="cat-card"
-                >
-                  <div className="cat-icon-wrap" style={{ background: cat.iconBg, color: cat.iconColor }}>
-                    {cat.icon}
-                  </div>
-                  <div className="cat-card-body">
-                    <div className="cat-card-label">{cat.label}</div>
-                    <div className="cat-card-count">
-                      {count > 0 ? `${count}+ Talents` : "Explore"}
-                    </div>
-                  </div>
-                  <div className="cat-card-arrow">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M5 12h14M12 5l7 7-7 7"/>
-                    </svg>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
       </section>
 
       {/* ── TOP FREELANCERS ── */}
