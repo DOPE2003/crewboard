@@ -25,7 +25,7 @@ type Job = {
   id: string; title: string; company: string; budget: string;
   duration: string | null; category: string;
   level: string; jobType: string; tags: string[];
-  description: string; milestones: boolean; createdAt: string;
+  description: string; milestones: unknown; attachments: unknown; createdAt: string;
   status: string; ownerId: string; applicantCount: number;
   owner: { name: string | null; twitterHandle: string; image: string | null };
 };
