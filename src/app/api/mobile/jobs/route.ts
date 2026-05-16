@@ -153,22 +153,22 @@ async function postHandler(req: NextRequest, user: MobileTokenPayload) {
         jobType: jobType || "Remote",
         tags: Array.isArray(tags) ? tags.map((t: string) => t.trim()).filter(Boolean) : [],
         description: description.trim(),
-        milestones: Array.isArray(milestones) && milestones.length > 0
-          ? milestones.map((m: any) => ({
+        ...(Array.isArray(milestones) && milestones.length > 0
+          ? { milestones: milestones.map((m: any) => ({
               title: String(m.title ?? ""),
               description: String(m.description ?? ""),
               amount: Number(m.amount) || 0,
               status: "pending",
               ...(m.dueDate ? { dueDate: m.dueDate } : {}),
-            }))
-          : null,
-        attachments: Array.isArray(attachments) && attachments.length > 0
-          ? attachments.map((a: any) => ({
+            })) }
+          : {}),
+        ...(Array.isArray(attachments) && attachments.length > 0
+          ? { attachments: attachments.map((a: any) => ({
               name: String(a.name ?? ""),
               type: String(a.type ?? "file"),
               ...(a.url ? { url: a.url } : {}),
-            }))
-          : null,
+            })) }
+          : {}),
         ownerId: user.sub,
       },
     });
