@@ -28,10 +28,16 @@ async function handler(req: NextRequest, user: MobileTokenPayload) {
     }
 
     // Resolve other user
+    // Strip leading "@" that iOS clients commonly include in handles.
+    const normalizedHandle = otherHandle?.replace(/^@/, "").toLowerCase();
+    const isEmail = normalizedHandle?.includes("@"); // e.g. user@example.com
+
     const other = await db.user.findFirst({
       where: otherUserId
         ? { id: otherUserId }
-        : { twitterHandle: otherHandle!.toLowerCase() },
+        : isEmail
+          ? { email: normalizedHandle }
+          : { twitterHandle: normalizedHandle! },
       select: { id: true },
     });
 
