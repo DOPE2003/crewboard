@@ -77,7 +77,7 @@ export default async function HomePage() {
   const session = await auth();
   const isLoggedIn = !!session?.user;
 
-  const VIDEO_HANDLES = ["alphaeth", "0xmambich", "mehdi"];
+  const VIDEO_HANDLES = ["alphaeth", "0xmambich", "germanarc1"];
 
   const [rawFeatured, rawProfiles] = await Promise.all([
     db.user.findMany({
