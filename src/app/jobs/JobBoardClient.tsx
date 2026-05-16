@@ -25,7 +25,7 @@ type Job = {
   id: string; title: string; company: string; budget: string;
   duration: string | null; category: string;
   level: string; jobType: string; tags: string[];
-  description: string; milestones: unknown; attachments: unknown; createdAt: string;
+  description: string; milestones: any[] | null; attachments: any[] | null; createdAt: string;
   status: string; ownerId: string; applicantCount: number;
   owner: { name: string | null; twitterHandle: string; image: string | null };
 };
@@ -168,7 +168,7 @@ function JobCard({ job, isLoggedIn, isOwner, index }: { job: Job; isLoggedIn: bo
           }}>
             {job.level}
           </span>
-          {job.milestones && (
+          {Array.isArray(job.milestones) && job.milestones.length > 0 && (
             <span style={{
               display: "inline-flex", alignItems: "center", gap: 3,
               padding: "3px 9px", borderRadius: 6,
